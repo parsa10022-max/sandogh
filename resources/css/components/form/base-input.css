@@ -1,0 +1,87 @@
+/*
+|--------------------------------------------------------------------------
+| Base Input System (Shared Styles)
+|--------------------------------------------------------------------------
+*/
+
+/* ---------- Base Input ---------- */
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: all .2s ease;
+    background: #fff;
+}
+
+/* ---------- Focus ---------- */
+
+.form-control:focus {
+    outline: none;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .18rem rgba(13,110,253,.15);
+}
+
+/* ---------- Placeholder ---------- */
+
+.form-control::placeholder {
+    color: #adb5bd;
+    font-weight: 400;
+}
+
+/* ---------- Disabled / Readonly ---------- */
+
+.form-control:disabled,
+.form-control[readonly] {
+    background: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* ---------- Hover ---------- */
+
+.form-control:hover:not(:disabled):not([readonly]) {
+    border-color: #86b7fe;
+}
+
+/* ---------- Validation ---------- */
+
+.is-valid {
+    border-color: #198754 !important;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+/* ---------- Feedback (shared) ---------- */
+
+.invalid-feedback {
+    display: none;
+    font-size: .82rem;
+    margin-top: .35rem;
+    color: #dc3545;
+}
+
+.invalid-feedback.d-block {
+    display: block;
+}
+
+/* ---------- Layout helpers ---------- */
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-prefix,
+.input-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+

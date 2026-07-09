@@ -1,0 +1,56 @@
+/*
+|--------------------------------------------------------------------------
+| Sheba Input
+|--------------------------------------------------------------------------
+*/
+
+.sheba-group{
+    direction:rtl;
+    flex-direction:row !important;
+}
+
+.sheba-group .sheba-prefix{
+    order:1;
+    min-width:55px;
+    justify-content:center;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.sheba-group .sheba-input{
+    order:2;
+    direction:ltr;
+    text-align:right;
+    font-family:Consolas,"Courier New",monospace;
+    letter-spacing:.5px;
+}
+
+.sheba-group .status-icon{
+    order:3;
+    width:46px;
+    justify-content:center;
+}
+
+.sheba-input::placeholder{
+    text-align:left !important;
+}
+
+.sheba-feedback{
+    width:100%;
+    margin-top:.25rem;
+}
+.sheba-prefix {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+
+}
+.status-icon {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+
+}
+.text-start {
+    text-align: left !important;
+}

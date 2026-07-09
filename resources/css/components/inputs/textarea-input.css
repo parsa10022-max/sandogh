@@ -1,0 +1,64 @@
+/*
+|--------------------------------------------------------------------------
+| Textarea
+|--------------------------------------------------------------------------
+*/
+
+.textarea-input {
+
+    min-height: 120px;
+
+    resize: vertical;
+
+    line-height: 1.7;
+
+}
+
+.textarea-input::placeholder {
+
+    color: #adb5bd;
+
+}
+
+.textarea-input:focus {
+
+    box-shadow: none;
+
+}
+
+.textarea-counter {
+
+    margin-top: .25rem;
+
+    text-align: end;
+
+    font-size: .85rem;
+
+    color: #6c757d;
+
+}
+
+.textarea-counter.text-danger {
+
+    font-weight: 600;
+
+}
+
+textarea.form-control.is-valid {
+
+    background-image: none;
+
+}
+
+textarea.form-control.is-invalid {
+
+    background-image: none;
+
+}
+.textarea-auto {
+
+    overflow: hidden;
+
+    resize: none;
+
+}
