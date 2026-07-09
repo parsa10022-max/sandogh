@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\OtpService;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Services\OtpService;
 use Illuminate\Support\Facades\Hash;
 
 
