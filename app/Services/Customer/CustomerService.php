@@ -23,9 +23,10 @@ class CustomerService
     }
     public function create(array $data): Customer
     {
+        $data['status'] ??= CustomerStatus::ACTIVE;
+
         return Customer::create($data);
     }
-
     /**
      * بروزرسانی اطلاعات مشتری
      */

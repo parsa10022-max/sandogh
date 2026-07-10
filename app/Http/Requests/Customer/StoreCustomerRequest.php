@@ -4,6 +4,7 @@ namespace App\Http\Requests\Customer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\CustomerStatus;
 
 class StoreCustomerRequest extends FormRequest
 {
@@ -48,10 +49,7 @@ class StoreCustomerRequest extends FormRequest
                 'digits:11',
             ],
 
-            'status' => [
-                'required',
-                new Enum(CustomerStatus::class),
-            ],
+            
         ];
     }
 }
