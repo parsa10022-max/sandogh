@@ -43,12 +43,31 @@ class Customer extends Model
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'customer_id');
     }
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', CustomerStatus::ACTIVE);
+        return $query->where('status', CustomerStatus::ACTIVE->value);
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if (! empty($search)) {
+
+            $query->where(function (Builder $q) use ($search) {
+
+                $q->where('customer_code', 'like', "%{$search}%")
+                    ->orWhere('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('national_code', 'like', "%{$search}%")
+                    ->orWhere('mobile', 'like', "%{$search}%");
+
+            });
+
+        }
+
+        return $query;
     }
 
     public function getFullNameAttribute(): string

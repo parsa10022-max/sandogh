@@ -193,6 +193,8 @@ return [
         'member_code'   => 'کد عضویت',
         'name' => 'نام',
         'family'=>'نام خانوادگی',
+        'mobile_second'=>'موبایل دوم',
+        'father_name'=>'نام پدر',
         'code'=> 'کد تایید',
         'national_code' => 'کد ملی',
         'sheba' => 'شماره شبا',

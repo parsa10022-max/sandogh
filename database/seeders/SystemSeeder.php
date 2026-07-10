@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Enums\CustomerStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
@@ -9,16 +10,11 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class SystemSeeder extends Seeder
-
-
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $customer = Customer::firstOrCreate(
-            ['customer_code' => '1'],
+            ['customer_code' => 1],
             [
                 'national_code' => '2299991190',
                 'first_name' => 'مدیر',
@@ -27,6 +23,7 @@ class SystemSeeder extends Seeder
                 'status' => CustomerStatus::ACTIVE,
             ]
         );
+
         User::firstOrCreate(
             ['username' => 'admin'],
             [
@@ -38,5 +35,4 @@ class SystemSeeder extends Seeder
             ]
         );
     }
-
 }

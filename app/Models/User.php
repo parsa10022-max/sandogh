@@ -69,7 +69,7 @@ class User extends Authenticatable
     }
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function otps(): HasMany
@@ -81,7 +81,7 @@ class User extends Authenticatable
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', UserStatus::ACTIVE);
+        return $query->where('status', UserStatus::ACTIVE->value);
     }
 
     public function scopeOperator(Builder $query): Builder

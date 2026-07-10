@@ -1,17 +1,32 @@
 /* Framework */
-@import 'tailwindcss';
-@import 'bootstrap/dist/css/bootstrap.rtl.min.css';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+
+/* Bootstrap */
+@import "bootstrap/dist/css/bootstrap.rtl.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+/* Base Components */
 @import "./components/form/base-input.css";
 
-
-/* Components */
+/* Inputs */
+@import "./components/inputs/text-input.css";
 @import "./components/inputs/password-input.css";
 @import "./components/inputs/mobile-input.css";
-@import "./components/inputs/file-input.css";
-@import "./components/inputs/text-input.css";
-@import "./components/inputs/textarea-input.css";
-@import "./components/inputs/select-input.css";
 @import "./components/inputs/national-code-input.css";
 @import "./components/inputs/money-input.css";
 @import "./components/inputs/date-input.css";
+@import "./components/inputs/select-input.css";
+@import "./components/inputs/textarea-input.css";
+@import "./components/inputs/file-input.css";
+
+footer{
+
+    font-size: .85rem;
+
+}
+
+footer small{
+
+    color:#6c757d;
+
+}

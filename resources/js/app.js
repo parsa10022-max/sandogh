@@ -1,12 +1,18 @@
 import './bootstrap';
-import 'bootstrap';
 
-import './components/inputs/text-input.js';
-import './components/inputs/password-input.js';
-import './components/inputs/mobile-input.js';
-import './components/inputs/national-code-input.js';
-import './components/inputs/money-input.js';
-import './components/inputs/file-input.js';
-import './components/inputs/select-input.js';     // فعلاً چون فایل همین نام را دارد
-import './components/inputs/textarea-input.js';   // فعلاً چون فایل همین نام را دارد
-import './components/inputs/date-input.js';   // فعلاً چون فایل همین نام را دارد
+import * as bootstrap from 'bootstrap';
+
+window.bootstrap = bootstrap;
+
+// Inputs
+import './components/inputs/text-input';
+import './components/inputs/password-input';
+import './components/inputs/mobile-input';
+import './components/inputs/national-code-input';
+import './components/inputs/money-input';
+import './components/inputs/date-input';
+import './components/inputs/select-input';
+import './components/inputs/textarea-input';
+import './components/inputs/file-input';
+
+console.log('APP LOADED');

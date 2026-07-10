@@ -28,13 +28,15 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
 
             // نقش کاربر
-            $table->string('role', 20)->index();
+            $table->string('role',20)->index();
 
             // احراز هویت
             $table->string('password');
 
             // وضعیت
-            $table->string('status', 20)->default('active');
+            $table->string('status',20)
+                ->default('active')
+                ->index();
             // تأییدها
             $table->timestamp('mobile_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
