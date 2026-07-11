@@ -66,4 +66,20 @@ class CustomerService
 
         return $customer->fresh();
     }
+
+    public function getArchived(
+        int $perPage = 15
+    ): LengthAwarePaginator
+    {
+        return Customer::onlyTrashed()
+            ->latest()
+            ->paginate($perPage);
+    }
+
+    public function restore(int $id): void
+    {
+        Customer::onlyTrashed()
+            ->findOrFail($id)
+            ->restore();
+    }
 }

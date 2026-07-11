@@ -49,7 +49,7 @@ class StoreCustomerRequest extends FormRequest
                 'digits:11',
             ],
 
-            
+
         ];
     }
 }

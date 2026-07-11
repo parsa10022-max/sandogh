@@ -10,20 +10,11 @@
 
             <h3>
 
-                مدیریت مشتریان
+                آرشیو مشتریان
 
             </h3>
 
-            <a
-                href="{{ route('customers.create') }}"
-                class="btn btn-primary"
-            >
 
-                <i class="bi bi-plus-circle"></i>
-
-                مشتری جدید
-
-            </a>
 
         </div>
 
@@ -144,30 +135,23 @@
 
                                     </a>
 
-                                    <a href="{{ route('customers.edit', $customer) }}"
-                                       class="btn btn-sm btn-warning"
-                                       title="ویرایش">
-
-                                        <i class="bi bi-pencil"></i>
-
-                                    </a>
-
-                                    <form action="{{ route('customers.destroy', $customer) }}"
+                                    <form action="{{ route('customers.restore', $customer->id) }}"
                                           method="POST"
-                                          onsubmit="return confirm('آیا از حذف این مشتری مطمئن هستید؟')">
+                                          class="d-inline">
 
                                         @csrf
-                                        @method('DELETE')
+                                        @method('PATCH')
 
                                         <button type="submit"
-                                                class="btn btn-sm btn-danger"
-                                                title="حذف">
+                                                class="btn btn-sm btn-success"
+                                                title="بازگردانی">
 
-                                            <i class="bi bi-trash"></i>
+                                            <i class="bi bi-arrow-counterclockwise"></i>
 
                                         </button>
 
                                     </form>
+
 
                                 </div>
 

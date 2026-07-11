@@ -4,6 +4,7 @@ namespace App\Http\Requests\Customer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCustomerRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,18 +23,34 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
+        $customer = $this->route('customer');
+
         return [
+
             'customer_code' => [
                 'required',
-                'integer',
+                'string',
+                'max:20',
                 Rule::unique('customers', 'customer_code')->ignore($customer),
             ],
 
-            'first_name' => ['required', 'string', 'max:50'],
+            'first_name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
 
-            'last_name' => ['required', 'string', 'max:50'],
+            'last_name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
 
-            'father_name' => ['nullable', 'string', 'max:50'],
+            'father_name' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
 
             'national_code' => [
                 'required',
@@ -52,11 +69,7 @@ class UpdateCustomerRequest extends FormRequest
                 'digits:11',
             ],
 
-            'status' => [
-                'required',
-                new Enum(CustomerStatus::class),
-            ],
-
         ];
     }
+
 }

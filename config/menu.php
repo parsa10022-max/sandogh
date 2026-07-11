@@ -33,16 +33,50 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | اطلاعات پایه
+    |--------------------------------------------------------------------------
+    */
+
     [
         'title' => 'اطلاعات پایه',
-        'icon' => 'database',
+        'icon'  => 'database',
 
         'children' => [
 
             [
-                'title' => 'مشتریان',
-                'icon' => 'people',
+                'title' => 'لیست مشتریان',
+                'icon'  => 'people',
                 'route' => 'customers.index',
+
+                'active' => [
+                    'customers.index',
+                    'customers.create',
+                    'customers.store',
+                    'customers.show',
+                    'customers.edit',
+                    'customers.update',
+                    'customers.destroy',
+                ],
+
+                'roles' => [
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::BOARD_MEMBER,
+                    UserRole::OPERATOR,
+                ],
+            ],
+
+            [
+                'title' => 'آرشیو مشتریان',
+                'icon'  => 'archive',
+                'route' => 'customers.archive',
+
+                'active' => [
+                    'customers.archive',
+                    'customers.restore',
+                ],
 
                 'roles' => [
                     UserRole::ADMIN,
@@ -53,7 +87,6 @@ return [
             ],
 
         ],
-
     ],
 
     /*

@@ -45,10 +45,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', LogoutController::class)
         ->name('logout');
 
-    Route::resource('customers', CustomerController::class)
-        ->except('show');
+    Route::get(
+        'customers/archive',
+        [CustomerController::class, 'archive']
+    )->name('customers.archive');
+
+    Route::patch(
+        'customers/{id}/restore',
+        [CustomerController::class, 'restore']
+    )->name('customers.restore');
+
+    Route::resource('customers', CustomerController::class);
+
 
 });
+
 
 /*
 |--------------------------------------------------------------------------

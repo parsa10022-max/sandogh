@@ -36,17 +36,15 @@
 
                 $groupActive = $visibleChildren->contains(function ($item) {
 
-                    return request()->routeIs(
-                        str_replace('.index', '.*', $item['route'])
-                    );
+                    return collect($item['active'] ?? [$item['route']])
+                        ->contains(fn ($route) => request()->routeIs($route));
 
                 });
 
             @endphp
 
             <button
-                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center fw-semibold
-                {{ $groupActive ? '' : 'collapsed' }}"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center fw-semibold {{ $groupActive ? '' : 'collapsed' }}"
                 data-bs-toggle="collapse"
                 data-bs-target="#menu{{ $index }}"
                 type="button"
@@ -75,9 +73,8 @@
 
                         @php
 
-                            $active = request()->routeIs(
-                                str_replace('.index', '.*', $item['route'])
-                            );
+                            $active = collect($item['active'] ?? [$item['route']])
+                                ->contains(fn ($route) => request()->routeIs($route));
 
                         @endphp
 
