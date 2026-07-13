@@ -195,6 +195,7 @@ return [
         'family'=>'نام خانوادگی',
         'mobile_second'=>'موبایل دوم',
         'father_name'=>'نام پدر',
+        'prefix'=>'پیش شماره',
         'code'=> 'کد تایید',
         'national_code' => 'کد ملی',
         'sheba' => 'شماره شبا',

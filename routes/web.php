@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoanType\LoanTypeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +59,22 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('customers', CustomerController::class);
 
+    Route::resource('loan-types', LoanTypeController::class)
+        ->parameters([
+            'loan-types' => 'loanType',
+        ])
+        ->only([
+            'index',
+            'create',
+            'store',
+            'edit',
+            'update',
+        ]);
 
+    Route::patch(
+        'loan-types/{loanType}/change-status',
+        [LoanTypeController::class, 'changeStatus']
+    )->name('loan-types.change-status');
 });
 
 

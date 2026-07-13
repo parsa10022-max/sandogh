@@ -85,7 +85,26 @@ return [
                     UserRole::OPERATOR,
                 ],
             ],
+            [
+                'title' => 'انواع وام',
+                'icon' => 'credit-card-2-front',
+                'route' => 'loan-types.index',
 
+                'active' => [
+                    'loan-types.index',
+                    'loan-types.create',
+                    'loan-types.store',
+                    'loan-types.edit',
+                    'loan-types.update',
+                ],
+
+                'roles' => [
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::BOARD_MEMBER,
+                    UserRole::OPERATOR,
+                ],
+            ],
         ],
     ],
 

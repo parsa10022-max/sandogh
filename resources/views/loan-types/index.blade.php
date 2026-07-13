@@ -1,26 +1,28 @@
 @extends('layouts.app')
 
-@section('title', 'مدیریت مشتریان')
+@section('title', 'مدیریت انواع وام')
 
 @section('content')
 
     <div class="container-fluid">
 
-        <x-page-header title="مدیریت مشتریان">
+        <x-page-header title="مدیریت انواع وام">
 
             <a
-                href="{{ route('customers.create') }}"
+                href="{{ route('loan-types.create') }}"
                 class="btn btn-primary">
 
                 <i class="bi bi-plus-circle"></i>
-                مشتری جدید
+
+                نوع وام جدید
+
             </a>
 
         </x-page-header>
 
         {{-- Search --}}
         <x-search-box
-            :action="route('customers.index')"
+            :action="route('loan-types.index')"
         />
 
         {{-- Table --}}
@@ -34,13 +36,9 @@
 
                     <tr>
 
-                        <th>کد</th>
+                        <th>نام نوع وام</th>
 
-                        <th>نام</th>
-
-                        <th>کد ملی</th>
-
-                        <th>موبایل</th>
+                        <th>پیش‌شماره</th>
 
                         <th>وضعیت</th>
 
@@ -52,22 +50,16 @@
 
                     <tbody>
 
-                    @forelse($customers as $customer)
+                    @forelse($loanTypes as $loanType)
 
                         <tr>
 
-                            <td>{{ $customer->customer_code }}</td>
+                            <td>{{ $loanType->name }}</td>
 
-                            <td>{{ $customer->full_name }}</td>
-
-                            <td>{{ $customer->national_code }}</td>
-
-                            <td>{{ $customer->mobile }}</td>
+                            <td>{{ $loanType->prefix }}</td>
 
                             <td>
-
-                                {{ $customer->status->label()}}
-
+                                {{ $loanType->is_active->label() }}
                             </td>
 
                             <td class="text-center">
@@ -75,10 +67,10 @@
                                 <div class="d-flex justify-content-center gap-1">
 
                                     <x-action-buttons
-                                        :show-route="route('customers.show', $customer)"
-                                        :edit-route="route('customers.edit', $customer)"
-                                        :delete-route="route('customers.destroy', $customer)"
+                                        :edit-route="route('loan-types.edit', $loanType)"
+                                        :change-status-route="route('loan-types.change-status', $loanType)"
                                     />
+                                    
 
                                 </div>
 
@@ -90,10 +82,10 @@
 
                         <tr>
 
-                            <td colspan="6"
+                            <td colspan="4"
                                 class="text-center py-4">
 
-                                مشتری ثبت نشده است.
+                                نوع وامی ثبت نشده است.
 
                             </td>
 
@@ -109,8 +101,7 @@
 
         </x-datatable.table>
 
-        <x-pagination :items="$customers"/>
-        {{-- Pagination --}}
+        <x-pagination :items="$loanTypes"/>
 
     </div>
 
