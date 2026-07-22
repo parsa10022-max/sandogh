@@ -5,6 +5,7 @@ namespace App\Services\Customer;
 
 use App\Enums\CustomerStatus;
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomerService
@@ -82,4 +83,13 @@ class CustomerService
             ->findOrFail($id)
             ->restore();
     }
+    public function getActive(): Collection
+    {
+        return Customer::query()
+            ->active()
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+    }
+
 }

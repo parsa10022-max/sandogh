@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoanType\LoanTypeController;
+use App\Http\Controllers\Loan\LoanController;
 
 
 /*
@@ -75,6 +76,23 @@ Route::middleware('auth')->group(function () {
         'loan-types/{loanType}/change-status',
         [LoanTypeController::class, 'changeStatus']
     )->name('loan-types.change-status');
+
+    Route::post(
+        'loans/calculate',
+        [LoanController::class, 'calculate']
+    )->name('loans.calculate');
+
+    Route::resource('loans', LoanController::class)
+        ->only([
+            'index',
+            'create',
+            'store',
+            'edit',
+            'update',
+            'show',
+            'destroy',
+        ]);
+
 });
 
 

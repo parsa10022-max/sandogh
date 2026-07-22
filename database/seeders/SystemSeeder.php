@@ -6,6 +6,7 @@ use App\Enums\CustomerStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -29,7 +30,7 @@ class SystemSeeder extends Seeder
             [
                 'customer_id' => $customer->id,
                 'mobile' => '09120000000',
-                'password' => '123456',
+                'password' => Hash::make('123456'),
                 'role' => UserRole::ADMIN,
                 'status' => UserStatus::ACTIVE,
             ]

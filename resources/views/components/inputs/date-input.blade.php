@@ -3,7 +3,9 @@
 'name',
 'value' => '',
 'required' => false,
+'readonly' => false,
 'disabled' => false,
+'placeholder' => '1405/04/28',
 'col' => 'col-12 col-md-6',
 ])
 
@@ -15,39 +17,23 @@
         :required="$required"
     />
 
-    <div class="input-group">
+    <input
+        type="text"
+        id="{{ $name }}"
+        name="{{ $name }}"
+        value="{{ old($name, $value) }}"
+        data-jdp
+        autocomplete="off"
 
-        {{-- Calendar Icon --}}
-        <span class="input-group-text">
-            <i class="bi bi-calendar-event"></i>
-        </span>
+        @required($required)
+        @readonly($readonly)
+        @disabled($disabled)
 
-        {{-- Persian Date Picker --}}
-        <persian-datepicker-element
-            id="{{ $name }}_picker"
-            class="form-control date-input"
-            format="YYYY/MM/DD"
-            @required($required)
-            @disabled($disabled)
-        >
-        </persian-datepicker-element>
-
-        {{-- Hidden Gregorian Date --}}
-        <input
-            type="hidden"
-            id="{{ $name }}"
-            name="{{ $name }}"
-            value="{{ old($name,$value) }}"
-        >
-
-        {{-- Status --}}
-        <span class="input-group-text status-icon">
-            <i class="bi"></i>
-        </span>
-
-    </div>
-
-    <div class="date-feedback"></div>
+        {{ $attributes->class([
+            'form-control',
+            'is-invalid' => $errors->has($name),
+        ]) }}
+    >
 
     <x-form.error :name="$name"/>
 

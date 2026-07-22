@@ -3,6 +3,7 @@
 'name',
 'options' => [],
 'value' => '',
+'attributesMap' => [],
 'required' => false,
 'col' => 'col-12 col-md-6',
 ])
@@ -29,12 +30,21 @@
         <option value="">انتخاب کنید...</option>
 
         @foreach($options as $key => $text)
+
             <option
                 value="{{ $key }}"
-                @selected(old($name, $value) == $key)
+
+            @foreach($attributesMap[$key] ?? [] as $attr => $attrValue)
+                {{ $attr }}="{{ $attrValue }}"
+            @endforeach
+
+            @selected(old($name, $value) == $key)
             >
-                {{ $text }}
+
+            {{ $text }}
+
             </option>
+
         @endforeach
 
     </select>

@@ -13,25 +13,26 @@ return [
     [
         'title' => 'داشبورد',
         'icon' => 'speedometer2',
+
         'children' => [
+
             [
                 'title' => 'داشبورد',
                 'icon' => 'speedometer2',
                 'route' => 'dashboard',
+
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
+
         ],
     ],
-    /*
-    |--------------------------------------------------------------------------
-    | اطلاعات پایه
-    |--------------------------------------------------------------------------
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ return [
                 'route' => 'customers.index',
 
                 'active' => [
+
                     'customers.index',
                     'customers.create',
                     'customers.store',
@@ -58,13 +60,16 @@ return [
                     'customers.edit',
                     'customers.update',
                     'customers.destroy',
+
                 ],
 
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
 
@@ -74,89 +79,135 @@ return [
                 'route' => 'customers.archive',
 
                 'active' => [
+
                     'customers.archive',
                     'customers.restore',
+
                 ],
 
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
+
             [
                 'title' => 'انواع وام',
-                'icon' => 'credit-card-2-front',
+                'icon'  => 'credit-card-2-front',
                 'route' => 'loan-types.index',
 
                 'active' => [
+
                     'loan-types.index',
                     'loan-types.create',
                     'loan-types.store',
                     'loan-types.edit',
                     'loan-types.update',
+
                 ],
 
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
-        ],
-    ],
 
+        ],
+
+    ],
     /*
-    |--------------------------------------------------------------------------
-    | عملیات صندوق
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| عملیات صندوق
+|--------------------------------------------------------------------------
+*/
 
     [
         'title' => 'عملیات صندوق',
-        'icon' => 'wallet2',
+        'icon'  => 'wallet2',
 
         'children' => [
 
             [
                 'title' => 'وام ها',
-                'icon' => 'cash-coin',
+                'icon'  => 'cash-coin',
                 'route' => 'loans.index',
 
+                'active' => [
+
+                    'loans.index',
+                    'loans.create',
+                    'loans.store',
+                    'loans.show',
+                    'loans.edit',
+                    'loans.update',
+
+                ],
+
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
 
             [
                 'title' => 'اقساط',
-                'icon' => 'calendar-check',
+                'icon'  => 'calendar-check',
                 'route' => 'installments.index',
 
+                'active' => [
+
+                    'installments.index',
+                    'installments.show',
+                    'installments.edit',
+                    'installments.update',
+
+                ],
+
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
 
             [
                 'title' => 'پرداخت ها',
-                'icon' => 'wallet',
-
+                'icon'  => 'wallet',
                 'route' => 'payments.index',
 
+                'active' => [
+
+                    'payments.index',
+                    'payments.create',
+                    'payments.store',
+                    'payments.show',
+                    'payments.edit',
+                    'payments.update',
+
+                ],
+
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
                     UserRole::OPERATOR,
+
                 ],
             ],
 
@@ -172,31 +223,35 @@ return [
 
     [
         'title' => 'گزارش ها',
-        'icon' => 'bar-chart',
+        'icon'  => 'bar-chart',
 
         'children' => [
 
             [
                 'title' => 'گزارش مشتریان',
-                'icon' => 'people',
+                'icon'  => 'people',
                 'route' => 'reports.customers',
 
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
+
                 ],
             ],
 
             [
                 'title' => 'گزارش وام ها',
-                'icon' => 'cash-coin',
+                'icon'  => 'cash-coin',
                 'route' => 'reports.loans',
 
                 'roles' => [
+
                     UserRole::ADMIN,
                     UserRole::CEO,
                     UserRole::BOARD_MEMBER,
+
                 ],
             ],
 
@@ -212,27 +267,31 @@ return [
 
     [
         'title' => 'مدیریت سیستم',
-        'icon' => 'gear',
+        'icon'  => 'gear',
 
         'children' => [
 
             [
                 'title' => 'کاربران',
-                'icon' => 'person-gear',
+                'icon'  => 'person-gear',
                 'route' => 'users.index',
 
                 'roles' => [
+
                     UserRole::ADMIN,
+
                 ],
             ],
 
             [
                 'title' => 'تنظیمات',
-                'icon' => 'sliders',
+                'icon'  => 'sliders',
                 'route' => 'settings.index',
 
                 'roles' => [
+
                     UserRole::ADMIN,
+
                 ],
             ],
 

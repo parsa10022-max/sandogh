@@ -15,4 +15,8 @@ import './components/inputs/select-input';
 import './components/inputs/textarea-input';
 import './components/inputs/file-input';
 
+import './loan/loan-form';
+
+import './components/inputs/date-input';
+
 console.log('APP LOADED');

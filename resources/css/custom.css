@@ -1,0 +1,95 @@
+/*
+|--------------------------------------------------------------------------
+| Loan Show
+|--------------------------------------------------------------------------
+*/
+
+.loan-number-display{
+
+    direction:ltr;
+
+    unicode-bidi:isolate;
+
+    display:inline-flex;
+
+    justify-content:flex-end;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Loan Info
+|--------------------------------------------------------------------------
+*/
+
+.loan-info-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:10px 0;
+
+    border-bottom:1px dashed #ececec;
+
+}
+
+.loan-info-title{
+
+    width:140px;
+
+    color:#6c757d;
+
+    font-weight:600;
+
+    flex-shrink:0;
+
+}
+
+.loan-info-value{
+
+    flex:1;
+
+    font-weight:700;
+
+    color:#212529;
+
+}
+
+@media (max-width:768px){
+
+    .loan-info-item{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:5px;
+
+    }
+
+    .loan-info-title{
+
+        width:auto;
+
+    }
+
+}
+
+.loan-installments-table th:nth-child(1){
+    width:70px;
+}
+
+.loan-installments-table th:nth-child(2){
+    width:140px;
+}
+
+.loan-installments-table th:nth-child(3){
+    width:180px;
+}
+
+.loan-installments-table th:nth-child(4){
+    width:150px;
+}

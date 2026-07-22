@@ -18,6 +18,8 @@
 @import "./components/inputs/select-input.css";
 @import "./components/inputs/textarea-input.css";
 @import "./components/inputs/file-input.css";
+@import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
+@import './custom.css';
 
 footer{
 
@@ -25,8 +27,50 @@ footer{
 
 }
 
-footer small{
+/*
+|--------------------------------------------------------------------------
+| Prefix Input
+|--------------------------------------------------------------------------
+*/
 
-    color:#6c757d;
+.loan-number-box{
 
+    display:flex;
+    direction:ltr;
+    width:100%;
+
+}
+
+.loan-prefix{
+
+    min-width:80px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#f8f9fa;
+
+    border:1px solid #ced4da;
+
+    border-right:0;
+
+    border-radius:.375rem 0 0 .375rem;
+
+    font-weight:700;
+
+}
+
+.loan-number-box input{
+    direction:ltr !important;
+    text-align:left !important;
+    border-radius:0 .375rem .375rem 0;
+
+}
+.loan-number-display{
+    direction:ltr;
+    unicode-bidi:isolate;
+    text-align:left;
 }

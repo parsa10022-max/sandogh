@@ -77,9 +77,7 @@ class LoanTypeController extends Controller
     public function changeStatus(
         LoanType $loanType
     ): RedirectResponse {
-
         $this->loanTypeService->changeStatus($loanType);
-
         return redirect()
             ->route('loan-types.index')
             ->with('success', 'وضعیت نوع وام تغییر کرد.');

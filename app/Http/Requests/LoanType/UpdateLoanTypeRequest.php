@@ -45,7 +45,7 @@ class UpdateLoanTypeRequest extends FormRequest
                 'string',
             ],
 
-            'is_active' => ['required', Rule::enum(LoanTypeStatus::class)],
+            'status' => ['required', Rule::enum(LoanTypeStatus::class)],
         ];
     }
 }

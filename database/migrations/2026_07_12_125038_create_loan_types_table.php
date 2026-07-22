@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\LoanTypeStatus;
 
 return new class extends Migration
 {
@@ -24,10 +25,7 @@ return new class extends Migration
             $table->text('description')
                 ->nullable()
                 ->comment('توضیحات');
-
-            $table->boolean('is_active')
-                ->default(true)
-                ->comment('وضعیت فعال بودن');
+            $table->tinyInteger('status')->default(LoanTypeStatus::ACTIVE->value)->index();
 
             $table->timestamps();
         });

@@ -30,7 +30,7 @@ class StoreLoanTypeRequest extends FormRequest
                  'name' => ['required', 'string', 'max:100'],
                  'prefix' => ['required', 'string', 'size:4', 'unique:loan_types,prefix'],
                  'description' => ['nullable', 'string'],
-                 'is_active' => ['required', Rule::enum(LoanTypeStatus::class)],
+                 'status' => ['required', Rule::enum(LoanTypeStatus::class)],
              ];
 
     }

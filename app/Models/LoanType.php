@@ -21,7 +21,7 @@ class LoanType extends Model
         'name',
         'prefix',
         'description',
-        'is_active',
+        'status',
     ];
 
     /**
@@ -32,7 +32,7 @@ class LoanType extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => LoanTypeStatus::class,
+            'status' => LoanTypeStatus::class,
         ];
     }
 
@@ -61,7 +61,10 @@ class LoanType extends Model
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('is_active', true);
+        return $query->where(
+            'status',
+            LoanTypeStatus::ACTIVE->value
+        );
     }
 
     /**

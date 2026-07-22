@@ -59,7 +59,9 @@
                             <td>{{ $loanType->prefix }}</td>
 
                             <td>
-                                {{ $loanType->is_active->label() }}
+
+                                {{ $loanType->status->label() }}
+
                             </td>
 
                             <td class="text-center">
@@ -70,7 +72,7 @@
                                         :edit-route="route('loan-types.edit', $loanType)"
                                         :change-status-route="route('loan-types.change-status', $loanType)"
                                     />
-                                    
+
 
                                 </div>
 

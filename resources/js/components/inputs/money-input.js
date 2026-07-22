@@ -94,13 +94,33 @@ class MoneyInput {
     /**
      * Only Numbers
      */
+    /**
+     * Only Numbers
+     */
     clean(value) {
 
-        value = this.toEnglish(value);
+        value = this.toEnglish(
+            value.toString()
+        );
+
+        // حذف جداکننده هزارگان
+        value = value.replace(/,/g, '');
+
+        // اگر مقدار اعشاری بود (100.00)
+        // فقط قسمت صحیح نگه داشته شود
+        if (value.includes('.')) {
+
+            value = value.split('.')[0];
+
+        }
 
         return value.replace(/\D/g, '');
+
     }
 
+    /**
+     * Thousands Separator
+     */
     /**
      * Thousands Separator
      */
@@ -108,20 +128,50 @@ class MoneyInput {
 
         value = this.clean(value);
 
-        if (!value.length) {
+        if (value === '') {
+
             return '';
+
         }
 
-        return Number(value).toLocaleString('en-US');
+        return Number(value).toLocaleString(
+            'en-US'
+        );
+
+    }
+    /**
+     * مقدار عددی
+     */
+    numericValue() {
+
+        const value = this.clean(
+            this.input.value
+        );
+
+        return value === ''
+            ? 0
+            : parseInt(value, 10);
+
     }
 
     /**
      * Initial Value
      */
+    /**
+     * Initial Value
+     */
     formatInitialValue() {
 
-        this.input.value =
-            this.format(this.input.value);
+        const value = this.input.value;
+
+        if (!value) {
+
+            return;
+
+        }
+
+        this.input.value = this.format(value);
+
     }
 
 /**

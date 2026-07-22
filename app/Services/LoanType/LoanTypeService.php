@@ -68,13 +68,18 @@ class LoanTypeService
     /**
      * تغییر وضعیت
      */
-    public function changeStatus(LoanType $loanType): void
-    {
-        $isActive = $loanType->is_active === LoanTypeStatus::ACTIVE
-            ? LoanTypeStatus::INACTIVE
-            : LoanTypeStatus::ACTIVE;
-    }
+    public function changeStatus(
+        LoanType $loanType
+    ): LoanType {
 
+        $loanType->update([
+            'status' => $loanType->status === LoanTypeStatus::ACTIVE
+                ? LoanTypeStatus::INACTIVE
+                : LoanTypeStatus::ACTIVE,
+        ]);
+
+        return $loanType->fresh();
+    }
     /**
      * حذف نوع وام
      */

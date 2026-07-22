@@ -43,10 +43,10 @@
     <div class="row">
 
         <x-inputs.select-input
-            name="is_active"
+            name="status"
             label="وضعیت"
             :options="\App\Enums\LoanTypeStatus::options()"
-            :value="old('is_active', isset($loanType) ? $loanType->is_active->value : \App\Enums\LoanTypeStatus::ACTIVE->value)"
+            :value="old('status', isset($loanType) ? $loanType->status->value : \App\Enums\LoanTypeStatus::ACTIVE->value)"
             required
         />
     </div>

@@ -76,4 +76,9 @@ class Customer extends Model
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
+    public function getDisplayNameAttribute(): string
+    {
+        return "{$this->customer_code} - {$this->full_name}";
+    }
+
 }
