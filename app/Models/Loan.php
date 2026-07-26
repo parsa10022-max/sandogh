@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Concerns\HasJalaliDates;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\InstallmentStatus;
 
 
 class Loan extends Model
@@ -87,6 +88,49 @@ class Loan extends Model
             Installment::class
         );
     }
+
+    public function guarantors()
+    {
+        return $this->hasMany(LoanGuarantor::class);
+    }
+
+    /*
+|--------------------------------------------------------------------------
+| Payment Helpers
+|--------------------------------------------------------------------------
+*/
+
+    public function paidInstallments()
+    {
+        return $this->installments()
+            ->where('status', InstallmentStatus::PAID->value);
+    }
+
+
+    public function paidInstallmentsCount(): int
+    {
+        return $this->paidInstallments()->count();
+    }
+
+
+    public function remainingInstallmentsCount(): int
+    {
+        return $this->installment_count - $this->paidInstallmentsCount();
+    }
+
+
+    public function paidAmount(): int
+    {
+        return $this->paidInstallments()
+            ->sum('amount');
+    }
+
+
+    public function remainingAmount(): int
+    {
+        return $this->loan_amount - $this->paidAmount();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes
@@ -189,5 +233,12 @@ class Loan extends Model
     public function getUpdatedAtJalaliAttribute(): string
     {
         return $this->toJalali($this->updated_at, 'Y/m/d H:i');
+    }
+
+    public function hasPayment(): bool
+    {
+        return $this->installments()
+            ->whereHas('payment')
+            ->exists();
     }
 }

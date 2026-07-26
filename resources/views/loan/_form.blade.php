@@ -6,13 +6,16 @@
 
     <div class="col-md-6 mb-3">
 
-        <x-inputs.select-input
-            name="customer_id"
-            label="مشتری"
-            :options="$customers->pluck('display_name','id')->toArray()"
-            :value="old('customer_id', $loan->customer_id ?? '')"
-            required
-        />
+        @include('customer._picker',[
+     'name'=>'customer_id',
+     'label'=>'وام گیرنده',
+     'required'=>true,
+     'value'=>old(
+         'customer_id',
+         $loan->customer_id ?? ''
+     )
+
+])
 
     </div>
 
@@ -139,6 +142,11 @@
         />
 
     </div>
+
+  @include('loan._guarantors')
+
+
+
 
 
 
@@ -301,6 +309,109 @@
     id="server-date"
     value="{{ now()->toDateString() }}">
 
+
+
+
+
+
+{{-- ============================= --}}
+{{-- برنامه اقساط --}}
+{{-- ============================= --}}
+
+<div
+    id="loan-schedule-card"
+    class="card border-0 shadow-sm mt-4 d-none">
+
+    <div class="card-header bg-primary text-white py-2">
+
+        <i class="bi bi-calendar-week me-1"></i>
+
+        برنامه بازپرداخت وام
+
+    </div>
+
+    <div class="card-body py-3">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-7 col-md-9">
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm table-hover align-middle text-center mb-2">
+
+                        <thead class="table-light">
+
+                        <tr>
+
+                            <th style="width:80px">
+
+                                قسط
+
+                            </th>
+
+                            <th style="width:160px">
+
+                                سررسید
+
+                            </th>
+
+                            <th style="width:180px" class="text-center">
+
+                                مبلغ
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="loan-schedule-body">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    class="d-flex justify-content-between align-items-center border-top pt-2 small">
+
+                    <span>
+
+                        تعداد اقساط :
+
+                        <strong id="schedule-total-count">
+
+                            -
+
+                        </strong>
+
+                    </span>
+
+                    <span>
+
+                        جمع اقساط :
+
+                        <strong
+                            id="schedule-total-amount"
+                            class="text-success">
+
+                            -
+
+                        </strong>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 {{-- ============================= --}}
 {{-- دکمه ها --}}
 {{-- ============================= --}}

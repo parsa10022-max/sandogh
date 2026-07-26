@@ -16,6 +16,7 @@ use App\Services\Loan\LoanCalculationService;
 use Illuminate\Http\JsonResponse;
 use App\Services\Date\JalaliDateService;
 
+
 class LoanController extends Controller
 {
     public function __construct(
@@ -23,7 +24,7 @@ class LoanController extends Controller
         private readonly CustomerService $customerService,
         private readonly LoanTypeService $loanTypeService,
         private readonly LoanCalculationService $calculator,
-        private JalaliDateService $jalaliDateService
+        private JalaliDateService $jalaliDateService,
 
     ) {
     }
@@ -86,7 +87,9 @@ class LoanController extends Controller
 
             'loanType',
 
-            'installments',
+            'installments.payment',
+
+            'guarantors.customer',
 
             'creator',
 
@@ -94,17 +97,50 @@ class LoanController extends Controller
 
         ]);
 
-        return view(
-            'loan.show',
-            compact('loan')
-        );
+
+
+        $paidInstallments = $loan->installments
+            ->where('status', \App\Enums\InstallmentStatus::PAID);
+
+        $summary = [
+
+            'paid_count' => $paidInstallments->count(),
+
+            'remaining_count' => $loan->installments->count() - $paidInstallments->count(),
+
+            'paid_amount' => $paidInstallments->sum('amount'),
+
+            'remaining_amount' => $loan->installments->sum('amount') - $paidInstallments->sum('amount'),
+
+            'progress' => $loan->installments->count() == 0
+                ? 0
+                : round(
+                    ($paidInstallments->count() / $loan->installments->count()) * 100
+                ),
+
+        ];
+
+        return view('loan.show', [
+
+            'loan' => $loan,
+
+            'summary' => $summary,
+
+        ]);
     }
     /**
      * فرم ویرایش
      */
-    public function edit(
-        Loan $loan
-    ): View {
+    /**
+     * فرم ویرایش
+     */
+    public function edit(Loan $loan): View
+    {
+        $loan->load([
+            'customer',
+            'loanType',
+            'guarantors.customer',
+        ]);
 
         return view('loan.edit', [
             'loan' => $loan,
@@ -119,17 +155,31 @@ class LoanController extends Controller
     public function update(
         UpdateLoanRequest $request,
         Loan $loan
-    ): RedirectResponse {
-        $this->loanService->update(
-            $loan,
-            $request->validated()
-        );
+    ): RedirectResponse
+    {
+        try {
 
-        return redirect()
-            ->route('loans.index')
-            ->with('success', 'وام با موفقیت بروزرسانی شد.');
+            $this->loanService->update(
+                $loan,
+                $request->validated()
+            );
+
+            return redirect()
+                ->route('loans.index')
+                ->with(
+                    'success',
+                    'وام با موفقیت بروزرسانی شد.'
+                );
+
+        } catch (\RuntimeException $e) {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'loan' => $e->getMessage()
+                ]);
+        }
     }
-
     /**
      * حذف
      */
@@ -225,5 +275,30 @@ class LoanController extends Controller
 
         ]);
 
+    }
+
+    public function overdue()
+    {
+        $loans = $this->loanService->overdue();
+
+        return view('loan.overdue', [
+
+            'loans' => $loans,
+
+            'statistics' => [
+
+                'loan_count' => $loans->count(),
+
+                'installment_count' => $loans->sum('overdue_count'),
+
+                'amount' => $loans->sum(function ($loan) {
+
+                    return $loan->installments->sum('amount');
+
+                }),
+
+            ],
+
+        ]);
     }
 }

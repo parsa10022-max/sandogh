@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <title>داشبورد</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h1>داشبورد</h1>
+@section('title','داشبورد')
 
-<p>خوش آمدید {{ Auth::user()->username }}</p>
+@section('content')
 
-<form method="POST" action="{{ route('logout') }}">
-    @csrf
-    <button type="submit">
-        خروج
-    </button>
-</form>
+    <div class="container-fluid">
 
-</body>
-</html>
+        @include('dashboard.partials.loan-statistics')
+
+        @include('dashboard.partials.latest-loans')
+
+        @include('dashboard.partials.overdue-installments')
+
+        @include('dashboard.partials.latest-payments')
+
+        @include('dashboard.partials.latest-payments')
+
+        @include('dashboard.partials.quick-links')
+    </div>
+
+@endsection

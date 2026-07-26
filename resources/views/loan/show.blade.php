@@ -4,6 +4,9 @@
 
 @section('content')
 
+    @include('loan.partials.summary', ['loan' => $loan])
+
+
     <div class="container-fluid">
 
         <div class="card shadow-sm">
@@ -17,6 +20,7 @@
                         مشاهده اطلاعات وام
 
                     </h5>
+
                     <small class="text-muted">
 
                         شماره وام :
@@ -26,15 +30,16 @@
                             {{ $loan->full_loan_number }}
 
                         </strong>
+
                     </small>
 
                 </div>
 
                 <span class="badge bg-success">
 
-                {{ $loan->status->label() }}
+                    {{ $loan->status->label() }}
 
-            </span>
+                </span>
 
             </div>
 
@@ -42,6 +47,7 @@
 
                 {{-- اطلاعات وام --}}
                 @include('loan.partials.loan-info')
+                @include('loan.partials.guarantors-show')
 
                 <hr class="my-4">
 
@@ -53,9 +59,10 @@
                 {{-- اطلاعات سیستم --}}
                 @include('loan.partials.system-info')
 
+
             </div>
 
-            <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-2">
+            <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
 
                 <a
                     href="{{ route('loans.index') }}"
@@ -70,7 +77,7 @@
                 <div class="d-flex gap-2">
 
                     <a
-                        href="{{ route('loans.edit',$loan) }}"
+                        href="{{ route('loans.edit', $loan) }}"
                         class="btn btn-warning">
 
                         <i class="bi bi-pencil-square"></i>

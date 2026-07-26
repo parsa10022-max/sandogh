@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             scheduleButton.dataset.schedule =
                 JSON.stringify(data.schedule);
 
+
         }
 
     }
@@ -221,6 +222,83 @@ document.addEventListener('DOMContentLoaded', () => {
     | اگر فرم ویرایش باشد، پیش‌نمایش را همان ابتدا نمایش بده
     |--------------------------------------------------------------------------
     */
+    /*
+    |--------------------------------------------------------------------------
+    | نمایش برنامه اقساط
+    |--------------------------------------------------------------------------
+    */
+
+    const scheduleButton = document.getElementById('show-schedule');
+
+    const scheduleCard = document.getElementById('loan-schedule-card');
+
+    const scheduleBody = document.getElementById('loan-schedule-body');
+
+    scheduleButton?.addEventListener('click', () => {
+
+        const schedule = JSON.parse(
+            scheduleButton.dataset.schedule ?? '[]'
+        );
+
+        scheduleBody.innerHTML = '';
+
+        schedule.forEach(item => {
+
+            scheduleBody.innerHTML += `
+
+        <tr>
+
+            <td class="text-center fw-bold">
+                ${item.number}
+            </td>
+
+            <td class="text-center">
+                ${item.date}
+            </td>
+
+            <td class="text-center fw-bold">
+                ${item.amount} ریال
+            </td>
+
+        </tr>
+
+    `;
+
+        });
+
+        const totalCount = document.getElementById('schedule-total-count');
+
+        if (totalCount) {
+            totalCount.textContent = schedule.length;
+        }
+
+        document.getElementById('schedule-total-count').textContent =
+            schedule.length;
+
+        let total = 0;
+
+        schedule.forEach(item => {
+
+            total += Number(item.amount.replace(/,/g, ''));
+
+        });
+
+
+
+        document.getElementById('schedule-total-amount').textContent =
+            total.toLocaleString() + ' ریال';
+
+        scheduleCard.classList.remove('d-none');
+
+        scheduleCard.scrollIntoView({
+
+            behavior: 'smooth',
+
+            block: 'start'
+
+        });
+
+    });
 
     calculateLoan();
 

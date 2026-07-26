@@ -4,13 +4,12 @@ namespace App\Models;
 
 use App\Enums\InstallmentStatus;
 use App\Models\Concerns\HasJalaliDates;
+use App\Services\Date\JalaliDateService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Installment extends Model
 {
-
     use HasJalaliDates;
 
     protected $fillable = [
@@ -77,6 +76,14 @@ class Installment extends Model
         );
     }
 
+    public function payment()
+    {
+        return $this->hasOne(
+            LoanPayment::class,
+            'installment_id'
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors
@@ -92,7 +99,7 @@ class Installment extends Model
     }
 
     /**
-     * وضعیت پرداخت
+     * آیا پرداخت شده است؟
      */
     public function getIsPaidAttribute(): bool
     {
@@ -100,18 +107,51 @@ class Installment extends Model
     }
 
     /**
-     * تاریخ سررسید شمسی
-     */
-    public function getDueDateJalaliAttribute(): string
-    {
-        return $this->toJalali($this->due_date);
-    }
-
-    /**
-     * شماره قسط (برای نمایش)
+     * شماره قسط
      */
     public function getNumberAttribute(): int
     {
         return $this->installment_number;
+    }
+
+    /**
+     * تاریخ سررسید شمسی
+     */
+    public function getDueDateJalaliAttribute(): string
+    {
+        return app(JalaliDateService::class)
+            ->toJalali($this->due_date);
+    }
+
+    /**
+     * تاریخ پرداخت شمسی
+     */
+    public function getPaidAtJalaliAttribute(): ?string
+    {
+        if (! $this->paid_at) {
+            return null;
+        }
+
+        return app(JalaliDateService::class)
+            ->toJalali($this->paid_at);
+    }
+
+    /**
+     * تعداد روزهای تأخیر
+     */
+    public function getOverdueDaysAttribute(): int
+    {
+        if ($this->status === InstallmentStatus::PAID) {
+            return 0;
+        }
+
+        $today = now()->startOfDay();
+        $due = $this->due_date->startOfDay();
+
+        if ($due->gte($today)) {
+            return 0;
+        }
+
+        return $due->diffInDays($today);
     }
 }

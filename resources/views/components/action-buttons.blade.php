@@ -14,13 +14,35 @@
 
     {{-- ویرایش --}}
     @isset($editRoute)
-        <a href="{{ $editRoute }}"
-           class="btn btn-sm btn-outline-primary"
-           title="ویرایش">
 
-            <i class="bi bi-pencil-square"></i>
+        @php
+            $loanModel = $attributes->get('loan');
+        @endphp
 
-        </a>
+        @if($loanModel && $loanModel->hasPayment())
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary"
+                disabled
+                title="به علت ثبت پرداخت، امکان ویرایش وجود ندارد">
+
+                <i class="bi bi-lock"></i>
+
+            </button>
+
+        @else
+
+            <a href="{{ $editRoute }}"
+               class="btn btn-sm btn-outline-primary"
+               title="ویرایش">
+
+                <i class="bi bi-pencil-square"></i>
+
+            </a>
+
+        @endif
+
     @endisset
 
 

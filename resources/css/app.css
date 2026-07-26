@@ -74,3 +74,6 @@ footer{
     unicode-bidi:isolate;
     text-align:left;
 }
+.btn {
+    white-space: nowrap;
+}

@@ -32,7 +32,7 @@ class InstallmentService
 
                     'due_date' => $item['gregorian_date'],
 
-                    'status' => InstallmentStatus::UNPAID,
+                    'status' => InstallmentStatus::PENDING,
 
                     'created_by' => auth()->id(),
 
@@ -87,7 +87,7 @@ class InstallmentService
 
         $installment->update([
 
-            'status' => InstallmentStatus::UNPAID,
+            'status' => InstallmentStatus::PENDING,
 
             'paid_at' => null,
 
@@ -102,12 +102,12 @@ class InstallmentService
     /**
      * تعداد اقساط پرداخت نشده
      */
-    public function unpaidCount(
+    public function pendingCount(
         Loan $loan
     ): int {
 
         return $loan->installments()
-            ->where('status', InstallmentStatus::UNPAID)
+            ->where('status', InstallmentStatus::PENDING)
             ->count();
 
     }
@@ -123,5 +123,41 @@ class InstallmentService
             ->where('status', InstallmentStatus::PAID)
             ->sum('amount');
 
+    }
+    /**
+     * اقساط معوق داشبورد
+     */
+    public function overdue(int $limit = 5)
+    {
+        return \App\Models\Installment::query()
+            ->with([
+                'loan.customer',
+                'loan.loanType',
+            ])
+            ->where('status', \App\Enums\InstallmentStatus::PENDING)
+            ->whereDate('due_date', '<', today())
+            ->orderBy('due_date')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * سررسیدهای 7 روز آینده
+     */
+    public function upcoming(int $limit = 5)
+    {
+        return Installment::query()
+            ->with([
+                'loan.customer',
+                'loan.loanType',
+            ])
+            ->where('status', InstallmentStatus::PENDING)
+            ->whereBetween('due_date', [
+                today(),
+                today()->addDays(7),
+            ])
+            ->orderBy('due_date')
+            ->limit($limit)
+            ->get();
     }
 }

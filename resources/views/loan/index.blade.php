@@ -151,12 +151,9 @@
                                 <td class="text-center">
 
                                     <x-action-buttons
-
+                                        :loan="$loan"
                                         :edit-route="route('loans.edit',$loan)"
-
                                         :show-route="route('loans.show',$loan)"
-
-
                                     />
 
                                 </td>

@@ -47,6 +47,11 @@ class Customer extends Model
         return $this->hasOne(User::class, 'customer_id');
     }
 
+    public function guarantorLoans()
+    {
+        return $this->hasMany(LoanGuarantor::class);
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', CustomerStatus::ACTIVE->value);
@@ -79,6 +84,57 @@ class Customer extends Model
     public function getDisplayNameAttribute(): string
     {
         return "{$this->customer_code} - {$this->full_name}";
+    }
+
+    public function searchByCode(Request $request)
+    {
+        $request->validate([
+            'code' => [
+                'required',
+            ],
+        ]);
+
+
+        $customer = Customer::query()
+            ->active()
+            ->where(
+                'customer_code',
+                $request->code
+            )
+            ->first();
+
+
+        if (!$customer) {
+
+            return response()->json([
+
+                'found' => false,
+
+                'message' => 'مشتری پیدا نشد.'
+
+            ]);
+
+        }
+
+
+        return response()->json([
+
+            'found' => true,
+
+
+            'customer' => [
+
+                'id' => $customer->id,
+
+                'code' => $customer->customer_code,
+
+                'name' => $customer->full_name,
+
+                'mobile' => $customer->mobile,
+
+            ]
+
+        ]);
     }
 
 }

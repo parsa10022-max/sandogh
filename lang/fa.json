@@ -1004,7 +1004,7 @@
     "United States Minor Outlying Islands": "جزایر کوچک حاشیه های ایالات متحده",
     "United States Outlying Islands": "جزایر دورافتاده ایالات متحده",
     "Unknown": "ناشناخته",
-    "Unpaid": "پرداخت نشده",
+    "PENDING": "پرداخت نشده",
     "Update": "بروزرسانی",
     "Update & Continue Editing": "بروزرسانی و ادامه ویرایش",
     "Update :resource": "بروزرسانی :resource",
