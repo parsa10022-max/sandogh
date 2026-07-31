@@ -45,6 +45,16 @@
                     </tr>
 
                     <tr>
+                        <th>شماره شبا </th>
+                        <td>{{ \App\Support\Iban::format($customer->iban) }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>بانک</th>
+                        <td>{{ \App\Support\Iban::bankName($customer->iban) }}</td>
+                    </tr>
+
+                    <tr>
                         <th>موبایل</th>
                         <td>{{ $customer->mobile }}</td>
                     </tr>

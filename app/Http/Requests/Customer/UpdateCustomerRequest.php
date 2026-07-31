@@ -5,6 +5,7 @@ namespace App\Http\Requests\Customer;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Support\Iban;
 
 class UpdateCustomerRequest extends FormRequest
 {
@@ -69,7 +70,25 @@ class UpdateCustomerRequest extends FormRequest
                 'digits:11',
             ],
 
+            'iban' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if ($value && !\App\Support\Iban::isValid($value)) {
+                        $fail('شماره شبا معتبر نیست.');
+                    }
+                },
+            ],
+
         ];
+
+
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'iban' => Iban::normalize($this->iban),
+        ]);
     }
 
 }

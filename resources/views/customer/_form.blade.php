@@ -58,6 +58,14 @@
 
     </div>
 
+    <x-inputs.iban-input
+        name="iban"
+        label="شماره شبا"
+        :value="old('iban', $customer->iban ?? '')"
+        required
+        col="col-md-6"
+    />
+
     <div class="col-md-4 mb-3">
 
         <x-inputs.mobile-input

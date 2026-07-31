@@ -1,8 +1,8 @@
 @props([
-'label',
+'label'=> '',
 'name',
 'value' => '',
-'placeholder' => '820540102680020817909002',
+'placeholder' => '24 رقم بدون IR',
 'required' => false,
 'readonly' => false,
 'disabled' => false,
@@ -12,18 +12,30 @@
 
 <x-form.group :col="$col">
 
-    <x-form.label
-        :label="$label"
-        :name="$name"
-        :required="$required"
-    />
+    @if($label)
 
-    <div class="input-group sheba-group" >
+        <x-form.label
+            :label="$label"
+            :name="$name"
+            :required="$required"
+        />
 
-        {{-- پیشوند شبا --}}
-        <span class="input-group-text status-icon">
-            <i class="bi"></i>
-        </span>
+    @endif
+
+        <div class="input-group sheba-group">
+
+            @if($readonly)
+
+                <input type="hidden"
+                       name="{{ $name }}"
+                       value="{{ $value }}">
+
+            @endif
+
+        {{-- نام بانک --}}
+        <span class="input-group-text bg-light bank-name">
+    -
+</span>
 
 
         {{-- Input --}}
@@ -31,9 +43,10 @@
             type="text"
             id="{{ $name }}"
             name="{{ $name }}"
-            value="{{ old($name, $value) }}"
+            value="{{ old($name, \App\Support\Iban::formatDigits($value)) }}"
             placeholder="{{ $placeholder }}"
-            maxlength="24"
+            minlength="24"
+            maxlength="31"
             inputmode="numeric"
             autocomplete="off"
             dir="ltr"
@@ -47,23 +60,24 @@
             {{ $attributes->class([
                 'form-control',
                 'sheba-input',
-
-
                 'is-invalid' => $errors->has($name),
             ]) }}
         >
 
-        {{-- وضعیت --}}
+
+        {{-- پیشوند شبا --}}
         <span class="input-group-text sheba-prefix fw-bold">
             IR
         </span>
 
     </div>
 
+
     {{-- اعتبارسنجی JavaScript --}}
     <div class="sheba-feedback"></div>
 
+
     {{-- اعتبارسنجی Laravel --}}
-    <x-form.error :name="$name"/>
+        {{-- <x-form.error :name="$name"/> --}}
 
 </x-form.group>

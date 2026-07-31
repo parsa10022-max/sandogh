@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Customer extends Model
 {
@@ -25,6 +26,7 @@ class Customer extends Model
         'last_name',
         'father_name',
         'national_code',
+        'iban',
         'mobile',
         'mobile_second',
         'status',
@@ -51,6 +53,15 @@ class Customer extends Model
     {
         return $this->hasMany(LoanGuarantor::class);
     }
+
+    /**
+     * حساب‌های عضو
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
 
     public function scopeActive(Builder $query): Builder
     {

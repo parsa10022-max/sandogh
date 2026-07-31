@@ -1,88 +1,119 @@
 /**
  * --------------------------------------------------------------------------
- * Sheba Input Component
+ * Iban Input Component
  * --------------------------------------------------------------------------
- * Version : 1.0.0
+ * Version : 1.1.0
  * Project : Sandogh
  * Laravel : 12
  * Bootstrap : 5
  * --------------------------------------------------------------------------
  */
-
-class ShebaInput {
+console.log('IBAN COMPONENT LOADED');class IbanInput {
 
     constructor(element) {
 
         this.input = element;
 
-        this.group = this.input.closest('.input-group');
+        this.group =
+            this.input.closest('.input-group');
 
-        this.feedback = this.input
-            .closest('.mb-3')
-            ?.querySelector('.sheba-feedback');
 
-        this.icon = this.group
-            ?.querySelector('.status-icon i');
+        this.feedback =
+            this.input
+                .closest('.mb-3')
+                ?.querySelector('.sheba-feedback');
+
+
+        this.icon =
+            this.group
+                ?.querySelector('.status-icon i');
+
+
+        this.bankName =
+            this.group
+                ?.querySelector('.bank-name');
+
 
         this.live =
             this.input.dataset.live === 'true';
 
+
         this.required =
             this.input.hasAttribute('required');
 
+
         this.init();
+
     }
+
 
     /**
      * Initialize
      */
     init() {
 
-        this.normalize();
+       // this.normalize();
+
+        this.detectBank();
 
         this.bindEvents();
 
     }
+
+
 
     /**
      * Register Events
      */
     bindEvents() {
 
+
         this.input.addEventListener(
             'input',
             this.handleInput.bind(this)
         );
+
 
         this.input.addEventListener(
             'blur',
             this.handleBlur.bind(this)
         );
 
+
         this.input.addEventListener(
             'paste',
             this.handlePaste.bind(this)
         );
+
 
         this.input.addEventListener(
             'keypress',
             this.handleKeyPress.bind(this)
         );
 
+
         this.input.addEventListener(
             'drop',
             this.handleDrop.bind(this)
         );
 
+
     }
+
+
 
     /**
      * Persian & Arabic Numbers
      */
     toEnglish(value) {
 
-        const fa = '۰۱۲۳۴۵۶۷۸۹';
-        const ar = '٠١٢٣٤٥٦٧٨٩';
+        const fa =
+            '۰۱۲۳۴۵۶۷۸۹';
+
+
+        const ar =
+            '٠١٢٣٤٥٦٧٨٩';
+
 
         return value
             .replace(/[۰-۹]/g, d => fa.indexOf(d))
@@ -90,24 +121,35 @@ class ShebaInput {
 
     }
 
+
+
     /**
      * Clean Value
      */
     clean(value) {
 
+
         value = this.toEnglish(value);
+
 
         value = value.replace(/\s+/g, '');
 
+
         value = value.replace(/-/g, '');
+
 
         value = value.replace(/^IR/i, '');
 
+
         value = value.replace(/\D/g, '');
 
-        return value.substring(0, 24);
+
+        return value.substring(0,24);
+
 
     }
+
+
 
     /**
      * Normalize Value
@@ -119,12 +161,19 @@ class ShebaInput {
 
     }
 
+
+
     /**
      * Input Event
      */
     handleInput() {
 
+
         this.normalize();
+
+
+        this.detectBank();
+
 
         if (this.live) {
 
@@ -132,7 +181,10 @@ class ShebaInput {
 
         }
 
+
     }
+
+
 
     /**
      * Blur Event
@@ -143,34 +195,52 @@ class ShebaInput {
 
     }
 
+
+
     /**
      * Paste Event
      */
     handlePaste(event) {
 
+
         event.preventDefault();
 
-        const text = (
-            event.clipboardData ||
-            window.clipboardData
-        ).getData('text');
+
+        const text =
+            (
+                event.clipboardData ||
+                window.clipboardData
+            )
+                .getData('text');
+
 
         this.input.value =
             this.clean(text);
 
+
+        this.detectBank();
+
+
         this.validate();
 
+
     }
+
+
 
     /**
      * Only Numbers
      */
     handleKeyPress(event) {
 
-        const key = event.key;
+
+        const key =
+            event.key;
+
 
         const allowed =
             /^[0-9۰-۹٠-٩]$/;
+
 
         if (!allowed.test(key)) {
 
@@ -178,98 +248,208 @@ class ShebaInput {
 
         }
 
+
     }
+
+
+
     /**
      * Drag & Drop
      */
     handleDrop(event) {
 
+
         event.preventDefault();
 
-        const text = event.dataTransfer.getData('text');
+
+        const text =
+            event.dataTransfer.getData('text');
+
 
         this.input.value =
             this.clean(text);
 
+
+        this.detectBank();
+
+
         this.validate();
 
+
     }
+
+
+
 
     /**
      * Raw Value
      */
     rawValue() {
 
-        return this.clean(this.input.value);
-
-    }
-
-    /**
-     * Dispatch Event
-     */
-    dispatch(name) {
-
-        this.input.dispatchEvent(
-
-            new CustomEvent(name, {
-
-                bubbles: true,
-
-                detail: {
-
-                    value: this.rawValue()
-
-                }
-
-            })
-
+        return this.clean(
+            this.input.value
         );
 
     }
+
+
+
+
+    /**
+     * Detect Bank
+     */
+    detectBank() {
+
+        console.log('BANK CHECK', this.rawValue());
+        if (!this.bankName) {
+
+            return;
+
+        }
+
+
+        const value =
+            this.rawValue();
+
+
+        const bankCode =
+         value.substring(2,5);
+
+
+
+        const banks = {
+
+
+            '010': 'بانک مرکزی',
+
+            '012': 'بانک ملت',
+
+            '013': 'بانک رفاه',
+
+            '014': 'بانک مسکن',
+
+            '015': 'بانک سپه',
+
+            '016': 'بانک کشاورزی',
+
+            '017': 'بانک ملی ایران',
+
+            '018': 'بانک تجارت',
+
+            '019': 'بانک صادرات ایران',
+
+
+            '051': 'موسسه اعتباری توسعه',
+
+            '053': 'بانک کارآفرین',
+
+            '054': 'بانک پارسیان',
+
+            '055': 'بانک اقتصاد نوین',
+
+            '056': 'بانک سامان',
+
+            '057': 'بانک پاسارگاد',
+
+            '058': 'بانک سرمایه',
+
+            '059': 'بانک سینا',
+
+            '061': 'بانک شهر',
+
+            '062': 'بانک آینده',
+
+            '070': 'بانک رسالت',
+
+
+        };
+
+
+        this.bankName.innerText =
+            banks[bankCode] ?? '-';
+
+
+    }
+
+
+
+
 
     /**
      * Validation
      */
     validate() {
 
-        const value = this.rawValue();
+
+        const value =
+            this.rawValue();
+
 
         let valid = true;
 
+
         let message = '';
+
+
 
         if (this.required && value === '') {
 
-            valid = false;
-
-            message = 'وارد کردن شماره شبا الزامی است.';
-
-        }
-        else if (value !== '' && value.length !== 24) {
 
             valid = false;
 
-            message = 'شماره شبا باید دقیقاً 24 رقم باشد.';
+
+            message =
+                'وارد کردن شماره شبا الزامی است.';
+
 
         }
 
-        this.showValidation(valid, message);
+        else if (
+            value !== '' &&
+            value.length !== 24
+        ) {
+
+
+            valid = false;
+
+
+            message =
+                'شماره شبا باید دقیقاً 24 رقم باشد.';
+
+
+        }
+
+
+
+        this.showValidation(
+            valid,
+            message
+        );
+
 
         return valid;
 
+
     }
+
+
+
 
     /**
      * Show Validation
      */
     showValidation(valid, message = '') {
 
+
         this.input.classList.remove(
             'is-valid',
             'is-invalid'
         );
 
+
+
         if (this.feedback) {
+
 
             this.feedback.classList.remove(
                 'valid-feedback',
@@ -277,103 +457,130 @@ class ShebaInput {
                 'd-block'
             );
 
+
             this.feedback.innerHTML = '';
 
         }
 
+
+
+
         if (this.icon) {
 
-            this.icon.className = 'bi';
+            this.icon.className =
+                'bi';
 
         }
 
+
+
+
+
         if (valid) {
+
 
             if (this.rawValue() !== '') {
 
-                this.input.classList.add('is-valid');
 
-                if (this.icon) {
+                this.input.classList.add(
+                    'is-valid'
+                );
 
-                    this.icon.classList.add(
-                        'bi-check-circle-fill',
-                        'text-success'
-                    );
-
-                }
 
             }
 
-        } else {
 
-            this.input.classList.add('is-invalid');
+        }
+
+        else {
+
+
+            this.input.classList.add(
+                'is-invalid'
+            );
+
 
             if (this.feedback) {
 
-                this.feedback.innerHTML = message;
+
+                this.feedback.innerHTML =
+                    message;
+
 
                 this.feedback.classList.add(
                     'invalid-feedback',
                     'd-block'
                 );
 
-            }
-
-            if (this.icon) {
-
-                this.icon.classList.add(
-                    'bi-x-circle-fill',
-                    'text-danger'
-                );
 
             }
+
 
         }
 
+
     }
 
+
+
 }
+
+
+
 /**
- * حذف فاصله‌ها قبل از ارسال فرم
+ * حذف فاصله قبل از ارسال فرم
  */
 document.addEventListener(
     'submit',
-    function (event) {
+    function(event) {
+
 
         event.target
             .querySelectorAll('.sheba-input')
             .forEach(input => {
 
-                input.value = input.value
-                    .replace(/\s+/g, '')
-                    .replace(/-/g, '')
-                    .replace(/^IR/i, '')
-                    .replace(/\D/g, '')
-                    .substring(0, 24);
+
+                input.value =
+                    input.value
+                        .replace(/\s+/g,'')
+                        .replace(/-/g,'')
+                        .replace(/^IR/i,'')
+                        .replace(/\D/g,'')
+                        .substring(0,24);
+
 
             });
+
 
     },
     true
 );
 
+
+
+
 /**
- * راه‌اندازی خودکار
+ * Auto Initialize
  */
 document.addEventListener(
     'DOMContentLoaded',
     () => {
 
+
         document
             .querySelectorAll('.sheba-input')
             .forEach(input => {
 
-                new ShebaInput(input);
+
+                new IbanInput(input);
+
 
             });
+
 
     }
 );
 
-export default ShebaInput;
 
+
+export default IbanInput;

@@ -11,6 +11,17 @@ use App\Http\Controllers\PaymentController;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Account\DepositController;
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\WithdrawalController;
+
+
+
+Route::post(
+    '/accounts/deposit',
+    [DepositController::class, 'store']
+)->name('accounts.deposit');
+
 
 
 /*
@@ -68,6 +79,87 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', LogoutController::class)
         ->name('logout');
 
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Accounts
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/accounts',
+        [AccountController::class, 'index']
+    )->name('accounts.index');
+
+
+    Route::get(
+        '/accounts/{account}',
+        [AccountController::class, 'show']
+    )->name('accounts.show');
+
+
+    Route::get(
+        '/accounts/{account}/deposit',
+        [DepositController::class, 'create']
+    )->name('accounts.deposit.create');
+
+
+    Route::post(
+        '/accounts/deposit',
+        [DepositController::class, 'store']
+    )->name('accounts.deposit');
+
+    Route::get(
+        '/accounts/{account}/transactions',
+        [AccountController::class, 'transactions']
+    )->name('accounts.transactions');
+
+    /*
+       |--------------------------------------------------------------------------
+       | براشت
+       |--------------------------------------------------------------------------
+       */
+    Route::get(
+        '/accounts/{account}/withdrawal',
+        [WithdrawalController::class, 'create']
+    )->name('accounts.withdrawal.create');
+
+    Route::post(
+        '/accounts/{account}/withdrawal',
+        [WithdrawalController::class, 'store']
+    )->name('accounts.withdrawal.store');
+
+
+    Route::resource('withdrawals', WithdrawalController::class)
+        ->only([
+            'index',
+            'show',
+            'update',
+        ]);
+
+
+    Route::post(
+        '/withdrawals/{withdrawal}/approve',
+        [WithdrawalController::class, 'approve']
+    )->name('withdrawals.approve');
+
+
+    Route::patch(
+        '/withdrawals/{withdrawal}/cancel',
+        [WithdrawalController::class, 'cancel']
+    )->name('withdrawals.cancel');
+
+    Route::get(
+        '/my-withdrawals',
+        [WithdrawalController::class, 'myWithdrawals']
+    )->name('withdrawals.mine');
+
+    Route::post(
+        '/withdrawals/{withdrawal}/reject',
+        [WithdrawalController::class, 'reject']
+    )->name('withdrawals.reject');
 
     /*
     |--------------------------------------------------------------------------

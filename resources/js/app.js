@@ -14,6 +14,7 @@ import './components/inputs/date-input';
 import './components/inputs/select-input';
 import './components/inputs/textarea-input';
 import './components/inputs/file-input';
+import './components/inputs/sheba-input';
 
 import './loan/loan-form';
 
