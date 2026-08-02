@@ -36,18 +36,26 @@
 
                     <div class="card-body">
 
-                            <form
-                                id="loan-form"
-                                action="{{ route('loans.store') }}"
-                                method="POST"
-                                autocomplete="off"
-                                data-calculate-url="{{ route('loans.calculate') }}">
+                        <form
+                            id="loan-form"
+                            action="{{ route('loans.store') }}"
+                            method="POST"
+                            autocomplete="off"
+                            data-calculate-url="{{ route('loans.calculate') }}">
 
-                                @csrf
+                            @csrf
 
-                                @include('loan._form')
+                            @if(isset($loanRequest))
 
-                            </form>
+                                <input type="hidden"
+                                       name="loan_request_id"
+                                       value="{{ $loanRequest->id }}">
+
+                            @endif
+
+                            @include('loan._form')
+
+                        </form>
 
                     </div>
 

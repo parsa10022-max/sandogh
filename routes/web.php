@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\DepositController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\WithdrawalController;
+use App\Http\Controllers\Loan\LoanRequestController;
 
 
 
@@ -160,6 +161,36 @@ Route::middleware('auth')->group(function () {
         '/withdrawals/{withdrawal}/reject',
         [WithdrawalController::class, 'reject']
     )->name('withdrawals.reject');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LoanRequest
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('loan-requests', LoanRequestController::class)
+        ->only([
+            'index',
+            'create',
+            'store',
+            'show',
+        ]);
+
+    Route::post('loan-requests/{loanRequest}/approve',
+        [LoanRequestController::class, 'approve'])
+        ->name('loan-requests.approve');
+
+
+    Route::post('loan-requests/{loanRequest}/reject',
+        [LoanRequestController::class, 'reject'])
+        ->name('loan-requests.reject');
+
+    Route::put(
+        'loan-requests/{loanRequest}/update-review-date',
+        [LoanRequestController::class, 'updateReviewDate']
+    )
+        ->name('loan-requests.update-review-date');
+
 
     /*
     |--------------------------------------------------------------------------

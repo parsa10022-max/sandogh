@@ -15,6 +15,9 @@ use Illuminate\View\View;
 use App\Services\Loan\LoanCalculationService;
 use Illuminate\Http\JsonResponse;
 use App\Services\Date\JalaliDateService;
+use App\Models\LoanRequest;
+
+
 
 
 class LoanController extends Controller
@@ -44,12 +47,47 @@ class LoanController extends Controller
     /**
      * فرم ثبت
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $loanRequest = null;
+
+        if ($request->filled('request')) {
+
+            $loanRequest = LoanRequest::with('customer')
+                ->findOrFail($request->input('request'));
+
+        }
+
+
+        $loan = new Loan();
+
+
+        if ($loanRequest) {
+
+            $loan->customer_id = $loanRequest->customer_id;
+
+            $loan->loan_amount = $loanRequest->approved_amount;
+
+            $loan->loan_type_id = $loanRequest->loan_type_id;
+
+            $loan->installment_count = $loanRequest->approved_installment_count;
+
+            $loan->installment_interval = $loanRequest->approved_installment_interval;
+
+        }
+
+
+
         return view('loan.create', [
-            'loan' => new Loan(),
+
+            'loan' => $loan,
+
             'customers' => $this->customerService->getActive(),
+
             'loanTypes' => $this->loanTypeService->getActive(),
+
+            'loanRequest' => $loanRequest,
+
         ]);
     }
 
@@ -60,9 +98,20 @@ class LoanController extends Controller
         StoreLoanRequest $request
     ): RedirectResponse {
 
-        $this->loanService->create(
+        $loan = $this->loanService->create(
             $request->validated()
         );
+
+
+        if ($request->filled('loan_request_id')) {
+
+            LoanRequest::where('id', $request->loan_request_id)
+                ->update([
+                    'loan_id' => $loan->id,
+                ]);
+
+        }
+
 
         return redirect()
             ->route('loans.index')
@@ -94,6 +143,8 @@ class LoanController extends Controller
             'creator',
 
             'updater',
+
+            'loanRequest',
 
         ]);
 
@@ -131,9 +182,7 @@ class LoanController extends Controller
     /**
      * فرم ویرایش
      */
-    /**
-     * فرم ویرایش
-     */
+
     public function edit(Loan $loan): View
     {
         $loan->load([

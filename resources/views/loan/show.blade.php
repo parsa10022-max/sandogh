@@ -47,6 +47,7 @@
 
                 {{-- اطلاعات وام --}}
                 @include('loan.partials.loan-info')
+                @include('loan.partials.request-info')
                 @include('loan.partials.guarantors-show')
 
                 <hr class="my-4">

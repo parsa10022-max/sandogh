@@ -12,7 +12,7 @@
      'required'=>true,
      'value'=>old(
          'customer_id',
-         $loan->customer_id ?? ''
+         $loanRequest?->customer_id ?? $loan->customer_id ?? ''
      )
 
 ])
@@ -84,12 +84,13 @@
 
     <div class="col-md-4 mb-3">
 
-        <x-inputs.money-input
-            name="loan_amount"
-            label="مبلغ وام"
-            :value="old('loan_amount', $loan->loan_amount ?? '')"
-            required
-        />
+        <input type="number"
+               name="loan_amount"
+               class="form-control"
+               value="{{ old(
+            'loan_amount',
+            $loanRequest?->approved_amount ?? $loan->loan_amount
+       ) }}">
 
     </div>
 

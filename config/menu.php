@@ -123,11 +123,12 @@ return [
         ],
 
     ],
+
     /*
-|--------------------------------------------------------------------------
-| عملیات صندوق
-|--------------------------------------------------------------------------
-*/
+ |--------------------------------------------------------------------------
+ | عملیات صندوق
+ |--------------------------------------------------------------------------
+ */
 
     [
         'title' => 'عملیات صندوق',
@@ -161,6 +162,34 @@ return [
                 ],
             ],
 
+
+            [
+                'title' => 'درخواست‌های وام',
+                'icon'  => 'file-earmark-text',
+                'route' => 'loan-requests.index',
+
+                'active' => [
+
+                    'loan-requests.index',
+                    'loan-requests.create',
+                    'loan-requests.store',
+                    'loan-requests.show',
+                    'loan-requests.approve',
+                    'loan-requests.reject',
+
+                ],
+
+                'roles' => [
+
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::BOARD_MEMBER,
+                    UserRole::OPERATOR,
+
+                ],
+            ],
+
+
             [
                 'title' => 'اقساط',
                 'icon'  => 'calendar-check',
@@ -184,6 +213,7 @@ return [
 
                 ],
             ],
+
 
             [
                 'title' => 'پرداخت ها',

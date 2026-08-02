@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Concerns\HasJalaliDates;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\InstallmentStatus;
+use App\Models\LoanRequest;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 
 class Loan extends Model
@@ -93,6 +96,13 @@ class Loan extends Model
     {
         return $this->hasMany(LoanGuarantor::class);
     }
+
+    public function loanRequest()
+    {
+        return $this->hasOne(LoanRequest::class);
+    }
+
+    
 
     /*
 |--------------------------------------------------------------------------
