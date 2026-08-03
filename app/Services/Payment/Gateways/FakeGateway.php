@@ -23,13 +23,15 @@ class FakeGateway implements GatewayInterface
 
                 'token' => $token,
 
-                'loan_id' => $paymentData['loan_id'],
+                'payment_type' => $paymentData['payment_type'],
 
-                'installment_id' => $paymentData['installment_id'],
+                'reference_id' => $paymentData['reference_id'],
 
                 'tracking_code' => $paymentData['tracking_code'],
 
                 'amount' => $paymentData['amount'],
+
+
 
             ]),
 

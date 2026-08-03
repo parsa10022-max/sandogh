@@ -15,6 +15,9 @@ use App\Http\Controllers\Account\DepositController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\WithdrawalController;
 use App\Http\Controllers\Loan\LoanRequestController;
+use App\Http\Controllers\Customer\SavingsTransferController;
+use App\Http\Controllers\Payment\SavingsTransferCallbackController;
+
 
 
 
@@ -192,6 +195,7 @@ Route::middleware('auth')->group(function () {
         ->name('loan-requests.update-review-date');
 
 
+
     /*
     |--------------------------------------------------------------------------
     | Customers
@@ -347,3 +351,52 @@ Route::get('/test-otp', function (OtpService $otpService) {
     return $otpService->generate($user);
 
 });
+
+
+/*
+        |--------------------------------------------------------------------------
+        | CustomerSavingsTransfer
+        |--------------------------------------------------------------------------
+        */
+
+
+
+
+Route::middleware(['auth'])
+    ->prefix('customer')
+    ->name('customer.')
+    ->group(function () {
+
+        Route::get(
+            'savings-transfer',
+            [SavingsTransferController::class, 'create']
+        )->name('savings-transfer.create');
+
+        Route::post(
+            'savings-transfer/search',
+            [SavingsTransferController::class, 'search']
+        )->name('savings-transfer.search');
+
+        Route::post(
+            'savings-transfer',
+            [SavingsTransferController::class, 'store']
+        )->name('savings-transfer.store');
+
+        Route::get(
+            'savings-transfer/success/{transfer}',
+            [PaymentController::class, 'savingsTransferSuccess']
+        )->name('savings-transfer.success');
+
+        Route::get(
+            'savings-transfer/failed',
+            [PaymentController::class, 'savingsTransferFailed']
+        )->name('savings-transfer.failed');
+    });
+
+Route::post(
+    'payments/savings-transfer/callback',
+    [
+        SavingsTransferCallbackController::class,
+        'handle'
+    ]
+)->name('savings-transfer.callback');

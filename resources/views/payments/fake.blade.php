@@ -30,15 +30,34 @@
 
                         <table class="table table-bordered align-middle">
 
-                            <tr>
-                                <th width="220">شماره وام</th>
-                                <td>{{ $data['loan_id'] ?? '-' }}</td>
-                            </tr>
+                            @if(($data['payment_type'] ?? null) !== 'savings_transfer')
 
-                            <tr>
-                                <th>شناسه قسط</th>
-                                <td>{{ $data['installment_id'] ?? '-' }}</td>
-                            </tr>
+                                <tr>
+                                    <th width="220">شماره وام</th>
+                                    <td>{{ $data['loan_id'] ?? '-' }}</td>
+                                </tr>
+
+                                <tr>
+                                    <th>شناسه قسط</th>
+                                    <td>{{ $data['installment_id'] ?? '-' }}</td>
+                                </tr>
+
+                            @endif
+                                @if(($data['payment_type'] ?? null) === 'savings_transfer')
+
+                                    <tr>
+                                        <th width="220">نوع پرداخت</th>
+                                        <td>واریز به حساب پس‌انداز عضو</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>شماره پیگیری</th>
+                                        <td>{{ $data['tracking_code'] ?? '-' }}</td>
+                                    </tr>
+
+                                @endif
+
+
 
                             <tr>
                                 <th>مبلغ</th>
@@ -75,7 +94,9 @@
                             </a>
 
                             <a
-                                href="{{ route('payments.callback', array_merge($data, ['result' => 'failed'])) }}"
+                                href="{{ route('payments.callback', array_merge($data, [
+        'result' => 'failed'
+    ])) }}"
                                 class="btn btn-danger">
 
                                 <i class="bi bi-x-circle"></i>
@@ -84,11 +105,11 @@
 
                             </a>
 
-                            <a
-                                href="{{ route('payments.callback', array_merge($data, ['result' => 'canceled'])) }}"
-                                class="btn btn-warning">
-
-                                <i class="bi bi-arrow-return-left"></i>
+                            <a href="{{ route('payments.failed', [
+    'reference_id' => $data['reference_id'] ?? null,
+    'installment_id' => $data['installment_id'] ?? null,
+]) }}"
+                               class="btn btn-warning">
 
                                 انصراف
 
