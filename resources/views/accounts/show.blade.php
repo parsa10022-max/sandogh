@@ -12,8 +12,27 @@
 
             <p>
                 عضو:
-                {{ $account->customer->first_name }}
-                {{ $account->customer->last_name }}
+            @if($account->customer)
+
+                <div>
+                    <strong>عضو:</strong>
+
+                    {{ $account->customer->first_name }}
+                    {{ $account->customer->last_name }}
+
+                </div>
+
+            @else
+
+                <div>
+
+                    <strong>حساب سیستمی:</strong>
+
+                    {{ $account->name ?? '-' }}
+
+                </div>
+
+                @endif
             </p>
 
             <p>
@@ -38,6 +57,12 @@
             <a href="{{ route('accounts.deposit.create', $account) }}"
                class="btn btn-success">
                 واریز
+            </a>
+
+            <a href="{{ route('accounts.withdrawal.create', $account) }}"
+               class="btn btn-danger">
+                <i class="bi bi-arrow-down-circle"></i>
+                برداشت از حساب
             </a>
 
             <a href="{{ route('accounts.transactions', $account) }}"

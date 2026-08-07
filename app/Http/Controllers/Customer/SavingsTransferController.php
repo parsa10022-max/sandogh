@@ -12,7 +12,7 @@ class SavingsTransferController extends Controller
 {
 
     public function __construct(
-        private readonly SavingsTransferService $service
+        private readonly SavingsTransferService $savingsTransferService,
     ) {
     }
 
@@ -150,7 +150,7 @@ class SavingsTransferController extends Controller
 
 
         $result =
-            $this->service->startPayment(
+            $this->savingsTransferService->startPayment(
 
                 $receiver,
 
@@ -164,6 +164,87 @@ class SavingsTransferController extends Controller
             $result['gateway']['redirect_url']
         );
 
+    }
+
+    public function ownDepositCreate()
+    {
+        $customer = auth()->user()->customer;
+
+        $account = $customer->accounts()
+            ->where(
+                'account_type',
+                \App\Enums\AccountType::SAVING->value
+            )
+            ->where(
+                'status',
+                \App\Enums\AccountStatus::ACTIVE->value
+            )
+            ->firstOrFail();
+
+
+        return view(
+            'customer.savings.deposit.create',
+            compact('account')
+        );
+    }
+
+    public function ownDepositStore(Request $request)
+    {
+        $request->validate([
+
+            'amount' => [
+                'required',
+                'integer',
+                'min:50000'
+            ],
+
+        ]);
+
+
+        $customer = auth()->user()->customer;
+
+
+        $response = $this->savingsTransferService
+            ->startPayment(
+                $customer,
+                (int)$request->amount
+            );
+
+
+        return redirect()->away(
+            $response['gateway']['redirect_url']
+        );
+    }
+
+    public function transactions()
+    {
+        $customer = auth()->user()->customer;
+
+
+        $account = $customer->accounts()
+            ->where(
+                'account_type',
+                \App\Enums\AccountType::SAVING->value
+            )
+            ->where(
+                'status',
+                \App\Enums\AccountStatus::ACTIVE->value
+            )
+            ->firstOrFail();
+
+
+        $transactions = $account->transactions()
+            ->latest('transaction_date')
+            ->paginate(20);
+
+
+        return view(
+            'customer.savings.transactions',
+            compact(
+                'account',
+                'transactions'
+            )
+        );
     }
 
 }

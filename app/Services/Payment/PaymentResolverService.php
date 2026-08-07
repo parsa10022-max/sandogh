@@ -2,17 +2,22 @@
 
 namespace App\Services\Payment;
 
-use App\Models\SavingsTransfer;
+
 use App\Services\Savings\SavingsTransferService;
+use App\Services\Donation\DonationPaymentService;
 
 class PaymentResolverService
 {
     public function __construct(
+
         private readonly PaymentService $loanPaymentService,
+
         private readonly SavingsTransferService $savingsTransferService,
+
+        private readonly DonationPaymentService $donationPaymentService,
+
     ) {
     }
-
     /**
      * تایید پرداخت
      */
@@ -24,12 +29,11 @@ class PaymentResolverService
         |--------------------------------------------------------------------------
         */
 
+
         if (
-            isset($callbackData['reference_id']) &&
-            SavingsTransfer::where(
-                'id',
-                $callbackData['reference_id']
-            )->exists()
+            ($callbackData['payment_type'] ?? null)
+            ===
+            'savings_transfer'
         ) {
 
             return $this->savingsTransferService
@@ -37,13 +41,46 @@ class PaymentResolverService
 
         }
 
+
         /*
         |--------------------------------------------------------------------------
-        | پرداخت اقساط
+        | پرداخت قسط وام
         |--------------------------------------------------------------------------
         */
 
-        return $this->loanPaymentService
-            ->verifyPayment($callbackData);
+        if (
+            ($callbackData['payment_type'] ?? null)
+            ===
+            'installment'
+        ) {
+
+            return $this->loanPaymentService
+                ->verifyPayment($callbackData);
+
+        }
+        /*
+|--------------------------------------------------------------------------
+| کمک مالی
+|--------------------------------------------------------------------------
+*/
+
+        if (
+            in_array(
+                ($callbackData['payment_type'] ?? null),
+                [
+                    'donation_public',
+                    'donation_customer'
+                ]
+            )
+        ) {
+
+            return $this->donationPaymentService
+                ->verifyPayment($callbackData);
+
+        }
+
+        throw new \RuntimeException(
+            'نوع پرداخت مشخص نیست.'
+        );
     }
 }

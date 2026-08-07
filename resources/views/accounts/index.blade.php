@@ -1,177 +1,256 @@
 @extends('layouts.app')
 
-@section('title', 'برداشت‌های من')
+@section('title','حساب‌ها')
 
 @section('content')
+    <div class="card shadow-sm border-2 mb-3">
 
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+                 dir="rtl">
+
+
+                {{-- جستجو --}}
+                <div style="width:350px">
+
+                    <form method="GET">
+
+                        <label class="form-label small fw-bold mb-1">
+                            <i class="bi bi-search"></i>
+                            جستجوی حساب
+                        </label>
+
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control text-end"
+                                placeholder="شماره حساب، نام، کد ملی..."
+                                value="{{ request('search') }}"
+                                style="height:42px"
+                            >
+
+
+                            <button class="btn btn-primary">
+
+                                <i class="bi bi-search"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+
+                {{-- آمار --}}
+                <div class="d-flex gap-3">
+
+
+                    <div class="border border-2 rounded p-3 bg-light text-center"
+                         style="min-width:150px">
+
+                        <div class="small text-muted">
+
+                            <i class="bi bi-wallet2"></i>
+                            تعداد حساب‌ها
+
+                        </div>
+
+
+                        <div class="fw-bold fs-5">
+
+                            {{ number_format($totalAccounts) }}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="border border-2 rounded p-3 bg-light text-center"
+                         style="min-width:220px">
+
+                        <div class="small text-muted">
+
+                            <i class="bi bi-cash-stack"></i>
+                            موجودی کل
+
+                        </div>
+
+
+                        <div class="fw-bold fs-5">
+
+                            {{ number_format($totalBalance) }}
+                            ریال
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
     <div class="container">
 
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm">
 
             <div class="card-header bg-light">
                 <h5 class="mb-0">
-                    برداشت‌های من
+                    لیست حساب‌ها
                 </h5>
             </div>
 
 
             <div class="card-body">
 
-                @if($withdrawals->count())
+                <table class="table table-bordered table-hover align-middle">
 
-                    <div class="table-responsive">
+                    <thead class="table-light">
+                    <tr>
+                        <th>شماره حساب</th>
+                        <th>کد مشتری</th>
+                        <th>نام حساب / صاحب حساب</th>
 
-                        <table class="table table-bordered align-middle">
+                        <th>موجودی</th>
+                        <th>وضعیت</th>
+                        <th width="90">عملیات</th>
+                    </tr>
+                    </thead>
 
-                            <thead class="table-light">
+                    <tbody>
 
-                            <tr>
-                                <th>مبلغ</th>
-                                <th>بانک مقصد</th>
-                                <th>شماره شبا</th>
-                                <th>وضعیت</th>
-                                <th>تاریخ درخواست</th>
-                                <th>عملیات</th>
-                            </tr>
+                    @foreach($accounts as $account)
 
-                            </thead>
+                        <tr class="{{ $account->customer ? '' : 'table-primary' }}">
 
+                            {{-- شماره حساب --}}
+                            <td>
 
-                            <tbody>
+                                @if($account->customer)
 
-                            @foreach($withdrawals as $withdrawal)
+                                    <i class="bi bi-person-fill text-success me-1"></i>
 
-                                <tr>
+                                @else
 
-                                    <td>
-                                        {{ number_format($withdrawal->amount) }}
-                                        ریال
-                                    </td>
+                                    <i class="bi bi-bank2 text-primary me-1"></i>
 
+                                @endif
 
-                                    <td>
-                                        {{ \App\Support\Iban::bankName(
-                                            $withdrawal->account->customer->iban
-                                        ) }}
-                                    </td>
+                                <strong>{{ $account->account_number }}</strong>
 
+                            </td>
 
-                                    <td dir="ltr">
-                                        {{ \App\Support\Iban::format(
-                                            $withdrawal->account->customer->iban
-                                        ) }}
-                                    </td>
 
+                            {{-- کد مشتری --}}
+                            <td class="text-center">
 
-                                    <td>
+                                {{ $account->customer?->customer_code ?? '-' }}
 
-                                        @switch($withdrawal->status)
+                            </td>
 
-                                            @case(\App\Enums\WithdrawalStatus::PENDING)
 
-                                            <span class="badge bg-warning">
-                                                در انتظار پرداخت
-                                            </span>
+                            {{-- نام --}}
+                            <td>
 
-                                            @break
+                                @if($account->customer)
+                                    <span class="badge bg-success ms-2">
+                                        مشتری
+                                      </span>
 
+                                    {{ $account->customer->first_name }}
+                                    {{ $account->customer->last_name }}
 
-                                            @case(\App\Enums\WithdrawalStatus::PAID)
 
-                                            <span class="badge bg-success">
-                                                پرداخت شده
-                                            </span>
 
-                                            @break
+                                @else
+                                    <span class="badge bg-primary ms-2">
+                                          سیستمی
+                                      </span>
+                                    <strong>{{ $account->name }}</strong>
 
 
-                                            @case(\App\Enums\WithdrawalStatus::CANCELLED)
 
-                                            <span class="badge bg-secondary">
-                                                لغو شده
-                                            </span>
+                                @endif
 
-                                            @break
+                            </td>
 
 
-                                            @case(\App\Enums\WithdrawalStatus::REJECTED)
+                            {{-- نوع حساب --}}
 
-                                            <span class="badge bg-danger">
-                                                رد شده
-                                            </span>
 
-                                            @break
 
-                                        @endswitch
+                            {{-- موجودی --}}
+                            <td class="text-start">
 
-                                    </td>
+                                <strong>
 
+                                    {{ number_format($account->balance) }}
 
-                                    <td>
+                                </strong>
 
-                                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                            $withdrawal->created_at
-                                        )->format('Y/m/d H:i') }}
+                                ریال
 
-                                    </td>
+                            </td>
 
 
-                                    <td>
+                            {{-- وضعیت --}}
+                            <td>
 
-                                        <a href="{{ route('withdrawals.show',$withdrawal) }}"
-                                           class="btn btn-sm btn-primary mb-1">
+                                @if($account->status === \App\Enums\AccountStatus::ACTIVE)
 
-                                            مشاهده
+                                    <span class="badge bg-success">
+            <i class="bi bi-check-circle"></i>
+            فعال
+        </span>
 
-                                        </a>
+                                @else
 
+                                    <span class="badge bg-danger">
+            <i class="bi bi-x-circle"></i>
+            غیرفعال
+        </span>
 
-                                        @if($withdrawal->status === \App\Enums\WithdrawalStatus::PENDING)
+                                @endif
 
-                                            <form method="POST"
-                                                  action="{{ route('withdrawals.cancel',$withdrawal) }}"
-                                                  class="d-inline">
+                            </td>
 
-                                                @csrf
-                                                @method('PATCH')
 
-                                                <button
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    onclick="return confirm('آیا از لغو این درخواست اطمینان دارید؟')">
+                            {{-- عملیات --}}
+                            <td class="text-center">
 
-                                                    لغو درخواست
+                                <a href="{{ route('accounts.show',$account) }}"
+                                   class="btn btn-outline-primary btn-sm">
 
-                                                </button>
+                                    <i class="bi bi-eye"></i>
 
-                                            </form>
+                                </a>
 
-                                        @endif
+                            </td>
 
+                        </tr>
 
-                                    </td>
+                    @endforeach
 
-                                </tr>
+                    </tbody>
 
-                            @endforeach
+                </table>
 
-                            </tbody>
 
-                        </table>
-
-                    </div>
-
-
-                    {{ $withdrawals->links() }}
-
-
-                @else
-
-                    <div class="alert alert-info">
-                        درخواست برداشتی ثبت نشده است.
-                    </div>
-
-                @endif
-
+                {{ $accounts->links() }}
 
             </div>
 

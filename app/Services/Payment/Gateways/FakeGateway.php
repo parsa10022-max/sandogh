@@ -23,19 +23,19 @@ class FakeGateway implements GatewayInterface
 
                 'token' => $token,
 
-                'payment_type' => $paymentData['payment_type'],
+                'payment_type' => $paymentData['payment_type'] ?? null,
 
-                'reference_id' => $paymentData['reference_id'],
+                'reference_id' => $paymentData['reference_id'] ?? null,
 
-                'tracking_code' => $paymentData['tracking_code'],
+                'loan_id' => $paymentData['loan_id'] ?? null,
 
-                'amount' => $paymentData['amount'],
+                'installment_id' => $paymentData['installment_id'] ?? null,
 
+                'tracking_code' => $paymentData['tracking_code'] ?? null,
 
+                'amount' => $paymentData['amount'] ?? null,
 
             ]),
-
-            'message' => null,
         ];
     }
 

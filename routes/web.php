@@ -17,6 +17,13 @@ use App\Http\Controllers\Account\WithdrawalController;
 use App\Http\Controllers\Loan\LoanRequestController;
 use App\Http\Controllers\Customer\SavingsTransferController;
 use App\Http\Controllers\Payment\SavingsTransferCallbackController;
+use App\Http\Controllers\Customer\OtherInstallmentPaymentController;
+use App\Http\Controllers\Admin\DonationController;
+use App\Http\Controllers\Customer\DonationController as CustomerDonationController;
+use App\Http\Controllers\DonationTypeController;
+use App\Http\Controllers\SystemAccountController;
+use App\Http\Controllers\DonationController as PublicDonationController;
+
 
 
 
@@ -229,6 +236,45 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::resource(
+        'system-accounts',
+        SystemAccountController::class
+    )->only([
+        'index',
+        'create',
+        'store',
+        'edit',
+        'update',
+    ]);
+
+
+    Route::patch(
+        'system-accounts/{systemAccount}/change-status',
+        [
+            SystemAccountController::class,
+            'changeStatus'
+        ]
+    )->name('system-accounts.change-status');
+
+
+    Route::get(
+        '/customer/donations/payment/{donationPayment}',
+        [
+            \App\Http\Controllers\Customer\DonationController::class,
+            'payment'
+        ]
+    )
+        ->name('customer.donations.payment');
+
+    Route::post(
+        '/customer/donations/payment/{donationPayment}/pay',
+        [
+            \App\Http\Controllers\Customer\DonationController::class,
+            'pay'
+        ]
+    )
+        ->name('customer.donations.pay');
+
     /*
     |--------------------------------------------------------------------------
     | Loan Types
@@ -280,7 +326,27 @@ Route::middleware('auth')->group(function () {
             'destroy',
         ]);
 
+    /*
+    |--------------------------------------------------------------------------
+    | Donations Manual (Operator)
+    |--------------------------------------------------------------------------
+    */
 
+    Route::get(
+        'donations/manual/create',
+        [DonationController::class, 'manualCreate']
+    )->name('donations.manual.create');
+
+
+    Route::post(
+        'donations/manual',
+        [DonationController::class, 'manualStore']
+    )->name('donations.manual.store');
+
+    Route::get(
+        'donations',
+        [DonationController::class, 'index']
+    )->name('donations.index');
 
     /*
     |--------------------------------------------------------------------------
@@ -292,7 +358,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('payments')
         ->name('payments.')
         ->group(function () {
-
 
             Route::post(
                 '/{installment}/pay',
@@ -326,7 +391,10 @@ Route::middleware('auth')->group(function () {
 
         });
 
-});
+
+}); // این را اضافه کن
+
+
 
 
 
@@ -367,6 +435,73 @@ Route::middleware(['auth'])
     ->name('customer.')
     ->group(function () {
 
+
+        Route::get(
+            'donations/create',
+            [CustomerDonationController::class, 'create']
+        )->name('donations.create');
+
+
+        Route::post(
+            'donations',
+            [CustomerDonationController::class, 'store']
+        )->name('donations.store');
+
+        Route::get(
+            'installments/others',
+            [OtherInstallmentPaymentController::class, 'create']
+        )->name('installments.others.create');
+
+        Route::post(
+            'installments/others/search',
+            [OtherInstallmentPaymentController::class, 'search']
+        )->name('installments.others.search');
+
+        Route::post(
+            'installments/others/pay',
+            [
+                OtherInstallmentPaymentController::class,
+                'pay'
+            ]
+        )->name('installments.others.pay');
+
+
+
+        Route::get(
+            'savings/withdrawal',
+            [
+                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
+                'create'
+            ]
+        )->name('savings.withdrawal.create');
+
+
+        Route::post(
+            'savings/withdrawal',
+            [
+                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
+                'store'
+            ]
+        )->name('savings.withdrawal.store');
+
+        Route::get(
+            'savings/transactions',
+            [\App\Http\Controllers\Customer\SavingsTransferController::class, 'transactions']
+        )->name('savings.transactions');
+
+
+
+        Route::get(
+            'savings/deposit',
+            [SavingsTransferController::class, 'ownDepositCreate']
+        )->name('savings.deposit.create');
+
+
+        Route::post(
+            'savings/deposit',
+            [SavingsTransferController::class, 'ownDepositStore']
+        )->name('savings.deposit.store');
+
         Route::get(
             'savings-transfer',
             [SavingsTransferController::class, 'create']
@@ -393,10 +528,48 @@ Route::middleware(['auth'])
         )->name('savings-transfer.failed');
     });
 
-Route::post(
-    'payments/savings-transfer/callback',
+
+Route::get(
+    '/payments/cancel',
     [
-        SavingsTransferCallbackController::class,
+        \App\Http\Controllers\Payment\PaymentCancelController::class,
         'handle'
     ]
-)->name('savings-transfer.callback');
+)
+    ->name('payments.cancel');
+Route::get(
+    '/customer/donations/success/{donationPayment}',
+    [
+        \App\Http\Controllers\Customer\DonationController::class,
+        'success'
+    ]
+)
+    ->name('customer.donations.success');
+
+Route::get(
+    '/donation',
+    [
+        PublicDonationController::class,
+        'create'
+    ]
+)
+    ->name('donation.create');
+
+
+Route::post(
+    '/donation',
+    [
+        PublicDonationController::class,
+        'store'
+    ]
+)
+    ->name('donation.store');
+
+Route::get(
+    '/donation/success/{donationPayment}',
+    [
+        \App\Http\Controllers\DonationController::class,
+        'success'
+    ]
+)
+    ->name('donation.success');

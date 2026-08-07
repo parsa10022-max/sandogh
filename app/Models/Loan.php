@@ -102,7 +102,7 @@ class Loan extends Model
         return $this->hasOne(LoanRequest::class);
     }
 
-    
+
 
     /*
 |--------------------------------------------------------------------------
@@ -250,5 +250,10 @@ class Loan extends Model
         return $this->installments()
             ->whereHas('payment')
             ->exists();
+    }
+
+    public function getSearchLoanNumberAttribute(): string
+    {
+        return preg_replace('/\D/', '', $this->full_loan_number);
     }
 }

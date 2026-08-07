@@ -31,7 +31,7 @@
             <tr>
                 <th>تاریخ پرداخت</th>
                 <td>
-                    {{ $transfer->paid_at }}
+                    {{ \Morilog\Jalali\Jalalian::fromDateTime($transfer->paid_at)->format('Y/m/d H:i') }}
                 </td>
             </tr>
 

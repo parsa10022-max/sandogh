@@ -11,8 +11,10 @@ use App\Models\AccountTransaction;
 use App\Models\Customer;
 use App\Models\SavingsTransfer;
 use App\Services\Payment\Gateways\GatewayInterface;
+use App\Services\Account\AccountTransactionService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Account;
+use App\Services\Account\AccountService;
 
 
 
@@ -23,6 +25,10 @@ class SavingsTransferService
         private readonly GatewayInterface $gateway,
 
         private readonly SavingsTransferTrackingCodeService $trackingService,
+
+        private readonly AccountTransactionService $accountTransactionService,
+
+        private readonly AccountService $accountService,
 
     ) {
     }
@@ -252,7 +258,6 @@ class SavingsTransferService
                     $transfer->account_id
                 );
 
-
             $balanceBefore = $account->balance;
 
 
@@ -260,63 +265,25 @@ class SavingsTransferService
                 $balanceBefore + $transfer->amount;
 
 
-
-            // افزایش موجودی
-            $account->update([
-
-                'balance' => $balanceAfter,
-
-            ]);
+            $this->accountService->depositBalance(
+                $account,
+                $transfer->amount
+            );
 
 
 
             // ثبت تراکنش حساب
-            AccountTransaction::create([
-
-                'account_id' =>
-                    $account->id,
-
-
-                'transaction_no' =>
-                    'AT' . now()->format('YmdHis') . rand(1000,9999),
-
-
-                'transaction_type' =>
-                    TransactionType::DEPOSIT,
-
-
-                'transaction_source' =>
-                    TransactionSource::ONLINE,
-
-
-                'amount' =>
-                    $transfer->amount,
-
-
-                'balance_before' =>
-                    $balanceBefore,
-
-
-                'balance_after' =>
-                    $balanceAfter,
-
-
-                'payment_method' =>
-                    PaymentMethod::GATEWAY,
-
-
-                'transaction_date' =>
-                    today(),
-
-
-                'created_by' =>
-                    null,
-
-
-                'description' =>
-                    'واریز آنلاین به حساب پس‌انداز',
-
-            ]);
+            $this->accountTransactionService->create(
+                account: $account,
+                type: TransactionType::DEPOSIT,
+                source: TransactionSource::ONLINE,
+                paymentMethod: PaymentMethod::GATEWAY,
+                amount: $transfer->amount,
+                balanceBefore: $balanceBefore,
+                balanceAfter: $balanceAfter,
+                createdBy: null,
+                description: 'واریز آنلاین به حساب پس‌انداز'
+            );
 
 
 
@@ -381,6 +348,37 @@ class SavingsTransferService
             'customer.savings-transfer.failed'
         );
 
+    }
+
+    public function transactions()
+    {
+        $customer = auth()->user()->customer;
+
+
+        $account = $customer->accounts()
+            ->where(
+                'account_type',
+                \App\Enums\AccountType::SAVING->value
+            )
+            ->where(
+                'status',
+                \App\Enums\AccountStatus::ACTIVE->value
+            )
+            ->firstOrFail();
+
+
+        $transactions = $account->transactions()
+            ->latest('transaction_date')
+            ->paginate(20);
+
+
+        return view(
+            'customer.savings.transactions',
+            compact(
+                'account',
+                'transactions'
+            )
+        );
     }
 
 

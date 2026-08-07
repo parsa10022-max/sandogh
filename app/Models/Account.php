@@ -19,6 +19,7 @@ class Account extends Model
         'account_type',
         'balance',
         'status',
+        'name',
         'opened_date',
         'closed_date',
     ];
@@ -30,8 +31,13 @@ class Account extends Model
             'status' => AccountStatus::class,
             'opened_date' => 'date',
             'closed_date' => 'date',
+            'status' => AccountStatus::class,
+            'account_type' => AccountType::class,
         ];
+
+
     }
+
 
     /**
      * صاحب حساب

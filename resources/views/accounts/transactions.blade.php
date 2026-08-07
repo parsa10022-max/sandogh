@@ -2,158 +2,341 @@
 
 @section('content')
 
-    <div class="card">
+    <div class="container py-4">
 
-        <div class="card-header d-flex justify-content-between">
 
-            <div>
-                گردش حساب
+        {{-- خلاصه حساب --}}
+
+        <div class="card border border-2 shadow-sm mb-4">
+
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+
+                <div class="fw-bold">
+
+                    <i class="bi bi-wallet2 text-primary"></i>
+
+                    گردش حساب
+
+                </div>
+
+
+                <div>
+
+                <span class="badge bg-primary fs-6" dir="ltr">
+
+                    {{ $account->account_number }}
+
+                </span>
+
+                </div>
+
+
             </div>
 
-            <div>
-            <span dir="ltr">
-                {{ $account->account_number }}
-            </span>
+
+
+            <div class="card-body">
+
+
+                <div class="row text-center">
+
+
+                    <div class="col-md-4 mb-3">
+
+                        <small class="text-muted">
+                            عنوان حساب
+                        </small>
+
+
+                        <div class="fw-bold">
+
+                            {{ $account->name ?? 'حساب مشتری' }}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-md-4 mb-3">
+
+                        <small class="text-muted">
+                            مالک حساب
+                        </small>
+
+
+                        <div class="fw-bold">
+
+
+                            @if($account->customer)
+
+                                {{ $account->customer->first_name }}
+
+                                {{ $account->customer->last_name }}
+
+                            @else
+
+                                حساب سیستمی
+
+                            @endif
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-md-4 mb-3">
+
+                        <small class="text-muted">
+                            موجودی فعلی
+                        </small>
+
+
+                        <div class="fw-bold text-success fs-5">
+
+                            {{ number_format($account->balance) }}
+
+                            ریال
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
             </div>
+
 
         </div>
 
 
-        <div class="card-body">
 
 
-            <div class="mb-3">
 
-                عضو:
-                {{ $account->customer->first_name }}
-                {{ $account->customer->last_name }}
+        {{-- جدول تراکنش‌ها --}}
 
-                <br>
 
-                موجودی فعلی:
+        <div class="card border border-2 shadow-sm">
 
-                {{ number_format($account->balance) }}
-                ریال
+
+            <div class="card-header fw-bold">
+
+                تراکنش‌ها
 
             </div>
 
 
 
-            <div class="table-responsive">
-
-                <table class="table table-bordered table-striped">
-
-                    <thead>
-
-                    <tr>
-
-                        <th>تاریخ</th>
-                        <th>شماره تراکنش</th>
-                        <th>نوع تراکنش </th>
-                        <th>نوع</th>
-                        <th>مبلغ</th>
-                        <th>قبل</th>
-                        <th>بعد</th>
-                        <th>توضیح</th>
-
-                    </tr>
-
-                    </thead>
+            <div class="card-body">
 
 
-                    <tbody>
+                <div class="table-responsive">
 
-                    @forelse($transactions as $transaction)
-                        @php
-                            $jalaliDateService = app(\App\Services\Date\JalaliDateService::class);
-                        @endphp
+
+                    <table class="table table-bordered table-hover text-center align-middle">
+
+
+                        <thead class="table-light">
+
+
                         <tr>
 
-                            <td>
-                                {{ $jalaliDateService->toJalali($transaction->transaction_date) }}
-                            </td>
+                            <th>
+                                تاریخ
+                            </th>
 
 
-                            <td dir="ltr">
-                                {{ $transaction->transaction_no }}
-                            </td>
-                            <td dir="ltr">
-                                {{ $transaction->payment_method?->label() ?? '-' }}
-                            </td>
-
-                            <td>
-
-                                @if($transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT)
-
-                                    <span class="badge bg-success">
-            {{ $transaction->transaction_type->label() }}
-        </span>
-
-                                @elseif($transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL)
-
-                                    <span class="badge bg-danger">
-            {{ $transaction->transaction_type->label() }}
-        </span>
-
-                                @else
-
-                                    <span class="badge bg-secondary">
-            {{ $transaction->transaction_type->label() }}
-        </span>
-
-                                @endif
-                            </td>
+                            <th>
+                                شماره تراکنش
+                            </th>
 
 
-
-                            <td>
-                                {{ number_format($transaction->amount) }}
-                                ریال
-                            </td>
+                            <th>
+                                روش پرداخت
+                            </th>
 
 
-                            <td>
-                                {{ number_format($transaction->balance_before) }}
-                                ریال
-                            </td>
+                            <th>
+                                نوع
+                            </th>
 
 
-                            <td>
-                                {{ number_format($transaction->balance_after) }}
-                                ریال
-                            </td>
+                            <th>
+                                مبلغ
+                            </th>
 
 
-                            <td>
-                                {{ $transaction->description }}
-                            </td>
+                            <th>
+                                مانده
+                            </th>
+
+
+                            <th>
+                                توضیح
+                            </th>
+
 
                         </tr>
 
 
-                    @empty
-
-                        <tr>
-                            <td colspan="7" class="text-center">
-                                تراکنشی ثبت نشده است.
-                            </td>
-                        </tr>
-
-                    @endforelse
+                        </thead>
 
 
-                    </tbody>
 
-                </table>
+                        <tbody>
+
+
+                        @forelse($transactions as $transaction)
+
+
+                            <tr>
+
+
+                                <td>
+
+                                    {{ app(\App\Services\Date\JalaliDateService::class)
+                                        ->toJalali($transaction->transaction_date) }}
+
+                                </td>
+
+
+
+                                <td dir="ltr">
+
+                                    {{ $transaction->transaction_no }}
+
+                                </td>
+
+
+
+                                <td>
+
+                                    {{ $transaction->payment_method?->label() ?? '-' }}
+
+                                </td>
+
+
+
+                                <td>
+
+
+                                    @if($transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT)
+
+                                        <span class="badge bg-success">
+
+                                        {{ $transaction->transaction_type->label() }}
+
+                                    </span>
+
+
+                                    @elseif($transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL)
+
+                                        <span class="badge bg-danger">
+
+                                        {{ $transaction->transaction_type->label() }}
+
+                                    </span>
+
+
+                                    @else
+
+                                        <span class="badge bg-secondary">
+
+                                        {{ $transaction->transaction_type->label() }}
+
+                                    </span>
+
+
+                                    @endif
+
+
+                                </td>
+
+
+
+
+                                <td class="fw-bold">
+
+
+                                    {{ number_format($transaction->amount) }}
+
+                                    ریال
+
+
+                                </td>
+
+
+
+
+                                <td>
+
+
+                                    {{ number_format($transaction->balance_after) }}
+
+                                    ریال
+
+
+                                </td>
+
+
+
+
+                                <td>
+
+                                    {{ $transaction->description ?? '-' }}
+
+                                </td>
+
+
+                            </tr>
+
+
+
+                        @empty
+
+
+                            <tr>
+
+                                <td colspan="7">
+
+                                    تراکنشی ثبت نشده است.
+
+                                </td>
+
+                            </tr>
+
+
+                        @endforelse
+
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+
+                {{ $transactions->links() }}
+
 
             </div>
-
-
-            {{ $transactions->links() }}
 
 
         </div>
+
+
 
     </div>
+
 
 @endsection

@@ -20,15 +20,23 @@
 
                 $children = collect($group['children'] ?? []);
 
-                $visibleChildren = $children->filter(function ($item) use ($user) {
+              $visibleChildren = $children->filter(function ($item) use ($user) {
 
-                    if (! isset($item['roles'])) {
-                        return true;
-                    }
+    if (! isset($item['roles'])) {
+        return true;
+    }
 
-                    return in_array($user->role, $item['roles'], true);
+    if (! $user) {
+        return false;
+    }
 
-                });
+    return in_array(
+        $user->role,
+        $item['roles'],
+        true
+    );
+
+});
 
                 if ($visibleChildren->isEmpty()) {
                     continue;

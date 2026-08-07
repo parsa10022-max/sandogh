@@ -6,16 +6,25 @@ use App\Enums\TransactionSource;
 use App\Enums\TransactionType;
 use App\Enums\PaymentMethod;
 use App\Models\Account;
-use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use App\Models\Withdrawal;
 use App\Enums\WithdrawalStatus;
-
+use App\Services\Account\AccountTransactionService;
+use App\Services\Account\AccountTransactionNoService;
 use Illuminate\Validation\ValidationException;
+
 
 class AccountService
 {
+    public function __construct(
+
+        private readonly AccountTransactionService $accountTransactionService,
+
+        private readonly AccountTransactionNoService $transactionNoService,
+
+    ) {
+    }
+
     public function deposit(
         Account $account,
         int $amount,
@@ -42,11 +51,12 @@ class AccountService
 
             $balanceAfter = $balanceBefore + $amount;
 
-            $account->update([
-                'balance' => $balanceAfter,
-            ]);
+            $account->increment(
+                'balance',
+                $amount
+            );
 
-            return $this->createTransaction(
+            return $this->accountTransactionService->create(
                 account: $account,
                 type: TransactionType::DEPOSIT,
                 source: $source,
@@ -60,38 +70,6 @@ class AccountService
     }
 
 
-    private function createTransaction(
-        Account $account,
-        TransactionType $type,
-        TransactionSource $source,
-        PaymentMethod $paymentMethod,
-        int $amount,
-        int $balanceBefore,
-        int $balanceAfter,
-        ?string $description = null,
-        ?int $createdBy = null,
-    ): AccountTransaction {
-
-        return AccountTransaction::create([
-            'account_id'         => $account->id,
-            'transaction_no'     => $this->generateTransactionNo(),
-            'transaction_type'   => $type,
-            'transaction_source' => $source,
-            'payment_method'     => $paymentMethod,
-            'amount'             => $amount,
-            'balance_before'     => $balanceBefore,
-            'balance_after'      => $balanceAfter,
-            'transaction_date'   => now(),
-            'created_by'         => $createdBy,
-            'description'        => $description,
-        ]);
-    }
-
-
-    private function generateTransactionNo(): string
-    {
-        return 'TRX-' . strtoupper(Str::random(10));
-    }
 
     public function withdraw(
         Account $account,
@@ -133,19 +111,15 @@ class AccountService
 
             $balanceBefore = $account->balance;
 
-
             $balanceAfter = $balanceBefore - $amount;
 
-
-            $account->update([
-
-                'balance' => $balanceAfter,
-
-            ]);
+            $account->decrement(
+                'balance',
+                $amount
+            );
 
 
-
-            $transaction = $this->createTransaction(
+            $transaction = $this->accountTransactionService->create(
 
                 account: $account,
 
@@ -226,12 +200,12 @@ class AccountService
             $balanceAfter = $balanceBefore + $withdrawal->amount;
 
 
-            $account->update([
-                'balance' => $balanceAfter,
-            ]);
+            $account->increment(
+                'balance',
+                $withdrawal->amount
+            );
 
-
-            $this->createTransaction(
+            $this->accountTransactionService->create(
 
                 account: $account,
 
@@ -288,7 +262,7 @@ class AccountService
                 'balance' => $balanceAfter,
             ]);
 
-            $this->createTransaction(
+            $this->accountTransactionService->create(
 
                 account: $account,
 
@@ -308,15 +282,22 @@ class AccountService
 
             );
 
-            $withdrawal->update([
 
-                'status' => WithdrawalStatus::REJECTED,
-
-            ]);
 
             return $withdrawal->fresh();
 
         });
+
+    }
+    public function depositBalance(
+        Account $account,
+        int $amount
+    ): void {
+
+        $account->increment(
+            'balance',
+            $amount
+        );
 
     }
 }

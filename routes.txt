@@ -1,0 +1,75 @@
+
+  GET|HEAD        / .................................................................................... routes/web.php:37
+  GET|HEAD        accounts .............................................. accounts.index › Account\AccountController@index
+  POST            accounts/deposit .................................... accounts.deposit › Account\DepositController@store
+  GET|HEAD        accounts/{account} ...................................... accounts.show › Account\AccountController@show
+  GET|HEAD        accounts/{account}/deposit .................. accounts.deposit.create › Account\DepositController@create
+  GET|HEAD        accounts/{account}/transactions ......... accounts.transactions › Account\AccountController@transactions
+  GET|HEAD        accounts/{account}/withdrawal ......... accounts.withdrawal.create › Account\WithdrawalController@create
+  POST            accounts/{account}/withdrawal ........... accounts.withdrawal.store › Account\WithdrawalController@store
+  GET|HEAD        customer/savings-transfer . customer.savings-transfer.create › Customer\SavingsTransferController@create
+  POST            customer/savings-transfer ... customer.savings-transfer.store › Customer\SavingsTransferController@store
+  GET|HEAD        customer/savings-transfer/failed customer.savings-transfer.failed › PaymentController@savingsTransferFa…
+  POST            customer/savings-transfer/search customer.savings-transfer.search › Customer\SavingsTransferController@…
+  GET|HEAD        customer/savings-transfer/success/{transfer} customer.savings-transfer.success › PaymentController@savi…
+  GET|HEAD        customer/savings/deposit customer.savings.deposit.create › Customer\SavingsTransferController@ownDeposi…
+  POST            customer/savings/deposit customer.savings.deposit.store › Customer\SavingsTransferController@ownDeposit…
+  GET|HEAD        customers .......................................... customers.index › Customer\CustomerController@index
+  POST            customers .......................................... customers.store › Customer\CustomerController@store
+  GET|HEAD        customers/archive .............................. customers.archive › Customer\CustomerController@archive
+  GET|HEAD        customers/create ................................. customers.create › Customer\CustomerController@create
+  GET|HEAD        customers/search-code ................. customers.search.code › Customer\CustomerController@searchByCode
+  GET|HEAD        customers/{customer} ................................. customers.show › Customer\CustomerController@show
+  PUT|PATCH       customers/{customer} ............................. customers.update › Customer\CustomerController@update
+  DELETE          customers/{customer} ........................... customers.destroy › Customer\CustomerController@destroy
+  GET|HEAD        customers/{customer}/edit ............................ customers.edit › Customer\CustomerController@edit
+  PATCH           customers/{id}/restore ......................... customers.restore › Customer\CustomerController@restore
+  GET|HEAD        dashboard ........................................................ dashboard › DashboardController@index
+  GET|HEAD        loan-requests ................................... loan-requests.index › Loan\LoanRequestController@index
+  POST            loan-requests ................................... loan-requests.store › Loan\LoanRequestController@store
+  GET|HEAD        loan-requests/create .......................... loan-requests.create › Loan\LoanRequestController@create
+  POST            loan-requests/{loanRequest}/approve ......... loan-requests.approve › Loan\LoanRequestController@approve
+  POST            loan-requests/{loanRequest}/reject ............ loan-requests.reject › Loan\LoanRequestController@reject
+  PUT             loan-requests/{loanRequest}/update-review-date loan-requests.update-review-date › Loan\LoanRequestContr…
+  GET|HEAD        loan-requests/{loan_request} ...................... loan-requests.show › Loan\LoanRequestController@show
+  GET|HEAD        loan-types ........................................ loan-types.index › LoanType\LoanTypeController@index
+  POST            loan-types ........................................ loan-types.store › LoanType\LoanTypeController@store
+  GET|HEAD        loan-types/create ............................... loan-types.create › LoanType\LoanTypeController@create
+  PUT|PATCH       loan-types/{loanType} ........................... loan-types.update › LoanType\LoanTypeController@update
+  PATCH           loan-types/{loanType}/change-status loan-types.change-status › LoanType\LoanTypeController@changeStatus
+  GET|HEAD        loan-types/{loanType}/edit .......................... loan-types.edit › LoanType\LoanTypeController@edit
+  GET|HEAD        loans .......................................................... loans.index › Loan\LoanController@index
+  POST            loans .......................................................... loans.store › Loan\LoanController@store
+  POST            loans/calculate ........................................ loans.calculate › Loan\LoanController@calculate
+  GET|HEAD        loans/create ................................................. loans.create › Loan\LoanController@create
+  GET|HEAD        loans/overdue .............................................. loans.overdue › Loan\LoanController@overdue
+  GET|HEAD        loans/{loan} ..................................................... loans.show › Loan\LoanController@show
+  PUT|PATCH       loans/{loan} ................................................. loans.update › Loan\LoanController@update
+  DELETE          loans/{loan} ............................................... loans.destroy › Loan\LoanController@destroy
+  GET|HEAD        loans/{loan}/edit ................................................ loans.edit › Loan\LoanController@edit
+  GET|HEAD        login ....................................................... login › Auth\LoginController@showLoginForm
+  POST            login ......................................................... login.store › Auth\LoginController@login
+  POST            logout .................................................................. logout › Auth\LogoutController
+  GET|HEAD        my-withdrawals ........................... withdrawals.mine › Account\WithdrawalController@myWithdrawals
+  GET|HEAD        otp ....................................................... otp.form › Auth\OtpController@showVerifyForm
+  POST            otp ............................................................. otp.verify › Auth\OtpController@verify
+  GET|POST|HEAD   payments/callback ....................................... payments.callback › PaymentController@callback
+  GET|HEAD        payments/failed ............................................. payments.failed › PaymentController@failed
+  GET|HEAD        payments/fake ................................................... payments.fake › PaymentController@fake
+  POST            payments/savings-transfer/callback savings-transfer.callback › Payment\SavingsTransferCallbackControlle…
+  POST            payments/{installment}/pay ........................................ payments.pay › PaymentController@pay
+  GET|HEAD        payments/{payment}/success ................................ payments.success › PaymentController@success
+  GET|HEAD        storage/{path} storage.local › vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProv…
+  PUT             storage/{path} storage.local.upload › vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServ…
+  GET|HEAD        test-components ........................................................................................ 
+  GET|HEAD        test-otp ............................................................................ routes/web.php:347
+  GET|HEAD        up ......... vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php:219
+  GET|HEAD        withdrawals ..................................... withdrawals.index › Account\WithdrawalController@index
+  GET|HEAD        withdrawals/{withdrawal} .......................... withdrawals.show › Account\WithdrawalController@show
+  PUT|PATCH       withdrawals/{withdrawal} ...................... withdrawals.update › Account\WithdrawalController@update
+  POST            withdrawals/{withdrawal}/approve ............ withdrawals.approve › Account\WithdrawalController@approve
+  PATCH           withdrawals/{withdrawal}/cancel ............... withdrawals.cancel › Account\WithdrawalController@cancel
+  POST            withdrawals/{withdrawal}/reject ............... withdrawals.reject › Account\WithdrawalController@reject
+
+                                                                                                       Showing [71] routes
+

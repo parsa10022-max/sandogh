@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Installment;
 use App\Models\LoanPayment;
-use App\Services\Payment\PaymentService;
-use Illuminate\Http\Request;
-use App\Services\Savings\SavingsTransferService;
 use App\Models\SavingsTransfer;
 use App\Services\Payment\PaymentResolverService;
+use App\Services\Payment\PaymentService;
+use App\Services\Savings\SavingsTransferService;
+use Illuminate\Http\Request;
+use App\Models\DonationPayment;
+
 
 
 class PaymentController extends Controller
@@ -24,27 +26,37 @@ class PaymentController extends Controller
     ) {
     }
 
+
     /**
-     * شروع فرآیند پرداخت
+     * شروع فرآیند پرداخت قسط
      */
     public function pay(Installment $installment)
     {
         try {
 
-            $response = $this->paymentService->startPayment($installment);
+            $response = $this->paymentService->startPayment(
+                $installment
+            );
+
 
             if (! $response['success']) {
 
                 return back()->with(
                     'error',
-                    $response['message'] ?? 'خطا در اتصال به درگاه پرداخت.'
+                    $response['message']
+                    ?? 'خطا در اتصال به درگاه پرداخت.'
                 );
 
             }
 
-            return redirect()->away($response['redirect_url']);
+
+            return redirect()->away(
+                $response['redirect_url']
+            );
+
 
         } catch (\Throwable $e) {
+
 
             return back()->with(
                 'error',
@@ -55,16 +67,20 @@ class PaymentController extends Controller
     }
 
 
+
     /**
-     * Callback بانک
+     * Callback درگاه پرداخت
      */
     public function callback(Request $request)
     {
         try {
 
+
             $payment = $this->paymentResolver->verify(
                 $request->all()
             );
+
+
 
             /*
             |--------------------------------------------------------------------------
@@ -72,7 +88,8 @@ class PaymentController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            if ($payment instanceof \App\Models\SavingsTransfer) {
+            if ($payment instanceof SavingsTransfer) {
+
 
                 return redirect()->route(
                     'customer.savings-transfer.success',
@@ -81,13 +98,16 @@ class PaymentController extends Controller
 
             }
 
+
+
             /*
             |--------------------------------------------------------------------------
-            | پرداخت اقساط
+            | پرداخت قسط وام
             |--------------------------------------------------------------------------
             */
 
-            if ($payment instanceof \App\Models\LoanPayment) {
+            if ($payment instanceof LoanPayment) {
+
 
                 return redirect()->route(
                     'payments.success',
@@ -96,18 +116,55 @@ class PaymentController extends Controller
 
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | پرداخت حساب سیستمی
+            |--------------------------------------------------------------------------
+            */
+
+            if ($payment instanceof DonationPayment) {
+
+
+                // کمک عمومی (خارج از صندوق)
+                if ($payment->customer_id === null) {
+
+                    return redirect()
+                        ->route(
+                            'donation.success',
+                            $payment
+                        );
+
+                }
+
+
+                // کمک عضو صندوق
+                return redirect()
+                    ->route(
+                        'customer.donations.success',
+                        $payment
+                    );
+
+            }
+
+
+
             throw new \RuntimeException(
                 'نوع پرداخت قابل تشخیص نیست.'
             );
 
+
+
         } catch (\Throwable $e) {
+
 
             return redirect()
                 ->route('payments.failed', [
 
-                    'reference_id'   => $request->reference_id,
+                    'reference_id' =>
+                        $request->reference_id,
 
-                    'installment_id' => $request->installment_id,
+                    'installment_id' =>
+                        $request->installment_id,
 
                 ])
                 ->with(
@@ -118,69 +175,169 @@ class PaymentController extends Controller
         }
     }
 
+
+
+
     /**
      * صفحه تست درگاه Fake
      */
+
+
     public function fake(Request $request)
     {
-        return view('payments.fake', [
+        $data = $request->all();
 
-            'data' => $request->all(),
 
-        ]);
+        if (
+            in_array(
+                $data['payment_type'] ?? null,
+                [
+                    'donation_customer',
+                    'donation_public'
+                ]
+            )
+        ) {
+
+
+            $payment = DonationPayment::with('account')
+                ->find(
+                    $data['reference_id'] ?? null
+                );
+
+
+            if ($payment) {
+
+                $data['account_name'] =
+                    $payment->account?->name;
+
+
+                $data['account_number'] =
+                    $payment->account?->account_number;
+
+            }
+
+        }
+
+
+        return view(
+            'payments.fake',
+            compact('data')
+        );
+
     }
 
+
+
+
     /**
-     * رسید پرداخت
+     * رسید پرداخت قسط
      */
     public function success(LoanPayment $payment)
     {
-        return view('receipts.payment', [
 
-            'title'          => 'رسید پرداخت قسط',
+        return view(
+            'receipts.payment',
+            [
 
-            'receipt_number' => $payment->tracking_code,
+                'title' =>
+                    'رسید پرداخت قسط',
 
-            'receipt_date'   => $payment->paid_at_jalali,
+                'receipt_number' =>
+                    $payment->tracking_code,
 
-            'payment'        => $payment,
+                'receipt_date' =>
+                    $payment->paid_at_jalali,
 
-        ]);
+                'payment' =>
+                    $payment,
+
+            ]
+        );
+
     }
+
+
+
 
     /**
      * صفحه خطای پرداخت
      */
     public function failed(Request $request)
     {
+        if (
+            ($request->payment_type ?? null) === 'donation'
+        ) {
+
+            return redirect()
+                ->route('donation.create')
+                ->with(
+                    'error',
+                    'پرداخت کمک انجام نشد.'
+                );
+
+        }
+
         /*
         |--------------------------------------------------------------------------
-        | واریز به حساب پس‌انداز
+        | واریز پس‌انداز
         |--------------------------------------------------------------------------
         */
 
         if (
+
             $request->reference_id
+
             &&
-            \App\Models\SavingsTransfer::where(
+
+            SavingsTransfer::where(
                 'id',
                 $request->reference_id
             )->exists()
+
         ) {
 
             return redirect()
-                ->route('customer.savings-transfer.create')
+                ->route(
+                    'customer.savings-transfer.create'
+                )
                 ->with(
                     'error',
                     'پرداخت انجام نشد.'
                 );
-        }
 
+        }
 
 
         /*
         |--------------------------------------------------------------------------
-        | پرداخت قسط وام
+        | پرداخت قسط
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $request->installment_id
+            &&
+            \App\Models\Installment::where(
+                'id',
+                $request->installment_id
+            )->exists()
+        ) {
+
+            return redirect()
+                ->route(
+                    'customer.installments.others.create'
+                )
+                ->with(
+                    'error',
+                    'پرداخت قسط انجام نشد.'
+                );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | پرداخت‌های مدیریتی
         |--------------------------------------------------------------------------
         */
 
@@ -191,26 +348,37 @@ class PaymentController extends Controller
                 'پرداخت انجام نشد.'
             );
     }
+
+
+
+
+
     /**
      * رسید موفقیت واریز پس‌انداز
      */
     public function savingsTransferSuccess(
-        \App\Models\SavingsTransfer $transfer
+        SavingsTransfer $transfer
     ) {
+
         return view(
             'receipts.savings-transfer',
             [
                 'transfer' => $transfer
             ]
         );
+
     }
+
 
 
 
     public function savingsTransferFailed()
     {
+
         return view(
             'customer.savings-transfer.failed'
         );
+
     }
+
 }

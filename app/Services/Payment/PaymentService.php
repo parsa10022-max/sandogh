@@ -31,9 +31,13 @@ class PaymentService
 
         return $this->gateway->request([
 
+            'payment_type' => 'installment',
+
             'loan_id' => $installment->loan_id,
 
             'installment_id' => $installment->id,
+
+            'reference_id' => $installment->id,
 
             'amount' => $installment->amount,
 
@@ -71,6 +75,7 @@ class PaymentService
             ->findOrFail(
                 $callbackData['installment_id']
             );
+
 
         return DB::transaction(function () use (
 
@@ -218,5 +223,57 @@ class PaymentService
             ]);
 
         }
+    }
+
+    /**
+     * پیدا کردن اولین قسط قابل پرداخت با شماره وام
+     */
+    public function findPayableInstallmentByLoanNumber(
+        string $loanNumber
+    ): ?Installment {
+
+        $loan = Loan::query()
+
+            ->with([
+                'customer',
+                'loanType',
+                'installments'
+            ])
+
+            ->where(
+                'loan_number',
+                $loanNumber
+            )
+
+            ->first();
+
+
+        if (! $loan) {
+            return null;
+        }
+
+
+        if ($loan->status !== LoanStatus::ACTIVE) {
+
+            throw new \DomainException(
+                'این وام فعال نیست.'
+            );
+
+        }
+
+
+        return $loan->installments()
+
+            ->where(
+                'status',
+                InstallmentStatus::PENDING
+            )
+
+            ->orderBy(
+                'installment_number'
+            )
+
+            ->first();
+
     }
 }
