@@ -1,0 +1,1779 @@
+/* =========================================================
+   CUSTOMER DONATIONS
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   ========================================================= */
+
+
+/* =========================================================
+   DONATIONS DASHBOARD
+   ========================================================= */
+
+.customer-donations-section {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+
+.customer-donations-title {
+    margin-bottom: 4px;
+}
+
+.customer-donations-title h2 {
+    margin: 0;
+
+    color: #263a8b;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+.customer-donations-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+.customer-donation-action {
+    flex: 1 1 180px;
+
+    min-height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 7px 10px;
+
+    background: #fff;
+
+    border: 1px solid #e4e7f2;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 10px rgba(45,55,90,.06);
+
+    text-decoration: none;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+.customer-donation-action-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 9px;
+
+    border-radius: 12px;
+
+    background: #fff1f3;
+
+    color: #e05268;
+
+    font-size: 19px;
+
+    transition: transform .18s ease;
+}
+
+.customer-donation-action-text {
+    color: #26304d;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.5;
+}
+
+.customer-donation-action:hover {
+    transform: translateY(-2px);
+
+    border-color: #c9c2ff;
+
+    box-shadow:
+        0 6px 16px rgba(45,55,90,.10);
+}
+
+.customer-donation-action:hover
+.customer-donation-action-icon {
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   DONATION ACTION ICONS
+   ========================================================= */
+
+/* کمک به صندوق */
+.customer-donation-action:first-child
+.customer-donation-action-icon {
+    background: #fff1f3;
+
+    color: #e05268;
+}
+
+/* کمک دوم */
+.customer-donation-action:nth-child(2)
+.customer-donation-action-icon {
+    background: #eef4ff;
+
+    color: #4778dc;
+}
+
+/* کمک سوم */
+.customer-donation-action:nth-child(3)
+.customer-donation-action-icon {
+    background: #eef9f1;
+
+    color: #3d9b5c;
+}
+
+
+/* آیکون مستقل Donations */
+.customer-donation-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #fff1f3;
+
+    color: #e05268;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   EMPTY DONATIONS
+   ========================================================= */
+
+.customer-donations-empty {
+    width: 100%;
+
+    min-height: 60px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 12px;
+
+    color: #7b8195;
+
+    background: #fff;
+
+    border: 1px dashed #d9ddec;
+
+    border-radius: 14px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.customer-donations-empty i {
+    color: #8b91a5;
+}
+
+
+/* =========================================================
+   DONATION CREATE
+   ثبت کمک
+   ========================================================= */
+
+.customer-donation-form-card {
+    width: 100%;
+
+    padding: 14px;
+
+    background: #fff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 4px 14px rgba(35,45,75,.05);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CREATE HEADER
+   ========================================================= */
+
+.customer-donation-form-header {
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 14px;
+
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid #edf0f5;
+
+    overflow: hidden;
+}
+
+.customer-donation-form-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: nowrap;
+}
+
+.customer-donation-form-title h3 {
+    margin: 0;
+
+    color: #25283a;
+
+    font-size: 1rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-form-title h5 {
+    margin: 0;
+
+    white-space: nowrap;
+
+    font-size: 1rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-form-title p {
+    margin: 3px 0 0;
+
+    color: #747887;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+.customer-donation-form-title-text {
+    display: inline-block;
+
+    white-space: nowrap;
+
+    font-size: 1rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-form-header h5 {
+    display: flex !important;
+
+    align-items: center !important;
+
+    flex-wrap: nowrap !important;
+
+    gap: 10px;
+
+    white-space: nowrap !important;
+
+    margin: 0 !important;
+}
+
+.customer-donation-form-icon {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    flex: 0 0 42px;
+
+    display: inline-flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #e05268;
+
+    background: #fff1f3;
+
+    border-radius: 12px;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   ALERT
+   ========================================================= */
+
+.customer-donation-alert {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+    padding: 10px 12px;
+
+    border-radius: 11px;
+
+    font-size: .75rem;
+
+    font-weight: 700;
+}
+
+.customer-donation-alert-success {
+    color: #319451;
+
+    background: #e8f7ed;
+
+    border: 1px solid #d3efdc;
+}
+
+.customer-donation-alert-danger {
+    color: #c84750;
+
+    background: #fff0f1;
+
+    border: 1px solid #f5d3d6;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.customer-donation-field {
+    margin-top: 14px;
+}
+
+.customer-donation-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #25283a;
+
+    font-size: .82rem;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   ACCOUNTS
+   ========================================================= */
+
+.customer-donation-accounts {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.customer-donation-account {
+    display: block;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.customer-donation-account-radio {
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.customer-donation-account-card {
+    min-height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 8px 10px;
+
+    background: #fff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 13px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+.customer-donation-account-card:hover {
+    border-color: #cbc4fa;
+
+    box-shadow:
+        0 5px 14px rgba(75,60,190,.07);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ACCOUNT ICON
+   ========================================================= */
+
+.customer-donation-account-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 40px;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border-radius: 11px;
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   ACCOUNT INFO
+   ========================================================= */
+
+.customer-donation-account-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.customer-donation-account-info strong {
+    color: #303342;
+
+    font-size: .82rem;
+
+    font-weight: 900;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.customer-donation-account-info span {
+    color: #747887;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACCOUNT CHECK
+   ========================================================= */
+
+.customer-donation-account-check {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 25px;
+
+    color: transparent;
+
+    background: #f1f3f8;
+
+    border: 1px solid #dfe3ec;
+
+    border-radius: 50%;
+
+    font-size: .75rem;
+
+    transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease;
+}
+
+
+/* =========================================================
+   SELECTED ACCOUNT
+   ========================================================= */
+
+.customer-donation-account-radio:checked
++ .customer-donation-account-card {
+    border-color: #6040e8;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff 0%,
+            #faf9ff 100%
+        );
+
+    box-shadow:
+        0 5px 15px rgba(96,64,232,.10);
+}
+
+.customer-donation-account-radio:checked
++ .customer-donation-account-card
+.customer-donation-account-icon {
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6040e8,
+            #4168e9
+        );
+}
+
+.customer-donation-account-radio:checked
++ .customer-donation-account-card
+.customer-donation-account-check {
+    color: #fff;
+
+    background: #6040e8;
+
+    border-color: #6040e8;
+}
+
+
+/* =========================================================
+   SELECTED ACCOUNT INFO
+   ========================================================= */
+
+.customer-donation-selected-account {
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    background: #f7f6ff;
+
+    border: 1px solid #dcd6ff;
+
+    border-radius: 12px;
+}
+
+.customer-donation-selected-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-bottom: 7px;
+
+    color: #6040e8;
+
+    font-size: .75rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-selected-info {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px 25px;
+}
+
+.customer-donation-selected-info > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+.customer-donation-selected-info span {
+    color: #747887;
+
+    font-size: .68rem;
+
+    font-weight: 600;
+}
+
+.customer-donation-selected-info strong {
+    color: #303342;
+
+    font-size: .75rem;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.customer-donation-amount-wrapper {
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #dfe3ec;
+
+    border-radius: 11px;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-donation-amount-wrapper:focus-within {
+    border-color: #6040e8;
+
+    box-shadow:
+        0 0 0 3px rgba(96,64,232,.08);
+}
+
+.customer-donation-amount-input {
+    width: 100%;
+
+    min-width: 0;
+
+    height: 46px;
+
+    padding: 0 12px;
+
+    color: #303342;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: .9rem;
+
+    font-weight: 800;
+}
+
+.customer-donation-amount-input::placeholder {
+    color: #a0a4b2;
+
+    font-weight: 500;
+}
+
+.customer-donation-amount-wrapper > span {
+    flex-shrink: 0;
+
+    padding: 0 12px;
+
+    color: #747887;
+
+    font-size: .72rem;
+
+    font-weight: 800;
+
+    border-right: 1px solid #edf0f5;
+}
+
+.customer-donation-help-text {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 6px;
+
+    color: #747887;
+
+    font-size: .67rem;
+
+    font-weight: 600;
+}
+
+.customer-donation-help-text i {
+    color: #6040e8;
+}
+
+
+/* =========================================================
+   DONATION SUBMIT
+   ========================================================= */
+
+.customer-donation-submit {
+    width: 100%;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 14px;
+
+    padding: 0 14px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border: none;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 6px 14px rgba(77,57,200,.14);
+
+    font-family: inherit;
+
+    font-size: .82rem;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-donation-submit span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.customer-donation-submit:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(77,57,200,.20);
+}
+
+
+/* =========================================================
+   DONATION CREATE DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .customer-donation-form-card {
+        max-width: 760px;
+
+        margin: 0 auto;
+
+        padding: 18px;
+    }
+
+    .customer-donation-accounts {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+}
+
+
+/* =========================================================
+   DONATION MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-donations-section {
+        margin-top: 14px;
+    }
+
+    .customer-donations-title {
+        margin-bottom: 5px;
+    }
+
+    .customer-donations-title h2 {
+        font-size: 1rem;
+    }
+
+    .customer-donations-actions {
+        gap: 7px;
+    }
+
+    .customer-donation-action {
+        min-height: 60px;
+
+        padding: 7px 9px;
+    }
+
+    .customer-donation-action-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+    }
+
+    .customer-donation-action-text {
+        font-size: .85rem;
+    }
+
+    .customer-donation-form-card {
+        padding: 12px;
+
+        border-radius: 14px;
+    }
+
+    .customer-donation-form-header {
+        margin-bottom: 12px;
+    }
+
+    .customer-donation-form-icon {
+        width: 40px;
+        height: 40px;
+
+        min-width: 40px;
+
+        flex-basis: 40px;
+
+        font-size: 18px;
+    }
+
+    .customer-donation-form-title h3,
+    .customer-donation-form-title h5,
+    .customer-donation-form-title-text {
+        font-size: .92rem;
+    }
+
+    .customer-donation-form-title p {
+        font-size: .67rem;
+    }
+
+    .customer-donation-account-card {
+        min-height: 60px;
+
+        padding: 7px 8px;
+    }
+
+    .customer-donation-account-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+    }
+
+    .customer-donation-account-info strong {
+        font-size: .78rem;
+    }
+
+    .customer-donation-account-info span {
+        font-size: .68rem;
+    }
+
+    .customer-donation-selected-info {
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .customer-donation-submit {
+        height: 45px;
+
+        margin-top: 16px;
+    }
+}
+
+
+/* =========================================================
+   DONATION PAYMENT
+   ========================================================= */
+
+.customer-donation-payment-card {
+    width: 100%;
+
+    max-width: 720px;
+
+    margin: 0 auto;
+
+    padding: 18px;
+
+    background: #fff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 5px 16px rgba(35,45,75,.06);
+}
+
+.customer-donation-payment-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #edf0f5;
+}
+
+.customer-donation-payment-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.customer-donation-payment-title h3,
+.customer-donation-payment-header h3 {
+    margin: 0;
+
+    color: #25283a;
+
+    font-size: 1rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-payment-title span,
+.customer-donation-payment-header span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #7b8195;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+.customer-donation-payment-icon {
+    width: 50px;
+    height: 50px;
+
+    flex: 0 0 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 1.35rem;
+}
+
+.customer-donation-payment-title
+.customer-donation-form-icon {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   PAYMENT INFO
+   ========================================================= */
+
+.customer-donation-payment-info {
+    margin-top: 14px;
+
+    padding: 4px 0;
+}
+
+.customer-donation-payment-row {
+    min-height: 43px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 8px 0;
+
+    border-bottom: 1px solid #f0f1f5;
+}
+
+.customer-donation-payment-row:last-child {
+    border-bottom: none;
+}
+
+.customer-donation-payment-row > span,
+.customer-donation-payment-row span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #747887;
+
+    font-size: .78rem;
+
+    font-weight: 700;
+}
+
+.customer-donation-payment-row > span i {
+    color: #6040e8;
+
+    font-size: .95rem;
+}
+
+.customer-donation-payment-row strong {
+    color: #303342;
+
+    font-size: .85rem;
+
+    font-weight: 900;
+
+    text-align: left;
+}
+
+.customer-donation-payment-divider {
+    height: 1px;
+
+    margin: 8px 0;
+
+    background: #edf0f5;
+}
+
+
+/* =========================================================
+   PAYMENT AMOUNT
+   ========================================================= */
+
+.customer-donation-payment-amount {
+    min-height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 10px 14px;
+
+    background: #f7f6ff;
+
+    border: 1px solid #e8e5fb;
+
+    border-radius: 12px;
+}
+
+.customer-donation-payment-amount > span {
+    color: #565a6b;
+
+    font-size: .82rem;
+
+    font-weight: 800;
+}
+
+.customer-donation-payment-amount strong {
+    color: #6040e8;
+
+    font-size: 1.05rem;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-donation-payment-amount small {
+    margin-right: 3px;
+
+    color: #747887;
+
+    font-size: .65rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAYMENT ROW AMOUNT
+   ========================================================= */
+
+.customer-donation-payment-row.amount {
+    margin-top: 4px;
+
+    padding: 12px 10px;
+
+    background: #f7f6ff;
+
+    border: 1px solid #e8e5fb;
+
+    border-radius: 11px;
+}
+
+.customer-donation-payment-row.amount strong {
+    color: #6040e8;
+
+    font-size: 1.05rem;
+}
+
+.customer-donation-payment-row.amount small {
+    font-size: .65rem;
+}
+
+
+/* =========================================================
+   PAYMENT MESSAGE / ALERT
+   ========================================================= */
+
+.customer-donation-payment-message,
+.customer-donation-payment-alert {
+    min-height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding: 9px 11px;
+
+    color: #566078;
+
+    background: #f7f8fc;
+
+    border: 1px solid #e5e8f0;
+
+    border-radius: 10px;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+
+    line-height: 1.6;
+}
+
+.customer-donation-payment-message {
+    background: #f1efff;
+
+    border-color: #e4e0ff;
+}
+
+.customer-donation-payment-message i {
+    color: #6040e8;
+
+    font-size: 1rem;
+
+    flex-shrink: 0;
+}
+
+.customer-donation-payment-alert i {
+    color: #4778dc;
+
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   PAYMENT SUBMIT
+   ========================================================= */
+
+.customer-donation-payment-submit {
+    width: 100%;
+
+    min-height: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 16px;
+
+    padding: 0 16px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border: none;
+
+    border-radius: 11px;
+
+    font-size: .86rem;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-donation-payment-submit span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.customer-donation-payment-submit i {
+    font-size: 1rem;
+}
+
+.customer-donation-payment-submit:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 16px rgba(75,60,190,.15);
+}
+
+
+/* دکمه عمومی ثبت کمک */
+.customer-donation-submit:hover {
+    color: #fff;
+}
+
+
+/* =========================================================
+   PAYMENT CANCEL
+   ========================================================= */
+
+.customer-donation-payment-cancel {
+    width: 100%;
+
+    min-height: 38px;
+
+    margin-top: 7px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    color: #73798b;
+
+    text-decoration: none;
+
+    font-size: .72rem;
+
+    font-weight: 700;
+}
+
+.customer-donation-payment-cancel:hover {
+    color: #6040e8;
+}
+
+
+/* =========================================================
+   PAYMENT MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-donation-payment-card {
+        padding: 13px;
+
+        border-radius: 14px;
+    }
+
+    .customer-donation-payment-header {
+        gap: 9px;
+    }
+
+    .customer-donation-payment-title {
+        gap: 9px;
+    }
+
+    .customer-donation-payment-icon {
+        width: 43px;
+        height: 43px;
+
+        flex-basis: 43px;
+
+        border-radius: 11px;
+
+        font-size: 1.1rem;
+    }
+
+    .customer-donation-payment-title
+    .customer-donation-form-icon {
+        width: 43px;
+        height: 43px;
+
+        flex-basis: 43px;
+
+        border-radius: 11px;
+
+        font-size: 1.1rem;
+    }
+
+    .customer-donation-payment-title h3,
+    .customer-donation-payment-header h3 {
+        font-size: .9rem;
+    }
+
+    .customer-donation-payment-title span,
+    .customer-donation-payment-header span {
+        font-size: .65rem;
+    }
+
+    .customer-donation-payment-row {
+        min-height: 44px;
+    }
+
+    .customer-donation-payment-row > span,
+    .customer-donation-payment-row span {
+        font-size: .7rem;
+    }
+
+    .customer-donation-payment-row strong {
+        font-size: .76rem;
+    }
+
+    .customer-donation-payment-amount {
+        min-height: 58px;
+
+        padding: 8px 10px;
+    }
+
+    .customer-donation-payment-amount > span {
+        font-size: .74rem;
+    }
+
+    .customer-donation-payment-amount strong {
+        font-size: .95rem;
+    }
+
+    .customer-donation-payment-message,
+    .customer-donation-payment-alert {
+        font-size: .67rem;
+    }
+
+    .customer-donation-payment-submit {
+        min-height: 46px;
+
+        font-size: .78rem;
+    }
+}
+
+
+/* =========================================================
+   DONATION SUCCESS
+   ========================================================= */
+
+.customer-donation-success-card {
+    width: 100%;
+
+    max-width: 760px;
+
+    margin: 0 auto;
+
+    padding: 28px 32px;
+
+    background: #fff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 20px rgba(35,45,75,.06);
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+   ========================================================= */
+
+.customer-donation-success-icon {
+    width: 78px;
+    height: 78px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #319451;
+
+    background: #e8f7ed;
+
+    border: 1px solid #ccebd7;
+
+    border-radius: 22px;
+
+    font-size: 2.4rem;
+
+    box-shadow:
+        0 6px 14px rgba(49,148,81,.08);
+}
+
+
+/* =========================================================
+   SUCCESS TITLE
+   ========================================================= */
+
+.customer-donation-success-title {
+    margin: 0;
+
+    color: #25283a;
+
+    font-size: 1.35rem;
+
+    font-weight: 900;
+}
+
+.customer-donation-success-message {
+    margin: 8px 0 22px;
+
+    color: #747887;
+
+    font-size: .85rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SUCCESS INFORMATION
+   ========================================================= */
+
+.customer-donation-success-info {
+    width: 100%;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    background: #f8f9fc;
+
+    border: 1px solid #e5e8f0;
+
+    border-radius: 14px;
+}
+
+.customer-donation-success-row {
+    min-height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 9px 16px;
+
+    border-bottom: 1px solid #e7e9f0;
+
+    text-align: right;
+}
+
+.customer-donation-success-row:last-child {
+    border-bottom: none;
+}
+
+.customer-donation-success-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #656a7b;
+
+    font-size: .78rem;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-donation-success-info-icon {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border-radius: 10px;
+
+    font-size: 1rem;
+}
+
+.customer-donation-success-row strong {
+    color: #303342;
+
+    font-size: .88rem;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-donation-success-amount {
+    color: #29904d !important;
+
+    font-size: 1rem !important;
+}
+
+.customer-donation-success-amount small {
+    margin-right: 3px;
+
+    color: #747887;
+
+    font-size: .65rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SUCCESS ACTIONS
+   ========================================================= */
+
+.customer-donation-success-actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+.customer-donation-success-dashboard,
+.customer-donation-success-again {
+    flex: 1;
+
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: .8rem;
+
+    font-weight: 900;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-donation-success-dashboard {
+    color: #fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+}
+
+.customer-donation-success-again {
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border: 1px solid #dcd6ff;
+}
+
+.customer-donation-success-dashboard:hover,
+.customer-donation-success-again:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px rgba(75,60,190,.10);
+}
+
+
+/* =========================================================
+   SUCCESS MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-donation-success-card {
+        padding: 22px 12px;
+
+        border-radius: 14px;
+    }
+
+    .customer-donation-success-icon {
+        width: 68px;
+        height: 68px;
+
+        border-radius: 19px;
+
+        font-size: 2rem;
+    }
+
+    .customer-donation-success-title {
+        font-size: 1.1rem;
+    }
+
+    .customer-donation-success-message {
+        font-size: .76rem;
+
+        margin-bottom: 18px;
+    }
+
+    .customer-donation-success-row {
+        min-height: 52px;
+
+        gap: 10px;
+
+        padding: 8px 10px;
+    }
+
+    .customer-donation-success-label {
+        gap: 6px;
+
+        font-size: .68rem;
+    }
+
+    .customer-donation-success-info-icon {
+        width: 30px;
+        height: 30px;
+
+        border-radius: 8px;
+
+        font-size: .85rem;
+    }
+
+    .customer-donation-success-row strong {
+        font-size: .76rem;
+    }
+
+    .customer-donation-success-amount {
+        font-size: .88rem !important;
+    }
+
+    .customer-donation-success-actions {
+        flex-direction: column;
+
+        gap: 7px;
+
+        margin-top: 18px;
+    }
+
+    .customer-donation-success-dashboard,
+    .customer-donation-success-again {
+        min-height: 40px;
+
+        font-size: .75rem;
+    }
+}

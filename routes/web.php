@@ -16,11 +16,11 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\WithdrawalController;
 use App\Http\Controllers\Loan\LoanRequestController;
 use App\Http\Controllers\Customer\SavingsTransferController;
-use App\Http\Controllers\Payment\SavingsTransferCallbackController;
+use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\OtherInstallmentPaymentController;
 use App\Http\Controllers\Admin\DonationController;
 use App\Http\Controllers\Customer\DonationController as CustomerDonationController;
-use App\Http\Controllers\DonationTypeController;
+use App\Http\Controllers\Account\BalanceAdjustmentController;
 use App\Http\Controllers\SystemAccountController;
 use App\Http\Controllers\DonationController as PublicDonationController;
 
@@ -28,10 +28,6 @@ use App\Http\Controllers\DonationController as PublicDonationController;
 
 
 
-Route::post(
-    '/accounts/deposit',
-    [DepositController::class, 'store']
-)->name('accounts.deposit');
 
 
 
@@ -41,36 +37,100 @@ Route::post(
 |--------------------------------------------------------------------------
 */
 
+
+/*
+|--------------------------------------------------------------------------
+| Website
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])
-    ->name('login');
+/*
+|--------------------------------------------------------------------------
+| Admin Authentication
+|--------------------------------------------------------------------------
+*/
+
 
 Route::get(
-    'loans/overdue',
-    [LoanController::class, 'overdue']
-)->name('loans.overdue');
+    '/login',
+    [LoginController::class, 'showLoginForm']
+)
+    ->name('login');
 
 
-Route::post('/login', [LoginController::class, 'login'])
+Route::post(
+    '/login',
+    [LoginController::class, 'login']
+)
     ->name('login.store');
 
 
-Route::get('/otp', [OtpController::class, 'showVerifyForm'])
+Route::get(
+    '/otp',
+    [OtpController::class, 'showVerifyForm']
+)
     ->name('otp.form');
 
 
-Route::post('/otp', [OtpController::class, 'verify'])
+Route::post(
+    '/otp',
+    [OtpController::class, 'verify']
+)
     ->name('otp.verify');
+
+
+/*
+|--------------------------------------------------------------------------
+| Public Loan Information
+|--------------------------------------------------------------------------
+*/
 
 
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes
+| Public Donation
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/donation',
+    [PublicDonationController::class, 'create']
+)
+    ->name('donation.create');
+
+
+Route::post(
+    '/donation',
+    [PublicDonationController::class, 'store']
+)
+    ->name('donation.store');
+
+
+Route::get(
+    '/donation/success/{donationPayment}',
+    [
+        \App\Http\Controllers\DonationController::class,
+        'success'
+    ]
+)
+    ->name('donation.success');
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Protected Routes
 |--------------------------------------------------------------------------
 */
 
@@ -83,64 +143,102 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
+    Route::get(
+        '/dashboard',
+        [DashboardController::class, 'index']
+    )
         ->name('dashboard');
 
 
-    Route::post('/logout', LogoutController::class)
+    Route::post(
+        '/logout',
+        LogoutController::class
+    )
         ->name('logout');
 
 
 
 
+    Route::get(
+        'loans/overdue',
+        [LoanController::class, 'overdue']
+    )
+        ->name('loans.overdue');
+
     /*
     |--------------------------------------------------------------------------
-    | Accounts
+    | Accounts Management
     |--------------------------------------------------------------------------
     */
+
+
+    Route::get(
+        '/accounts/{account}/adjustment',
+        [BalanceAdjustmentController::class, 'create']
+    )
+        ->name('accounts.adjustment.create');
+
+    Route::post(
+        '/accounts/{account}/adjustment',
+        [BalanceAdjustmentController::class, 'store']
+    )
+        ->name('accounts.adjustment.store');
 
     Route::get(
         '/accounts',
         [AccountController::class, 'index']
-    )->name('accounts.index');
+    )
+        ->name('accounts.index');
 
 
     Route::get(
         '/accounts/{account}',
         [AccountController::class, 'show']
-    )->name('accounts.show');
+    )
+        ->name('accounts.show');
 
 
     Route::get(
         '/accounts/{account}/deposit',
         [DepositController::class, 'create']
-    )->name('accounts.deposit.create');
+    )
+        ->name('accounts.deposit.create');
 
 
     Route::post(
         '/accounts/deposit',
         [DepositController::class, 'store']
-    )->name('accounts.deposit');
+    )
+        ->name('accounts.deposit');
+
 
     Route::get(
         '/accounts/{account}/transactions',
         [AccountController::class, 'transactions']
-    )->name('accounts.transactions');
+    )
+        ->name('accounts.transactions');
+
+
 
     /*
-       |--------------------------------------------------------------------------
-       | براشت
-       |--------------------------------------------------------------------------
-       */
+    |--------------------------------------------------------------------------
+    | Withdrawals
+    |--------------------------------------------------------------------------
+    */
+
+
     Route::get(
         '/accounts/{account}/withdrawal',
         [WithdrawalController::class, 'create']
-    )->name('accounts.withdrawal.create');
+    )
+        ->name('accounts.withdrawal.create');
+
 
     Route::post(
         '/accounts/{account}/withdrawal',
         [WithdrawalController::class, 'store']
-    )->name('accounts.withdrawal.store');
+    )
+        ->name('accounts.withdrawal.store');
 
 
     Route::resource('withdrawals', WithdrawalController::class)
@@ -154,52 +252,29 @@ Route::middleware('auth')->group(function () {
     Route::post(
         '/withdrawals/{withdrawal}/approve',
         [WithdrawalController::class, 'approve']
-    )->name('withdrawals.approve');
+    )
+        ->name('withdrawals.approve');
 
 
     Route::patch(
         '/withdrawals/{withdrawal}/cancel',
         [WithdrawalController::class, 'cancel']
-    )->name('withdrawals.cancel');
+    )
+        ->name('withdrawals.cancel');
 
-    Route::get(
-        '/my-withdrawals',
-        [WithdrawalController::class, 'myWithdrawals']
-    )->name('withdrawals.mine');
 
     Route::post(
         '/withdrawals/{withdrawal}/reject',
         [WithdrawalController::class, 'reject']
-    )->name('withdrawals.reject');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | LoanRequest
-    |--------------------------------------------------------------------------
-    */
-    Route::resource('loan-requests', LoanRequestController::class)
-        ->only([
-            'index',
-            'create',
-            'store',
-            'show',
-        ]);
-
-    Route::post('loan-requests/{loanRequest}/approve',
-        [LoanRequestController::class, 'approve'])
-        ->name('loan-requests.approve');
-
-
-    Route::post('loan-requests/{loanRequest}/reject',
-        [LoanRequestController::class, 'reject'])
-        ->name('loan-requests.reject');
-
-    Route::put(
-        'loan-requests/{loanRequest}/update-review-date',
-        [LoanRequestController::class, 'updateReviewDate']
     )
-        ->name('loan-requests.update-review-date');
+        ->name('withdrawals.reject');
+
+
+    Route::get(
+        '/my-withdrawals',
+        [WithdrawalController::class, 'myWithdrawals']
+    )
+        ->name('withdrawals.mine');
 
 
 
@@ -211,41 +286,71 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get(
+        'customers/{customer}/accounts/create',
+        [\App\Http\Controllers\Account\CustomerAccountController::class, 'create']
+    )->name('customers.accounts.create');
+
+    Route::post(
+        'customers/{customer}/accounts',
+        [\App\Http\Controllers\Account\CustomerAccountController::class, 'store']
+    )->name('customers.accounts.store');
+
+    Route::get(
+        'customers/{customer}/accounts/{account}/edit',
+        [\App\Http\Controllers\Account\CustomerAccountController::class, 'edit']
+    )->name('customers.accounts.edit');
+
+    Route::put(
+        'customers/{customer}/accounts/{account}',
+        [\App\Http\Controllers\Account\CustomerAccountController::class, 'update']
+    )->name('customers.accounts.update');
+
+    Route::get(
         'customers/archive',
         [CustomerController::class, 'archive']
-    )->name('customers.archive');
+    )
+        ->name('customers.archive');
 
 
     Route::patch(
         'customers/{id}/restore',
         [CustomerController::class, 'restore']
-    )->name('customers.restore');
+    )
+        ->name('customers.restore');
 
 
-    /*
-     | جستجوی مشتری با کد مشتری
-     | برای انتخاب ضامن
-     */
     Route::get(
         'customers/search-code',
         [CustomerController::class, 'searchByCode']
-    )->name('customers.search.code');
+    )
+        ->name('customers.search.code');
 
 
-    Route::resource('customers', CustomerController::class);
+    Route::resource(
+        'customers',
+        CustomerController::class
+    );
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | System Accounts
+    |--------------------------------------------------------------------------
+    */
 
 
     Route::resource(
         'system-accounts',
         SystemAccountController::class
-    )->only([
-        'index',
-        'create',
-        'store',
-        'edit',
-        'update',
-    ]);
+    )
+        ->only([
+            'index',
+            'create',
+            'store',
+            'edit',
+            'update',
+        ]);
 
 
     Route::patch(
@@ -254,26 +359,10 @@ Route::middleware('auth')->group(function () {
             SystemAccountController::class,
             'changeStatus'
         ]
-    )->name('system-accounts.change-status');
-
-
-    Route::get(
-        '/customer/donations/payment/{donationPayment}',
-        [
-            \App\Http\Controllers\Customer\DonationController::class,
-            'payment'
-        ]
     )
-        ->name('customer.donations.payment');
+        ->name('system-accounts.change-status');
 
-    Route::post(
-        '/customer/donations/payment/{donationPayment}/pay',
-        [
-            \App\Http\Controllers\Customer\DonationController::class,
-            'pay'
-        ]
-    )
-        ->name('customer.donations.pay');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -298,7 +387,49 @@ Route::middleware('auth')->group(function () {
     Route::patch(
         'loan-types/{loanType}/change-status',
         [LoanTypeController::class, 'changeStatus']
-    )->name('loan-types.change-status');
+    )
+        ->name('loan-types.change-status');
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Loan Requests
+    |--------------------------------------------------------------------------
+    */
+
+
+    Route::resource(
+        'loan-requests',
+        LoanRequestController::class
+    )
+        ->only([
+            'index',
+            'create',
+            'store',
+            'show',
+        ]);
+
+
+    Route::post(
+        'loan-requests/{loanRequest}/approve',
+        [LoanRequestController::class, 'approve']
+    )
+        ->name('loan-requests.approve');
+
+
+    Route::post(
+        'loan-requests/{loanRequest}/reject',
+        [LoanRequestController::class, 'reject']
+    )
+        ->name('loan-requests.reject');
+
+
+    Route::put(
+        'loan-requests/{loanRequest}/update-review-date',
+        [LoanRequestController::class, 'updateReviewDate']
+    )
+        ->name('loan-requests.update-review-date');
 
 
 
@@ -312,7 +443,8 @@ Route::middleware('auth')->group(function () {
     Route::post(
         'loans/calculate',
         [LoanController::class, 'calculate']
-    )->name('loans.calculate');
+    )
+        ->name('loans.calculate');
 
 
     Route::resource('loans', LoanController::class)
@@ -326,27 +458,7 @@ Route::middleware('auth')->group(function () {
             'destroy',
         ]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Donations Manual (Operator)
-    |--------------------------------------------------------------------------
-    */
 
-    Route::get(
-        'donations/manual/create',
-        [DonationController::class, 'manualCreate']
-    )->name('donations.manual.create');
-
-
-    Route::post(
-        'donations/manual',
-        [DonationController::class, 'manualStore']
-    )->name('donations.manual.store');
-
-    Route::get(
-        'donations',
-        [DonationController::class, 'index']
-    )->name('donations.index');
 
     /*
     |--------------------------------------------------------------------------
@@ -359,76 +471,82 @@ Route::middleware('auth')->group(function () {
         ->name('payments.')
         ->group(function () {
 
+
             Route::post(
                 '/{installment}/pay',
                 [PaymentController::class, 'pay']
-            )->name('pay');
+            )
+                ->name('pay');
 
 
             Route::match(
                 ['GET', 'POST'],
                 '/callback',
                 [PaymentController::class, 'callback']
-            )->name('callback');
+            )
+                ->name('callback');
 
 
             Route::get(
                 '/fake',
                 [PaymentController::class, 'fake']
-            )->name('fake');
+            )
+                ->name('fake');
 
 
             Route::get(
                 '/{payment}/success',
                 [PaymentController::class, 'success']
-            )->name('success');
+            )
+                ->name('success');
 
 
             Route::get(
                 '/failed',
                 [PaymentController::class, 'failed']
-            )->name('failed');
+            )
+                ->name('failed');
 
         });
 
 
-}); // این را اضافه کن
+
+    /*
+    |--------------------------------------------------------------------------
+    | Manual Donations
+    |--------------------------------------------------------------------------
+    */
 
 
+    Route::get(
+        'donations/manual/create',
+        [DonationController::class, 'manualCreate']
+    )
+        ->name('donations.manual.create');
 
 
-
-/*
-|--------------------------------------------------------------------------
-| Development Routes
-|--------------------------------------------------------------------------
-*/
-
-
-Route::view(
-    '/test-components',
-    'test.components'
-);
+    Route::post(
+        'donations/manual',
+        [DonationController::class, 'manualStore']
+    )
+        ->name('donations.manual.store');
 
 
+    Route::get(
+        'donations',
+        [DonationController::class, 'index']
+    )
+        ->name('donations.index');
 
-Route::get('/test-otp', function (OtpService $otpService) {
-
-    $user = User::first();
-
-    return $otpService->generate($user);
 
 });
 
 
 /*
-        |--------------------------------------------------------------------------
-        | CustomerSavingsTransfer
-        |--------------------------------------------------------------------------
-        */
-
-
-
+|--------------------------------------------------------------------------
+| Customer Panel Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth'])
     ->prefix('customer')
@@ -436,36 +554,64 @@ Route::middleware(['auth'])
     ->group(function () {
 
 
-        Route::get(
-            'donations/create',
-            [CustomerDonationController::class, 'create']
-        )->name('donations.create');
-
-
-        Route::post(
-            'donations',
-            [CustomerDonationController::class, 'store']
-        )->name('donations.store');
 
         Route::get(
-            'installments/others',
-            [OtherInstallmentPaymentController::class, 'create']
-        )->name('installments.others.create');
+            'installments/{payment}/success',
+            [\App\Http\Controllers\Customer\InstallmentController::class, 'success']
+        )->name('installments.payment.success');
 
-        Route::post(
-            'installments/others/search',
-            [OtherInstallmentPaymentController::class, 'search']
-        )->name('installments.others.search');
 
-        Route::post(
-            'installments/others/pay',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Customer Dashboard
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/dashboard',
             [
-                OtherInstallmentPaymentController::class,
-                'pay'
+                CustomerDashboardController::class,
+                'index'
             ]
-        )->name('installments.others.pay');
+        )
+            ->name('dashboard');
 
 
+
+        Route::get(
+            'installments',
+            [
+                \App\Http\Controllers\Customer\InstallmentController::class,
+                'index'
+            ]
+        )->name('installments.index');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Savings Account
+        |--------------------------------------------------------------------------
+        */
+
+
+        // واریز به حساب پس‌انداز خود
+
+        Route::get(
+            'savings/deposit',
+            [SavingsTransferController::class, 'ownDepositCreate']
+        )
+            ->name('savings.deposit.create');
+
+
+        Route::post(
+            'savings/deposit',
+            [SavingsTransferController::class, 'ownDepositStore']
+        )
+            ->name('savings.deposit.store');
+
+
+
+        // برداشت از حساب پس‌انداز
 
         Route::get(
             'savings/withdrawal',
@@ -484,92 +630,194 @@ Route::middleware(['auth'])
             ]
         )->name('savings.withdrawal.store');
 
+
+        Route::get(
+            'savings/withdrawal/success/{withdrawal}',
+            [
+                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
+                'success'
+            ]
+        )->name('savings.withdrawal.success');
+
+
+
+        // گردش حساب
+
         Route::get(
             'savings/transactions',
-            [\App\Http\Controllers\Customer\SavingsTransferController::class, 'transactions']
-        )->name('savings.transactions');
+            [
+                SavingsTransferController::class,
+                'transactions'
+            ]
+        )
+            ->name('savings.transactions');
 
 
 
-        Route::get(
-            'savings/deposit',
-            [SavingsTransferController::class, 'ownDepositCreate']
-        )->name('savings.deposit.create');
+        /*
+        |--------------------------------------------------------------------------
+        | Transfer Savings To Other Members
+        |--------------------------------------------------------------------------
+        */
 
-
-        Route::post(
-            'savings/deposit',
-            [SavingsTransferController::class, 'ownDepositStore']
-        )->name('savings.deposit.store');
 
         Route::get(
             'savings-transfer',
             [SavingsTransferController::class, 'create']
-        )->name('savings-transfer.create');
+        )
+            ->name('savings-transfer.create');
+
 
         Route::post(
             'savings-transfer/search',
             [SavingsTransferController::class, 'search']
-        )->name('savings-transfer.search');
+        )
+            ->name('savings-transfer.search');
+
 
         Route::post(
             'savings-transfer',
             [SavingsTransferController::class, 'store']
-        )->name('savings-transfer.store');
+        )
+            ->name('savings-transfer.store');
+
 
         Route::get(
             'savings-transfer/success/{transfer}',
             [PaymentController::class, 'savingsTransferSuccess']
-        )->name('savings-transfer.success');
+        )
+            ->name('savings-transfer.success');
+
 
         Route::get(
             'savings-transfer/failed',
             [PaymentController::class, 'savingsTransferFailed']
-        )->name('savings-transfer.failed');
+        )
+            ->name('savings-transfer.failed');
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Other Installments Payment
+        |--------------------------------------------------------------------------
+        */
+
+
+        Route::get(
+            'installments/others',
+            [OtherInstallmentPaymentController::class, 'create']
+        )
+            ->name('installments.others.create');
+
+
+        Route::post(
+            'installments/others/search',
+            [OtherInstallmentPaymentController::class, 'search']
+        )
+            ->name('installments.others.search');
+
+
+        Route::post(
+            'installments/others/pay',
+            [
+                OtherInstallmentPaymentController::class,
+                'pay'
+            ]
+        )
+            ->name('installments.others.pay');
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Customer Donation
+        |--------------------------------------------------------------------------
+        */
+
+
+        Route::get(
+            'donations/create',
+            [CustomerDonationController::class, 'create']
+        )
+            ->name('donations.create');
+
+
+        Route::post(
+            'donations',
+            [CustomerDonationController::class, 'store']
+        )
+            ->name('donations.store');
+
+
+        Route::get(
+            'donations/payment/{donationPayment}',
+            [CustomerDonationController::class, 'payment']
+        )
+            ->name('donations.payment');
+
+
+        Route::post(
+            'donations/payment/{donationPayment}/pay',
+            [CustomerDonationController::class, 'pay']
+        )
+            ->name('donations.pay');
+
+
+        Route::get(
+            'donations/success/{donationPayment}',
+            [CustomerDonationController::class, 'success']
+        )
+            ->name('donations.success');
+
+
     });
 
 
-Route::get(
-    '/payments/cancel',
-    [
-        \App\Http\Controllers\Payment\PaymentCancelController::class,
-        'handle'
-    ]
-)
-    ->name('payments.cancel');
-Route::get(
-    '/customer/donations/success/{donationPayment}',
-    [
-        \App\Http\Controllers\Customer\DonationController::class,
-        'success'
-    ]
-)
-    ->name('customer.donations.success');
 
-Route::get(
-    '/donation',
-    [
-        PublicDonationController::class,
-        'create'
-    ]
-)
-    ->name('donation.create');
+/*
+|--------------------------------------------------------------------------
+| Development Routes
+|--------------------------------------------------------------------------
+*/
 
 
-Route::post(
-    '/donation',
-    [
-        PublicDonationController::class,
-        'store'
-    ]
-)
-    ->name('donation.store');
+/*
+|--------------------------------------------------------------------------
+| Test Components
+|--------------------------------------------------------------------------
+*/
 
-Route::get(
-    '/donation/success/{donationPayment}',
-    [
-        \App\Http\Controllers\DonationController::class,
-        'success'
-    ]
-)
-    ->name('donation.success');
+Route::view(
+    '/test-components',
+    'test.components'
+);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Test OTP
+|--------------------------------------------------------------------------
+*/
+
+if (app()->environment('local')) {
+
+    Route::get(
+        '/test-otp',
+        function (OtpService $otpService) {
+
+            $user = User::first();
+
+            return $otpService->generate($user);
+
+        }
+    );
+
+}
+
+
+
+
+
+

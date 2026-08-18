@@ -242,19 +242,36 @@
 
 
 
-                            <a href="{{ route('payments.cancel', [
-                            'reference_id' => $data['reference_id'] ?? null,
-                            'payment_type' => $paymentType,
-                        ]) }}"
-                               class="btn btn-warning">
+                            @if(in_array($paymentType, [
+         'donation',
+         'donation_customer',
+         'donation_public'
+     ]))
 
+                                <a href="{{ route('customer.donations.payment', [
+        'donationPayment' => $data['reference_id']
+    ]) }}"
+                                   class="btn btn-warning">
 
-                                <i class="bi bi-arrow-counterclockwise"></i>
+                                    <i class="bi bi-arrow-counterclockwise"></i>
 
-                                انصراف
+                                    انصراف
 
+                                </a>
 
-                            </a>
+                            @else
+
+                                <button type="button"
+                                        onclick="history.back()"
+                                        class="btn btn-warning">
+
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                                    انصراف
+
+                                </button>
+
+                            @endif
 
 
 

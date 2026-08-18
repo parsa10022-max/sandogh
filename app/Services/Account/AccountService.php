@@ -12,6 +12,7 @@ use App\Enums\WithdrawalStatus;
 use App\Services\Account\AccountTransactionService;
 use App\Services\Account\AccountTransactionNoService;
 use Illuminate\Validation\ValidationException;
+use App\Models\AccountTransaction;
 
 
 class AccountService
@@ -258,10 +259,12 @@ class AccountService
 
             $balanceAfter = $balanceBefore + $withdrawal->amount;
 
+            // برگشت مبلغ به حساب
             $account->update([
                 'balance' => $balanceAfter,
             ]);
 
+            // ثبت تراکنش برگشت وجه
             $this->accountTransactionService->create(
 
                 account: $account,
@@ -282,7 +285,10 @@ class AccountService
 
             );
 
-
+            // تغییر وضعیت درخواست برداشت
+            $withdrawal->update([
+                'status' => WithdrawalStatus::REJECTED,
+            ]);
 
             return $withdrawal->fresh();
 
@@ -299,5 +305,53 @@ class AccountService
             $amount
         );
 
+    }
+
+    public function adjustBalance(
+        Account $account,
+        int $newBalance,
+        ?string $description = null,
+        ?int $createdBy = null,
+    ): AccountTransaction {
+
+        if ($newBalance < 0) {
+            throw new \InvalidArgumentException(
+                'موجودی نمی‌تواند منفی باشد.'
+            );
+        }
+
+        return DB::transaction(function () use (
+            $account,
+            $newBalance,
+            $description,
+            $createdBy
+        ) {
+
+            $balanceBefore = $account->balance;
+
+            if ($newBalance === $balanceBefore) {
+                throw new \InvalidArgumentException(
+                    'موجودی جدید با موجودی فعلی یکسان است.'
+                );
+            }
+
+            $balanceAfter = $newBalance;
+
+            $account->update([
+                'balance' => $balanceAfter,
+            ]);
+
+            return $this->accountTransactionService->create(
+                account: $account,
+                type: TransactionType::ADJUSTMENT,
+                source: TransactionSource::OPERATOR,
+                paymentMethod: PaymentMethod::BANK_TRANSFER,
+                amount: abs($newBalance - $balanceBefore),
+                balanceBefore: $balanceBefore,
+                balanceAfter: $balanceAfter,
+                createdBy: $createdBy ?? auth()->id(),
+                description: $description ?? 'اصلاح موجودی حساب',
+            );
+        });
     }
 }

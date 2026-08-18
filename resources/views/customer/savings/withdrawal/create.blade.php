@@ -1,105 +1,299 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
 @section('title', 'برداشت از حساب پس‌انداز')
 
+@section('header_title', 'برداشت از حساب پس‌انداز')
+
+@section('header_subtitle', 'برداشت وجه از حساب پس‌انداز شما')
+
+@push('styles')
+    @vite('resources/css/customer/savings-withdrawal.css')
+@endpush
+
 @section('content')
 
-    <div class="container py-4">
+    <div class="customer-savings-withdrawal-page">
 
-        <div class="row justify-content-center">
+        <div class="customer-savings-withdrawal-card">
 
-            <div class="col-lg-6">
+            {{-- =====================================================
+                 CARD HEADER
+            ====================================================== --}}
 
-                <div class="card shadow">
+            <div class="customer-savings-withdrawal-header">
 
-                    <div class="card-header">
+                <div class="customer-savings-withdrawal-header-icon">
 
-                        <h5 class="mb-0">
+                    <i class="bi bi-arrow-return-left"></i>
 
-                            برداشت از حساب پس‌انداز
-                            <span class="text-primary fw-bold">
-                            {{ $account->customer->full_name }}
-                        </span>
+                </div>
 
-                        </h5>
+                <div class="customer-savings-withdrawal-header-content">
 
-                    </div>
+                    <h1>
+                        برداشت از حساب پس‌انداز
+                    </h1>
 
-                    <div class="card-body">
+                    <span>
+                        برداشت وجه از حساب پس‌انداز
+                    </span>
 
-                        <div class="alert alert-info">
+                </div>
 
-                            <div>
+            </div>
 
-                                <strong>شماره حساب:</strong>
 
-                                <span dir="ltr">
+            {{-- =====================================================
+                 ACCOUNT INFORMATION
+            ====================================================== --}}
 
-                                {{ $account->account_number }}
+            <div class="customer-savings-withdrawal-account">
 
-                            </span>
+                {{-- صاحب حساب --}}
+                <div class="customer-savings-withdrawal-account-item">
 
-                            </div>
+                    <span>
+                        صاحب حساب
+                    </span>
 
-                            <div class="mt-2">
+                    <strong>
+                        {{ $account->customer->full_name }}
+                    </strong>
 
-                                <strong>موجودی:</strong>
+                </div>
 
-                                {{ number_format($account->balance) }}
-                                ریال
 
-                            </div>
+                {{-- شماره حساب --}}
+                <div class="customer-savings-withdrawal-account-item">
+
+                    <span>
+                        شماره حساب
+                    </span>
+
+                    <strong dir="ltr">
+                        {{ $account->account_number }}
+                    </strong>
+
+                </div>
+
+
+                {{-- موجودی --}}
+                <div class="customer-savings-withdrawal-account-item balance">
+
+                    <span>
+                        موجودی فعلی
+                    </span>
+
+                    <strong>
+                        {{ number_format($account->balance) }}
+
+                        <small>
+                            ریال
+                        </small>
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {{-- =====================================================
+                 FORM
+            ====================================================== --}}
+
+            <form
+                method="POST"
+                action="{{ route('customer.savings.withdrawal.store') }}"
+                class="customer-savings-withdrawal-form"
+            >
+
+                @csrf
+
+
+                {{-- =================================================
+                     IBAN ALERT
+                ================================================== --}}
+                @php
+
+                    $iban = strtoupper(
+                        trim($customer->iban ?? '')
+                    );
+
+                    $iban = preg_replace(
+                        '/\s+/',
+                        '',
+                        $iban
+                    );
+
+                    $ibanFormatted = trim(
+                        chunk_split(
+                            $iban,
+                            4,
+                            ' '
+                        )
+                    );
+
+                @endphp
+
+
+                <div class="customer-savings-withdrawal-iban-alert">
+
+                    <i class="bi bi-bank"></i>
+
+                    <div class="customer-savings-withdrawal-iban-content">
+
+        <span class="customer-savings-withdrawal-iban-title">
+            حساب مقصد برداشت
+        </span>
+
+
+                        @if($iban)
+
+                            <strong
+                                dir="ltr"
+                                class="customer-savings-withdrawal-iban-number"
+                            >
+                                {{ $ibanFormatted }}
+                            </strong>
+
+                        @else
+
+                            <strong class="customer-savings-withdrawal-iban-empty">
+                                شماره شبا ثبت نشده است
+                            </strong>
+
+                        @endif
+
+
+                        <div class="customer-savings-withdrawal-iban-name">
+
+                            <i class="bi bi-person-fill"></i>
+
+                            <span>
+                به نام:
+            </span>
+
+                            <strong>
+                                {{ $customer->full_name }}
+                            </strong>
 
                         </div>
 
 
-                        <form
-                            method="POST"
-                            action="{{ route('customer.savings.withdrawal.store') }}">
+                        <small class="customer-savings-withdrawal-iban-owner">
 
-                            @csrf
+                            مبلغ برداشت فقط به شماره شبای ثبت‌شده
+                            و به نام خود مشتری واریز می‌شود.
 
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-
-                                    مبلغ برداشت
-
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="amount"
-                                    min="500000"
-                                    class="form-control"
-                                    required>
-
-                                @error('amount')
-
-                                <div class="text-danger small mt-1">
-
-                                    {{ $message }}
-
-                                </div>
-
-                                @enderror
-
-                            </div>
-
-
-                            <button
-                                class="btn btn-danger">
-
-                                ثبت درخواست برداشت
-
-                            </button>
-
-                        </form>
+                        </small>
 
                     </div>
 
                 </div>
+
+
+                {{-- =================================================
+                     AMOUNT
+                ================================================== --}}
+
+                <div class="customer-savings-withdrawal-field">
+
+                    <label
+                        for="amount"
+                        class="customer-savings-withdrawal-label"
+                    >
+                        مبلغ برداشت
+                    </label>
+
+
+                    <div class="customer-savings-withdrawal-money">
+
+                        <input
+                            type="text"
+                            name="amount"
+                            id="amount"
+                            class="money-input @error('amount') is-invalid @enderror"
+                            value="{{ old('amount') }}"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            placeholder="مثلاً 500,000"
+                            data-min="500000"
+                            required
+                        >
+
+                        <span class="rial-box">
+                            ریال
+                        </span>
+
+                    </div>
+
+
+                    @error('amount')
+
+                    <div class="customer-savings-withdrawal-error">
+
+                        {{ $message }}
+
+                    </div>
+
+                    @enderror
+
+
+                    <div class="customer-savings-withdrawal-help">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        حداقل مبلغ برداشت
+
+                        <strong>
+                            ۵۰۰,۰۰۰ ریال
+                        </strong>
+
+                        است.
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     ACTION
+                ================================================== --}}
+
+                <div class="customer-savings-withdrawal-actions">
+
+                    <button
+                        type="submit"
+                        class="customer-savings-withdrawal-submit"
+                    >
+
+                        <i class="bi bi-arrow-down-circle"></i>
+
+                        <span>
+                            ثبت درخواست برداشت
+                        </span>
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            {{-- =====================================================
+                 SECURITY NOTE
+            ====================================================== --}}
+
+            <div class="customer-savings-withdrawal-note">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+                    درخواست برداشت شما پس از ثبت، در سوابق حساب ذخیره می‌شود.
+                </span>
 
             </div>
 

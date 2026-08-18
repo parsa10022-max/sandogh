@@ -1,74 +1,114 @@
 @extends('layouts.app')
 
+@section('title', 'اطلاعات حساب')
+
 @section('content')
 
-    <div class="card">
+    <div class="container-fluid py-4">
 
-        <div class="card-header">
-            اطلاعات حساب
-        </div>
+        <div class="card shadow-sm">
 
-        <div class="card-body">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-bank"></i>
+                    اطلاعات حساب
+                </h5>
+            </div>
 
-            <p>
-                عضو:
-            @if($account->customer)
+            <div class="card-body">
 
-                <div>
-                    <strong>عضو:</strong>
+                {{-- صاحب حساب --}}
+                @if($account->customer)
 
-                    {{ $account->customer->first_name }}
-                    {{ $account->customer->last_name }}
+                    <div class="mb-3">
+                        <strong>عضو:</strong>
 
-                </div>
+                        {{ $account->customer->first_name }}
+                        {{ $account->customer->last_name }}
+                    </div>
 
-            @else
+                    <div class="mb-3">
+                        <strong>کد مشتری:</strong>
 
-                <div>
+                        {{ $account->customer->customer_code }}
+                    </div>
 
-                    <strong>حساب سیستمی:</strong>
+                @else
 
-                    {{ $account->name ?? '-' }}
+                    <div class="mb-3">
+                        <strong>حساب سیستمی:</strong>
 
-                </div>
+                        {{ $account->name ?? '-' }}
+                    </div>
 
                 @endif
-            </p>
 
-            <p>
-                شماره حساب:
-                <span dir="ltr">
-              {{ $account->account_number }}
-                </span>
-            </p>
+                {{-- شماره حساب --}}
+                <div class="mb-3">
+                    <strong>شماره حساب:</strong>
 
-            <p>
-                نوع حساب:
-                {{ $account->account_type->label() }}
-            </p>
+                    <span dir="ltr">
+                        {{ $account->account_number }}
+                    </span>
+                </div>
 
-            <p>
-                موجودی:
-                {{ number_format($account->balance) }}
-                ریال
-            </p>
+                {{-- نوع حساب --}}
+                <div class="mb-3">
+                    <strong>نوع حساب:</strong>
 
+                    {{ $account->account_type->label() }}
+                </div>
 
-            <a href="{{ route('accounts.deposit.create', $account) }}"
-               class="btn btn-success">
-                واریز
-            </a>
+                {{-- موجودی فعلی --}}
+                <div class="mb-4">
+                    <strong>موجودی فعلی:</strong>
 
-            <a href="{{ route('accounts.withdrawal.create', $account) }}"
-               class="btn btn-danger">
-                <i class="bi bi-arrow-down-circle"></i>
-                برداشت از حساب
-            </a>
+                    <span class="fw-bold">
+                        {{ number_format($account->balance) }}
+                        ریال
+                    </span>
+                </div>
 
-            <a href="{{ route('accounts.transactions', $account) }}"
-               class="btn btn-primary">
-                گردش حساب
-            </a>
+                <hr>
+
+                {{-- عملیات --}}
+                <div class="d-flex flex-wrap gap-2">
+
+                    <a href="{{ route('accounts.deposit.create', $account) }}"
+                       class="btn btn-success">
+
+                        <i class="bi bi-arrow-up-circle"></i>
+                        واریز
+
+                    </a>
+
+                    <a href="{{ route('accounts.withdrawal.create', $account) }}"
+                       class="btn btn-danger">
+
+                        <i class="bi bi-arrow-down-circle"></i>
+                        برداشت از حساب
+
+                    </a>
+
+                    <a href="{{ route('accounts.transactions', $account) }}"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-list-ul"></i>
+                        گردش حساب
+
+                    </a>
+
+                    <a href="{{ route('accounts.adjustment.create', $account) }}"
+                       class="btn btn-warning">
+
+                        <i class="bi bi-pencil-square"></i>
+                        اصلاح موجودی
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 

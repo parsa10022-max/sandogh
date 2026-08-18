@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Enums\AccountType;
-use App\Services\Account\AccountTransactionService;
 use Illuminate\Http\Request;
 use App\Services\Donation\DonationPaymentService;
 use App\Models\DonationPayment;
+use App\Enums\AccountStatus;
 use App\Services\Payment\Gateways\GatewayInterface;
 
 
@@ -26,31 +26,43 @@ class DonationController extends Controller
     /**
      * فرم ثبت کمک
      */
-    public function create()
+    public function create(Request $request)
     {
-
         $accounts = Account::query()
-
-            ->where(
-                'account_type',
-                AccountType::SYSTEM
-            )
-
-            ->where(
-                'status',
-                1
-            )
-
+            ->where('account_type', AccountType::SYSTEM)
+            ->where('status', 1)
             ->orderBy('account_number')
-
             ->get();
 
+        $selectedAccountId = $request->integer('account_id');
+
+        // حسابی انتخاب نشده است
+        if (!$selectedAccountId) {
+            return redirect()
+                ->route('customer.dashboard')
+                ->with('error', 'لطفاً ابتدا حساب مقصد کمک را انتخاب کنید.');
+        }
+
+        $selectedAccount = $accounts->firstWhere(
+            'id',
+            $selectedAccountId
+        );
+
+        // حساب انتخاب‌شده معتبر نیست
+        if (!$selectedAccount) {
+            return redirect()
+                ->route('customer.dashboard')
+                ->with('error', 'حساب مقصد انتخاب‌شده معتبر نیست.');
+        }
 
         return view(
             'customer.donations.create',
-            compact('accounts')
+            compact(
+                'accounts',
+                'selectedAccountId',
+                'selectedAccount'
+            )
         );
-
     }
 
 
@@ -58,33 +70,41 @@ class DonationController extends Controller
     /**
      * ثبت کمک
      */
+
     public function store(Request $request)
     {
-
         $request->validate([
 
             'account_id' => [
                 'required',
-                'exists:accounts,id'
+                'integer',
+                'exists:accounts,id',
             ],
 
             'amount' => [
                 'required',
                 'integer',
-                'min:10000'
+                'min:50000',
             ],
 
         ]);
 
 
-
         $customer = auth()->user()->customer;
 
 
-        $account = \App\Models\Account::findOrFail(
-            $request->account_id
-        );
-
+        $account = Account::query()
+            ->where(
+                'account_type',
+                AccountType::SYSTEM
+            )
+            ->where(
+                'status',
+                AccountStatus::ACTIVE
+            )
+            ->findOrFail(
+                $request->account_id
+            );
 
 
         $result = $this->donationPaymentService
@@ -94,55 +114,52 @@ class DonationController extends Controller
 
                 account: $account,
 
-                amount: (int)$request->amount
+                amount: (int) $request->amount,
 
             );
 
 
-
         return redirect()
-
             ->route(
                 'customer.donations.payment',
                 $result['payment']->id
             );
-
     }
 
     public function payment(
         DonationPayment $donationPayment
-    )
-    {
+    ) {
+        abort_if(
+            $donationPayment->customer_id
+            !== auth()->user()->customer->id,
+            403
+        );
 
         return view(
             'customer.donations.payment',
             compact('donationPayment')
         );
-
     }
 
     public function pay(
         DonationPayment $donationPayment
-    )
-    {
+    ) {
+
+        abort_if(
+            $donationPayment->customer_id
+            !== auth()->user()->customer->id,
+            403
+        );
 
         $response =
             $this->donationPaymentService
-                ->startPayment(
-
-                    customer: auth()->user()->customer,
-
-                    account: $donationPayment->account,
-
-                    amount: $donationPayment->amount
-
+                ->sendToGateway(
+                    $donationPayment
                 );
 
-
         return redirect(
-            $response['gateway']['redirect_url']
+            $response['redirect_url']
         );
-
     }
 
     public function success(

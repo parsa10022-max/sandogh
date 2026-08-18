@@ -2,7 +2,7 @@
  * --------------------------------------------------------------------------
  * Money Input Component
  * --------------------------------------------------------------------------
- * Version : 1.0.0
+ * Version : 1.1.0
  * Author  : Project Sandogh
  * Laravel : 12
  * Bootstrap : 5
@@ -11,9 +11,6 @@
 
 class MoneyInput {
 
-    /**
-     * Constructor
-     */
     constructor(element) {
 
         this.input = element;
@@ -33,6 +30,9 @@ class MoneyInput {
         this.required =
             this.input.hasAttribute('required');
 
+        this.allowNegative =
+            this.input.dataset.allowNegative === 'true';
+
         this.min =
             Number(this.input.dataset.min || 0);
 
@@ -42,9 +42,7 @@ class MoneyInput {
         this.init();
     }
 
-    /**
-     * Initialize Component
-     */
+
     init() {
 
         this.formatInitialValue();
@@ -52,9 +50,7 @@ class MoneyInput {
         this.bindEvents();
     }
 
-    /**
-     * Register Events
-     */
+
     bindEvents() {
 
         this.input.addEventListener(
@@ -76,7 +72,13 @@ class MoneyInput {
             'keypress',
             this.handleKeyPress.bind(this)
         );
+
+        this.input.addEventListener(
+            'drop',
+            this.handleDrop.bind(this)
+        );
     }
+
 
     /**
      * Persian & Arabic Numbers
@@ -91,11 +93,9 @@ class MoneyInput {
             .replace(/[٠-٩]/g, d => ar.indexOf(d));
     }
 
+
     /**
-     * Only Numbers
-     */
-    /**
-     * Only Numbers
+     * پاکسازی مقدار
      */
     clean(value) {
 
@@ -103,24 +103,38 @@ class MoneyInput {
             value.toString()
         );
 
-        // حذف جداکننده هزارگان
         value = value.replace(/,/g, '');
 
-        // اگر مقدار اعشاری بود (100.00)
-        // فقط قسمت صحیح نگه داشته شود
+        const negative =
+            value.trim().startsWith('-');
+
         if (value.includes('.')) {
 
             value = value.split('.')[0];
 
         }
 
-        return value.replace(/\D/g, '');
+        value = value.replace(/\D/g, '');
 
+        if (value === '') {
+
+            return '';
+
+        }
+
+        if (
+            negative &&
+            this.allowNegative
+        ) {
+
+            return '-' + value;
+
+        }
+
+        return value;
     }
 
-    /**
-     * Thousands Separator
-     */
+
     /**
      * Thousands Separator
      */
@@ -134,29 +148,36 @@ class MoneyInput {
 
         }
 
-        return Number(value).toLocaleString(
-            'en-US'
-        );
+        const negative =
+            value.startsWith('-');
 
+        const numericValue =
+            negative
+                ? value.substring(1)
+                : value;
+
+        const formatted =
+            Number(numericValue).toLocaleString('en-US');
+
+        return negative
+            ? '-' + formatted
+            : formatted;
     }
+
+
     /**
      * مقدار عددی
      */
     numericValue() {
 
-        const value = this.clean(
-            this.input.value
-        );
+        const value = this.rawValue();
 
         return value === ''
             ? 0
-            : parseInt(value, 10);
-
+            : Number(value);
     }
 
-    /**
-     * Initial Value
-     */
+
     /**
      * Initial Value
      */
@@ -170,285 +191,372 @@ class MoneyInput {
 
         }
 
-        this.input.value = this.format(value);
-
+        this.input.value =
+            this.format(value);
     }
 
-/**
- * هنگام تایپ
- */
-handleInput(event) {
 
-    const cursor = this.input.selectionStart;
+    /**
+     * هنگام تایپ
+     */
+    handleInput() {
 
-    const oldLength = this.input.value.length;
+        const cursor =
+            this.input.selectionStart;
 
-    const value = this.clean(this.input.value);
+        const oldLength =
+            this.input.value.length;
 
-    this.input.value = this.format(value);
+        const value =
+            this.clean(this.input.value);
 
-    const newLength = this.input.value.length;
+        this.input.value =
+            this.format(value);
 
-    const diff = newLength - oldLength;
+        const newLength =
+            this.input.value.length;
 
-    this.input.setSelectionRange(
-        cursor + diff,
-        cursor + diff
-    );
+        const diff =
+            newLength - oldLength;
 
-    if (this.live) {
-        this.validate();
-    }
-
-    this.dispatch('money:input');
-}
-
-/**
- * خروج از فیلد
- */
-handleBlur() {
-
-    this.validate();
-
-    this.dispatch('money:blur');
-}
-
-/**
- * Paste
- */
-handlePaste(event) {
-
-    event.preventDefault();
-
-    const text = (
-        event.clipboardData ||
-        window.clipboardData
-    ).getData('text');
-
-    this.input.value = this.format(text);
-
-    if (this.live) {
-        this.validate();
-    }
-
-    this.dispatch('money:paste');
-}
-
-/**
- * فقط اعداد
- */
-handleKeyPress(event) {
-
-    const key = event.key;
-
-    const allowed =
-        /^[0-9۰-۹٠-٩]$/;
-
-    if (!allowed.test(key)) {
-        event.preventDefault();
-    }
-}
-
-/**
- * Drag & Drop
- */
-handleDrop(event) {
-
-    event.preventDefault();
-
-    const text = event.dataTransfer.getData('text');
-
-    this.input.value = this.format(text);
-
-    this.validate();
-
-    this.dispatch('money:drop');
-}
-
-/**
- * گرفتن مقدار خام
- */
-rawValue() {
-
-    return this.clean(this.input.value);
-}
-
-/**
- * مقدار عددی
- */
-numericValue() {
-
-    const value = this.rawValue();
-
-    return value === ''
-        ? 0
-        : Number(value);
-}
-
-/**
- * مقدار فرمت شده
- */
-formattedValue() {
-
-    return this.input.value;
-}
-
-/**
- * ثبت Event سفارشی
- */
-dispatch(name) {
-
-    this.input.dispatchEvent(
-
-        new CustomEvent(name, {
-
-            bubbles: true,
-
-            detail: {
-
-                value: this.rawValue(),
-
-                formatted: this.formattedValue(),
-
-                number: this.numericValue()
-
-            }
-
-        })
-
-    );
-
-}
-/**
- * اعتبارسنجی
- */
-validate() {
-
-    const value = this.numericValue();
-
-    let valid = true;
-    let message = '';
-
-    if (this.required && value === 0) {
-
-        valid = false;
-        message = 'وارد کردن مبلغ الزامی است.';
-
-    } else if (value < this.min) {
-
-        valid = false;
-        message = `حداقل مبلغ ${this.min.toLocaleString('en-US')} است.`;
-
-    } else if (value > this.max) {
-
-        valid = false;
-        message = `حداکثر مبلغ ${this.max.toLocaleString('en-US')} است.`;
-
-    }
-
-    this.showValidation(valid, message);
-
-    return valid;
-}
-
-/**
- * نمایش وضعیت اعتبارسنجی
- */
-showValidation(valid, message = '') {
-
-    this.input.classList.remove('is-valid', 'is-invalid');
-
-    if (this.feedback) {
-
-        this.feedback.classList.remove(
-            'valid-feedback',
-            'invalid-feedback',
-            'd-block'
+        this.input.setSelectionRange(
+            Math.max(0, cursor + diff),
+            Math.max(0, cursor + diff)
         );
 
-        this.feedback.innerHTML = '';
-    }
+        if (this.live) {
 
-    if (this.icon) {
-
-        this.icon.className = 'bi';
-    }
-
-    if (valid) {
-
-        if (this.rawValue() !== '') {
-
-            this.input.classList.add('is-valid');
-
-            if (this.icon) {
-
-                this.icon.classList.add(
-                    'bi-check-circle-fill',
-                    'text-success'
-                );
-
-            }
+            this.validate();
 
         }
 
-    } else {
+        this.dispatch('money:input');
+    }
 
-        this.input.classList.add('is-invalid');
+
+    /**
+     * خروج از فیلد
+     */
+    handleBlur() {
+
+        this.validate();
+
+        this.dispatch('money:blur');
+    }
+
+
+    /**
+     * Paste
+     */
+    handlePaste(event) {
+
+        event.preventDefault();
+
+        const text = (
+            event.clipboardData ||
+            window.clipboardData
+        ).getData('text');
+
+        this.input.value =
+            this.format(text);
+
+        if (this.live) {
+
+            this.validate();
+
+        }
+
+        this.dispatch('money:paste');
+    }
+
+
+    /**
+     * فقط اعداد و علامت منفی
+     */
+    handleKeyPress(event) {
+
+        const key = event.key;
+
+        const allowed =
+            /^[0-9۰-۹٠-٩]$/;
+
+        if (allowed.test(key)) {
+
+            return;
+
+        }
+
+        if (
+            key === '-' &&
+            this.allowNegative &&
+            this.input.selectionStart === 0 &&
+            !this.input.value.includes('-')
+        ) {
+
+            return;
+
+        }
+
+        event.preventDefault();
+    }
+
+
+    /**
+     * Drag & Drop
+     */
+    handleDrop(event) {
+
+        event.preventDefault();
+
+        const text =
+            event.dataTransfer.getData('text');
+
+        this.input.value =
+            this.format(text);
+
+        this.validate();
+
+        this.dispatch('money:drop');
+    }
+
+
+    /**
+     * گرفتن مقدار خام
+     */
+    rawValue() {
+
+        return this.clean(
+            this.input.value
+        );
+    }
+
+
+    /**
+     * مقدار عددی
+     */
+    numericValue() {
+
+        const value =
+            this.rawValue();
+
+        return value === ''
+            ? 0
+            : Number(value);
+    }
+
+
+    /**
+     * مقدار فرمت شده
+     */
+    formattedValue() {
+
+        return this.input.value;
+    }
+
+
+    /**
+     * ثبت Event سفارشی
+     */
+    dispatch(name) {
+
+        this.input.dispatchEvent(
+
+            new CustomEvent(name, {
+
+                bubbles: true,
+
+                detail: {
+
+                    value:
+                        this.rawValue(),
+
+                    formatted:
+                        this.formattedValue(),
+
+                    number:
+                        this.numericValue()
+
+                }
+
+            })
+
+        );
+    }
+
+
+    /**
+     * اعتبارسنجی
+     */
+    validate() {
+
+        const value =
+            this.numericValue();
+
+        let valid = true;
+
+        let message = '';
+
+
+        if (
+            this.required &&
+            value === 0
+        ) {
+
+            valid = false;
+
+            message =
+                'وارد کردن مبلغ الزامی است.';
+
+        }
+
+        else if (
+            !this.allowNegative &&
+            value < this.min
+        ) {
+
+            valid = false;
+
+            message =
+                `حداقل مبلغ ${this.min.toLocaleString('en-US')} است.`;
+
+        }
+
+        else if (
+            value > this.max
+        ) {
+
+            valid = false;
+
+            message =
+                `حداکثر مبلغ ${this.max.toLocaleString('en-US')} است.`;
+        }
+
+
+        this.showValidation(
+            valid,
+            message
+        );
+
+        return valid;
+    }
+
+
+    /**
+     * نمایش وضعیت اعتبارسنجی
+     */
+    showValidation(
+        valid,
+        message = ''
+    ) {
+
+        this.input.classList.remove(
+            'is-valid',
+            'is-invalid'
+        );
+
 
         if (this.feedback) {
 
-            this.feedback.innerHTML = message;
-
-            this.feedback.classList.add(
+            this.feedback.classList.remove(
+                'valid-feedback',
                 'invalid-feedback',
                 'd-block'
             );
 
+            this.feedback.innerHTML = '';
         }
+
 
         if (this.icon) {
 
-            this.icon.classList.add(
-                'bi-x-circle-fill',
-                'text-danger'
-            );
-
+            this.icon.className = 'bi';
         }
 
+
+        if (valid) {
+
+            if (this.rawValue() !== '') {
+
+                this.input.classList.add(
+                    'is-valid'
+                );
+
+                if (this.icon) {
+
+                    this.icon.classList.add(
+                        'bi-check-circle-fill',
+                        'text-success'
+                    );
+                }
+            }
+
+        } else {
+
+            this.input.classList.add(
+                'is-invalid'
+            );
+
+            if (this.feedback) {
+
+                this.feedback.innerHTML =
+                    message;
+
+                this.feedback.classList.add(
+                    'invalid-feedback',
+                    'd-block'
+                );
+            }
+
+            if (this.icon) {
+
+                this.icon.classList.add(
+                    'bi-x-circle-fill',
+                    'text-danger'
+                );
+            }
+        }
     }
-
 }
 
-}
 
 /**
  * حذف کاما قبل از ارسال فرم
  */
-document.addEventListener('submit', function (event) {
+document.addEventListener(
+    'submit',
+    function (event) {
 
-    event.target
-        .querySelectorAll('.money-input')
-        .forEach(input => {
+        event.target
+            .querySelectorAll('.money-input')
+            .forEach(input => {
 
-            input.value = input.value.replace(/,/g, '');
+                input.value =
+                    input.value.replace(/,/g, '');
 
-        });
+            });
 
-}, true);
+    },
+    true
+);
+
 
 /**
  * راه‌اندازی خودکار
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener(
+    'DOMContentLoaded',
+    () => {
 
-    document
-        .querySelectorAll('.money-input')
-        .forEach(input => {
+        document
+            .querySelectorAll('.money-input')
+            .forEach(input => {
 
-            new MoneyInput(input);
+                new MoneyInput(input);
 
-        });
+            });
 
-});
+    }
+);
+
 
 export default MoneyInput;

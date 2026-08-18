@@ -1,0 +1,665 @@
+/* =========================================================
+   CUSTOMER SAVINGS WITHDRAWAL SUCCESS
+   Design System #1
+   ========================================================= */
+
+.customer-savings-withdrawal-success-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.customer-savings-withdrawal-success-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e3e6ef;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(35, 45, 75, .055);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-savings-withdrawal-success-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid #eef0f5;
+}
+
+.customer-savings-withdrawal-success-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #319451;
+    background: #eefaf2;
+    border: 1px solid #d7efdf;
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+}
+
+.customer-savings-withdrawal-success-header h1 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.customer-savings-withdrawal-success-header span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #858b9b;
+
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+   ========================================================= */
+
+.customer-savings-withdrawal-success-message {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin: 18px 20px 0;
+    padding: 14px 16px;
+
+    background: #f4fbf6;
+
+    border: 1px solid #dcefe2;
+    border-radius: 12px;
+
+    color: #286c3c;
+}
+
+.customer-savings-withdrawal-success-message > i {
+    flex: 0 0 auto;
+
+    margin-top: 2px;
+
+    color: #319451;
+
+    font-size: 1.1rem;
+}
+
+.customer-savings-withdrawal-success-message strong {
+    display: block;
+
+    color: #286c3c;
+
+    font-size: .8rem;
+    font-weight: 900;
+}
+
+.customer-savings-withdrawal-success-message span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #66806d;
+
+    font-size: .68rem;
+    font-weight: 600;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   IBAN / DESTINATION ACCOUNT
+   ========================================================= */
+
+.customer-savings-withdrawal-iban-alert {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin: 14px 20px 0;
+    padding: 15px 17px;
+
+    background: #f7f8ff;
+
+    border: 1px solid #dfe3f5;
+    border-radius: 13px;
+
+    color: #4030a5;
+}
+
+.customer-savings-withdrawal-iban-alert > i {
+    flex: 0 0 auto;
+
+    margin-top: 3px;
+
+    color: #6040e8;
+
+    font-size: 1.2rem;
+}
+
+.customer-savings-withdrawal-iban-content {
+    min-width: 0;
+    flex: 1;
+}
+
+
+/* عنوان */
+
+.customer-savings-withdrawal-iban-title {
+    display: block;
+
+    color: #555d78;
+
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+
+/* شماره شبا */
+
+.customer-savings-withdrawal-iban-number {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #4030a5;
+
+    font-size: 1.08rem;
+    font-weight: 900;
+
+    /* فاصله کنترل‌شده بین گروه‌های شبا */
+    letter-spacing: .5px;
+    word-spacing: 0;
+
+    line-height: 1.8;
+
+    direction: ltr;
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* شماره شبا ثبت نشده */
+
+.customer-savings-withdrawal-iban-empty {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #c0392b;
+
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+
+/* نام صاحب حساب */
+
+.customer-savings-withdrawal-iban-name {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 9px;
+}
+
+.customer-savings-withdrawal-iban-name i {
+    color: #6040e8;
+
+    font-size: .82rem;
+}
+
+.customer-savings-withdrawal-iban-name span {
+    color: #777d91;
+
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.customer-savings-withdrawal-iban-name strong {
+    color: #303342;
+
+    font-size: .8rem;
+    font-weight: 900;
+}
+
+
+/* هشدار */
+
+.customer-savings-withdrawal-iban-owner {
+    display: block;
+
+    margin-top: 9px;
+    padding-top: 9px;
+
+    border-top: 1px solid #e4e7f3;
+
+    color: #7a6b25;
+
+    font-size: .68rem;
+    font-weight: 700;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   INFORMATION
+   ========================================================= */
+
+.customer-savings-withdrawal-success-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 14px;
+
+    padding: 0 20px 18px;
+}
+
+.customer-savings-withdrawal-success-info-item {
+    min-width: 0;
+
+    padding: 12px 14px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e7e3ef;
+    border-radius: 11px;
+}
+
+.customer-savings-withdrawal-success-info-item > span:first-child {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #7b8192;
+
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+.customer-savings-withdrawal-success-info-item strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .82rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.customer-savings-withdrawal-success-amount {
+    color: #6040e8 !important;
+}
+
+.customer-savings-withdrawal-success-amount small {
+    color: #6040e8;
+
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   WITHDRAWAL STATUS
+   ========================================================= */
+
+.customer-savings-withdrawal-status-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 92px;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-family: inherit;
+
+    font-size: .68rem;
+    font-weight: 900;
+
+    line-height: 1.5;
+
+    white-space: nowrap;
+}
+
+
+/* در انتظار پرداخت */
+
+.customer-savings-withdrawal-status-warning {
+    color: #946200;
+
+    background: #fff7df;
+    border: 1px solid #f3df9d;
+}
+
+
+/* پرداخت شده */
+
+.customer-savings-withdrawal-status-success {
+    color: #267a40;
+
+    background: #edf9f1;
+    border: 1px solid #cfead8;
+}
+
+
+/* رد شده */
+
+.customer-savings-withdrawal-status-danger {
+    color: #b42318;
+
+    background: #fff0ef;
+    border: 1px solid #f2cfcc;
+}
+
+
+/* لغو شده */
+
+.customer-savings-withdrawal-status-secondary {
+    color: #68707d;
+
+    background: #f1f3f5;
+    border: 1px solid #dfe3e8;
+}
+
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.customer-savings-withdrawal-success-note {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 12px 20px;
+
+    color: #707789;
+
+    background: #fafbfe;
+
+    border-top: 1px solid #eef0f5;
+
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+.customer-savings-withdrawal-success-note i {
+    color: #319451;
+
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.customer-savings-withdrawal-success-actions {
+    display: flex;
+
+    justify-content: flex-start;
+
+    padding: 18px 20px;
+}
+
+.customer-savings-withdrawal-success-submit {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 44px;
+
+    padding: 9px 18px;
+
+    color: #fff !important;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-radius: 11px;
+
+    font-family: inherit;
+
+    font-size: .82rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+.customer-savings-withdrawal-success-submit:hover {
+    color: #fff !important;
+
+    box-shadow:
+        0 5px 14px rgba(96, 64, 232, .20);
+}
+
+.customer-savings-withdrawal-success-submit:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-savings-withdrawal-success-page {
+        max-width: 100%;
+    }
+
+    .customer-savings-withdrawal-success-card {
+        border-radius: 14px;
+    }
+
+
+    /* HEADER */
+
+    .customer-savings-withdrawal-success-header {
+        padding: 14px;
+    }
+
+    .customer-savings-withdrawal-success-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+    .customer-savings-withdrawal-success-header h1 {
+        font-size: .85rem;
+    }
+
+    .customer-savings-withdrawal-success-header span {
+        font-size: .62rem;
+    }
+
+
+    /* SUCCESS */
+
+    .customer-savings-withdrawal-success-message {
+        margin: 13px 13px 0;
+
+        padding: 11px 12px;
+    }
+
+    .customer-savings-withdrawal-success-message strong {
+        font-size: .7rem;
+    }
+
+    .customer-savings-withdrawal-success-message span {
+        font-size: .6rem;
+    }
+
+
+    /* IBAN */
+
+    .customer-savings-withdrawal-iban-alert {
+        margin: 12px 13px 0;
+
+        padding: 12px 13px;
+
+        gap: 9px;
+    }
+
+    .customer-savings-withdrawal-iban-alert > i {
+        font-size: 1.05rem;
+    }
+
+    .customer-savings-withdrawal-iban-title {
+        font-size: .65rem;
+    }
+
+    .customer-savings-withdrawal-iban-number {
+        margin-top: 5px;
+
+        font-size: .86rem;
+
+        /* فاصله کم و کنترل‌شده */
+        letter-spacing: .25px;
+
+        line-height: 1.8;
+    }
+
+    .customer-savings-withdrawal-iban-name {
+        margin-top: 7px;
+    }
+
+    .customer-savings-withdrawal-iban-name span {
+        font-size: .62rem;
+    }
+
+    .customer-savings-withdrawal-iban-name strong {
+        font-size: .7rem;
+    }
+
+    .customer-savings-withdrawal-iban-owner {
+        margin-top: 7px;
+        padding-top: 7px;
+
+        font-size: .59rem;
+    }
+
+
+    /* INFORMATION */
+
+    .customer-savings-withdrawal-success-info {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 7px;
+
+        margin-top: 12px;
+
+        padding: 0 13px 13px;
+    }
+
+    .customer-savings-withdrawal-success-info-item {
+        padding: 9px 10px;
+    }
+
+    .customer-savings-withdrawal-success-info-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .customer-savings-withdrawal-success-info-item > span:first-child {
+        font-size: .58rem;
+    }
+
+    .customer-savings-withdrawal-success-info-item strong {
+        font-size: .7rem;
+    }
+
+    .customer-savings-withdrawal-success-amount small {
+        font-size: .6rem;
+    }
+
+
+    /* STATUS */
+
+    .customer-savings-withdrawal-status-badge {
+        min-width: 82px;
+
+        padding: 4px 8px;
+
+        font-size: .62rem;
+    }
+
+
+    /* NOTE */
+
+    .customer-savings-withdrawal-success-note {
+        padding: 10px 13px;
+
+        font-size: .6rem;
+    }
+
+
+    /* ACTION */
+
+    .customer-savings-withdrawal-success-actions {
+        justify-content: flex-start;
+
+        padding: 14px 13px;
+    }
+
+    .customer-savings-withdrawal-success-submit {
+        min-height: 42px;
+
+        padding: 8px 14px;
+
+        font-size: .74rem;
+    }
+}

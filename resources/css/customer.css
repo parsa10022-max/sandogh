@@ -1,0 +1,243 @@
+/* =========================================================
+   CUSTOMER PANEL
+   Global / Shared Styles
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   ========================================================= */
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.customer-body {
+    background: #f5f7fb;
+}
+
+.customer-dashboard {
+    width: 100%;
+}
+
+.customer-content {
+    width: 100%;
+}
+
+.customer-card {
+    border-radius: 16px;
+    border: none;
+}
+
+.customer-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+}
+
+
+/* =========================================================
+   COMMON LINKS
+   ========================================================= */
+
+.customer-body a {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   COMMON BUTTON
+   ========================================================= */
+
+.customer-primary-button {
+    color: #fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border: none;
+    border-radius: 9px;
+
+    text-decoration: none;
+    font-weight: 900;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-primary-button:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 14px rgba(75,60,190,.12);
+}
+
+
+/* =========================================================
+   COMMON ICON BOX
+   ========================================================= */
+
+.customer-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border-radius: 11px;
+}
+
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
+
+.customer-panel-card {
+    background: #fff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 15px;
+
+    box-shadow:
+        0 4px 14px rgba(35,45,75,.05);
+}
+
+
+/* =========================================================
+   COMMON SECTION TITLE
+   ========================================================= */
+
+.customer-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.customer-section-title h2,
+.customer-section-title h3 {
+    margin: 0;
+
+    color: #25283a;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   COMMON TEXT
+   ========================================================= */
+
+.customer-muted {
+    color: #747887;
+}
+
+.customer-text {
+    color: #303342;
+}
+
+.customer-success {
+    color: #319451;
+}
+
+.customer-danger {
+    color: #d34a50;
+}
+
+
+/* =========================================================
+   COMMON STATUS
+   ========================================================= */
+
+.customer-status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.customer-status-success {
+    color: #319451;
+    background: #e8f7ed;
+}
+
+.customer-status-warning {
+    color: #856404;
+    background: #fff3cd;
+}
+
+.customer-status-danger {
+    color: #d34a50;
+    background: #fdebed;
+}
+
+.customer-status-neutral {
+    color: #747887;
+    background: #f1f3f8;
+}
+
+
+/* =========================================================
+   COMMON AMOUNT
+   مبالغ پروژه
+   ========================================================= */
+
+.customer-amount {
+    color: #303342;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-amount-positive {
+    color: #29904d;
+}
+
+.customer-amount-negative {
+    color: #d34a50;
+}
+
+.customer-amount small {
+    margin-right: 3px;
+
+    color: #747887;
+
+    font-size: .65rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   COMMON RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-card,
+    .customer-panel-card {
+        border-radius: 14px;
+    }
+
+    .customer-content {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+}

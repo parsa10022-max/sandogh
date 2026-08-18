@@ -12,6 +12,8 @@ enum UserRole: string
 
     case OPERATOR = 'operator';
 
+    case CUSTOMER = 'customer';
+
     public function label(): string
     {
         return match ($this) {
@@ -19,6 +21,7 @@ enum UserRole: string
             self::CEO          => 'مدیرعامل',
             self::BOARD_MEMBER => 'عضو هیئت مدیره',
             self::OPERATOR     => 'اپراتور',
+            self::CUSTOMER => 'عضو صندوق',
         };
     }
 }

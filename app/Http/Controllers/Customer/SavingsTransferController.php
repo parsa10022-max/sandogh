@@ -216,35 +216,197 @@ class SavingsTransferController extends Controller
         );
     }
 
-    public function transactions()
-    {
-        $customer = auth()->user()->customer;
+
+public function transactions(Request $request)
+{
+    $customer = auth()->user()->customer;
+
+    $account = $customer->accounts()
+        ->where(
+            'account_type',
+            \App\Enums\AccountType::SAVING->value
+        )
+        ->where(
+            'status',
+            \App\Enums\AccountStatus::ACTIVE->value
+        )
+        ->firstOrFail();
 
 
-        $account = $customer->accounts()
-            ->where(
-                'account_type',
-                \App\Enums\AccountType::SAVING->value
-            )
-            ->where(
-                'status',
-                \App\Enums\AccountStatus::ACTIVE->value
-            )
-            ->firstOrFail();
+    $query = $account->transactions()
+        ->latest('transaction_date');
 
 
-        $transactions = $account->transactions()
-            ->latest('transaction_date')
-            ->paginate(20);
+    /*
+    |--------------------------------------------------------------------------
+    | جستجوی شماره تراکنش
+    |--------------------------------------------------------------------------
+    */
 
+    if ($request->filled('transaction_no')) {
 
-        return view(
-            'customer.savings.transactions',
-            compact(
-                'account',
-                'transactions'
-            )
+        $query->where(
+            'transaction_no',
+            'like',
+            '%' . trim($request->transaction_no) . '%'
         );
+
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | نوع تراکنش
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        $request->filled('transaction_type')
+        && $request->transaction_type !== 'all'
+    ) {
+
+        $query->where(
+            'transaction_type',
+            $request->transaction_type
+        );
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | مبلغ
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('amount')) {
+
+        $amount = trim($request->amount);
+
+        // تبدیل اعداد فارسی و عربی به انگلیسی
+        $amount = strtr($amount, [
+            '۰' => '0',
+            '۱' => '1',
+            '۲' => '2',
+            '۳' => '3',
+            '۴' => '4',
+            '۵' => '5',
+            '۶' => '6',
+            '۷' => '7',
+            '۸' => '8',
+            '۹' => '9',
+
+            '٠' => '0',
+            '١' => '1',
+            '٢' => '2',
+            '٣' => '3',
+            '٤' => '4',
+            '٥' => '5',
+            '٦' => '6',
+            '٧' => '7',
+            '٨' => '8',
+            '٩' => '9',
+        ]);
+
+        // حذف جداکننده‌های هزارگان
+        $amount = str_replace(
+            [',', '٬', ' '],
+            '',
+            $amount
+        );
+
+        // فقط عدد معتبر پذیرفته شود
+        if (ctype_digit($amount)) {
+
+            $query->where(
+                'amount',
+                (int) $amount
+            );
+
+        }
+
+    }
+
+
+    /*
+   |--------------------------------------------------------------------------
+   | از تاریخ
+   |--------------------------------------------------------------------------
+   */
+
+    if ($request->filled('from_date')) {
+
+        try {
+
+            $fromDate = \Morilog\Jalali\Jalalian::fromFormat(
+                'Y/m/d',
+                trim($request->from_date)
+            )->toCarbon()->format('Y-m-d');
+
+            $query->whereDate(
+                'transaction_date',
+                '>=',
+                $fromDate
+            );
+
+        } catch (\Throwable $e) {
+
+            // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | تا تاریخ
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('to_date')) {
+
+        try {
+
+            $toDate = \Morilog\Jalali\Jalalian::fromFormat(
+                'Y/m/d',
+                trim($request->to_date)
+            )->toCarbon()->format('Y-m-d');
+
+            $query->whereDate(
+                'transaction_date',
+                '<=',
+                $toDate
+            );
+
+        } catch (\Throwable $e) {
+
+            // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | صفحه‌بندی
+    |--------------------------------------------------------------------------
+    */
+
+    $transactions = $query
+        ->paginate(20)
+        ->withQueryString();
+
+
+    return view(
+        'customer.savings.transactions',
+        compact(
+            'account',
+            'transactions'
+        )
+    );
+}
+
 
 }

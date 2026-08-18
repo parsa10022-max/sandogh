@@ -1,0 +1,520 @@
+/* =========================================================
+   CUSTOMER SAVINGS TRANSFER SUCCESS
+   Design System #1
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.customer-savings-success-page {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.customer-savings-success-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 18px rgba(35, 45, 75, .055);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-savings-success-header {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #eef0f5;
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+   ========================================================= */
+
+.customer-savings-success-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #319451;
+
+    background: #eefaf2;
+
+    border: 1px solid #d7efdf;
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+   ========================================================= */
+
+.customer-savings-success-header-content {
+    min-width: 0;
+}
+
+
+.customer-savings-success-header-content h1 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: 1rem;
+    font-weight: 900;
+
+    line-height: 1.5;
+}
+
+
+.customer-savings-success-header-content span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #858b9b;
+
+    font-size: .7rem;
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+   ========================================================= */
+
+.customer-savings-success-message {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 18px 20px 0;
+
+    padding: 13px 15px;
+
+    color: #286c3c;
+
+    background: #f4fbf6;
+
+    border: 1px solid #dcefe2;
+
+    border-radius: 12px;
+}
+
+
+.customer-savings-success-message > i {
+    flex: 0 0 auto;
+
+    color: #319451;
+
+    font-size: 1.1rem;
+}
+
+
+.customer-savings-success-message div {
+    min-width: 0;
+}
+
+
+.customer-savings-success-message strong {
+    display: block;
+
+    margin: 0;
+
+    color: #286c3c;
+
+    font-size: .78rem;
+    font-weight: 900;
+
+    line-height: 1.6;
+}
+
+
+.customer-savings-success-message span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #66806d;
+
+    font-size: .67rem;
+    font-weight: 600;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   INFORMATION
+   ========================================================= */
+
+.customer-savings-success-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding: 18px 20px;
+}
+
+
+/* =========================================================
+   INFO ITEM
+   ========================================================= */
+
+.customer-savings-success-info-item {
+    min-width: 0;
+
+    padding: 12px 14px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e7e3ef;
+
+    border-radius: 11px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.customer-savings-success-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #7b8192;
+
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.customer-savings-success-info-item strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .82rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   TRACKING CODE
+   ========================================================= */
+
+.customer-savings-success-tracking {
+    letter-spacing: .3px;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.customer-savings-success-amount {
+    color: #319451 !important;
+}
+
+
+.customer-savings-success-amount small {
+    color: #319451;
+
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+   ========================================================= */
+
+.customer-savings-success-note {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 12px 20px;
+
+    color: #707789;
+
+    background: #fafbfe;
+
+    border-top: 1px solid #eef0f5;
+
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+
+.customer-savings-success-note i {
+    flex: 0 0 auto;
+
+    color: #319451;
+
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.customer-savings-success-actions {
+    display: flex;
+
+    justify-content: flex-start;
+
+    padding: 18px 20px;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.customer-savings-success-submit {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 44px;
+
+    padding: 9px 18px;
+
+    color: #ffffff !important;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border: 1px solid transparent;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+
+    font-size: .82rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+
+.customer-savings-success-submit:hover {
+    color: #ffffff !important;
+
+    box-shadow:
+        0 5px 14px rgba(96, 64, 232, .20);
+}
+
+
+.customer-savings-success-submit:active {
+    transform: translateY(1px);
+}
+
+
+.customer-savings-success-submit i {
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+
+    /* PAGE */
+
+    .customer-savings-success-page {
+        max-width: 100%;
+    }
+
+
+    /* CARD */
+
+    .customer-savings-success-card {
+        border-radius: 14px;
+    }
+
+
+    /* HEADER */
+
+    .customer-savings-success-header {
+        padding: 14px;
+    }
+
+
+    .customer-savings-success-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+
+    .customer-savings-success-header-content h1 {
+        font-size: .85rem;
+    }
+
+
+    .customer-savings-success-header-content span {
+        font-size: .62rem;
+    }
+
+
+    /* MESSAGE */
+
+    .customer-savings-success-message {
+        margin: 13px 13px 0;
+
+        padding: 11px 12px;
+
+        gap: 8px;
+    }
+
+
+    .customer-savings-success-message > i {
+        font-size: .95rem;
+    }
+
+
+    .customer-savings-success-message strong {
+        font-size: .7rem;
+    }
+
+
+    .customer-savings-success-message span {
+        font-size: .6rem;
+    }
+
+
+    /* INFORMATION */
+
+    .customer-savings-success-info {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 7px;
+
+        padding: 13px;
+    }
+
+
+    .customer-savings-success-info-item {
+        padding: 9px 10px;
+    }
+
+
+    .customer-savings-success-info-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+
+    .customer-savings-success-label {
+        font-size: .58rem;
+    }
+
+
+    .customer-savings-success-info-item strong {
+        font-size: .7rem;
+    }
+
+
+    .customer-savings-success-amount small {
+        font-size: .6rem;
+    }
+
+
+    /* NOTE */
+
+    .customer-savings-success-note {
+        padding: 10px 13px;
+
+        font-size: .6rem;
+    }
+
+
+    /* ACTION */
+
+    .customer-savings-success-actions {
+        padding: 14px 13px;
+    }
+
+
+    .customer-savings-success-submit {
+        min-height: 42px;
+
+        padding: 8px 14px;
+
+        font-size: .74rem;
+    }
+
+}

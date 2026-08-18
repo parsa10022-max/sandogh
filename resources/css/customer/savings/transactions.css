@@ -1,0 +1,1320 @@
+
+    /* =========================================================
+       CUSTOMER SAVINGS TRANSACTIONS
+       Design System #1
+       Purple + Blue / RTL / Bootstrap 5.3
+       Mobile First / PWA
+       ========================================================= */
+
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+.customer-savings-transactions-page {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   COMMON SECTION
+   ========================================================= */
+
+.customer-savings-account-summary,
+.customer-savings-transactions-section {
+    width: 100%;
+
+    margin-bottom: 20px;
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 16px rgba(35, 45, 75, .045);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.customer-savings-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 18px;
+}
+
+.customer-savings-section-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f1efff;
+
+    border: 1px solid #e2dcfb;
+    border-radius: 11px;
+
+    font-size: 1.1rem;
+}
+
+.customer-savings-section-title h2 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: .95rem;
+    font-weight: 900;
+}
+
+.customer-savings-section-title span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #85899a;
+
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACCOUNT SUMMARY
+   ========================================================= */
+
+.customer-savings-account-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.customer-savings-account-item {
+    min-width: 0;
+    min-height: 76px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 11px 13px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e7e3ef;
+    border-radius: 11px;
+
+    box-sizing: border-box;
+}
+
+.customer-savings-account-item span {
+    color: #7b8192;
+
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+.customer-savings-account-item strong {
+    color: #303342;
+
+    font-size: .86rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-savings-account-item strong small {
+    font-size: .65rem;
+    font-weight: 700;
+}
+
+.customer-savings-account-item.balance {
+    background: #fbfdfb;
+    border-color: #dcefe2;
+}
+
+.customer-savings-account-item.balance strong {
+    color: #319451;
+}
+
+
+/* =========================================================
+   MOBILE TRANSACTIONS
+   ========================================================= */
+
+.customer-savings-transactions-mobile {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.customer-savings-transaction-card {
+    width: 100%;
+    min-width: 0;
+
+    padding: 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e7ef;
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 3px 12px rgba(35, 45, 75, .035);
+}
+
+
+/* =========================================================
+   TRANSACTION TOP
+   ========================================================= */
+
+.customer-savings-transaction-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding-bottom: 9px;
+
+    border-bottom: 1px solid #eef0f5;
+}
+
+.customer-savings-transaction-type span {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 8px;
+
+    border-radius: 7px;
+
+    font-size: .67rem;
+    font-weight: 900;
+}
+
+.customer-savings-transaction-type .deposit {
+    color: #319451;
+    background: #eaf7ee;
+    border: 1px solid #d3ecdc;
+}
+
+.customer-savings-transaction-type .withdrawal {
+    color: #d14b55;
+    background: #fff0f1;
+    border: 1px solid #f2d6d9;
+}
+
+.customer-savings-transaction-date {
+    color: #747887;
+
+    font-size: .68rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TRANSACTION MIDDLE
+   ========================================================= */
+
+.customer-savings-transaction-middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 11px 0;
+}
+
+.customer-savings-transaction-middle > div:first-child {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.transaction-label {
+    display: block;
+
+    color: #85899a;
+
+    font-size: .61rem;
+    font-weight: 600;
+}
+
+.customer-savings-transaction-middle strong {
+    color: #303342;
+
+    font-size: .70rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.transaction-amount {
+    min-width: 0;
+
+    text-align: left;
+}
+
+.transaction-amount strong {
+    font-size: .82rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.transaction-amount strong small {
+    font-size: .58rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TRANSACTION BOTTOM
+   ========================================================= */
+
+.customer-savings-transaction-bottom {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1.4fr);
+
+    gap: 10px;
+
+    padding-top: 9px;
+
+    border-top: 1px solid #eef0f5;
+}
+
+.customer-savings-transaction-bottom > div {
+    min-width: 0;
+}
+
+.customer-savings-transaction-bottom strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #303342;
+
+    font-size: .70rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-savings-transaction-bottom strong small {
+    font-size: .56rem;
+    font-weight: 700;
+}
+
+.transaction-description > span:last-child {
+    display: block;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    color: #606575;
+
+    font-size: .62rem;
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   COLORS
+   ========================================================= */
+
+.deposit {
+    color: #319451;
+}
+
+.withdrawal {
+    color: #d14b55;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.customer-savings-transactions-table {
+    display: none;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border: 1px solid #e4e7ef;
+    border-radius: 12px;
+}
+
+.customer-savings-transactions-table .table {
+    margin: 0;
+
+    color: #303342;
+
+    font-size: .76rem;
+}
+
+.customer-savings-transactions-table thead th {
+    padding: 12px 11px;
+
+    color: #666b7c;
+
+    background: #faf9fd;
+
+    border-bottom: 1px solid #e4e7ef;
+
+    font-size: .70rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-savings-transactions-table tbody td {
+    padding: 12px 11px;
+
+    border-bottom: 1px solid #eef0f5;
+
+    vertical-align: middle;
+
+    font-size: .72rem;
+    font-weight: 600;
+}
+
+.customer-savings-transactions-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.customer-savings-transactions-table tbody tr:hover {
+    background: #fcfbff;
+}
+
+
+/* =========================================================
+   TABLE BADGE
+   ========================================================= */
+
+.customer-savings-transaction-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    font-size: .65rem;
+    font-weight: 900;
+}
+
+.customer-savings-transaction-badge.deposit {
+    color: #319451;
+    background: #eaf7ee;
+
+    border: 1px solid #d3ecdc;
+}
+
+.customer-savings-transaction-badge.withdrawal {
+    color: #d14b55;
+    background: #fff0f1;
+
+    border: 1px solid #f2d6d9;
+}
+
+
+/* =========================================================
+   TABLE AMOUNTS
+   ========================================================= */
+
+.customer-savings-amount {
+    font-size: .78rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-savings-amount.deposit {
+    color: #319451;
+}
+
+.customer-savings-amount.withdrawal {
+    color: #d14b55;
+}
+
+.customer-savings-transactions-table td small {
+    color: #777c8d;
+
+    font-size: .58rem;
+    font-weight: 600;
+}
+
+.customer-savings-balance {
+    color: #303342;
+
+    font-size: .76rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.customer-savings-transactions-empty {
+    width: 100%;
+
+    padding: 32px 18px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 13px;
+
+    box-sizing: border-box;
+}
+
+.customer-savings-transactions-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f1efff;
+
+    border: 1px solid #dfd9fb;
+    border-radius: 16px;
+
+    font-size: 1.5rem;
+}
+
+.customer-savings-transactions-empty h5 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: .88rem;
+    font-weight: 900;
+}
+
+.customer-savings-transactions-empty p {
+    margin: 7px 0 0;
+
+    color: #7b8195;
+
+    font-size: .65rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.customer-savings-transactions-pagination {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 15px;
+}
+
+.customer-savings-transactions-pagination .pagination {
+    margin: 0;
+
+    gap: 4px;
+}
+
+.customer-savings-transactions-pagination .page-link {
+    min-width: 34px;
+    min-height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    border: 1px solid #e2dcfb;
+    border-radius: 8px;
+
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+.customer-savings-transactions-pagination .page-item.active .page-link {
+    color: #ffffff;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-color: transparent;
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+    .customer-savings-account-summary,
+    .customer-savings-transactions-section {
+        padding: 12px;
+
+        border-radius: 13px;
+    }
+
+    .customer-savings-section-title {
+        gap: 9px;
+
+        margin-bottom: 13px;
+    }
+
+    .customer-savings-section-icon {
+        width: 36px;
+        height: 36px;
+
+        flex-basis: 36px;
+
+        border-radius: 10px;
+
+        font-size: .95rem;
+    }
+
+    .customer-savings-section-title h2 {
+        font-size: .80rem;
+    }
+
+    .customer-savings-section-title span {
+        font-size: .58rem;
+    }
+
+    .customer-savings-account-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .customer-savings-account-item {
+        min-height: 62px;
+
+        padding: 8px 9px;
+    }
+
+    .customer-savings-account-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .customer-savings-account-item span {
+        font-size: .58rem;
+    }
+
+    .customer-savings-account-item strong {
+        font-size: .72rem;
+    }
+
+    .customer-savings-transaction-card {
+        padding: 10px;
+
+        border-radius: 11px;
+    }
+
+    .customer-savings-transaction-date {
+        font-size: .61rem;
+    }
+
+    .customer-savings-transaction-middle {
+        gap: 7px;
+
+        padding: 9px 0;
+    }
+
+    .transaction-label {
+        font-size: .56rem;
+    }
+
+    .customer-savings-transaction-middle strong {
+        font-size: .65rem;
+    }
+
+    .transaction-amount strong {
+        font-size: .75rem;
+    }
+
+    .customer-savings-transaction-bottom {
+        gap: 7px;
+    }
+
+    .customer-savings-transaction-bottom strong {
+        font-size: .64rem;
+    }
+
+    .transaction-description > span:last-child {
+        font-size: .57rem;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991.98px
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    .customer-savings-account-summary,
+    .customer-savings-transactions-section {
+        padding: 18px;
+
+        border-radius: 15px;
+    }
+
+    .customer-savings-section-title {
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+    .customer-savings-section-icon {
+        width: 48px;
+        height: 48px;
+
+        flex-basis: 48px;
+
+        border-radius: 12px;
+
+        font-size: 1.35rem;
+    }
+
+    .customer-savings-section-title h2 {
+        font-size: 1.12rem;
+    }
+
+    .customer-savings-section-title span {
+        font-size: .76rem;
+    }
+
+    .customer-savings-account-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .customer-savings-account-item {
+        min-height: 82px;
+
+        padding: 11px 13px;
+    }
+
+    .customer-savings-account-item span {
+        font-size: .76rem;
+    }
+
+    .customer-savings-account-item strong {
+        font-size: .95rem;
+    }
+
+    .customer-savings-account-item strong small {
+        font-size: .68rem;
+    }
+
+    .customer-savings-transactions-mobile {
+        display: none;
+    }
+
+    .customer-savings-transactions-table {
+        display: block;
+    }
+
+    .customer-savings-transactions-table .table {
+        font-size: .82rem;
+    }
+
+    .customer-savings-transactions-table thead th {
+        padding: 13px 10px;
+
+        font-size: .74rem;
+    }
+
+    .customer-savings-transactions-table tbody td {
+        padding: 13px 10px;
+
+        font-size: .76rem;
+    }
+
+    .customer-savings-transaction-badge {
+        font-size: .70rem;
+    }
+
+    .customer-savings-amount {
+        font-size: .82rem;
+    }
+
+    .customer-savings-balance {
+        font-size: .80rem;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP / LAPTOP
+   992px+
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .customer-savings-account-summary,
+    .customer-savings-transactions-section {
+        padding: 20px;
+    }
+
+    .customer-savings-section-title h2 {
+        font-size: 1rem;
+    }
+
+    .customer-savings-section-title span {
+        font-size: .70rem;
+    }
+
+    .customer-savings-account-item {
+        min-height: 78px;
+    }
+
+    .customer-savings-transactions-mobile {
+        display: none;
+    }
+
+    .customer-savings-transactions-table {
+        display: block;
+    }
+
+    .customer-savings-transactions-table .table {
+        font-size: .78rem;
+    }
+
+    .customer-savings-transactions-table thead th {
+        padding: 13px 12px;
+
+        font-size: .72rem;
+    }
+
+    .customer-savings-transactions-table tbody td {
+        padding: 13px 12px;
+
+        font-size: .74rem;
+    }
+}
+
+    /* =========================================================
+      SAVINGS TRANSACTIONS - FILTERS
+      Design System #1
+   ========================================================= */
+
+    .customer-savings-transactions-filters {
+        width: 100%;
+
+        margin: 0;
+
+        padding: 4px 0 0;
+    }
+
+
+    /* =========================================================
+       FILTER GRID
+    ========================================================= */
+
+    .customer-savings-filter-grid {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+
+    /* =========================================================
+       FILTER ITEM
+    ========================================================= */
+
+    .customer-savings-filter-item {
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 6px;
+    }
+
+
+    /* =========================================================
+       LABEL
+    ========================================================= */
+
+    .customer-savings-filter-item label {
+        display: flex;
+        align-items: center;
+
+        gap: 6px;
+
+        color: #666b7c;
+
+        font-size: .68rem;
+        font-weight: 800;
+    }
+
+
+    .customer-savings-filter-item label i {
+        width: 22px;
+        height: 22px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #6040e8;
+
+        background: #f1efff;
+
+        border: 1px solid #e2dcfb;
+        border-radius: 6px;
+
+        font-size: .68rem;
+    }
+
+
+    /* =========================================================
+       INPUT / SELECT
+    ========================================================= */
+
+    .customer-savings-filter-item input,
+    .customer-savings-filter-item select {
+
+        width: 100%;
+        min-width: 0;
+        min-height: 42px;
+
+        padding: 8px 11px;
+
+        color: #303342;
+
+        background: #faf9fd;
+
+        border: 1px solid #e1e4ec;
+        border-radius: 10px;
+
+        outline: none;
+
+        font-family: inherit;
+        font-size: .70rem;
+        font-weight: 600;
+
+        box-sizing: border-box;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background-color .2s ease;
+    }
+
+
+    .customer-savings-filter-item input::placeholder {
+        color: #a0a4b1;
+
+        font-weight: 500;
+    }
+
+
+    /* =========================================================
+       FOCUS
+    ========================================================= */
+
+    .customer-savings-filter-item input:focus,
+    .customer-savings-filter-item select:focus {
+
+        background: #ffffff;
+
+        border-color: #6040e8;
+
+        box-shadow:
+            0 0 0 3px rgba(96, 64, 232, .08);
+    }
+
+
+    /* =========================================================
+       FILTER ACTIONS
+    ========================================================= */
+
+    .customer-savings-filter-actions {
+
+        grid-column: 1 / -1;
+
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+
+        padding-top: 2px;
+    }
+
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+
+    .customer-savings-filter-submit,
+    .customer-savings-filter-reset {
+
+        min-height: 40px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 6px;
+
+        padding: 8px 14px;
+
+        border-radius: 9px;
+
+        font-family: inherit;
+        font-size: .70rem;
+        font-weight: 800;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            background-color .2s ease,
+            border-color .2s ease;
+    }
+
+
+    /* =========================================================
+       APPLY
+    ========================================================= */
+
+    .customer-savings-filter-submit {
+
+        color: #ffffff;
+
+        background: linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+        border: 1px solid transparent;
+    }
+
+
+    .customer-savings-filter-submit:hover {
+
+        box-shadow:
+            0 5px 14px rgba(96, 64, 232, .18);
+
+        transform: translateY(-1px);
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    .customer-savings-filter-reset {
+
+        color: #666b7c;
+
+        background: #ffffff;
+
+        border: 1px solid #e1e4ec;
+    }
+
+
+    .customer-savings-filter-reset:hover {
+
+        color: #6040e8;
+
+        background: #faf9fd;
+
+        border-color: #e2dcfb;
+    }
+
+
+    /* =========================================================
+       ACTIVE
+    ========================================================= */
+
+    .customer-savings-filter-submit:active,
+    .customer-savings-filter-reset:active {
+
+        transform: translateY(1px);
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+        .customer-savings-filter-grid {
+
+            grid-template-columns: 1fr;
+
+            gap: 10px;
+        }
+
+
+        .customer-savings-filter-item label {
+
+            font-size: .62rem;
+        }
+
+
+        .customer-savings-filter-item label i {
+
+            width: 20px;
+            height: 20px;
+
+            font-size: .62rem;
+        }
+
+
+        .customer-savings-filter-item input,
+        .customer-savings-filter-item select {
+
+            min-height: 40px;
+
+            padding: 8px 10px;
+
+            font-size: .68rem;
+        }
+
+
+        .customer-savings-filter-actions {
+
+            display: grid;
+
+            grid-template-columns:
+            1fr 1fr;
+
+            gap: 7px;
+        }
+
+
+        .customer-savings-filter-submit,
+        .customer-savings-filter-reset {
+
+            width: 100%;
+
+            min-height: 40px;
+
+            padding: 8px 7px;
+
+            font-size: .66rem;
+        }
+    }
+
+
+
+
+
+
+
+    /* =========================================================
+   SAVINGS TRANSACTIONS - FILTER COLLAPSE
+========================================================= */
+
+    .customer-savings-transactions-filter-box {
+        width: 100%;
+
+        margin-top: 18px;
+
+        background: #ffffff;
+
+        border: 1px solid #e3e6ef;
+        border-radius: 14px;
+
+        box-shadow:
+            0 4px 14px rgba(35, 45, 75, .035);
+
+        overflow: hidden;
+    }
+
+
+    /* =========================================================
+       FILTER TOGGLE
+    ========================================================= */
+
+    .customer-savings-filter-toggle {
+        width: 100%;
+
+        min-height: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 10px 14px;
+
+        border: none;
+
+        background: #ffffff;
+
+        color: #303342;
+
+        font-family: inherit;
+        font-size: .78rem;
+        font-weight: 900;
+
+        text-align: right;
+
+        cursor: pointer;
+
+        transition:
+            background-color .2s ease,
+            color .2s ease;
+    }
+
+
+    .customer-savings-filter-toggle:hover {
+        background: #faf9fd;
+    }
+
+
+    .customer-savings-filter-toggle > span {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 8px;
+    }
+
+
+    .customer-savings-filter-toggle > span i {
+        width: 30px;
+        height: 30px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #6040e8;
+
+        background: #f1efff;
+
+        border: 1px solid #e2dcfb;
+        border-radius: 9px;
+
+        font-size: .82rem;
+    }
+
+
+    /* =========================================================
+       CHEVRON
+    ========================================================= */
+
+    .filter-toggle-icon {
+        color: #7b8192;
+
+        font-size: .72rem;
+
+        transition:
+            transform .25s ease,
+            color .2s ease;
+    }
+
+
+    /* وقتی Collapse باز است */
+
+    .customer-savings-filter-toggle[aria-expanded="true"] {
+
+        color: #6040e8;
+
+        background: #fcfbff;
+    }
+
+
+    .customer-savings-filter-toggle[aria-expanded="true"]
+    .filter-toggle-icon {
+
+        color: #6040e8;
+
+        transform: rotate(180deg);
+    }
+
+
+    /* =========================================================
+       FILTER CONTENT
+    ========================================================= */
+
+    .customer-savings-transactions-filter-content {
+
+        padding: 0 14px 14px;
+    }
+
+
+    .customer-savings-transactions-filter-content
+    .customer-savings-transactions-filters {
+
+        margin-top: 0;
+    }

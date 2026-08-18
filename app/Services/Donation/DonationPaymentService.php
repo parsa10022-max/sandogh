@@ -362,5 +362,32 @@ class DonationPaymentService
         });
 
     }
+    /**
+     * ارسال پرداخت موجود به درگاه
+     */
+    public function sendToGateway(
+        DonationPayment $payment,
+        string $paymentType = 'donation_customer'
+    ): array {
+
+        return $this->gateway->request([
+
+            'payment_type' =>
+                $paymentType,
+
+            'reference_id' =>
+                $payment->id,
+
+            'amount' =>
+                $payment->amount,
+
+            'tracking_code' =>
+                $payment->tracking_code,
+
+            'callback_url' =>
+                route('payments.callback'),
+
+        ]);
+    }
 
 }

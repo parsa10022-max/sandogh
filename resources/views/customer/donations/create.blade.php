@@ -1,55 +1,108 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
-@section('title','کمک به صندوق')
+@section('title', 'کمک به صندوق')
+
+@section('header_title', 'کمک به صندوق')
+
+@section('header_subtitle', 'حمایت مالی از صندوق')
 
 @section('content')
 
-    <div class="container py-4">
+    <div class="customer-dashboard">
 
-        <div class="card shadow-sm border">
+        {{-- =====================================================
+             HEADER
+             ===================================================== --}}
+        <section class="customer-donations-section">
 
-            <div class="card-header bg-primary text-white">
-
-                <h5 class="mb-0">
-                    <i class="bi bi-heart-fill"></i>
-                    ثبت کمک
-                </h5>
-
+            <div class="customer-donations-title">
+                <h2>
+                    کمک به صندوق
+                </h2>
             </div>
 
 
-            <div class="card-body">
+            {{-- =================================================
+                 DONATION CARD
+                 ================================================= --}}
+            <div class="customer-donation-form-card">
+
+                @php
+                    $accountName = $selectedAccount->name ?? '';
+
+                    if (str_contains($accountName, 'صندوق')) {
+                        $accountColor = '#e05268';
+                    } elseif (str_contains($accountName, 'مسجد')) {
+                        $accountColor = '#4778dc';
+                    } elseif (
+                        str_contains($accountName, 'باقی') ||
+                        str_contains($accountName, 'الصالحات')
+                    ) {
+                        $accountColor = '#3d9b5c';
+                    } else {
+                        $accountColor = '#6040e8';
+                    }
+                @endphp
+
+                <div class="customer-donation-form-header">
+
+                    <h5 class="mb-0">
+
+                        <span class="customer-donation-form-icon"
+                              style="
+                                  background: {{ $accountColor }}1A;
+                                  color: {{ $accountColor }};
+                                  ">
+
+                              <i class="bi bi-heart-fill"></i>
+
+                     </span>
+                            حساب مقصد
+                         {{ $accountName }}
+
+                    </h5>
+
+                </div>
 
 
+                {{-- پیام موفقیت --}}
                 @if(session('success'))
 
-                    <div class="alert alert-success">
-                        {{ session('success') }}
+                    <div class="customer-donation-alert customer-donation-alert-success">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
+                            {{ session('success') }}
+                        </span>
+
                     </div>
 
                 @endif
 
 
+                {{-- خطاها --}}
                 @if($errors->any())
 
-                    <div class="alert alert-danger">
+                    <div class="customer-donation-alert customer-donation-alert-danger">
 
-                        <ul class="mb-0">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+
+                        <div>
 
                             @foreach($errors->all() as $error)
 
-                                <li>
+                                <div>
                                     {{ $error }}
-                                </li>
+                                </div>
 
                             @endforeach
 
-                        </ul>
+                        </div>
 
                     </div>
 
                 @endif
-
 
 
                 <form method="POST"
@@ -57,226 +110,81 @@
 
                     @csrf
 
+                    <input type="hidden"
+                           name="account_id"
+                           value="{{ $selectedAccountId }}">
 
 
-                    <label class="form-label fw-bold mb-3">
+                    {{-- =================================================
+                         مبلغ
+                         ================================================= --}}
+                    <div class="customer-donation-field customer-donation-amount-field">
 
-                        انتخاب حساب کمک
+                        <label for="amount"
+                               class="customer-donation-label">
 
-                    </label>
-
-
-
-                    <div class="row g-3">
-
-
-                        @foreach($accounts as $account)
-
-
-                            <div class="col-md-6">
-
-
-                                <label class="w-100">
-
-
-                                    <input type="radio"
-                                           name="account_id"
-                                           value="{{ $account->id }}"
-                                           class="btn-check account-radio"
-                                           data-name="{{ $account->name }}"
-                                           data-number="{{ $account->account_number }}"
-                                           required>
-
-
-
-                                    <div class="card account-card border-success">
-
-
-                                        <div class="card-body">
-
-
-                                            <div class="d-flex justify-content-between align-items-center">
-
-
-                                                <div class="d-flex align-items-center">
-
-
-                                                    <div class="icon-box me-3">
-
-                                                        <i class="bi bi-bank fs-3 text-success"></i>
-
-                                                    </div>
-
-
-
-                                                    <div>
-
-
-                                                        <h6 class="mb-1 fw-bold">
-
-                                                            {{ $account->name }}
-
-                                                        </h6>
-
-
-
-                                                        <span dir="ltr"
-                                                              class="text-muted">
-
-                                                        {{ $account->account_number }}
-
-                                                    </span>
-
-
-                                                    </div>
-
-
-                                                </div>
-
-
-
-                                                <span class="badge bg-success status-active">
-
-    <i class="bi bi-check-circle"></i>
-    فعال
-
-</span>
-
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                    </div>
-
-
-                                </label>
-
-
-                            </div>
-
-
-                        @endforeach
-
-
-                    </div>
-
-
-
-
-                    <div class="mt-4">
-
-
-                        <label class="form-label fw-bold">
-
-                            مبلغ (ریال)
+                            مبلغ کمک
 
                         </label>
 
 
-                        <input type="number"
-                               name="amount"
-                               class="form-control form-control-lg"
-                               min="10000"
-                               required>
+                        <div class="customer-donation-amount-wrapper">
 
+                            <input type="text"
+                                   id="amount"
+                                   name="amount"
+                                   class="customer-donation-amount-input js-money-input"
+                                   min="50000"
+                                   required
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   placeholder="مثلاً ۵۰۰٬۰۰۰">
+
+                            <span>
+            ریال
+        </span>
+
+                        </div>
+
+
+                        <div class="customer-donation-help-text">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            حداقل مبلغ کمک ۵۰٬۰۰۰ ریال است.
+
+                        </div>
 
                     </div>
 
 
-                    <div id="selectedAccountBox"
-                         class="alert alert-success d-none mt-4">
+                    {{-- =================================================
+                         پرداخت
+                         ================================================= --}}
+                    <button type="submit"
+                            class="customer-donation-submit">
 
-                        <div class="fw-bold mb-2">
+                        <span>
+                            <i class="bi bi-credit-card"></i>
+                            ادامه پرداخت
+                        </span>
 
-                            <i class="bi bi-check-circle"></i>
-                            حساب انتخاب شده
-
-                        </div>
-
-
-                        <div>
-
-                            حساب:
-                            <span id="selectedAccountName"></span>
-
-                        </div>
-
-
-                        <div dir="ltr">
-
-                            شماره حساب:
-                            <span id="selectedAccountNumber"></span>
-
-                        </div>
-
-
-                    </div>
-
-                    <button class="btn btn-success w-100 mt-4">
-
-                        <i class="bi bi-credit-card"></i>
-
-                        ادامه پرداخت
+                        <i class="bi bi-arrow-left"></i>
 
                     </button>
 
-
-
                 </form>
-
 
             </div>
 
-
-        </div>
-
+        </section>
 
     </div>
 
 
+    {{-- =========================================================
+         SCRIPT
+         ========================================================= --}}
 
-
-
-    <script>
-        document.querySelectorAll('.account-radio').forEach(input => {
-
-            input.addEventListener('change', function () {
-
-
-                document.querySelectorAll('.account-card')
-                    .forEach(card => {
-
-                        card.classList.remove('selected');
-
-                    });
-
-
-                this.closest('label')
-                    .querySelector('.account-card')
-                    .classList.add('selected');
-
-
-
-                document.getElementById('selectedAccountBox')
-                    .classList.remove('d-none');
-
-
-
-                document.getElementById('selectedAccountName')
-                    .innerText = this.dataset.name;
-
-
-
-                document.getElementById('selectedAccountNumber')
-                    .innerText = this.dataset.number;
-
-
-            });
-
-        });
-    </script>
 
 @endsection

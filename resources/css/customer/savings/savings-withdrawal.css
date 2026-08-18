@@ -1,0 +1,700 @@
+
+    /* =========================================================
+       CUSTOMER SAVINGS WITHDRAWAL
+       Design System #1
+       Mobile First
+       RTL
+       ========================================================= */
+
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+.customer-savings-withdrawal-page {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.customer-savings-withdrawal-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 18px rgba(35, 45, 75, .055);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-savings-withdrawal-header {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #eef0f5;
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.customer-savings-withdrawal-header-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border: 1px solid #e2dcfb;
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+   ========================================================= */
+
+.customer-savings-withdrawal-header-content {
+    min-width: 0;
+}
+
+
+.customer-savings-withdrawal-header-content h1 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: 1rem;
+    font-weight: 900;
+
+    line-height: 1.5;
+}
+
+
+.customer-savings-withdrawal-header-content span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #858b9b;
+
+    font-size: .7rem;
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACCOUNT INFORMATION
+   ========================================================= */
+
+.customer-savings-withdrawal-account {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding: 18px 20px;
+}
+
+
+/* =========================================================
+   ACCOUNT ITEM
+   ========================================================= */
+
+.customer-savings-withdrawal-account-item {
+    min-width: 0;
+
+    padding: 12px 14px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e7e3ef;
+
+    border-radius: 11px;
+}
+
+
+.customer-savings-withdrawal-account-item span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #7b8192;
+
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+
+.customer-savings-withdrawal-account-item strong {
+    display: block;
+
+    min-width: 0;
+
+    color: #303342;
+
+    font-size: .82rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+.customer-savings-withdrawal-account-item.balance {
+    background: #fbfdfb;
+
+    border-color: #dcefe2;
+}
+
+
+.customer-savings-withdrawal-account-item.balance strong {
+    color: #319451;
+}
+
+
+.customer-savings-withdrawal-account-item.balance small {
+    margin-right: 3px;
+
+    color: #319451;
+
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.customer-savings-withdrawal-form {
+    width: 100%;
+
+    padding: 0 20px 20px;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.customer-savings-withdrawal-field {
+    width: 100%;
+}
+
+
+.customer-savings-withdrawal-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #374151;
+
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+
+.customer-savings-withdrawal-field label i {
+    margin-left: 5px;
+
+    color: #6040e8;
+
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   MONEY INPUT
+   ========================================================= */
+
+.customer-savings-withdrawal-money {
+    display: flex;
+
+    width: 100%;
+
+    direction: ltr;
+}
+
+
+.customer-savings-withdrawal-money .money-input {
+    min-width: 0;
+
+    flex: 1;
+
+    height: 46px;
+
+    padding: 9px 13px;
+
+    color: #303342;
+
+    background: #f9fafb;
+
+    border: 1px solid #dfe3ea;
+
+    border-right: 0;
+
+    border-radius: 12px 0 0 12px;
+
+    font-family: inherit;
+
+    font-size: .9rem;
+    font-weight: 700;
+
+    outline: none;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.customer-savings-withdrawal-money .money-input::placeholder {
+    color: #a2a7b3;
+
+    font-weight: 500;
+}
+
+
+.customer-savings-withdrawal-money .money-input:focus {
+    background: #ffffff;
+
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, .10);
+}
+
+
+/* =========================================================
+   RIAL BOX
+   ========================================================= */
+
+.customer-savings-withdrawal-money .rial-box {
+    width: 68px;
+    min-width: 68px;
+
+    height: 46px;
+
+    flex: 0 0 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border: 1px solid #e2dcfb;
+
+    border-radius: 0 12px 12px 0;
+
+    font-family: inherit;
+
+    font-size: .76rem;
+    font-weight: 900;
+
+    direction: rtl;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.customer-savings-withdrawal-error {
+    margin-top: 7px;
+
+    color: #dc3545;
+
+    font-size: .7rem;
+    font-weight: 700;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   HELP
+   ========================================================= */
+
+.customer-savings-withdrawal-help {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 8px;
+
+    color: #858b9b;
+
+    font-size: .68rem;
+    font-weight: 600;
+
+    line-height: 1.7;
+}
+
+
+.customer-savings-withdrawal-help i {
+    color: #6040e8;
+
+    font-size: .78rem;
+}
+
+
+.customer-savings-withdrawal-help strong {
+    color: #6040e8;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   ACTIONS
+   دکمه در سمت چپ
+   ========================================================= */
+
+.customer-savings-withdrawal-actions {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    /*
+     * صفحه RTL است.
+     * برای قرار گرفتن دکمه در سمت چپ واقعی صفحه
+     * از flex-end استفاده می‌کنیم.
+     */
+
+    justify-content: flex-end;
+
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.customer-savings-withdrawal-submit {
+    min-height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 9px 18px;
+
+    color: #ffffff !important;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border: 1px solid transparent;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+
+    font-size: .82rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+
+.customer-savings-withdrawal-submit:hover {
+    color: #ffffff !important;
+
+    box-shadow:
+        0 5px 14px rgba(96, 64, 232, .20);
+}
+
+
+.customer-savings-withdrawal-submit:active {
+    transform: translateY(1px);
+}
+
+
+.customer-savings-withdrawal-submit i {
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+   ========================================================= */
+
+.customer-savings-withdrawal-note {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 12px 20px;
+
+    color: #707789;
+
+    background: #fafbfe;
+
+    border-top: 1px solid #eef0f5;
+
+    font-size: .68rem;
+    font-weight: 600;
+
+    line-height: 1.7;
+}
+
+
+.customer-savings-withdrawal-note i {
+    flex: 0 0 auto;
+
+    color: #319451;
+
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    /* CARD */
+
+    .customer-savings-withdrawal-card {
+        border-radius: 14px;
+    }
+
+
+    /* HEADER */
+
+    .customer-savings-withdrawal-header {
+        padding: 14px;
+    }
+
+
+    .customer-savings-withdrawal-header-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+
+    .customer-savings-withdrawal-header-content h1 {
+        font-size: .85rem;
+    }
+
+
+    .customer-savings-withdrawal-header-content span {
+        font-size: .62rem;
+    }
+
+
+    /* ACCOUNT */
+
+    .customer-savings-withdrawal-account {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 7px;
+
+        padding: 13px;
+    }
+
+
+    .customer-savings-withdrawal-account-item {
+        padding: 9px 10px;
+    }
+
+
+    .customer-savings-withdrawal-account-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+
+    .customer-savings-withdrawal-account-item span {
+        font-size: .58rem;
+    }
+
+
+    .customer-savings-withdrawal-account-item strong {
+        font-size: .7rem;
+    }
+
+
+    .customer-savings-withdrawal-account-item.balance small {
+        font-size: .6rem;
+    }
+
+
+    /* FORM */
+
+    .customer-savings-withdrawal-form {
+        padding: 0 13px 14px;
+    }
+
+
+    .customer-savings-withdrawal-field label {
+        font-size: .72rem;
+    }
+
+
+    /* MONEY */
+
+    .customer-savings-withdrawal-money .money-input {
+        height: 44px;
+
+        padding: 8px 11px;
+
+        font-size: .78rem;
+    }
+
+
+    .customer-savings-withdrawal-money .rial-box {
+        width: 62px;
+        min-width: 62px;
+
+        flex-basis: 62px;
+
+        height: 44px;
+
+        font-size: .7rem;
+    }
+
+
+    /* HELP */
+
+    .customer-savings-withdrawal-help {
+        font-size: .6rem;
+    }
+
+
+    /* ACTION */
+
+    .customer-savings-withdrawal-actions {
+        justify-content: flex-end;
+
+        margin-top: 18px;
+    }
+
+
+    .customer-savings-withdrawal-submit {
+        min-height: 42px;
+
+        padding: 8px 14px;
+
+        font-size: .74rem;
+    }
+
+
+    /* NOTE */
+
+    .customer-savings-withdrawal-note {
+        padding: 10px 13px;
+
+        font-size: .6rem;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    .customer-savings-withdrawal-account {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .customer-savings-withdrawal-account-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .customer-savings-withdrawal-page {
+        max-width: 900px;
+
+        margin: 0 auto;
+    }
+
+}
+

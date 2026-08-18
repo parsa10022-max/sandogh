@@ -75,12 +75,9 @@ class PaymentController extends Controller
     {
         try {
 
-
             $payment = $this->paymentResolver->verify(
                 $request->all()
             );
-
-
 
             /*
             |--------------------------------------------------------------------------
@@ -90,14 +87,11 @@ class PaymentController extends Controller
 
             if ($payment instanceof SavingsTransfer) {
 
-
                 return redirect()->route(
                     'customer.savings-transfer.success',
                     $payment
                 );
-
             }
-
 
 
             /*
@@ -108,44 +102,41 @@ class PaymentController extends Controller
 
             if ($payment instanceof LoanPayment) {
 
+                if ($payment->loan->customer_id === auth()->user()->customer?->id) {
+
+                    return redirect()->route(
+                        'customer.installments.payment.success',
+                        $payment
+                    );
+                }
 
                 return redirect()->route(
                     'payments.success',
                     $payment
                 );
-
             }
 
             /*
             |--------------------------------------------------------------------------
-            | پرداخت حساب سیستمی
+            | پرداخت کمک
             |--------------------------------------------------------------------------
             */
 
             if ($payment instanceof DonationPayment) {
 
-
-                // کمک عمومی (خارج از صندوق)
                 if ($payment->customer_id === null) {
 
-                    return redirect()
-                        ->route(
-                            'donation.success',
-                            $payment
-                        );
-
-                }
-
-
-                // کمک عضو صندوق
-                return redirect()
-                    ->route(
-                        'customer.donations.success',
+                    return redirect()->route(
+                        'donation.success',
                         $payment
                     );
+                }
 
+                return redirect()->route(
+                    'customer.donations.success',
+                    $payment
+                );
             }
-
 
 
             throw new \RuntimeException(
@@ -153,9 +144,43 @@ class PaymentController extends Controller
             );
 
 
-
         } catch (\Throwable $e) {
 
+            /*
+            |--------------------------------------------------------------------------
+            | پرداخت ناموفق کمک
+            |--------------------------------------------------------------------------
+            */
+
+            if ($request->payment_type === 'donation_customer') {
+
+                $donationPayment = DonationPayment::find(
+                    $request->reference_id
+                );
+
+                if ($donationPayment) {
+
+                    return redirect()
+                        ->route(
+                            'customer.donations.create',
+                            [
+                                'account_id' =>
+                                    $donationPayment->account_id
+                            ]
+                        )
+                        ->with(
+                            'error',
+                            'پرداخت کمک ناموفق بود.'
+                        );
+                }
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | سایر پرداخت‌ها
+            |--------------------------------------------------------------------------
+            */
 
             return redirect()
                 ->route('payments.failed', [
@@ -171,7 +196,6 @@ class PaymentController extends Controller
                     'error',
                     $e->getMessage()
                 );
-
         }
     }
 
@@ -257,6 +281,28 @@ class PaymentController extends Controller
     }
 
 
+    /**
+     * رسید موفقیت پرداخت قسط برای مشتری
+     */
+    public function customerSuccess(LoanPayment $payment)
+    {
+        $customer = auth()->user()->customer;
+
+        if (
+            ! $customer ||
+            $payment->loan->customer_id !== $customer->id
+        ) {
+            abort(403);
+        }
+
+        return view(
+            'customer.payments.success',
+            [
+                'payment' => $payment,
+            ]
+        );
+    }
+
 
 
     /**
@@ -278,35 +324,59 @@ class PaymentController extends Controller
         }
 
         /*
-        |--------------------------------------------------------------------------
-        | واریز پس‌انداز
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| واریز به حساب پس‌انداز
+|--------------------------------------------------------------------------
+*/
 
-        if (
+        if ($request->reference_id) {
 
-            $request->reference_id
-
-            &&
-
-            SavingsTransfer::where(
-                'id',
+            $transfer = SavingsTransfer::find(
                 $request->reference_id
-            )->exists()
+            );
 
-        ) {
+            if ($transfer) {
 
-            return redirect()
-                ->route(
-                    'customer.savings-transfer.create'
-                )
-                ->with(
-                    'error',
-                    'پرداخت انجام نشد.'
-                );
+                $customer = auth()->user()->customer;
 
+                /*
+                |--------------------------------------------------------------------------
+                | واریز به حساب خود مشتری
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    $customer
+                    && $transfer->receiver_customer_id === $customer->id
+                ) {
+
+                    return redirect()
+                        ->route(
+                            'customer.savings.deposit.create'
+                        )
+                        ->with(
+                            'error',
+                            'پرداخت انجام نشد.'
+                        );
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | واریز به حساب عضو دیگر
+                |--------------------------------------------------------------------------
+                */
+
+                return redirect()
+                    ->route(
+                        'customer.savings-transfer.create'
+                    )
+                    ->with(
+                        'error',
+                        'پرداخت انجام نشد.'
+                    );
+            }
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -314,24 +384,37 @@ class PaymentController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (
-            $request->installment_id
-            &&
-            \App\Models\Installment::where(
-                'id',
-                $request->installment_id
-            )->exists()
-        ) {
+        if ($request->installment_id) {
 
-            return redirect()
-                ->route(
-                    'customer.installments.others.create'
-                )
-                ->with(
-                    'error',
-                    'پرداخت قسط انجام نشد.'
-                );
+            $installment = Installment::with('loan')
+                ->find($request->installment_id);
 
+            if ($installment) {
+
+                $customer = auth()->user()->customer;
+
+                // قسط وام خود مشتری
+                if (
+                    $customer
+                    && $installment->loan->customer_id === $customer->id
+                ) {
+
+                    return redirect()
+                        ->route('customer.installments.index')
+                        ->with(
+                            'error',
+                            'پرداخت قسط انجام نشد.'
+                        );
+                }
+
+                // قسط وام شخص دیگر
+                return redirect()
+                    ->route('customer.installments.others.create')
+                    ->with(
+                        'error',
+                        'پرداخت قسط انجام نشد.'
+                    );
+            }
         }
 
 

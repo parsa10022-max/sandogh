@@ -49,9 +49,14 @@ class PaymentResolverService
         */
 
         if (
-            ($callbackData['payment_type'] ?? null)
-            ===
-            'installment'
+            in_array(
+                ($callbackData['payment_type'] ?? null),
+                [
+                    'installment',
+                    'installment_customer',
+                    'installment_other',
+                ]
+            )
         ) {
 
             return $this->loanPaymentService

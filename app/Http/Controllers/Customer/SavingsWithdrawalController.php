@@ -9,6 +9,7 @@ use App\Enums\AccountType;
 use App\Enums\AccountStatus;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
+use App\Models\Withdrawal;
 
 class SavingsWithdrawalController extends Controller
 {
@@ -23,6 +24,38 @@ class SavingsWithdrawalController extends Controller
     {
         $customer = auth()->user()->customer;
 
+        $account = $customer->accounts()
+            ->where(
+                'account_type',
+                AccountType::SAVING->value
+            )
+            ->where(
+                'status',
+                AccountStatus::ACTIVE->value
+            )
+            ->first();
+
+        return view(
+            'customer.savings.withdrawal.create',
+            compact(
+                'account',
+                'customer'
+            )
+        );
+    }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'amount' => [
+                'required',
+                'integer',
+                'min:500000',
+            ],
+        ]);
+
+        $customer = auth()->user()->customer;
 
         $account = $customer->accounts()
             ->where(
@@ -35,59 +68,58 @@ class SavingsWithdrawalController extends Controller
             )
             ->firstOrFail();
 
+        try {
 
-        return view(
-            'customer.savings.withdrawal.create',
-            compact('account')
-        );
+            $withdrawal = $this->accountService->withdraw(
+
+                account: $account,
+
+                amount: (int) $request->amount,
+
+                paymentMethod: PaymentMethod::BANK_TRANSFER,
+
+                description: 'درخواست برداشت مشتری',
+
+                createdBy: auth()->id(),
+
+            );
+
+            return redirect()->route(
+                'customer.savings.withdrawal.success',
+                $withdrawal
+            );
+
+        } catch (\InvalidArgumentException $e) {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'amount' => $e->getMessage(),
+                ]);
+        }
     }
 
-
-    public function store(Request $request)
+    public function success(Withdrawal $withdrawal)
     {
-        $request->validate([
-
-            'amount' => [
-                'required',
-                'integer',
-                'min:1000'
-            ]
-
-        ]);
-
-
         $customer = auth()->user()->customer;
 
-
-        $account = $customer->accounts()
-            ->where(
-                'account_type',
-                AccountType::SAVING->value
-            )
-            ->firstOrFail();
-
-
-        $this->accountService->withdraw(
-
-            account: $account,
-
-            amount: $request->amount,
-
-            paymentMethod: PaymentMethod::BANK_TRANSFER,
-
-            description: 'درخواست برداشت مشتری',
-
-            createdBy: auth()->id(),
-
+        abort_if(
+            ! $customer,
+            403
         );
 
+        abort_if(
+            $withdrawal->account->customer_id !== $customer->id,
+            403
+        );
 
-        return redirect()
-            ->route('customer.savings.transactions')
-            ->with(
-                'success',
-                'درخواست برداشت با موفقیت ثبت شد.'
-            );
+        return view(
+            'customer.savings.withdrawal.success',
+            compact(
+                'withdrawal',
+                'customer'
+            )
+        );
     }
 
 }

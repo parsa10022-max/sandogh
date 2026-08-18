@@ -28,30 +28,22 @@ class Withdrawal extends Model
         'payment_tracking_code',
 
         'paid_by',
+        'paid_at',
 
     ];
 
 
-    protected function casts(): array
-    {
-        return [
-
-            'status' => WithdrawalStatus::class,
-
-            'amount' => 'integer',
-
-            'paid_at' => 'datetime',
-
-        ];
-    }
     protected $casts = [
 
         'status' => WithdrawalStatus::class,
 
         'payment_bank' => PaymentBank::class,
 
-    ];
+        'amount' => 'integer',
 
+        'paid_at' => 'datetime',
+
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -103,6 +95,6 @@ class Withdrawal extends Model
 
     public function isCanceled(): bool
     {
-        return $this->status === WithdrawalStatus::CANCELED;
+        return $this->status === WithdrawalStatus::CANCELLED;
     }
 }

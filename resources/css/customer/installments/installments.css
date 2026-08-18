@@ -1,0 +1,1199 @@
+
+    /* =========================================================
+       CUSTOMER INSTALLMENTS
+       Design System #1
+       Purple + Blue / RTL / Bootstrap 5.3
+       Mobile First / PWA
+       ========================================================= */
+
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+.customer-installments-page {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.customer-installments-empty-card {
+    width: 100%;
+    max-width: 760px;
+
+    margin: 20px auto;
+    padding: 40px 24px;
+
+    text-align: center;
+
+    background: #ffffff;
+    border: 1px solid #e3e6ef;
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 20px rgba(35, 45, 75, .06);
+
+    box-sizing: border-box;
+}
+
+.customer-installments-empty-icon {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f1efff;
+
+    border: 1px solid #dfd9fb;
+    border-radius: 20px;
+
+    font-size: 2rem;
+}
+
+.customer-installments-empty-card h5 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.customer-installments-empty-card p {
+    margin: 8px 0 0;
+
+    color: #7b8195;
+
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   MAIN SECTIONS
+   ========================================================= */
+
+.customer-installments-summary,
+.customer-installments-section {
+    width: 100%;
+
+    margin-bottom: 20px;
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 16px rgba(35, 45, 75, .045);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.customer-installments-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 18px;
+}
+
+.customer-installments-section-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f1efff;
+
+    border: 1px solid #e2dcfb;
+    border-radius: 11px;
+
+    font-size: 1.1rem;
+}
+
+.customer-installments-section-title h2 {
+    margin: 0;
+
+    color: #292938;
+
+    font-size: .95rem;
+    font-weight: 900;
+}
+
+.customer-installments-section-title span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #85899a;
+
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   LOAN SUMMARY
+   ========================================================= */
+
+.customer-installments-summary-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.customer-installments-summary-item {
+    min-width: 0;
+    min-height: 72px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 10px 12px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e7e3ef;
+    border-radius: 11px;
+
+    box-sizing: border-box;
+}
+
+.customer-installments-summary-item span {
+    color: #7b8192;
+
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+.customer-installments-summary-item strong {
+    color: #303342;
+
+    font-size: .82rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   INSTALLMENTS GRID
+   ========================================================= */
+
+.customer-installments-columns {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/*
+ * ردیف‌بندی اصلی حفظ شده است.
+ *
+ * موبایل  → ۲ ستون
+ * تبلت    → ۳ ستون
+ * دسکتاپ  → ۵ ستون
+ */
+
+.customer-installments-row {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   INSTALLMENT CARD
+   ========================================================= */
+
+.customer-installment-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 108px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 11px 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e7ef;
+    border-radius: 13px;
+
+    box-sizing: border-box;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+.customer-installment-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #dcd5f6;
+
+    box-shadow:
+        0 7px 18px rgba(35, 45, 75, .07);
+}
+
+
+/* =========================================================
+   PAID / PAYABLE
+   ========================================================= */
+
+.customer-installment-card.is-paid {
+    background: #fbfdfb;
+    border-color: #dcefe2;
+}
+
+.customer-installment-card.is-payable {
+    background: #fcfbff;
+    border-color: #dcd4fa;
+
+    box-shadow:
+        0 4px 14px rgba(96, 64, 232, .06);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   شماره قسط + تاریخ سررسید
+   ========================================================= */
+
+.customer-installment-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   INSTALLMENT HEADING
+   ========================================================= */
+
+.customer-installment-heading {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+/* =========================================================
+   INSTALLMENT NUMBER
+   ========================================================= */
+
+.customer-installment-number {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f1efff;
+
+    border: 1px solid #e3ddfb;
+    border-radius: 9px;
+
+    font-size: .78rem;
+    font-weight: 900;
+}
+
+.customer-installment-card.is-paid
+.customer-installment-number {
+    color: #319451;
+    background: #eaf7ee;
+
+    border-color: #d3ecdc;
+}
+
+.customer-installment-card.is-payable
+.customer-installment-number {
+    color: #6040e8;
+    background: #eeeaff;
+
+    border-color: #dcd4fa;
+}
+
+
+/* =========================================================
+   INSTALLMENT TITLE
+   ========================================================= */
+
+.customer-installment-title {
+    min-width: 0;
+
+    color: #303342;
+
+    font-size: .78rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DUE DATE
+   ========================================================= */
+
+.customer-installment-due-date {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    color: #6f7485;
+
+    font-size: .62rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-installment-due-date i {
+    color: #6040e8;
+
+    font-size: .70rem;
+}
+
+
+/* =========================================================
+   CARD BOTTOM
+   مبلغ + عملیات
+   ========================================================= */
+
+.customer-installment-bottom {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 7px;
+
+    margin-top: 13px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.customer-installment-amount {
+    min-width: 0;
+    flex: 1;
+}
+
+.customer-installment-amount strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .78rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-installment-amount small {
+    color: #666b7c;
+
+    font-size: .62rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAID DATE
+   ========================================================= */
+
+.customer-installment-paid-date {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 4px;
+
+    margin-top: 7px;
+
+    color: #319451;
+
+    font-size: .62rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-installment-paid-date i {
+    font-size: .68rem;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.customer-installment-action {
+    flex: 0 0 auto;
+
+    margin: 0;
+}
+
+.customer-installment-form {
+    width: auto;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   PAY BUTTON
+   ========================================================= */
+
+.customer-installment-pay {
+    min-width: 64px;
+    min-height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 0 8px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: .59rem;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-installment-pay:hover {
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(75, 60, 190, .15);
+}
+
+
+/* =========================================================
+   RECEIPT
+   ========================================================= */
+
+.customer-installment-receipt {
+    min-width: 64px;
+    min-height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 0 8px;
+
+    color: #319451;
+    background: #eaf7ee;
+
+    border: 1px solid #d3ecdc;
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: .59rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    transition: .18s ease;
+}
+
+.customer-installment-receipt:hover {
+    color: #277b41;
+    background: #e2f5e8;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.customer-installment-status {
+    min-height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 0 7px;
+
+    border-radius: 7px;
+
+    font-size: .57rem;
+    font-weight: 800;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+}
+
+.customer-installment-status.paid {
+    color: #319451;
+    background: #eaf7ee;
+
+    border: 1px solid #d3ecdc;
+}
+
+.customer-installment-status.waiting {
+    color: #85899a;
+    background: #f5f6f9;
+
+    border: 1px solid #e5e7ed;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.customer-installments-footer {
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 14px;
+    padding: 10px 13px;
+
+    background: #faf9fd;
+
+    border: 1px solid #e5e8f0;
+    border-radius: 10px;
+
+    color: #747887;
+
+    font-size: .68rem;
+    font-weight: 700;
+
+    box-sizing: border-box;
+}
+
+.customer-installments-footer span {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+.customer-installments-footer i {
+    color: #6040e8;
+
+    font-size: .85rem;
+}
+
+.customer-installments-footer strong {
+    color: #303342;
+
+    font-size: .73rem;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   TABLET
+   768px — 991.98px
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    .customer-installments-summary,
+    .customer-installments-section {
+        padding: 18px;
+
+        border-radius: 15px;
+    }
+
+
+    /* Section title */
+
+    .customer-installments-section-title {
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+    .customer-installments-section-icon {
+        width: 48px;
+        height: 48px;
+
+        flex-basis: 48px;
+
+        border-radius: 12px;
+
+        font-size: 1.35rem;
+    }
+
+    .customer-installments-section-title h2 {
+        font-size: 1.12rem;
+    }
+
+    .customer-installments-section-title span {
+        font-size: .76rem;
+    }
+
+
+    /* Loan summary */
+
+    .customer-installments-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .customer-installments-summary-item {
+        min-height: 82px;
+
+        padding: 11px 13px;
+    }
+
+    .customer-installments-summary-item span {
+        font-size: .78rem;
+    }
+
+    .customer-installments-summary-item strong {
+        font-size: .98rem;
+    }
+
+
+    /* Installment grid */
+
+    .customer-installments-columns {
+        gap: 10px;
+    }
+
+    .customer-installments-row {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+
+    /* Installment card */
+
+    .customer-installment-card {
+        min-height: 112px;
+
+        padding: 12px;
+
+        border-radius: 13px;
+    }
+
+    .customer-installment-header {
+        gap: 7px;
+    }
+
+    .customer-installment-heading {
+        gap: 8px;
+    }
+
+    .customer-installment-number {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 10px;
+
+        font-size: .88rem;
+    }
+
+    .customer-installment-title {
+        font-size: .82rem;
+    }
+
+    .customer-installment-due-date {
+        font-size: .68rem;
+    }
+
+    .customer-installment-due-date i {
+        font-size: .76rem;
+    }
+
+    .customer-installment-bottom {
+        margin-top: 12px;
+    }
+
+    .customer-installment-amount strong {
+        font-size: .82rem;
+    }
+
+    .customer-installment-amount small {
+        font-size: .64rem;
+    }
+
+    .customer-installment-pay,
+    .customer-installment-receipt {
+        min-height: 32px;
+
+        font-size: .65rem;
+    }
+
+    .customer-installment-status {
+        min-height: 32px;
+
+        font-size: .62rem;
+    }
+
+    .customer-installment-paid-date {
+        font-size: .65rem;
+    }
+
+
+    /* Footer */
+
+    .customer-installments-footer {
+        min-height: 52px;
+
+        padding: 10px 14px;
+
+        font-size: .76rem;
+    }
+
+    .customer-installments-footer strong {
+        font-size: .82rem;
+    }
+
+    .customer-installments-footer i {
+        font-size: .95rem;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP / LAPTOP
+   992px+
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .customer-installments-summary,
+    .customer-installments-section {
+        padding: 20px;
+    }
+
+    .customer-installments-summary-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .customer-installments-row {
+        grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+    .customer-installment-card {
+        min-height: 108px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   381px — 767.98px
+   ========================================================= */
+
+@media (min-width: 381px) and (max-width: 767.98px) {
+
+    .customer-installments-summary,
+    .customer-installments-section {
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+    .customer-installments-section-title {
+        margin-bottom: 13px;
+    }
+
+    .customer-installments-section-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+    .customer-installments-section-title h2 {
+        font-size: .85rem;
+    }
+
+    .customer-installments-section-title span {
+        font-size: .61rem;
+    }
+
+
+    /* Summary */
+
+    .customer-installments-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 7px;
+    }
+
+    .customer-installments-summary-item {
+        min-height: 64px;
+
+        padding: 8px 9px;
+    }
+
+    .customer-installments-summary-item span {
+        font-size: .60rem;
+    }
+
+    .customer-installments-summary-item strong {
+        font-size: .72rem;
+    }
+
+
+    /* Installments */
+
+    .customer-installments-columns {
+        gap: 7px;
+    }
+
+    .customer-installments-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 7px;
+    }
+
+
+    /* Compact card */
+
+    .customer-installment-card {
+        min-height: 96px;
+
+        padding: 9px;
+
+        border-radius: 11px;
+    }
+
+    .customer-installment-header {
+        gap: 5px;
+    }
+
+    .customer-installment-heading {
+        gap: 5px;
+    }
+
+    .customer-installment-number {
+        width: 28px;
+        height: 28px;
+
+        flex-basis: 28px;
+
+        border-radius: 8px;
+
+        font-size: .68rem;
+    }
+
+    .customer-installment-title {
+        font-size: .68rem;
+    }
+
+    .customer-installment-due-date {
+        gap: 3px;
+
+        font-size: .53rem;
+    }
+
+    .customer-installment-due-date i {
+        font-size: .60rem;
+    }
+
+    .customer-installment-bottom {
+        gap: 5px;
+
+        margin-top: 10px;
+    }
+
+    .customer-installment-amount strong {
+        font-size: .68rem;
+    }
+
+    .customer-installment-amount small {
+        font-size: .53rem;
+    }
+
+    .customer-installment-pay,
+    .customer-installment-receipt {
+        min-width: 50px;
+        min-height: 27px;
+
+        padding: 0 6px;
+
+        border-radius: 6px;
+
+        font-size: .52rem;
+    }
+
+    .customer-installment-status {
+        min-height: 27px;
+
+        padding: 0 5px;
+
+        border-radius: 6px;
+
+        font-size: .50rem;
+    }
+
+    .customer-installment-paid-date {
+        margin-top: 5px;
+
+        font-size: .54rem;
+    }
+
+    .customer-installment-paid-date i {
+        font-size: .58rem;
+    }
+
+
+    /* Footer */
+
+    .customer-installments-footer {
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 7px;
+
+        font-size: .62rem;
+    }
+
+    .customer-installments-footer span {
+        justify-content: space-between;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   360px — 380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .customer-installments-summary,
+    .customer-installments-section {
+        padding: 12px;
+    }
+
+    .customer-installments-section-icon {
+        width: 36px;
+        height: 36px;
+
+        flex-basis: 36px;
+
+        font-size: .95rem;
+    }
+
+    .customer-installments-section-title h2 {
+        font-size: .80rem;
+    }
+
+    .customer-installments-section-title span {
+        font-size: .58rem;
+    }
+
+
+    /* Summary */
+
+    .customer-installments-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .customer-installments-summary-item {
+        min-height: 60px;
+
+        padding: 7px 8px;
+    }
+
+    .customer-installments-summary-item span {
+        font-size: .56rem;
+    }
+
+    .customer-installments-summary-item strong {
+        font-size: .68rem;
+    }
+
+
+    /* Installments */
+
+    .customer-installments-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .customer-installment-card {
+        min-height: 92px;
+
+        padding: 8px;
+    }
+
+    .customer-installment-heading {
+        gap: 4px;
+    }
+
+    .customer-installment-number {
+        width: 26px;
+        height: 26px;
+
+        flex-basis: 26px;
+
+        font-size: .64rem;
+    }
+
+    .customer-installment-title {
+        font-size: .64rem;
+    }
+
+    .customer-installment-due-date {
+        font-size: .49rem;
+    }
+
+    .customer-installment-due-date i {
+        font-size: .56rem;
+    }
+
+    .customer-installment-bottom {
+        margin-top: 8px;
+    }
+
+    .customer-installment-amount strong {
+        font-size: .64rem;
+    }
+
+    .customer-installment-amount small {
+        font-size: .49rem;
+    }
+
+    .customer-installment-pay,
+    .customer-installment-receipt {
+        min-width: 46px;
+        min-height: 25px;
+
+        padding: 0 5px;
+
+        font-size: .49rem;
+    }
+
+    .customer-installment-status {
+        min-height: 25px;
+
+        padding: 0 4px;
+
+        font-size: .47rem;
+    }
+
+    .customer-installment-paid-date {
+        font-size: .51rem;
+    }
+}
+

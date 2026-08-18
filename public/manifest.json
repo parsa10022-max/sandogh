@@ -1,0 +1,11 @@
+{
+    "name": "صندوق قرض الحسنه",
+    "short_name": "صندوق",
+    "start_url": "/customer/dashboard",
+    "display": "standalone",
+    "direction": "rtl",
+    "lang": "fa",
+    "theme_color": "#0d6efd",
+    "background_color": "#ffffff",
+    "icons": []
+}

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\OtpRequest;
+use App\Enums\UserRole;
 
 class OtpController extends Controller
 
@@ -58,7 +59,17 @@ class OtpController extends Controller
 
         session()->forget('login_user_id');
 
-        return redirect()->route('dashboard');
+
+        if ($user->role === UserRole::CUSTOMER) {
+
+            return redirect()
+                ->route('customer.dashboard');
+
+        }
+
+
+        return redirect()
+            ->route('dashboard');
     }
     private function getLoginUser(): ?User
     {

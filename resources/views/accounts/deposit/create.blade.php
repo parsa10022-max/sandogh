@@ -1,177 +1,194 @@
 @extends('layouts.app')
 
+@section('title', 'واریز به حساب')
+
 @section('content')
 
-    <div class="card shadow-sm">
+    <div class="container py-4">
 
-        <div class="card-header">
-            <h5 class="mb-0">
-                واریز به حساب پس‌انداز
-            </h5>
-        </div>
+        <div class="card shadow-sm border-0">
 
-
-        <div class="card-body">
-
-
-            <div class="mb-3">
-
-                <strong>عضو:</strong>
-
-                {{ $account->customer->first_name }}
-                {{ $account->customer->last_name }}
-
-                <br>
-
-                <strong>شماره حساب:</strong>
-
-                <span dir="ltr">
-                {{ $account->account_number }}
-            </span>
-
-
-                <br>
-
-                <strong>موجودی فعلی:</strong>
-
-                {{ number_format($account->balance) }}
-
-                ریال
-
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-arrow-up-circle text-success"></i>
+                    واریز به حساب
+                </h5>
             </div>
 
+            <div class="card-body">
 
+                {{-- اطلاعات حساب --}}
+                <div class="mb-4">
 
-            <form method="POST"
-                  action="{{ route('accounts.deposit') }}">
+                    <div class="mb-2">
+                        <strong>عضو:</strong>
 
-                @csrf
-
-
-                <input type="hidden"
-                       name="account_id"
-                       value="{{ $account->id }}">
-
-
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        مبلغ واریز (ریال)
-                    </label>
-
-                    <input type="number"
-                           name="amount"
-                           class="form-control"
-                           value="{{ old('amount') }}"
-                           required>
-
-                    @error('amount')
-
-                    <div class="text-danger">
-                        {{ $message }}
+                        {{ $account->customer->first_name }}
+                        {{ $account->customer->last_name }}
                     </div>
 
-                    @enderror
+                    <div class="mb-2">
+                        <strong>شماره حساب:</strong>
+
+                        <span dir="ltr">
+                            {{ $account->account_number }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>موجودی فعلی:</strong>
+
+                        <span class="fw-bold">
+                            {{ number_format($account->balance) }}
+                            ریال
+                        </span>
+                    </div>
 
                 </div>
 
+                <hr>
 
+                <form method="POST"
+                      action="{{ route('accounts.deposit') }}">
 
+                    @csrf
 
-                <div class="mb-3">
+                    <input type="hidden"
+                           name="account_id"
+                           value="{{ $account->id }}">
 
-                    <label class="form-label">
-                        نوع واریز
-                    </label>
+                    {{-- مبلغ --}}
+                    <div class="mb-3">
 
+                        <label for="amount" class="form-label">
+                            مبلغ واریز
+                        </label>
 
-                    <select name="payment_method"
-                            class="form-select"
-                            required>
+                        <div class="input-group">
 
+                            <input
+                                type="text"
+                                name="amount"
+                                id="amount"
+                                value="{{ old('amount') }}"
+                                class="form-control money-input @error('amount') is-invalid @enderror"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                data-min="50000"
+                                required
+                            >
 
-                        <option value="">
-                            انتخاب کنید
-                        </option>
+                            <span class="input-group-text">
+                                ریال
+                            </span>
 
+                        </div>
 
-                        <option value="1"
-                            {{ old('payment_method') == 1 ? 'selected' : '' }}>
+                        @error('amount')
+                        <div class="invalid-feedback d-block">
+                            {{ $message }}
+                        </div>
+                        @enderror
+
+                        <div class="form-text">
+                            حداقل مبلغ واریز ۵۰,۰۰۰ ریال است.
+                        </div>
+
+                    </div>
+
+                    {{-- روش پرداخت --}}
+                    <div class="mb-3">
+
+                        <label for="payment_method" class="form-label">
+                            نوع واریز
+                        </label>
+
+                        <select
+                            name="payment_method"
+                            id="payment_method"
+                            class="form-select @error('payment_method') is-invalid @enderror"
+                            required
+                        >
+
+                            <option value="">
+                                انتخاب کنید
+                            </option>
+
+                            <option value="1"
+                                    @selected(old('payment_method') == 1)>
                             نقدی
-                        </option>
+                            </option>
 
-
-                        <option value="2"
-                            {{ old('payment_method') == 2 ? 'selected' : '' }}>
+                            <option value="2"
+                                    @selected(old('payment_method') == 2)>
                             دستگاه پوز
-                        </option>
+                            </option>
 
-
-                        <option value="3"
-                            {{ old('payment_method') == 3 ? 'selected' : '' }}>
+                            <option value="3"
+                                    @selected(old('payment_method') == 3)>
                             درگاه آنلاین
-                        </option>
+                            </option>
 
-
-                        <option value="4"
-                            {{ old('payment_method') == 4 ? 'selected' : '' }}>
+                            <option value="4"
+                                    @selected(old('payment_method') == 4)>
                             وام
-                        </option>
+                            </option>
 
+                        </select>
 
-                    </select>
+                        @error('payment_method')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
 
-
-                    @error('payment_method')
-
-                    <div class="text-danger">
-                        {{ $message }}
                     </div>
 
-                    @enderror
+                    {{-- توضیحات --}}
+                    <div class="mb-4">
 
-                </div>
+                        <label for="description" class="form-label">
+                            توضیحات
+                        </label>
 
+                        <textarea
+                            name="description"
+                            id="description"
+                            class="form-control @error('description') is-invalid @enderror"
+                            rows="3"
+                        >{{ old('description') }}</textarea>
 
+                        @error('description')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
 
+                    </div>
 
+                    {{-- دکمه‌ها --}}
+                    <div class="d-flex gap-2">
 
-                <div class="mb-3">
+                        <button type="submit"
+                                class="btn btn-success">
 
-                    <label class="form-label">
-                        توضیحات
-                    </label>
+                            <i class="bi bi-check-circle"></i>
+                            ثبت واریز
 
+                        </button>
 
-                    <textarea name="description"
-                              class="form-control"
-                              rows="3">{{ old('description') }}</textarea>
+                        <a href="{{ route('accounts.show', $account) }}"
+                           class="btn btn-outline-secondary">
 
+                            انصراف
 
-                </div>
+                        </a>
 
+                    </div>
 
+                </form>
 
-
-                <button type="submit"
-                        class="btn btn-success">
-
-                    ثبت واریز
-
-                </button>
-
-
-                <a href="{{ route('accounts.show',$account) }}"
-                   class="btn btn-secondary">
-
-                    انصراف
-
-                </a>
-
-
-            </form>
-
+            </div>
 
         </div>
 

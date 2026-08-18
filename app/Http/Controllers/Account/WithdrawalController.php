@@ -80,13 +80,12 @@ class WithdrawalController extends Controller
             );
     }
 
-
     public function show(Withdrawal $withdrawal)
     {
         $withdrawal->load([
-            'account.customer'
+            'account.customer',
+            'paidBy',
         ]);
-
 
         return view(
             'withdrawals.show',
@@ -96,47 +95,51 @@ class WithdrawalController extends Controller
 
 
 
-    public function approve(
-        Request $request,
-        Withdrawal $withdrawal
-    ) {
 
-        $request->validate([
+public function approve(
+    Request $request,
+    Withdrawal $withdrawal
+) {
+    $request->validate([
+        'payment_bank' => [
+            'required',
+            'integer',
+        ],
 
-            'payment_bank' => [
-                'required',
-                'integer',
-            ],
+        'payment_tracking_code' => [
+            'required',
+            'string',
+            'max:100',
+        ],
+    ]);
 
-            'payment_tracking_code' => [
-                'required',
-                'string',
-                'max:100',
-            ],
-
-        ]);
-
-
-        $withdrawal->update([
-
-            'status' => WithdrawalStatus::PAID,
-
-            'payment_bank' => $request->payment_bank,
-
-            'payment_tracking_code' => $request->payment_tracking_code,
-
-            'paid_by' => auth()->id(),
-
-        ]);
-
-
-        return redirect()
-            ->route('withdrawals.show', $withdrawal)
-            ->with(
-                'success',
-                'برداشت با موفقیت پرداخت شد.'
-            );
+    if ($withdrawal->status !== WithdrawalStatus::PENDING) {
+        return back()->with(
+            'error',
+            'این درخواست دیگر در وضعیت قابل پرداخت نیست.'
+        );
     }
+
+    $withdrawal->update([
+        'status' => WithdrawalStatus::PAID,
+
+        'payment_bank' => $request->payment_bank,
+
+        'payment_tracking_code' => $request->payment_tracking_code,
+
+        'paid_by' => auth()->id(),
+
+        'paid_at' => now(),
+    ]);
+
+    return redirect()
+        ->route('withdrawals.show', $withdrawal)
+        ->with(
+            'success',
+            'برداشت با موفقیت پرداخت شد.'
+        );
+}
+
 
 
 
@@ -184,11 +187,10 @@ class WithdrawalController extends Controller
 
     public function reject(Withdrawal $withdrawal)
     {
-
         $this->accountService->rejectWithdrawal($withdrawal);
 
         return redirect()
-            ->route('withdrawals.show', $withdrawal)
+            ->route('withdrawals.index')
             ->with(
                 'success',
                 'درخواست برداشت رد شد و مبلغ به حساب عضو بازگردانده شد.'
