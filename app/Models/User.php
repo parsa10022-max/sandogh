@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -88,5 +89,17 @@ class User extends Authenticatable
     {
         return $query->where('role', UserRole::OPERATOR);
     }
+
+    /**
+     * اعلان‌های کاربر
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(
+            Notification::class
+        );
+    }
+
+
 
 }

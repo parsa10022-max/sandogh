@@ -34,6 +34,8 @@
 @import "./customer/savings/savings-transfer-success.css";
 @import "./customer/savings/savings-withdrawal.css";
 @import "./customer/savings/savings-withdrawal-success.css";
+@import "./customer/loan-requests/loan-requests.css";
+@import "./customer/loan-requests/loan-request-show.css";
 @import "account/customer-account.css";
 
 

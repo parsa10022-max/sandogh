@@ -6,23 +6,39 @@
 
     <div class="container">
 
+        {{-- Header --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
 
             <h4 class="mb-0">
                 درخواست وام
             </h4>
 
-            <a href="{{ route('loan-requests.index') }}"
-               class="btn btn-secondary">
+            <div class="d-flex gap-2">
 
-                بازگشت
+                <a href="{{ route('loan-requests.edit', $loanRequest) }}"
+                   class="btn btn-warning">
 
-            </a>
+                    <i class="bi bi-pencil-square"></i>
+                    ویرایش درخواست
+
+                </a>
+
+                <a href="{{ route('loan-requests.index') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-right"></i>
+                    بازگشت
+
+                </a>
+
+            </div>
 
         </div>
 
 
-        {{-- اطلاعات درخواست --}}
+        {{-- ========================================================= --}}
+        {{-- اطلاعات اصلی درخواست --}}
+        {{-- ========================================================= --}}
 
         <div class="card shadow-sm border-0">
 
@@ -34,12 +50,11 @@
 
             </div>
 
-
             <div class="card-body">
 
                 <div class="row">
 
-
+                    {{-- عضو --}}
                     <div class="col-md-6 mb-3">
 
                         <label class="text-muted">
@@ -53,7 +68,7 @@
                     </div>
 
 
-
+                    {{-- مبلغ درخواستی --}}
                     <div class="col-md-6 mb-3">
 
                         <label class="text-muted">
@@ -63,14 +78,15 @@
                         <div class="fw-bold">
 
                             {{ number_format($loanRequest->requested_amount) }}
-                            تومان
+
+                            ریال
 
                         </div>
 
                     </div>
 
 
-
+                    {{-- وضعیت --}}
                     <div class="col-md-6 mb-3">
 
                         <label class="text-muted">
@@ -84,8 +100,12 @@
                                 @case(\App\Enums\LoanRequestStatus::PENDING)
 
                                 <span class="badge bg-warning text-dark">
-                                    {{ $loanRequest->status->label() }}
-                                </span>
+
+                                        <i class="bi bi-hourglass-split"></i>
+
+                                        در حال بررسی
+
+                                    </span>
 
                                 @break
 
@@ -93,8 +113,12 @@
                                 @case(\App\Enums\LoanRequestStatus::APPROVED)
 
                                 <span class="badge bg-success">
-                                    {{ $loanRequest->status->label() }}
-                                </span>
+
+                                        <i class="bi bi-check-circle"></i>
+
+                                        تایید شده
+
+                                    </span>
 
                                 @break
 
@@ -102,8 +126,12 @@
                                 @case(\App\Enums\LoanRequestStatus::REJECTED)
 
                                 <span class="badge bg-danger">
-                                    {{ $loanRequest->status->label() }}
-                                </span>
+
+                                        <i class="bi bi-x-circle"></i>
+
+                                        رد شده
+
+                                    </span>
 
                                 @break
 
@@ -111,8 +139,12 @@
                                 @case(\App\Enums\LoanRequestStatus::CANCELLED)
 
                                 <span class="badge bg-secondary">
-                                    {{ $loanRequest->status->label() }}
-                                </span>
+
+                                        <i class="bi bi-slash-circle"></i>
+
+                                        لغو شده
+
+                                    </span>
 
                                 @break
 
@@ -123,7 +155,7 @@
                     </div>
 
 
-
+                    {{-- تاریخ درخواست --}}
                     <div class="col-md-6 mb-3">
 
                         <label class="text-muted">
@@ -139,7 +171,7 @@
                     </div>
 
 
-
+                    {{-- توضیحات مشتری --}}
                     <div class="col-md-12 mb-3">
 
                         <label class="text-muted">
@@ -155,7 +187,7 @@
                     </div>
 
 
-
+                    {{-- پیام مدیر --}}
                     @if($loanRequest->review_note)
 
                         <div class="col-md-12 mb-3">
@@ -174,6 +206,8 @@
 
                     @endif
 
+
+                    {{-- تاریخ مراجعه مجدد --}}
                     @if($loanRequest->next_review_date)
 
                         <div class="col-md-6 mb-3">
@@ -192,12 +226,16 @@
 
                     @endif
 
-
                 </div>
 
             </div>
 
         </div>
+
+
+        {{-- ========================================================= --}}
+        {{-- اطلاعات وام تایید شده --}}
+        {{-- ========================================================= --}}
 
         @if($loanRequest->status === \App\Enums\LoanRequestStatus::APPROVED)
 
@@ -205,7 +243,9 @@
 
                 <div class="card-header bg-success text-white">
 
-                    <strong>اطلاعات وام تایید شده</strong>
+                    <strong>
+                        اطلاعات وام تایید شده
+                    </strong>
 
                 </div>
 
@@ -213,32 +253,71 @@
 
                     <div class="row">
 
+                        {{-- مبلغ --}}
                         <div class="col-md-3 mb-3">
-                            <label class="text-muted">مبلغ تایید شده</label>
+
+                            <label class="text-muted">
+                                مبلغ تایید شده
+                            </label>
+
                             <div class="fw-bold">
-                                {{ number_format($loanRequest->approved_amount) }} ریال
+
+                                {{ number_format($loanRequest->approved_amount) }}
+
+                                ریال
+
                             </div>
+
                         </div>
 
+
+                        {{-- نوع وام --}}
                         <div class="col-md-3 mb-3">
-                            <label class="text-muted">نوع وام</label>
+
+                            <label class="text-muted">
+                                نوع وام
+                            </label>
+
                             <div class="fw-bold">
+
                                 {{ $loanRequest->loanType?->name ?? '-' }}
+
                             </div>
+
                         </div>
 
+
+                        {{-- تعداد اقساط --}}
                         <div class="col-md-3 mb-3">
-                            <label class="text-muted">تعداد اقساط</label>
+
+                            <label class="text-muted">
+                                تعداد اقساط
+                            </label>
+
                             <div class="fw-bold">
+
                                 {{ $loanRequest->approved_installment_count }}
+
                             </div>
+
                         </div>
 
+
+                        {{-- دوره --}}
                         <div class="col-md-3 mb-3">
-                            <label class="text-muted">دوره پرداخت</label>
+
+                            <label class="text-muted">
+                                دوره بازپرداخت
+                            </label>
+
                             <div class="fw-bold">
-                                {{ $loanRequest->approved_installment_interval }} ماه
+
+                                {{ $loanRequest->approved_installment_interval }}
+
+                                ماه
+
                             </div>
+
                         </div>
 
                     </div>
@@ -250,14 +329,13 @@
         @endif
 
 
-
+        {{-- ========================================================= --}}
         {{-- بررسی مدیر --}}
+        {{-- ========================================================= --}}
 
         @if($loanRequest->status === \App\Enums\LoanRequestStatus::PENDING)
 
-
             <div class="card shadow-sm border-0 mt-4">
-
 
                 <div class="card-header bg-light">
 
@@ -267,11 +345,12 @@
 
                 </div>
 
-
                 <div class="card-body">
 
 
-                    {{-- تایید --}}
+                    {{-- ================================================= --}}
+                    {{-- تایید درخواست --}}
+                    {{-- ================================================= --}}
 
                     <form method="POST"
                           action="{{ route('loan-requests.approve', $loanRequest) }}"
@@ -279,6 +358,7 @@
 
                         @csrf
 
+                        {{-- مبلغ تایید شده --}}
                         <div class="mb-3">
 
                             <label class="form-label">
@@ -293,6 +373,8 @@
 
                         </div>
 
+
+                        {{-- نوع وام --}}
                         <div class="mb-3">
 
                             <label class="form-label">
@@ -310,7 +392,10 @@
                                 @foreach($loanTypes as $loanType)
 
                                     <option value="{{ $loanType->id }}"
-                                        {{ old('loan_type_id', $loanRequest->loan_type_id ?? '') == $loanType->id ? 'selected' : '' }}>
+                                        {{ old(
+                                            'loan_type_id',
+                                            $loanRequest->loan_type_id ?? ''
+                                        ) == $loanType->id ? 'selected' : '' }}>
 
                                         {{ $loanType->name }}
 
@@ -323,6 +408,7 @@
                         </div>
 
 
+                        {{-- تعداد اقساط --}}
                         <div class="mb-3">
 
                             <label class="form-label">
@@ -333,12 +419,16 @@
                                    name="approved_installment_count"
                                    class="form-control"
                                    min="1"
-                                   value="{{ old('approved_installment_count', $loanRequest->approved_installment_count ?? '') }}"
+                                   value="{{ old(
+                                        'approved_installment_count',
+                                        $loanRequest->approved_installment_count ?? ''
+                                   ) }}"
                                    required>
 
                         </div>
 
 
+                        {{-- دوره بازپرداخت --}}
                         <div class="mb-3">
 
                             <label class="form-label">
@@ -350,31 +440,45 @@
                                     required>
 
                                 <option value="1"
-                                    {{ old('approved_installment_interval', $loanRequest->approved_installment_interval ?? '') == 1 ? 'selected' : '' }}>
+                                    {{ old(
+                                        'approved_installment_interval',
+                                        $loanRequest->approved_installment_interval ?? ''
+                                    ) == 1 ? 'selected' : '' }}>
+
                                     ماهانه
+
                                 </option>
 
                                 <option value="2"
-                                    {{ old('approved_installment_interval', $loanRequest->approved_installment_interval ?? '') == 2 ? 'selected' : '' }}>
+                                    {{ old(
+                                        'approved_installment_interval',
+                                        $loanRequest->approved_installment_interval ?? ''
+                                    ) == 2 ? 'selected' : '' }}>
+
                                     هر دو ماه
+
                                 </option>
 
                                 <option value="3"
-                                    {{ old('approved_installment_interval', $loanRequest->approved_installment_interval ?? '') == 3 ? 'selected' : '' }}>
+                                    {{ old(
+                                        'approved_installment_interval',
+                                        $loanRequest->approved_installment_interval ?? ''
+                                    ) == 3 ? 'selected' : '' }}>
+
                                     هر سه ماه
+
                                 </option>
 
                             </select>
 
                         </div>
 
-                        <label class="form-label">
-                            پیام تایید
-                        </label>
+
+                        {{-- پیام تایید --}}
                         <div class="mb-3">
 
                             <label class="form-label">
-                                پیام آماده
+                                پیام آماده تایید
                             </label>
 
                             <select id="approveMessage"
@@ -410,34 +514,33 @@
                                   class="form-control mb-3"
                                   rows="4">با درخواست وام شما موافقت شد. لطفاً جهت تکمیل مراحل و ارائه مدارک لازم به صندوق مراجعه نمایید.</textarea>
 
+
                         <button type="submit"
                                 class="btn btn-success">
+
+                            <i class="bi bi-check-circle"></i>
 
                             تایید درخواست
 
                         </button>
 
-
                     </form>
-
 
 
                     <hr>
 
 
-
-                    {{-- رد --}}
+                    {{-- ================================================= --}}
+                    {{-- رد درخواست --}}
+                    {{-- ================================================= --}}
 
                     <form method="POST"
                           action="{{ route('loan-requests.reject', $loanRequest) }}">
 
-
                         @csrf
 
 
-                        <label class="form-label">
-                            پیام رد درخواست
-                        </label>
+                        {{-- تاریخ مراجعه --}}
                         <div class="mb-3">
 
                             <label class="form-label">
@@ -449,78 +552,78 @@
                                    class="form-control"
                                    placeholder="1405/02/01"
                                    value="{{ old(
-                'next_review_date',
-                $loanRequest->next_review_date
-                ? jdate($loanRequest->next_review_date)->format('Y/m/d')
-                : ''
-           ) }}">
+                                        'next_review_date',
+                                        $loanRequest->next_review_date
+                                        ? jdate($loanRequest->next_review_date)->format('Y/m/d')
+                                        : ''
+                                   ) }}">
 
                         </div>
 
+
+                        {{-- پیام آماده رد --}}
                         <div class="mb-3">
 
                             <label class="form-label">
                                 پیام آماده رد
                             </label>
 
-
                             <select id="rejectMessage"
                                     class="form-select">
-
 
                                 <option value="">
                                     انتخاب کنید
                                 </option>
 
-
                                 <option value="درخواست وام شما بررسی شد. به دلیل وجود تاخیر در بازپرداخت وام قبلی، در حال حاضر امکان پرداخت وام وجود ندارد. لطفاً در تاریخ تعیین شده مجدداً مراجعه نمایید.">
                                     تاخیر در وام قبلی
                                 </option>
-
 
                                 <option value="درخواست وام شما بررسی شد. با توجه به منابع فعلی صندوق، امکان پرداخت وام در حال حاضر وجود ندارد. لطفاً در تاریخ تعیین شده مجدداً مراجعه نمایید.">
                                     محدودیت منابع صندوق
                                 </option>
 
-
                                 <option value="درخواست وام شما پس از بررسی مورد موافقت قرار نگرفت. لطفاً در تاریخ تعیین شده مجدداً مراجعه نمایید.">
                                     عدم موافقت عمومی
                                 </option>
 
-
                             </select>
 
                         </div>
+
 
                         <textarea name="review_note"
                                   id="reject_note"
                                   class="form-control mb-3"
                                   rows="4">درخواست وام شما پس از بررسی مورد موافقت قرار نگرفت.</textarea>
 
+
                         <button type="submit"
                                 class="btn btn-danger">
+
+                            <i class="bi bi-x-circle"></i>
 
                             رد درخواست
 
                         </button>
 
-
                     </form>
-
-
-
 
                 </div>
 
-
             </div>
-
-
 
         @endif
 
-        @if($loanRequest->status === \App\Enums\LoanRequestStatus::APPROVED
-    && !$loanRequest->loan_id)
+
+        {{-- ========================================================= --}}
+        {{-- ایجاد وام پس از تایید --}}
+        {{-- ========================================================= --}}
+
+        @if(
+            $loanRequest->status === \App\Enums\LoanRequestStatus::APPROVED
+            && !$loanRequest->loan_id
+        )
 
             <div class="card mt-4 border-success">
 
@@ -531,50 +634,63 @@
                     </h6>
 
                     <p class="mb-3">
+
                         مبلغ تایید شده:
+
                         <strong>
+
                             {{ number_format($loanRequest->approved_amount) }}
+
                             ریال
+
                         </strong>
+
                     </p>
 
 
-
-
-
-
                     <a href="{{ route('loans.create', [
-                'request' => $loanRequest->id
-            ]) }}"
+                        'request' => $loanRequest->id
+                    ]) }}"
                        class="btn btn-success">
+
+                        <i class="bi bi-plus-circle"></i>
 
                         ایجاد وام
 
                     </a>
-
 
                 </div>
 
             </div>
 
         @endif
-        {{-- تاریخ مراجعه مجدد برای درخواست رد شده --}}
+
+
+        {{-- ========================================================= --}}
+        {{-- تغییر تاریخ مراجعه درخواست رد شده --}}
+        {{-- ========================================================= --}}
 
         @if($loanRequest->status === \App\Enums\LoanRequestStatus::REJECTED)
 
             <div class="card mt-4">
 
                 <div class="card-header fw-bold">
+
                     تاریخ مراجعه مجدد
+
                 </div>
 
                 <div class="card-body">
 
                     <form method="POST"
-                          action="{{ route('loan-requests.update-review-date', $loanRequest) }}">
+                          action="{{ route(
+                              'loan-requests.update-review-date',
+                              $loanRequest
+                          ) }}">
 
                         @csrf
                         @method('PUT')
+
 
                         <div class="mb-3">
 
@@ -587,17 +703,19 @@
                                    class="form-control"
                                    placeholder="1405/02/01"
                                    value="{{ old(
-                            'next_review_date',
-                            $loanRequest->next_review_date
-                            ? jdate($loanRequest->next_review_date)->format('Y/m/d')
-                            : ''
-                       ) }}">
+                                        'next_review_date',
+                                        $loanRequest->next_review_date
+                                        ? jdate($loanRequest->next_review_date)->format('Y/m/d')
+                                        : ''
+                                   ) }}">
 
                         </div>
 
 
                         <button type="submit"
                                 class="btn btn-primary">
+
+                            <i class="bi bi-calendar-check"></i>
 
                             ذخیره تاریخ
 
@@ -611,8 +729,13 @@
 
         @endif
 
-
     </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- JavaScript پیام‌های آماده --}}
+    {{-- ========================================================= --}}
+
     <script>
 
         document
@@ -623,6 +746,7 @@
 
             });
 
+
         document
             .getElementById('rejectMessage')
             ?.addEventListener('change', function () {
@@ -632,4 +756,5 @@
             });
 
     </script>
+
 @endsection

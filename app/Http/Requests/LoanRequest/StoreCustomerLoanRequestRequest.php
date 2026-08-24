@@ -1,6 +1,4 @@
-
 <?php
-
 namespace App\Http\Requests\LoanRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,11 +10,9 @@ class StoreCustomerLoanRequestRequest extends FormRequest
         return auth()->check();
     }
 
-
     public function rules(): array
     {
         return [
-
             'requested_amount' => [
                 'required',
                 'integer',
@@ -29,29 +25,20 @@ class StoreCustomerLoanRequestRequest extends FormRequest
                 'string',
                 'max:1000',
             ],
-
         ];
     }
-
 
     public function attributes(): array
     {
         return [
-
-            'requested_amount' =>
-                'مبلغ درخواستی',
-
-            'description' =>
-                'توضیحات',
-
+            'requested_amount' => 'مبلغ درخواستی',
+            'description' => 'توضیحات',
         ];
     }
-
 
     public function messages(): array
     {
         return [
-
             'requested_amount.required' =>
                 'مبلغ وام را وارد کنید.',
 
@@ -66,7 +53,6 @@ class StoreCustomerLoanRequestRequest extends FormRequest
 
             'description.max' =>
                 'توضیحات نمی‌تواند بیشتر از ۱۰۰۰ کاراکتر باشد.',
-
         ];
     }
 }

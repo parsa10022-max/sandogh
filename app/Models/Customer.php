@@ -1,13 +1,16 @@
 <?php
+
 namespace App\Models;
+
 use App\Enums\CustomerStatus;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Customer extends Model
 {
@@ -61,6 +64,17 @@ class Customer extends Model
     {
         return $this->hasMany(Account::class);
     }
+
+
+/**
+ * وام‌های مشتری
+ */
+public function loans(): HasMany
+{
+    return $this->hasMany(Loan::class);
+}
+
+
 
 
     public function scopeActive(Builder $query): Builder

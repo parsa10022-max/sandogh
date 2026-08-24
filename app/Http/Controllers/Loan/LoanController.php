@@ -16,6 +16,7 @@ use App\Services\Loan\LoanCalculationService;
 use Illuminate\Http\JsonResponse;
 use App\Services\Date\JalaliDateService;
 use App\Models\LoanRequest;
+use App\Models\Notification;
 
 
 
@@ -56,6 +57,33 @@ class LoanController extends Controller
             $loanRequest = LoanRequest::with('customer')
                 ->findOrFail($request->input('request'));
 
+            /*
+            |--------------------------------------------------------------------------
+            | فقط درخواست تایید شده می‌تواند وارد مرحله ایجاد وام شود
+            |--------------------------------------------------------------------------
+            */
+
+            if ($loanRequest->status !== \App\Enums\LoanRequestStatus::APPROVED) {
+
+                abort(
+                    403,
+                    'این درخواست تایید نشده است.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از ایجاد وام تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            if ($loanRequest->loan_id) {
+
+                abort(
+                    409,
+                    'برای این درخواست قبلاً وام ایجاد شده است.'
+                );
+            }
         }
 
 
@@ -64,32 +92,39 @@ class LoanController extends Controller
 
         if ($loanRequest) {
 
-            $loan->customer_id = $loanRequest->customer_id;
+            $loan->customer_id =
+                $loanRequest->customer_id;
 
-            $loan->loan_amount = $loanRequest->approved_amount;
+            $loan->loan_amount =
+                $loanRequest->approved_amount;
 
-            $loan->loan_type_id = $loanRequest->loan_type_id;
+            $loan->loan_type_id =
+                $loanRequest->loan_type_id;
 
-            $loan->installment_count = $loanRequest->approved_installment_count;
+            $loan->installment_count =
+                $loanRequest->approved_installment_count;
 
-            $loan->installment_interval = $loanRequest->approved_installment_interval;
-
+            $loan->installment_interval =
+                $loanRequest->approved_installment_interval;
         }
-
 
 
         return view('loan.create', [
 
             'loan' => $loan,
 
-            'customers' => $this->customerService->getActive(),
+            'customers' =>
+                $this->customerService->getActive(),
 
-            'loanTypes' => $this->loanTypeService->getActive(),
+            'loanTypes' =>
+                $this->loanTypeService->getActive(),
 
-            'loanRequest' => $loanRequest,
+            'loanRequest' =>
+                $loanRequest,
 
         ]);
     }
+
 
     /**
      * ذخیره
@@ -98,18 +133,136 @@ class LoanController extends Controller
         StoreLoanRequest $request
     ): RedirectResponse {
 
-        $loan = $this->loanService->create(
-            $request->validated()
-        );
-
+        $loanRequest = null;
 
         if ($request->filled('loan_request_id')) {
 
-            LoanRequest::where('id', $request->loan_request_id)
-                ->update([
-                    'loan_id' => $loan->id,
-                ]);
+            $loanRequest = LoanRequest::findOrFail(
+                $request->loan_request_id
+            );
 
+            /*
+            |--------------------------------------------------------------------------
+            | درخواست باید تایید شده باشد
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $loanRequest->status
+                !== \App\Enums\LoanRequestStatus::APPROVED
+            ) {
+
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'فقط برای درخواست تایید شده می‌توان وام ایجاد کرد.'
+                    );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از ایجاد وام تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            if ($loanRequest->loan_id) {
+
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'برای این درخواست قبلاً وام ایجاد شده است.'
+                    );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از تغییر اطلاعات تایید شده درخواست
+            |--------------------------------------------------------------------------
+            */
+
+            $data = $request->validated();
+
+            $data['customer_id'] =
+                $loanRequest->customer_id;
+
+            $data['loan_amount'] =
+                $loanRequest->approved_amount;
+
+            $data['loan_type_id'] =
+                $loanRequest->loan_type_id;
+
+            $data['installment_count'] =
+                $loanRequest->approved_installment_count;
+
+            $data['installment_interval'] =
+                $loanRequest->approved_installment_interval;
+
+        } else {
+
+            $data = $request->validated();
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ایجاد وام
+        |--------------------------------------------------------------------------
+        */
+
+        $loan = $this->loanService->create($data);
+
+        /*
+|--------------------------------------------------------------------------
+| اعلان واریز وام برای مشتری
+|--------------------------------------------------------------------------
+*/
+
+        $loan->load('customer.user');
+
+        $user = $loan->customer?->user;
+
+        if ($user) {
+
+            Notification::create([
+
+                'user_id' => $user->id,
+
+                'type' => 'loan_disbursed',
+
+                'title' => 'واریز وام',
+
+                'message' =>
+                    'مبلغ وام شما به حساب‌تان واریز شد. برای برداشت مبلغ، از بخش «برداشت از حساب پس‌انداز» اقدام کنید.',
+
+                'data' => [
+
+                    'loan_id' =>
+                        $loan->id,
+
+                    'loan_number' =>
+                        $loan->loan_number,
+
+                    'loan_amount' =>
+                        $loan->loan_amount,
+
+                ],
+            ]);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | اتصال درخواست به وام
+        |--------------------------------------------------------------------------
+        */
+
+        if ($loanRequest) {
+
+            $loanRequest->update([
+                'loan_id' => $loan->id,
+            ]);
         }
 
 

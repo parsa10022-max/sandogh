@@ -223,7 +223,7 @@
                             سلام
                             {{ auth()->user()?->customer?->full_name
                                 ?? auth()->user()?->username
-                                ?? 'محمدرضا برزگر' }}
+                                ?? 'مشتری محترم' }}
 
                         @endif
 
@@ -269,17 +269,26 @@
 
 
                 {{-- اعلان --}}
-                <button type="button"
-                        class="customer-header-action"
-                        aria-label="اعلان‌ها">
+                @php
+                    $unreadNotificationsCount = auth()->user()
+                        ->notifications()
+                        ->whereNull('read_at')
+                        ->count();
+                @endphp
+
+                <a href="{{ route('customer.notifications.index') }}"
+                   class="customer-header-action"
+                   aria-label="اعلان‌ها">
 
                     <i class="bi bi-bell"></i>
 
-                    <span class="customer-header-badge">
-                        0
-                    </span>
+                    @if($unreadNotificationsCount > 0)
+                        <span class="customer-header-badge">
+            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+        </span>
+                    @endif
 
-                </button>
+                </a>
 
 
                 {{-- تاریخ --}}

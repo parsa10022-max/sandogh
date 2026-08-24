@@ -7,9 +7,6 @@ use App\Enums\AccountType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\AccountTransaction;
-
-
 
 class Account extends Model
 {
@@ -31,13 +28,8 @@ class Account extends Model
             'status' => AccountStatus::class,
             'opened_date' => 'date',
             'closed_date' => 'date',
-            'status' => AccountStatus::class,
-            'account_type' => AccountType::class,
         ];
-
-
     }
-
 
     /**
      * صاحب حساب
@@ -47,14 +39,19 @@ class Account extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    /**
+     * تراکنش‌های حساب
+     */
     public function transactions(): HasMany
     {
         return $this->hasMany(AccountTransaction::class);
     }
 
-    public function withdrawals()
+    /**
+     * برداشت‌های حساب
+     */
+    public function withdrawals(): HasMany
     {
         return $this->hasMany(Withdrawal::class);
     }
-
 }

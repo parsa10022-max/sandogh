@@ -407,7 +407,10 @@ Route::middleware('auth')->group(function () {
             'index',
             'create',
             'store',
+            'edit',
+            'update',
             'show',
+
         ]);
 
 
@@ -554,6 +557,14 @@ Route::middleware(['auth'])
     ->group(function () {
 
 
+        Route::get(
+            'notifications',
+            [
+                \App\Http\Controllers\Customer\NotificationController::class,
+                'index'
+            ]
+        )->name('notifications.index');
+
 
         Route::get(
             'installments/{payment}/success',
@@ -561,7 +572,33 @@ Route::middleware(['auth'])
         )->name('installments.payment.success');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Customer Loan Requests
+        |--------------------------------------------------------------------------
+        */
 
+        Route::get(
+            'loan-request/create',
+            [\App\Http\Controllers\Customer\LoanRequestController::class, 'create']
+        )->name('loan-request.create');
+
+        Route::post(
+            'loan-request',
+            [\App\Http\Controllers\Customer\LoanRequestController::class, 'store']
+        )->name('loan-request.store');
+
+        Route::get(
+            'loan-requests',
+            [\App\Http\Controllers\Customer\LoanRequestController::class, 'index']
+        )->name('loan-requests.index');
+
+
+
+        Route::get(
+            'loan-request/{loanRequest}',
+            [\App\Http\Controllers\Customer\LoanRequestController::class, 'show']
+        )->name('loan-request.show');
         /*
         |--------------------------------------------------------------------------
         | Customer Dashboard

@@ -6,6 +6,7 @@ use App\Services\Loan\LoanStatisticsService;
 use Illuminate\View\View;
 use App\Services\Installment\InstallmentService;
 use App\Services\Loan\LoanService;
+use App\Models\LoanRequest;
 
 class DashboardController extends Controller
 {
@@ -18,6 +19,8 @@ class DashboardController extends Controller
 
     public function index(): View
     {
+
+
         return view('dashboard.index', [
 
             'dashboard' => [
