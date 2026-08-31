@@ -421,31 +421,47 @@
         {{-- =========================================================
      وضعیت مالی من
      ========================================================= --}}
+        blade
         <section class="customer-financial-section">
 
+            {{-- =====================================================
+                 HEADER
+            ====================================================== --}}
             <div class="customer-financial-section-header">
 
                 <div>
-                    <h2>وضعیت مالی من</h2>
+
+                    <h2>
+                        وضعیت مالی من
+                    </h2>
 
                     <span>
                 خلاصه حساب و وام
             </span>
+
                 </div>
 
+
                 <span class="customer-financial-section-status">
+
             <i class="bi bi-check-circle-fill"></i>
+
             فعال
+
         </span>
 
             </div>
 
 
+            {{-- =====================================================
+                 FINANCIAL CARDS
+            ====================================================== --}}
             <div class="customer-financial-cards">
 
-                {{-- =====================================================
+
+                {{-- =================================================
                      مجموع موجودی
-                     ===================================================== --}}
+                ================================================== --}}
                 <div class="customer-financial-card-item total">
 
                     <div class="customer-financial-card-icon">
@@ -459,8 +475,13 @@
                 </span>
 
                         <strong class="customer-financial-card-value">
+
                             {{ number_format($totalBalance) }}
-                            <small>ریال</small>
+
+                            <small>
+                                ریال
+                            </small>
+
                         </strong>
 
                     </div>
@@ -468,48 +489,91 @@
                 </div>
 
 
-                {{-- =====================================================
-                     حساب پس‌انداز
-                     ===================================================== --}}
-                <div class="customer-financial-card-item savings">
+                {{-- =================================================
+                     حساب‌های مشتری
+                     کاملاً داینامیک
+                ================================================== --}}
+                @foreach($accounts as $account)
 
-                    <div class="customer-financial-card-icon">
-                        <i class="bi bi-piggy-bank-fill"></i>
-                    </div>
+                    <div
+                        class="customer-financial-card-item
+                    {{ $account->account_type === \App\Enums\AccountType::SAVING
+                        ? 'savings'
+                        : ($account->account_type === \App\Enums\AccountType::CURRENT
+                            ? 'current'
+                            : 'account') }}"
+                    >
 
-                    <div class="customer-financial-card-content">
+                        {{-- آیکون --}}
+                        <div class="customer-financial-card-icon">
 
-                <span class="customer-financial-card-label">
-                    پس‌انداز
-                </span>
+                            @if($account->account_type === \App\Enums\AccountType::SAVING)
 
-                        @if($savingsAccount)
+                                <i class="bi bi-piggy-bank-fill"></i>
 
-                            <strong class="customer-financial-card-value">
-                                {{ number_format($savingsAccount->balance) }}
-                                <small>ریال</small>
-                            </strong>
+                            @elseif($account->account_type === \App\Enums\AccountType::CURRENT)
 
-                            <span class="customer-financial-card-meta">
-                        حساب {{ $savingsAccount->account_number }}
-                    </span>
+                                <i class="bi bi-credit-card-fill"></i>
+
+                            @else
+
+                                <i class="bi bi-wallet2"></i>
+
+                            @endif
+
+                        </div>
+
+
+                        {{-- محتوا --}}
+                        <div class="customer-financial-card-content">
+
+                    <span class="customer-financial-card-label">
+
+                        @if($account->account_type === \App\Enums\AccountType::SAVING)
+
+                            پس‌انداز
+
+                        @elseif($account->account_type === \App\Enums\AccountType::CURRENT)
+
+                            حساب جاری
 
                         @else
 
-                            <strong class="customer-financial-card-value muted">
-                                بدون حساب
-                            </strong>
+                            حساب
 
                         @endif
 
+                    </span>
+
+
+                            <strong class="customer-financial-card-value">
+
+                                {{ number_format($account->balance) }}
+
+                                <small>
+                                    ریال
+                                </small>
+
+                            </strong>
+
+
+                            <span class="customer-financial-card-meta">
+
+                        حساب
+                        {{ $account->account_number }}
+
+                    </span>
+
+                        </div>
+
                     </div>
 
-                </div>
+                @endforeach
 
 
-                {{-- =====================================================
+                {{-- =================================================
                      وام فعال
-                     ===================================================== --}}
+                ================================================== --}}
                 <div class="customer-financial-card-item loan">
 
                     <div class="customer-financial-card-icon">
@@ -522,15 +586,25 @@
                     وام فعال
                 </span>
 
+
                         @if($activeLoan)
 
                             <strong class="customer-financial-card-value">
+
                                 {{ number_format($activeLoan->remainingAmount()) }}
-                                <small>ریال باقی‌مانده</small>
+
+                                <small>
+                                    ریال باقی‌مانده
+                                </small>
+
                             </strong>
 
+
                             <span class="customer-financial-card-meta">
-                        وام {{ $activeLoan->full_loan_number }}
+
+                        وام
+                        {{ $activeLoan->full_loan_number }}
+
                     </span>
 
                         @else
@@ -546,9 +620,9 @@
                 </div>
 
 
-                {{-- =====================================================
+                {{-- =================================================
                      اقساط معوق
-                     ===================================================== --}}
+                ================================================== --}}
                 <div class="customer-financial-card-item overdue">
 
                     <div class="customer-financial-card-icon">
@@ -561,12 +635,19 @@
                     اقساط معوق
                 </span>
 
+
                         @if($overdueInstallmentsCount > 0)
 
                             <strong class="customer-financial-card-value danger">
+
                                 {{ $overdueInstallmentsCount }}
-                                <small>قسط</small>
+
+                                <small>
+                                    قسط
+                                </small>
+
                             </strong>
+
 
                             <span class="customer-financial-card-meta danger-text">
                         نیاز به پرداخت
@@ -578,6 +659,7 @@
                                 بدون معوقه
                             </strong>
 
+
                             <span class="customer-financial-card-meta success-text">
                         پرداخت منظم است
                     </span>
@@ -588,9 +670,12 @@
 
                 </div>
 
+
             </div>
 
         </section>
+
+
 
 
 
@@ -602,89 +687,99 @@
 
         <section class="customer-quick-actions-section">
 
+
             <div class="customer-quick-actions-title">
                 <h2>عملیات سریع</h2>
             </div>
 
+
             <div class="customer-quick-actions">
 
+
+                {{-- 1. واریز به پس‌انداز --}}
                 <a href="{{ route('customer.savings.deposit.create') }}"
                    class="customer-quick-action">
 
-    <span class="customer-quick-action-icon">
-        <i class="bi bi-plus-circle-fill"></i>
-    </span>
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-plus-circle-fill"></i>
+        </span>
 
                     <span class="customer-quick-action-text">
-        واریز به
-        پس‌انداز
-    </span>
+            واریز به
+            پس‌انداز
+        </span>
 
                 </a>
 
 
+                {{-- 2. برداشت از پس‌انداز --}}
                 <a href="{{ route('customer.savings.withdrawal.create') }}"
                    class="customer-quick-action">
 
-    <span class="customer-quick-action-icon">
-        <i class="bi bi-arrow-return-left"></i>
-    </span>
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-arrow-return-left"></i>
+        </span>
 
                     <span class="customer-quick-action-text">
-        برداشت از
-        پس‌انداز
-    </span>
+            برداشت از
+            پس‌انداز
+        </span>
 
                 </a>
 
-                {{-- گردش حساب --}}
+
+                {{-- 3. گردش حساب --}}
                 <a href="{{ route('customer.savings.transactions') }}"
                    class="customer-quick-action">
 
-    <span class="customer-quick-action-icon">
-        <i class="bi bi-receipt"></i>
-    </span>
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-receipt"></i>
+        </span>
 
                     <span class="customer-quick-action-text">
-        گردش
-        حساب
-    </span>
+            گردش
+            حساب
+        </span>
 
                 </a>
 
 
-                {{-- درخواست وام --}}
+                {{-- 4. درخواست وام --}}
                 <a href="{{ route('customer.loan-request.create') }}"
                    class="customer-quick-action">
 
-    <span class="customer-quick-action-icon">
-        <i class="bi bi-folder-plus"></i>
-    </span>
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-folder-plus"></i>
+        </span>
 
                     <span class="customer-quick-action-text">
-        درخواست
-        وام
-    </span>
+            درخواست
+            وام
+        </span>
 
                 </a>
-                {{-- درخواست‌های وام من --}}
+
+
+                {{-- 5. درخواست‌های وام من --}}
                 <a href="{{ url('/customer/loan-requests') }}"
                    class="customer-quick-action">
 
-    <span class="customer-quick-action-icon">
-        <i class="bi bi-list-check"></i>
-    </span>
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-list-check"></i>
+        </span>
 
                     <span class="customer-quick-action-text">
-        درخواست‌های
-        وام من
-    </span>
+            درخواست‌های
+            وام من
+        </span>
 
                 </a>
 
 
+                {{-- 6. پرداخت قسط --}}
                 <a href="{{ route('customer.installments.index') }}"
                    class="customer-quick-action">
+
         <span class="customer-quick-action-icon">
             <i class="bi bi-journal-text"></i>
         </span>
@@ -693,11 +788,14 @@
             پرداخت
             قسط
         </span>
+
                 </a>
 
 
+                {{-- 7. پرداخت قسط دیگران --}}
                 <a href="{{ route('customer.installments.others.create') }}"
                    class="customer-quick-action">
+
         <span class="customer-quick-action-icon">
             <i class="bi bi-people-fill"></i>
         </span>
@@ -706,11 +804,31 @@
             پرداخت قسط
             دیگران
         </span>
+
                 </a>
+
+
+                {{-- 8. واریز به پس‌انداز دیگران --}}
+                <a href="{{ route('customer.savings-transfer.create') }}"
+                   class="customer-quick-action">
+
+        <span class="customer-quick-action-icon">
+            <i class="bi bi-person-plus-fill"></i>
+        </span>
+
+                    <span class="customer-quick-action-text">
+            واریز به
+            پس‌انداز دیگران
+        </span>
+
+                </a>
+
 
             </div>
 
+
         </section>
+
 
         {{-- =========================================================
      DASHBOARD - LOAN & TRANSACTIONS
@@ -729,7 +847,8 @@
                         آخرین تراکنش‌ها
                     </h2>
 
-                    <a href="#" class="customer-transactions-all">
+                    <a href="{{ route('customer.savings.transactions') }}"
+                       class="customer-transactions-all">
                         مشاهده همه
                         <i class="bi bi-arrow-left"></i>
                     </a>
@@ -739,167 +858,126 @@
 
                 <div class="customer-transactions-table-wrapper">
 
-                    <table class="customer-transactions-table">
+                    @if($latestTransactions->isNotEmpty())
 
-                        <thead>
-                        <tr>
-                            <th>تاریخ</th>
-                            <th>نوع تراکنش</th>
-                            <th>مبلغ</th>
-                            <th>وضعیت</th>
-                        </tr>
-                        </thead>
+                        <table class="customer-transactions-table">
 
-                        <tbody>
+                            <thead>
+                            <tr>
+                                <th>تاریخ</th>
+                                <th>نوع تراکنش</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                            </tr>
+                            </thead>
 
-                        {{-- واریز --}}
-                        <tr>
+                            <tbody>
 
-                            <td>۱۴۰۵/۰۲/۲۸</td>
+                            @foreach($latestTransactions as $transaction)
 
-                            <td>
-                                <div class="customer-transaction-type">
+                                @php
+                                    $isDeposit = $transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT;
 
-                            <span class="customer-transaction-icon deposit">
-                                <i class="bi bi-arrow-down"></i>
+                                    $isWithdrawal = $transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL;
+
+                                    $isInstallment = $transaction->transaction_type === \App\Enums\TransactionType::INSTALLMENT_PAYMENT;
+
+                                    $isPositive = $isDeposit;
+
+                                    $iconClass = match ($transaction->transaction_type) {
+                                        \App\Enums\TransactionType::DEPOSIT => 'deposit',
+                                        \App\Enums\TransactionType::WITHDRAWAL => 'withdrawal',
+                                        \App\Enums\TransactionType::INSTALLMENT_PAYMENT => 'payment',
+                                        default => 'transfer',
+                                    };
+
+                                    $icon = match ($transaction->transaction_type) {
+                                        \App\Enums\TransactionType::DEPOSIT => 'bi-arrow-down',
+                                        \App\Enums\TransactionType::WITHDRAWAL => 'bi-arrow-up',
+                                        \App\Enums\TransactionType::INSTALLMENT_PAYMENT => 'bi-arrow-up',
+                                        \App\Enums\TransactionType::TRANSFER => 'bi-arrow-left-right',
+                                        \App\Enums\TransactionType::ADJUSTMENT => 'bi-pencil',
+                                    };
+                                @endphp
+
+                                <tr>
+
+                                    <td>
+                                        {{ $transaction->jalali_transaction_date }}
+                                    </td>
+
+                                    <td>
+
+                                        <div class="customer-transaction-type">
+
+                                <span class="customer-transaction-icon {{ $iconClass }}">
+                                    <i class="bi {{ $icon }}"></i>
+                                </span>
+
+                                            <span>
+                                    {{ $transaction->transaction_type->label() }}
+                                </span>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td class="customer-transaction-amount {{ $isPositive ? 'positive' : 'negative' }}">
+
+                                        {{ number_format($transaction->amount) }}
+
+                                        ریال
+
+                                    </td>
+
+                                    <td>
+
+                            <span class="customer-transaction-status success">
+                                موفق
                             </span>
 
-                                    <span>
-                                واریز به پس‌انداز
-                            </span>
+                                    </td>
 
-                                </div>
-                            </td>
+                                </tr>
 
-                            <td class="customer-transaction-amount positive">
-                                ۵,۰۰۰,۰۰۰ ریال
-                            </td>
+                            @endforeach
 
-                            <td>
-                        <span class="customer-transaction-status success">
-                            موفق
-                        </span>
-                            </td>
+                            </tbody>
 
-                        </tr>
+                        </table>
 
+                    @else
 
-                        {{-- پرداخت قسط --}}
-                        <tr>
+                        <div class="customer-transactions-empty">
 
-                            <td>۱۴۰۵/۰۲/۲۵</td>
+                            <i class="bi bi-receipt"></i>
 
-                            <td>
-                                <div class="customer-transaction-type">
+                            <span>
+                    هنوز تراکنشی ثبت نشده است.
+                </span>
 
-                            <span class="customer-transaction-icon payment">
-                                <i class="bi bi-arrow-up"></i>
-                            </span>
+                        </div>
 
-                                    <span>
-                                پرداخت قسط وام
-                            </span>
-
-                                </div>
-                            </td>
-
-                            <td class="customer-transaction-amount negative">
-                                ۲,۵۰۰,۰۰۰ ریال
-                            </td>
-
-                            <td>
-                        <span class="customer-transaction-status success">
-                            موفق
-                        </span>
-                            </td>
-
-                        </tr>
-
-
-                        {{-- برداشت --}}
-                        <tr>
-
-                            <td>۱۴۰۵/۰۲/۲۰</td>
-
-                            <td>
-                                <div class="customer-transaction-type">
-
-                            <span class="customer-transaction-icon withdrawal">
-                                <i class="bi bi-arrow-left"></i>
-                            </span>
-
-                                    <span>
-                                برداشت از پس‌انداز
-                            </span>
-
-                                </div>
-                            </td>
-
-                            <td class="customer-transaction-amount negative">
-                                ۱,۰۰۰,۰۰۰ ریال
-                            </td>
-
-                            <td>
-                        <span class="customer-transaction-status success">
-                            موفق
-                        </span>
-                            </td>
-
-                        </tr>
-
-
-                        {{-- واریز --}}
-                        <tr>
-
-                            <td>۱۴۰۵/۰۲/۱۸</td>
-
-                            <td>
-                                <div class="customer-transaction-type">
-
-                            <span class="customer-transaction-icon deposit">
-                                <i class="bi bi-arrow-down"></i>
-                            </span>
-
-                                    <span>
-                                واریز به پس‌انداز
-                            </span>
-
-                                </div>
-                            </td>
-
-                            <td class="customer-transaction-amount positive">
-                                ۳,۰۰۰,۰۰۰ ریال
-                            </td>
-
-                            <td>
-                        <span class="customer-transaction-status success">
-                            موفق
-                        </span>
-                            </td>
-
-                        </tr>
-
-                        </tbody>
-
-                    </table>
+                    @endif
 
                 </div>
 
             </section>
 
 
+
             {{-- =====================================================
-                 وام فعال شما
-                 ===================================================== --}}
+     وام فعال شما
+     ===================================================== --}}
             <section class="customer-active-loan-card">
 
                 <div class="customer-active-loan-header">
 
                     <div class="customer-active-loan-title">
 
-                <span class="customer-active-loan-title-icon">
-                    <i class="bi bi-cash-coin"></i>
-                </span>
+            <span class="customer-active-loan-title-icon">
+                <i class="bi bi-cash-coin"></i>
+            </span>
 
                         <h2>
                             وام فعال شما
@@ -907,99 +985,174 @@
 
                     </div>
 
-                    <span class="customer-active-loan-status">
+                    @if($activeLoan)
+
+                        <span class="customer-active-loan-status">
                 فعال
             </span>
 
+                    @endif
+
                 </div>
 
 
-                <div class="customer-active-loan-name">
-                    وام قرض‌الحسنه
-                </div>
+                @if($activeLoan)
+
+                    {{-- نام نوع وام --}}
+                    <div class="customer-active-loan-name">
+                        {{ $activeLoan->loanType->name }}
+                    </div>
+
+                    @php
+                        $totalInstallments = $activeLoan->installments->count();
+
+                        $paidInstallments = $activeLoan->installments
+                            ->where('status', \App\Enums\InstallmentStatus::PAID)
+                            ->count();
+
+                        $remainingInstallments = $totalInstallments - $paidInstallments;
+
+                        $paidAmount = $activeLoan->installments
+                            ->where('status', \App\Enums\InstallmentStatus::PAID)
+                            ->sum('amount');
+
+                        $remainingAmount = $activeLoan->loan_amount - $paidAmount;
+
+                        $progress = $activeLoan->loan_amount > 0
+                            ? round(($paidAmount / $activeLoan->loan_amount) * 100)
+                            : 0;
+
+                        $nextInstallment = $activeLoan->installments
+                            ->firstWhere('status', \App\Enums\InstallmentStatus::PENDING);
+                    @endphp
 
 
-                <div class="customer-loan-progress-row">
+                    {{-- پیشرفت پرداخت --}}
+                    <div class="customer-loan-progress-row">
 
-                    <div class="customer-loan-progress">
+                        <div class="customer-loan-progress">
 
-                        <div class="customer-loan-progress-bar"
-                             style="width: 60%;">
+                            <div class="customer-loan-progress-bar"
+                                 style="width: {{ $progress }}%;">
+                            </div>
+
                         </div>
+
+                        <span class="customer-loan-progress-value">
+                {{ $progress }}٪
+            </span>
 
                     </div>
 
-                    <span class="customer-loan-progress-value">
-                ۶۰٪
-            </span>
 
-                </div>
+                    {{-- اطلاعات وام --}}
+                    <div class="customer-active-loan-info">
 
-
-                <div class="customer-active-loan-info">
-
-                    <div class="customer-loan-info-row">
+                        {{-- مبلغ وام --}}
+                        <div class="customer-loan-info-row">
 
                 <span class="customer-loan-info-label">
                     مبلغ وام
                 </span>
 
-                        <strong class="customer-loan-info-value">
-                            ۱۰۰,۰۰۰,۰۰۰ ریال
-                        </strong>
+                            <strong class="customer-loan-info-value">
+                                {{ number_format($activeLoan->loan_amount) }}
+                                ریال
+                            </strong>
 
-                    </div>
+                        </div>
 
 
-                    <div class="customer-loan-info-row">
+                        {{-- باقی مانده --}}
+                        <div class="customer-loan-info-row">
 
                 <span class="customer-loan-info-label">
                     باقی‌مانده
                 </span>
 
-                        <strong class="customer-loan-info-value">
-                            ۴۰,۰۰۰,۰۰۰ ریال
-                        </strong>
+                            <strong class="customer-loan-info-value">
+                                {{ number_format($remainingAmount) }}
+                                ریال
+                            </strong>
 
-                    </div>
+                        </div>
 
 
-                    <div class="customer-loan-info-row">
+                        {{-- اقساط باقی مانده --}}
+                        <div class="customer-loan-info-row">
 
                 <span class="customer-loan-info-label">
                     اقساط باقی‌مانده
                 </span>
 
-                        <strong class="customer-loan-info-value">
-                            ۴ قسط
-                        </strong>
+                            <strong class="customer-loan-info-value">
+                                {{ $remainingInstallments }}
+                                قسط
+                            </strong>
 
-                    </div>
+                        </div>
 
 
-                    <div class="customer-loan-info-row">
+                        {{-- قسط بعدی --}}
+                        <div class="customer-loan-info-row">
 
                 <span class="customer-loan-info-label">
                     قسط بعدی
                 </span>
 
-                        <strong class="customer-loan-info-value">
-                            ۱۴۰۵/۰۳/۰۵
-                        </strong>
+                            @if($nextInstallment)
+
+                                <strong class="customer-loan-info-value">
+                                    {{ jdate($nextInstallment->due_date)->format('Y/m/d') }}
+                                </strong>
+
+                            @else
+
+                                <strong class="customer-loan-info-value">
+                                    ندارد
+                                </strong>
+
+                            @endif
+
+                        </div>
+
+
+                        {{-- شماره وام --}}
+                        <div class="customer-loan-info-row">
+
+                <span class="customer-loan-info-label">
+                    شماره وام
+                </span>
+
+                            <strong class="customer-loan-info-value" dir="ltr">
+                                {{ $activeLoan->full_loan_number }}
+                            </strong>
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    {{-- مشاهده جزئیات --}}
+                    <a href="{{ route('customer.installments.index') }}"
+                       class="customer-active-loan-details-button">
+
+                        مشاهده اقساط وام
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </a>
 
 
-                <a href="#"
-                   class="customer-active-loan-details-button">
+                @else
 
-                    مشاهده جزئیات وام
+                    <div class="text-muted text-center py-4">
+                        <i class="bi bi-cash-stack fs-2 d-block mb-2"></i>
 
-                    <i class="bi bi-arrow-left"></i>
+                        در حال حاضر وام فعالی ندارید.
+                    </div>
 
-                </a>
+                @endif
 
             </section>
 

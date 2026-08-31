@@ -1,14 +1,14 @@
-/* =========================================================
-   CUSTOMER DASHBOARD
-   Design System #1
-   Purple + Blue / RTL / Bootstrap 5.3
-   Mobile First / PWA
-   ========================================================= */
+    /* =========================================================
+       CUSTOMER DASHBOARD
+       Design System #1
+       Purple + Blue / RTL / Bootstrap 5.3
+       Mobile First / PWA
+       ========================================================= */
 
 
-/* =========================================================
-   BASE
-   ========================================================= */
+    /* =========================================================
+       BASE
+       ========================================================= */
 
 .customer-dashboard {
     width: 100%;
@@ -39,11 +39,9 @@
     margin-bottom: 0;
 }
 
+
 /* =========================================================
    CUSTOMER FINANCIAL SECTION
-   وضعیت مالی من
-   Purple + White
-   RTL / Bootstrap 5.3
    ========================================================= */
 
 .customer-financial-section {
@@ -86,7 +84,6 @@
     margin-bottom: 10px;
 }
 
-
 .customer-financial-section-header h2 {
     margin: 0;
 
@@ -97,7 +94,6 @@
 
     font-weight: 900;
 }
-
 
 .customer-financial-section-header span:not(
     .customer-financial-section-status
@@ -143,7 +139,6 @@
 
     white-space: nowrap;
 }
-
 
 .customer-financial-section-status i {
     font-size: .65rem;
@@ -201,7 +196,6 @@
         border-color .18s ease;
 }
 
-
 .customer-financial-card-item:hover {
     transform: translateY(-1px);
 
@@ -237,17 +231,11 @@
     flex-shrink: 0;
 }
 
-
-/* مجموع موجودی */
-
 .customer-financial-card-item.total
 .customer-financial-card-icon {
     color: #6040e8;
     background: #f1efff;
 }
-
-
-/* پس‌انداز */
 
 .customer-financial-card-item.savings
 .customer-financial-card-icon {
@@ -255,17 +243,11 @@
     background: #eaf8ef;
 }
 
-
-/* وام */
-
 .customer-financial-card-item.loan
 .customer-financial-card-icon {
     color: #4168e9;
     background: #edf2ff;
 }
-
-
-/* معوق */
 
 .customer-financial-card-item.overdue
 .customer-financial-card-icon {
@@ -289,7 +271,6 @@
     gap: 2px;
 }
 
-
 .customer-financial-card-label {
     display: block;
 
@@ -306,7 +287,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 
 .customer-financial-card-value {
     display: block;
@@ -327,7 +307,6 @@
     text-overflow: ellipsis;
 }
 
-
 .customer-financial-card-value small {
     color: #858896;
 
@@ -335,11 +314,6 @@
 
     font-weight: 700;
 }
-
-
-/* =========================================================
-   META
-   ========================================================= */
 
 .customer-financial-card-meta {
     display: block;
@@ -367,27 +341,21 @@
 
 .customer-financial-card-value.muted {
     color: #8a8d9d;
-
     font-size: .70rem;
 }
-
 
 .customer-financial-card-value.danger {
     color: #d34a50;
 }
 
-
 .customer-financial-card-value.success {
     color: #29904d;
-
     font-size: .70rem;
 }
-
 
 .customer-financial-card-meta.danger-text {
     color: #d34a50;
 }
-
 
 .customer-financial-card-meta.success-text {
     color: #29904d;
@@ -418,9 +386,7 @@
     .customer-financial-card-icon {
         width: 41px;
         height: 41px;
-
         min-width: 41px;
-
         font-size: 1.3rem;
     }
 
@@ -446,7 +412,6 @@
 
     .customer-financial-section {
         padding: 10px;
-
         border-radius: 14px;
     }
 
@@ -466,7 +431,6 @@
 
     .customer-financial-section-status {
         padding: 4px 7px;
-
         font-size: .57rem;
     }
 
@@ -479,22 +443,16 @@
 
     .customer-financial-card-item {
         min-height: 58px;
-
         gap: 6px;
-
         padding: 6px;
-
         border-radius: 10px;
     }
 
     .customer-financial-card-icon {
         width: 35px;
         height: 35px;
-
         min-width: 35px;
-
         border-radius: 9px;
-
         font-size: 1.08rem;
     }
 
@@ -516,7 +474,7 @@
 
     .customer-financial-card-value.muted,
     .customer-financial-card-value.success {
-        font-size: .61rem;
+        font-size: .75rem;
     }
 }
 
@@ -537,7 +495,6 @@
 
     .customer-financial-section-status {
         padding: 3px 6px;
-
         font-size: .52rem;
     }
 
@@ -547,20 +504,15 @@
 
     .customer-financial-card-item {
         min-height: 54px;
-
         gap: 5px;
-
         padding: 5px;
     }
 
     .customer-financial-card-icon {
         width: 31px;
         height: 31px;
-
         min-width: 31px;
-
         border-radius: 8px;
-
         font-size: .95rem;
     }
 
@@ -583,19 +535,7 @@
 
 
 /* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .customer-financial-card-item {
-        transition: none;
-    }
-}
-
-
-/* =========================================================
-   QUICK ACTIONS SECTION
+   QUICK ACTIONS
    ========================================================= */
 
 .customer-quick-actions-section {
@@ -619,38 +559,24 @@
     font-weight: 900;
 }
 
-
-/* =========================================================
-   QUICK ACTION GRID
-   ========================================================= */
-
 .customer-quick-actions {
     width: 100%;
 
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 6px;
-}
-
-/* =========================================================
-   Customer Quick Actions
-   ========================================================= */
-
-.customer-quick-actions {
-    display: grid;
-
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+        repeat(8, minmax(0, 1fr));
 
     gap: 12px;
 }
 
 
-/* هر عملیات */
+/* =========================================================
+   QUICK ACTION CARD
+   ========================================================= */
 
 .customer-quick-action {
+    width: 100%;
     min-width: 0;
 
     display: flex;
@@ -659,12 +585,11 @@
     align-items: center;
     justify-content: center;
 
-    min-height: 115px;
+    min-height: 110px;
 
-    padding: 14px 8px;
+    padding: 12px 6px;
 
     text-align: center;
-
     text-decoration: none;
 
     background: #ffffff;
@@ -673,25 +598,28 @@
 
     border-radius: 16px;
 
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.04);
 
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
 }
-
 
 .customer-quick-action:hover {
     transform: translateY(-3px);
 
     border-color: #c4b5fd;
 
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.08);
 }
 
 
-/* آیکون */
+/* =========================================================
+   QUICK ACTION ICON
+   ========================================================= */
 
 .customer-quick-action-icon {
     width: 48px;
@@ -713,12 +641,14 @@
 }
 
 
-/* متن */
+/* =========================================================
+   QUICK ACTION TEXT
+   ========================================================= */
 
 .customer-quick-action-text {
     display: block;
 
-    font-size: 13px;
+    font-size: 20px;
 
     line-height: 1.7;
 
@@ -729,35 +659,34 @@
 
 
 /* =========================================================
-   Tablet
+   TABLET
    ========================================================= */
 
 @media (max-width: 1199.98px) {
 
     .customer-quick-actions {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
     }
-
 }
 
 
 /* =========================================================
-   Mobile
+   MOBILE
    ========================================================= */
 
 @media (max-width: 767.98px) {
 
     .customer-quick-actions {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
 
         gap: 10px;
     }
 
     .customer-quick-action {
         min-height: 105px;
-
         padding: 12px 8px;
-
         border-radius: 14px;
     }
 
@@ -775,8 +704,8 @@
     .customer-quick-action-text {
         font-size: 12px;
     }
-
 }
+
 
 /* =========================================================
    DASHBOARD BOTTOM
@@ -1074,7 +1003,6 @@
 
 .customer-active-loan-details-button:hover {
     color: #ffffff;
-
     opacity: .94;
 }
 
@@ -1089,7 +1017,6 @@
 
 .customer-loan-overdue {
     color: #d34a50 !important;
-
     font-weight: 900;
 }
 
@@ -1114,7 +1041,7 @@
 
 
 /* =========================================================
-   TRANSACTIONS SECTION
+   TRANSACTIONS
    ========================================================= */
 
 .customer-transactions-section {
@@ -1137,11 +1064,6 @@
 
     overflow: hidden;
 }
-
-
-/* =========================================================
-   TRANSACTIONS HEADER
-   ========================================================= */
 
 .customer-transactions-header {
     display: flex;
@@ -1188,7 +1110,7 @@
 
 
 /* =========================================================
-   TRANSACTION TABLE WRAPPER
+   TRANSACTION TABLE
    ========================================================= */
 
 .customer-transactions-table-wrapper {
@@ -1200,11 +1122,6 @@
 
     -webkit-overflow-scrolling: touch;
 }
-
-
-/* =========================================================
-   TRANSACTION TABLE
-   ========================================================= */
 
 .customer-transactions-table {
     width: 100%;
@@ -1310,10 +1227,8 @@
    ========================================================= */
 
 .customer-transaction-amount {
-    font-size: .61rem !important;
-
+    font-size: .75rem !important;
     font-weight: 900 !important;
-
     white-space: nowrap;
 }
 
@@ -1354,7 +1269,6 @@
 
 /* =========================================================
    TABLET
-   768px - 991.98px
    ========================================================= */
 
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -1363,60 +1277,6 @@
         padding-top: 6px;
         padding-bottom: 8px;
     }
-
-
-    /* FINANCIAL */
-
-    .customer-financial-card {
-        padding: 12px;
-
-        border-radius: 16px;
-    }
-
-    .customer-financial-title-icon {
-        width: 38px;
-        height: 38px;
-        min-width: 38px;
-
-        font-size: 1.05rem;
-    }
-
-    .customer-financial-title h2 {
-        font-size: .98rem;
-    }
-
-    .customer-financial-subtitle {
-        font-size: .59rem;
-    }
-
-    .customer-financial-account {
-        min-height: 68px;
-
-        padding: 8px;
-    }
-
-    .customer-financial-account-icon {
-        width: 35px;
-        height: 35px;
-        min-width: 35px;
-
-        font-size: 1rem;
-    }
-
-    .customer-financial-account-title {
-        font-size: .60rem;
-    }
-
-    .customer-financial-account-number {
-        font-size: .73rem;
-    }
-
-    .customer-financial-account-balance {
-        font-size: .84rem;
-    }
-
-
-    /* QUICK ACTIONS */
 
     .customer-quick-actions {
         grid-template-columns:
@@ -1439,9 +1299,6 @@
     .customer-quick-action-text {
         font-size: .65rem;
     }
-
-
-    /* BOTTOM */
 
     .customer-dashboard-bottom-grid {
         grid-template-columns:
@@ -1473,279 +1330,363 @@
 /* =========================================================
    DESKTOP
    992px+
+   ONLY DESKTOP ENHANCEMENTS
    ========================================================= */
 
 @media (min-width: 992px) {
 
+    /* -----------------------------------------
+       GENERAL SPACING
+       ----------------------------------------- */
+
     .customer-content {
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .customer-dashboard-welcome {
+        margin-bottom: 14px;
     }
 
 
-    /* FINANCIAL */
+    /* -----------------------------------------
+       FINANCIAL SECTION
+       ----------------------------------------- */
 
-    .customer-financial-card {
+    .customer-financial-section {
+        padding: 16px;
+        border-radius: 18px;
+
+        box-shadow:
+            0 8px 22px rgba(77, 57, 200, .14);
+    }
+
+    .customer-financial-section-header {
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .customer-financial-section-header h2 {
+        font-size: 1.10rem;
+    }
+
+    .customer-financial-section-header span:not(
+        .customer-financial-section-status
+    ) {
+        font-size: .72rem;
+    }
+
+    .customer-financial-section-status {
+        padding: 6px 11px;
+        font-size: .70rem;
+    }
+
+    .customer-financial-section-status i {
+        font-size: .72rem;
+    }
+
+
+    /* -----------------------------------------
+       FINANCIAL CARDS
+       ----------------------------------------- */
+
+    .customer-financial-cards {
+        gap: 10px;
+    }
+
+    .customer-financial-card-item {
+        min-height: 76px;
+
+        gap: 10px;
+
         padding: 10px 12px;
 
-        border-radius: 14px;
-
-        margin-bottom: 8px;
+        border-radius: 13px;
     }
 
-    .customer-financial-header {
-        margin-bottom: 7px;
+    .customer-financial-card-icon {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+
+        border-radius: 12px;
+
+        font-size: 1.42rem;
     }
 
-    .customer-financial-title-icon {
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
-
-        font-size: .95rem;
+    .customer-financial-card-content {
+        gap: 3px;
     }
 
-    .customer-financial-title h2 {
-        font-size: .90rem;
+    .customer-financial-card-label {
+        font-size: .72rem;
     }
 
-    .customer-financial-subtitle {
-        font-size: .55rem;
+    .customer-financial-card-value {
+        font-size: .94rem;
     }
 
-    .customer-financial-accounts {
-        gap: 7px;
+    .customer-financial-card-value small {
+        font-size: .60rem;
     }
 
-    .customer-financial-account {
-        min-height: 62px;
-
-        padding: 7px 8px;
+    .customer-financial-card-meta {
+        font-size: .75rem;
     }
 
-    .customer-financial-account-icon {
-        width: 31px;
-        height: 31px;
-        min-width: 31px;
-    }
-
-    .customer-financial-account-title {
-        font-size: .54rem;
-    }
-
-    .customer-financial-account-number {
-        font-size: .67rem;
-    }
-
-    .customer-financial-account-balance {
+    .customer-financial-card-value.muted,
+    .customer-financial-card-value.success {
         font-size: .76rem;
     }
 
 
-    /* QUICK ACTIONS */
+    /* -----------------------------------------
+       QUICK ACTIONS
+       ----------------------------------------- */
 
     .customer-quick-actions-section {
-        margin-top: 9px;
+        margin-top: 18px;
+        margin-bottom: 18px;
+    }
+
+    .customer-quick-actions-title {
         margin-bottom: 9px;
+    }
+
+    .customer-quick-actions-title h2 {
+        font-size: 1rem;
     }
 
     .customer-quick-actions {
         grid-template-columns:
-            repeat(6, minmax(0, 1fr));
+            repeat(8, minmax(0, 1fr));
 
-        gap: 7px;
+        gap: 12px;
     }
 
     .customer-quick-action {
-        height: 68px;
+        min-height: 124px;
 
-        gap: 4px;
+        padding: 14px 8px;
 
-        padding: 5px;
+        border-radius: 16px;
     }
 
     .customer-quick-action-icon {
-        width: 34px;
-        height: 34px;
+        width: 52px;
+        height: 52px;
 
-        font-size: .98rem;
+        margin-bottom: 10px;
+
+        border-radius: 15px;
+
+        font-size: 1.35rem;
     }
 
     .customer-quick-action-text {
-        font-size: .61rem;
+        font-size: .76rem;
+
+        line-height: 1.8;
+
+        font-weight: 700;
     }
 
 
-    /* BOTTOM */
+    /* -----------------------------------------
+       BOTTOM SECTION
+       ----------------------------------------- */
 
     .customer-dashboard-bottom-grid {
         grid-template-columns:
             minmax(0, 1.15fr)
             minmax(0, .85fr);
 
+        gap: 14px;
+
+        margin-top: 14px;
+    }
+
+
+    /* -----------------------------------------
+       ACTIVE LOAN
+       ----------------------------------------- */
+
+    .customer-active-loan-card {
+        padding: 14px;
+
+        border-radius: 16px;
+
+        box-shadow:
+            0 5px 16px rgba(35, 45, 75, .06);
+    }
+
+    .customer-active-loan-header {
+        gap: 10px;
+    }
+
+    .customer-active-loan-title {
+        gap: 9px;
+    }
+
+    .customer-active-loan-title-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+
+        border-radius: 11px;
+
+        font-size: 1.08rem;
+    }
+
+    .customer-active-loan-title h2 {
+        font-size: .98rem;
+    }
+
+    .customer-active-loan-status {
+        padding: 5px 9px;
+
+        font-size: .64rem;
+    }
+
+    .customer-active-loan-name {
+        margin-top: 7px;
+
+        font-size: .72rem;
+    }
+
+    .customer-loan-progress-row {
         gap: 8px;
 
         margin-top: 8px;
     }
 
+    .customer-loan-progress {
+        height: 7px;
+    }
 
-    /* TRANSACTIONS */
+    .customer-loan-progress-value {
+        font-size: .72rem;
+    }
+
+    .customer-active-loan-info {
+        margin-top: 8px;
+
+        column-gap: 14px;
+        row-gap: 4px;
+    }
+
+    .customer-loan-info-row {
+        min-height: 28px;
+
+        gap: 8px;
+    }
+
+    .customer-loan-info-label {
+        font-size: .67rem;
+    }
+
+    .customer-loan-info-value {
+        font-size: .75rem;
+    }
+
+    .customer-active-loan-details-button {
+        height: 36px;
+        min-height: 36px;
+
+        margin-top: 9px;
+
+        gap: 7px;
+
+        border-radius: 9px;
+
+        font-size: .70rem;
+    }
+
+
+    /* -----------------------------------------
+       TRANSACTIONS
+       ----------------------------------------- */
 
     .customer-transactions-section {
         min-height: 0;
 
-        padding: 8px 8px 3px;
+        padding: 12px 12px 6px;
+
+        border-radius: 16px;
+
+        box-shadow:
+            0 5px 16px rgba(35, 45, 75, .06);
+    }
+
+    .customer-transactions-header {
+        gap: 10px;
+
+        margin-bottom: 7px;
+    }
+
+    .customer-transactions-header h2 {
+        font-size: .98rem;
+    }
+
+    .customer-transactions-all {
+        gap: 5px;
+
+        font-size: .67rem;
     }
 
     .customer-transactions-table th {
-        padding: 4px 5px;
+        padding: 7px 8px;
+
+        font-size: .67rem;
     }
 
     .customer-transactions-table td {
-        height: 28px;
+        height: 35px;
 
-        padding: 3px 5px;
+        padding: 5px 8px;
+
+        font-size: .67rem;
     }
 
+    .customer-transaction-type {
+        gap: 6px;
 
-    /* ACTIVE LOAN */
-
-    .customer-active-loan-card {
-        padding: 9px 10px;
+        font-size: .67rem;
     }
 
-    .customer-active-loan-title-icon {
-        width: 31px;
-        height: 31px;
-        min-width: 31px;
+    .customer-transaction-icon {
+        width: 24px;
+        height: 24px;
 
-        font-size: .92rem;
-    }
-
-    .customer-active-loan-title h2 {
-        font-size: .86rem;
-    }
-
-    .customer-active-loan-name {
         font-size: .64rem;
     }
 
-    .customer-loan-progress-row {
-        margin-top: 5px;
+    .customer-transaction-amount {
+        font-size: .70rem !important;
     }
 
-    .customer-active-loan-info {
-        margin-top: 4px;
-    }
+    .customer-transaction-status {
+        min-width: 48px;
 
-    .customer-loan-info-row {
-        min-height: 22px;
-    }
+        padding: 4px 8px;
 
-    .customer-loan-info-label {
-        font-size: .59rem;
-    }
-
-    .customer-loan-info-value {
-        font-size: .66rem;
-    }
-
-    .customer-active-loan-details-button {
-        height: 29px;
-        min-height: 29px;
-
-        margin-top: 5px;
+        font-size: .60rem;
     }
 }
 
 
 /* =========================================================
-   MOBILE
-   381px - 767.98px
+   MOBILE 381px - 767.98px
    ========================================================= */
 
 @media (min-width: 381px) and (max-width: 767.98px) {
 
-    /* FINANCIAL */
-
-    .customer-financial-card {
-        padding: 9px;
-
-        border-radius: 13px;
-    }
-
-    .customer-financial-header {
-        margin-bottom: 7px;
-    }
-
-    .customer-financial-title {
-        gap: 6px;
-    }
-
-    .customer-financial-title-icon {
-        width: 31px;
-        height: 31px;
-        min-width: 31px;
-
-        font-size: .88rem;
-    }
-
-    .customer-financial-title h2 {
-        font-size: .82rem;
-    }
-
-    .customer-financial-subtitle {
-        font-size: .51rem;
-    }
-
-    .customer-financial-status {
-        padding: 3px 6px;
-
-        font-size: .50rem;
-    }
-
-    .customer-financial-accounts {
-        gap: 5px;
-    }
-
-    .customer-financial-account {
+    .customer-financial-card-item {
         min-height: 60px;
-
         gap: 5px;
-
         padding: 6px;
-
         border-radius: 10px;
     }
-
-    .customer-financial-account-icon {
-        width: 29px;
-        height: 29px;
-        min-width: 29px;
-
-        border-radius: 8px;
-
-        font-size: .82rem;
-    }
-
-    .customer-financial-account-title {
-        font-size: .50rem;
-    }
-
-    .customer-financial-account-number {
-        font-size: .59rem;
-    }
-
-    .customer-financial-account-balance {
-        font-size: .70rem;
-    }
-
-    .customer-financial-account-balance small {
-        font-size: .45rem;
-    }
-
-
-    /* QUICK ACTIONS */
 
     .customer-quick-actions-section {
         margin-top: 9px;
@@ -1762,13 +1703,14 @@
 
     .customer-quick-actions {
         grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+            repeat(5, minmax(0, 1fr));
 
         gap: 5px;
     }
 
     .customer-quick-action {
         height: 72px;
+        min-height: 72px;
 
         gap: 4px;
 
@@ -1781,6 +1723,8 @@
         width: 33px;
         height: 33px;
 
+        margin-bottom: 0;
+
         border-radius: 8px;
 
         font-size: .92rem;
@@ -1790,9 +1734,6 @@
         font-size: .56rem;
     }
 
-
-    /* BOTTOM */
-
     .customer-dashboard-bottom-grid {
         grid-template-columns: 1fr;
 
@@ -1800,9 +1741,6 @@
 
         margin-top: 7px;
     }
-
-
-    /* ACTIVE LOAN */
 
     .customer-active-loan-card {
         padding: 9px;
@@ -1812,7 +1750,6 @@
         width: 30px;
         height: 30px;
         min-width: 30px;
-
         font-size: .90rem;
     }
 
@@ -1849,9 +1786,6 @@
         font-size: .60rem;
     }
 
-
-    /* TRANSACTIONS */
-
     .customer-transactions-section {
         padding: 8px 7px 3px;
     }
@@ -1866,15 +1800,12 @@
 
     .customer-transactions-table th {
         padding: 4px;
-
         font-size: .57rem;
     }
 
     .customer-transactions-table td {
         height: 27px;
-
         padding: 3px 4px;
-
         font-size: .57rem;
     }
 
@@ -1885,7 +1816,6 @@
     .customer-transaction-icon {
         width: 19px;
         height: 19px;
-
         font-size: .52rem;
     }
 
@@ -1895,7 +1825,6 @@
 
     .customer-transaction-status {
         padding: 3px 5px;
-
         font-size: .52rem;
     }
 }
@@ -1903,93 +1832,15 @@
 
 /* =========================================================
    VERY SMALL MOBILE
-   <= 380px
    ========================================================= */
 
 @media (max-width: 380px) {
 
-    /* FINANCIAL */
-
-    .customer-financial-card {
-        padding: 8px;
-
-        border-radius: 12px;
-    }
-
-    .customer-financial-header {
-        margin-bottom: 6px;
-    }
-
-    .customer-financial-title {
-        gap: 5px;
-    }
-
-    .customer-financial-title-icon {
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-
-        border-radius: 8px;
-
-        font-size: .80rem;
-    }
-
-    .customer-financial-title h2 {
-        font-size: .76rem;
-    }
-
-    .customer-financial-subtitle {
-        font-size: .47rem;
-    }
-
-    .customer-financial-status {
-        padding: 3px 5px;
-
-        font-size: .46rem;
-    }
-
-    .customer-financial-accounts {
+    .customer-financial-card-item {
+        min-height: 54px;
         gap: 4px;
-    }
-
-    .customer-financial-account {
-        min-height: 56px;
-
-        gap: 4px;
-
         padding: 5px;
-
-        border-radius: 9px;
     }
-
-    .customer-financial-account-icon {
-        width: 26px;
-        height: 26px;
-        min-width: 26px;
-
-        border-radius: 7px;
-
-        font-size: .74rem;
-    }
-
-    .customer-financial-account-title {
-        font-size: .45rem;
-    }
-
-    .customer-financial-account-number {
-        font-size: .55rem;
-    }
-
-    .customer-financial-account-balance {
-        font-size: .64rem;
-    }
-
-    .customer-financial-account-balance small {
-        font-size: .42rem;
-    }
-
-
-    /* QUICK ACTIONS */
 
     .customer-quick-actions-section {
         margin-top: 8px;
@@ -2013,6 +1864,7 @@
 
     .customer-quick-action {
         height: 68px;
+        min-height: 68px;
 
         gap: 3px;
 
@@ -2025,6 +1877,8 @@
         width: 30px;
         height: 30px;
 
+        margin-bottom: 0;
+
         border-radius: 8px;
 
         font-size: .84rem;
@@ -2034,17 +1888,10 @@
         font-size: .52rem;
     }
 
-
-    /* BOTTOM */
-
     .customer-dashboard-bottom-grid {
         gap: 6px;
-
         margin-top: 6px;
     }
-
-
-    /* ACTIVE LOAN */
 
     .customer-active-loan-card {
         padding: 8px;
@@ -2054,7 +1901,6 @@
         width: 28px;
         height: 28px;
         min-width: 28px;
-
         font-size: .82rem;
     }
 
@@ -2064,13 +1910,11 @@
 
     .customer-active-loan-status {
         padding: 3px 5px;
-
         font-size: .49rem;
     }
 
     .customer-active-loan-name {
         margin-top: 3px;
-
         font-size: .59rem;
     }
 
@@ -2097,21 +1941,12 @@
     .customer-active-loan-details-button {
         height: 27px;
         min-height: 27px;
-
         margin-top: 4px;
-
         font-size: .57rem;
     }
 
-
-    /* TRANSACTIONS */
-
     .customer-transactions-section {
         padding: 7px 6px 2px;
-    }
-
-    .customer-transactions-header {
-        margin-bottom: 3px;
     }
 
     .customer-transactions-header h2 {
@@ -2124,15 +1959,12 @@
 
     .customer-transactions-table th {
         padding: 3px;
-
         font-size: .53rem;
     }
 
     .customer-transactions-table td {
         height: 25px;
-
         padding: 3px;
-
         font-size: .53rem;
     }
 
@@ -2143,7 +1975,6 @@
     .customer-transaction-icon {
         width: 18px;
         height: 18px;
-
         font-size: .49rem;
     }
 
@@ -2153,27 +1984,13 @@
 
     .customer-transaction-status {
         padding: 2px 5px;
-
         font-size: .49rem;
     }
 }
 
 
 /* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .customer-quick-action,
-    .customer-financial-account,
-    .customer-active-loan-details-button {
-        transition: none;
-    }
-}
-
-/* =========================================================
-   Loan Request Notice
+   LOAN REQUEST NOTICE
    ========================================================= */
 
 .loan-request-notice {
@@ -2191,13 +2008,11 @@
     border: 1px solid;
     border-radius: 16px;
 
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.05);
 
     direction: rtl;
 }
-
-
-/* Icon */
 
 .loan-request-notice-icon {
     flex: 0 0 48px;
@@ -2214,16 +2029,10 @@
     font-size: 24px;
 }
 
-
-/* Content */
-
 .loan-request-notice-content {
     flex: 1;
     min-width: 0;
 }
-
-
-/* Title */
 
 .loan-request-notice-title {
     font-size: 16px;
@@ -2231,9 +2040,6 @@
 
     margin-bottom: 7px;
 }
-
-
-/* Text */
 
 .loan-request-notice-text {
     font-size: 14px;
@@ -2246,21 +2052,16 @@
     font-weight: 700;
 }
 
-
-/* Details */
-
 .loan-request-notice-details {
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(3, 1fr);
 
     gap: 10px;
 
     margin-top: 16px;
 }
-
-
-/* Detail */
 
 .loan-request-detail {
     padding: 12px;
@@ -2287,9 +2088,6 @@
     color: #1e293b;
 }
 
-
-/* Note */
-
 .loan-request-notice-note {
     display: flex;
     align-items: flex-start;
@@ -2311,11 +2109,6 @@
     margin-top: 4px;
 }
 
-
-/* =========================================================
-   Success
-   ========================================================= */
-
 .loan-request-notice-success {
     border-color: #bbf7d0;
 }
@@ -2336,11 +2129,6 @@
     color: #15803d;
 }
 
-
-/* =========================================================
-   Rejected
-   ========================================================= */
-
 .loan-request-notice-rejected {
     border-color: #fecaca;
 }
@@ -2355,9 +2143,6 @@
 .loan-request-notice-title {
     color: #b91c1c;
 }
-
-
-/* Next review date */
 
 .loan-request-notice-next-date {
     display: flex;
@@ -2391,7 +2176,7 @@
 
 
 /* =========================================================
-   Mobile
+   LOAN NOTICE MOBILE
    ========================================================= */
 
 @media (max-width: 767.98px) {
@@ -2456,101 +2241,49 @@
     }
 }
 
+
 /* =========================================================
-   QUICK ACTIONS - DESKTOP
+   WITHDRAW NOTIFICATION
    ========================================================= */
 
-.customer-quick-actions {
-    display: grid !important;
-
-    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+.loan-notification-withdraw-btn {
+    display: flex;
+    align-items: center;
 
     gap: 12px;
 
     width: 100%;
+
+    padding: 12px 14px;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6f42c1,
+            #0d6efd
+        );
+
+    color: #fff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 6px 18px rgba(13, 110, 253, 0.18);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
 }
-
-
-/* کارت */
-
-.customer-quick-actions .customer-quick-action {
-    width: 100%;
-    min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    min-height: 110px;
-
-    padding: 12px 6px;
-
-    box-sizing: border-box;
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 1199px) {
-
-    .customer-quick-actions {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 767px) {
-
-    .customer-quick-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-
-        gap: 10px;
-    }
-
-}
-
-
-   .loan-notification-withdraw-btn {
-       display: flex;
-       align-items: center;
-       gap: 12px;
-
-       width: 100%;
-       padding: 12px 14px;
-
-       text-decoration: none;
-
-       background: linear-gradient(
-           135deg,
-           #6f42c1,
-           #0d6efd
-       );
-
-       color: #fff;
-
-       border-radius: 14px;
-
-       box-shadow: 0 6px 18px rgba(13, 110, 253, 0.18);
-
-       transition:
-           transform 0.2s ease,
-           box-shadow 0.2s ease;
-   }
 
 .loan-notification-withdraw-btn:hover {
     color: #fff;
+
     transform: translateY(-2px);
 
-    box-shadow: 0 8px 22px rgba(13, 110, 253, 0.25);
+    box-shadow:
+        0 8px 22px rgba(13, 110, 253, 0.25);
 }
 
 .loan-notification-withdraw-icon {
@@ -2575,6 +2308,7 @@
 .loan-notification-withdraw-content {
     display: flex;
     flex-direction: column;
+
     gap: 3px;
 
     flex: 1;
@@ -2587,11 +2321,146 @@
 
 .loan-notification-withdraw-content small {
     font-size: 11px;
-    opacity: 0.9;
+    opacity: .9;
 }
 
 .loan-notification-withdraw-arrow {
     font-size: 18px;
-    opacity: 0.9;
+    opacity: .9;
+}
+
+
+/* =========================================================
+   DESKTOP - LOAN NOTICE + WITHDRAW NOTIFICATION
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .loan-request-notice {
+        gap: 20px;
+
+        padding: 22px;
+
+        margin-bottom: 30px;
+
+        border-radius: 18px;
+    }
+
+    .loan-request-notice-icon {
+        flex-basis: 54px;
+
+        width: 54px;
+        height: 54px;
+
+        border-radius: 15px;
+
+        font-size: 27px;
+    }
+
+    .loan-request-notice-title {
+        font-size: 18px;
+
+        margin-bottom: 9px;
+    }
+
+    .loan-request-notice-text {
+        font-size: 15px;
+
+        line-height: 2;
+    }
+
+    .loan-request-notice-details {
+        gap: 14px;
+
+        margin-top: 20px;
+    }
+
+    .loan-request-detail {
+        padding: 14px;
+
+        border-radius: 13px;
+
+        gap: 5px;
+    }
+
+    .loan-request-detail-label {
+        font-size: 13px;
+    }
+
+    .loan-request-detail strong {
+        font-size: 15px;
+    }
+
+    .loan-request-notice-note {
+        gap: 10px;
+
+        margin-top: 17px;
+        padding-top: 17px;
+
+        font-size: 14px;
+    }
+
+    .loan-request-notice-next-date {
+        gap: 8px;
+
+        margin-top: 17px;
+
+        padding: 13px 15px;
+
+        font-size: 14px;
+    }
+
+    .loan-request-notice-next-date i {
+        font-size: 18px;
+    }
+
+
+    .loan-notification-withdraw-btn {
+        gap: 15px;
+
+        padding: 15px 18px;
+
+        border-radius: 16px;
+    }
+
+    .loan-notification-withdraw-icon {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 13px;
+
+        font-size: 23px;
+    }
+
+    .loan-notification-withdraw-content {
+        gap: 4px;
+    }
+
+    .loan-notification-withdraw-content strong {
+        font-size: 15px;
+    }
+
+    .loan-notification-withdraw-content small {
+        font-size: 12px;
+    }
+
+    .loan-notification-withdraw-arrow {
+        font-size: 21px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .customer-quick-action,
+    .customer-financial-card-item,
+    .customer-active-loan-details-button,
+    .loan-notification-withdraw-btn {
+        transition: none;
+    }
 }
 

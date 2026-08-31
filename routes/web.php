@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Loan\LoanController;
+use App\Http\Controllers\Customer\LoanController;
 use App\Http\Controllers\LoanType\LoanTypeController;
 use App\Http\Controllers\PaymentController;
 use App\Models\User;
@@ -18,6 +18,7 @@ use App\Http\Controllers\Loan\LoanRequestController;
 use App\Http\Controllers\Customer\SavingsTransferController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\OtherInstallmentPaymentController;
+use App\Http\Controllers\Customer\InstallmentController;
 use App\Http\Controllers\Admin\DonationController;
 use App\Http\Controllers\Customer\DonationController as CustomerDonationController;
 use App\Http\Controllers\Account\BalanceAdjustmentController;
@@ -134,7 +135,7 @@ Route::get(
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin.access'])->group(function () {
 
 
     /*
@@ -147,8 +148,8 @@ Route::middleware('auth')->group(function () {
         '/dashboard',
         [DashboardController::class, 'index']
     )
+        ->middleware('admin.access')
         ->name('dashboard');
-
 
     Route::post(
         '/logout',
@@ -463,55 +464,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Payments
-    |--------------------------------------------------------------------------
-    */
-
-
-    Route::prefix('payments')
-        ->name('payments.')
-        ->group(function () {
-
-
-            Route::post(
-                '/{installment}/pay',
-                [PaymentController::class, 'pay']
-            )
-                ->name('pay');
-
-
-            Route::match(
-                ['GET', 'POST'],
-                '/callback',
-                [PaymentController::class, 'callback']
-            )
-                ->name('callback');
-
-
-            Route::get(
-                '/fake',
-                [PaymentController::class, 'fake']
-            )
-                ->name('fake');
-
-
-            Route::get(
-                '/{payment}/success',
-                [PaymentController::class, 'success']
-            )
-                ->name('success');
-
-
-            Route::get(
-                '/failed',
-                [PaymentController::class, 'failed']
-            )
-                ->name('failed');
-
-        });
-
 
 
     /*
@@ -545,16 +497,65 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+
+/*
+|--------------------------------------------------------------------------
+| Payments
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')
+    ->prefix('payments')
+    ->name('payments.')
+    ->group(function () {
+
+        Route::post(
+            '/{installment}/pay',
+            [PaymentController::class, 'pay']
+        )->name('pay');
+
+        Route::match(
+            ['GET', 'POST'],
+            '/callback',
+            [PaymentController::class, 'callback']
+        )->name('callback');
+
+        Route::get(
+            '/fake',
+            [PaymentController::class, 'fake']
+        )->name('fake');
+
+        Route::get(
+            '/{payment}/success',
+            [PaymentController::class, 'success']
+        )->name('success');
+
+        Route::get(
+            '/failed',
+            [PaymentController::class, 'failed']
+        )->name('failed');
+
+    });
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Customer Panel Routes
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth'])
+Route::middleware(['auth', 'customer.access'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {
+
+        Route::get('/loans', [LoanController::class, 'index'])
+            ->name('loans.index');
+
+        Route::get('/loans/{loan}', [LoanController::class, 'show'])
+            ->name('loans.show');
 
 
         Route::get(
@@ -720,10 +721,10 @@ Route::middleware(['auth'])
 
 
         Route::get(
-            'savings-transfer/success/{transfer}',
+            'savings/deposit/savings-transfer/success/{transfer}',
             [PaymentController::class, 'savingsTransferSuccess']
         )
-            ->name('savings-transfer.success');
+            ->name('savings.deposit.savings-transfer.success');
 
 
         Route::get(
@@ -735,11 +736,10 @@ Route::middleware(['auth'])
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Other Installments Payment
-        |--------------------------------------------------------------------------
-        */
-
+|--------------------------------------------------------------------------
+| Other Installments Payment
+|--------------------------------------------------------------------------
+*/
 
         Route::get(
             'installments/others',
@@ -748,11 +748,7 @@ Route::middleware(['auth'])
             ->name('installments.others.create');
 
 
-        Route::post(
-            'installments/others/search',
-            [OtherInstallmentPaymentController::class, 'search']
-        )
-            ->name('installments.others.search');
+
 
 
         Route::post(
@@ -763,6 +759,13 @@ Route::middleware(['auth'])
             ]
         )
             ->name('installments.others.pay');
+
+
+        Route::get(
+            'installments/others/{payment}/success',
+            [InstallmentController::class, 'othersPaymentSuccess']
+        )
+            ->name('installments.others.payment.success');
 
 
 

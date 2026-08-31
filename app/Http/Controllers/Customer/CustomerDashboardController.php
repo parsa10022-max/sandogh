@@ -11,10 +11,12 @@ use App\Models\Loan;
 use App\Models\LoanRequest;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AccountTransaction;
+use App\Services\Date\JalaliDateService;
 
 class CustomerDashboardController extends Controller
 {
-    public function index()
+    public function index(JalaliDateService $jalaliDateService)
     {
         $user = Auth::user();
 
@@ -43,6 +45,28 @@ class CustomerDashboardController extends Controller
             'account_type',
             AccountType::CURRENT
         );
+
+        /*
+|--------------------------------------------------------------------------
+| آخرین تراکنش‌های مشتری
+|--------------------------------------------------------------------------
+*/
+
+        $latestTransactions = AccountTransaction::query()
+            ->whereIn('account_id', $accounts->pluck('id'))
+            ->latest('transaction_date')
+            ->latest('id')
+            ->limit(5)
+            ->get()
+            ->map(function (AccountTransaction $transaction) use ($jalaliDateService) {
+
+                $transaction->jalali_transaction_date =
+                    $jalaliDateService->fromDatabase(
+                        $transaction->transaction_date->toDateString()
+                    );
+
+                return $transaction;
+            });
 
 
         /*
@@ -201,6 +225,7 @@ class CustomerDashboardController extends Controller
                 'latestLoanRequest',
                 'notifications',
                 'unreadNotificationsCount',
+                'latestTransactions'
             )
         );
     }

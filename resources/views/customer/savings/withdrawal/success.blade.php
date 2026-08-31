@@ -6,10 +6,6 @@
 
 @section('header_subtitle', 'درخواست برداشت با موفقیت ثبت شد')
 
-@push('styles')
-    @vite('resources/css/customer/savings-withdrawal-success.css')
-@endpush
-
 @section('content')
 
     <div class="customer-savings-withdrawal-success-page">

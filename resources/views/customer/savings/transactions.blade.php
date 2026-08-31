@@ -282,6 +282,7 @@
                                             inputmode="numeric"
                                             autocomplete="off"
                                             dir="ltr"
+                                            class="js-money-input"
                                         >
 
                                     </div>

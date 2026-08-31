@@ -1,0 +1,648 @@
+/* =========================================================
+   CUSTOMER SIDEBAR
+   صندوق قرض الحسنه شهید مطهری
+   شیراز - داریون
+
+   Design System #1
+   Purple + Blue
+   RTL
+   Bootstrap 5.3
+   Mobile First / PWA
+   Sidebar Width: 160px
+   ========================================================= */
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.customer-sidebar,
+.customer-sidebar *,
+.customer-sidebar *::before,
+.customer-sidebar *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.customer-sidebar {
+
+    width: 150px;
+    min-width: 150px;
+
+    height: 100vh;
+    height: 100dvh;
+
+    position: sticky;
+    top: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 16px 10px;
+
+    background: #ffffff;
+
+    border-left: 1px solid #e8eaf3;
+
+    box-shadow:
+        0 4px 24px rgba(50, 50, 93, 0.06);
+
+    z-index: 1000;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.customer-sidebar-brand {
+
+    width: 100%;
+
+    margin-bottom: 18px;
+}
+
+
+.customer-sidebar-brand-link {
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 5px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    border-radius: 13px;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.customer-sidebar-brand-link:hover {
+
+    background: #f7f7ff;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BRAND LOGO
+   ========================================================= */
+
+.customer-brand-logo {
+
+    width: 38px;
+    height: 38px;
+
+    min-width: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: linear-gradient(
+        135deg,
+        #5b3df5,
+        #356df3
+    );
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    box-shadow:
+        0 6px 14px rgba(91, 61, 245, 0.20);
+}
+
+
+/* =========================================================
+   BRAND TEXT
+   ========================================================= */
+
+.customer-brand-text {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1px;
+}
+
+
+.customer-brand-text strong {
+
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    line-height: 1.7;
+
+    color: #202238;
+
+    white-space: normal;
+
+    overflow: hidden;
+}
+
+
+.customer-brand-text small {
+
+    display: block;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+
+    color: #85889d;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MAIN MENU
+   ========================================================= */
+
+.customer-sidebar-menu {
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   MENU ITEM
+   ========================================================= */
+
+.customer-menu-item {
+
+    position: relative;
+
+    width: 100%;
+    min-height: 45px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 6px;
+
+    border: 1px solid transparent;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: #666a80;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.customer-menu-item:hover {
+
+    color: #4f3be8;
+
+    background: #f7f6ff;
+
+    border-color: #ece9ff;
+
+    text-decoration: none;
+}
+
+
+.customer-menu-item:active {
+
+    transform: scale(0.985);
+}
+
+
+/* =========================================================
+   MENU ICON
+   ========================================================= */
+
+.customer-menu-icon {
+
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    flex: 0 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f5f6fb;
+
+    color: #72768d;
+
+    font-size: 15px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.customer-menu-item:hover .customer-menu-icon {
+
+    background: #eceaff;
+
+    color: #5b3df5;
+}
+
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.customer-menu-item.active {
+
+    color: #4f36e8;
+
+    background: linear-gradient(
+        90deg,
+        #f0edff,
+        #f7f8ff
+    );
+
+    border-color: #e4e0ff;
+
+    box-shadow:
+        0 4px 12px rgba(91, 61, 245, 0.07);
+}
+
+
+.customer-menu-item.active .customer-menu-icon {
+
+    background: linear-gradient(
+        135deg,
+        #5b3df5,
+        #356df3
+    );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 12px rgba(91, 61, 245, 0.18);
+}
+
+
+/* =========================================================
+   ACTIVE INDICATOR
+   ========================================================= */
+
+.customer-menu-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    right: -10px;
+
+    top: 50%;
+
+    width: 3px;
+    height: 23px;
+
+    transform: translateY(-50%);
+
+    border-radius: 3px 0 0 3px;
+
+    background: linear-gradient(
+        180deg,
+        #5b3df5,
+        #356df3
+    );
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.customer-menu-label {
+
+    min-width: 0;
+
+    flex: 1;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
+.customer-menu-badge {
+
+    min-width: 19px;
+    height: 19px;
+
+    padding: 0 4px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 7px;
+
+    background: #eeeafd;
+
+    color: #5b3df5;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    direction: ltr;
+}
+
+
+.customer-menu-item:hover .customer-menu-badge {
+
+    background: #e4e0ff;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.customer-sidebar-footer {
+
+    width: 100%;
+
+    margin-top: auto;
+
+    padding-top: 12px;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.customer-sidebar-divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    margin-bottom: 9px;
+
+    background: #ececf3;
+}
+
+
+/* =========================================================
+   LOGOUT FORM
+   ========================================================= */
+
+.customer-sidebar-logout-form {
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.customer-menu-logout {
+
+    width: 100%;
+
+    border: 1px solid transparent;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    text-align: right;
+}
+
+
+.customer-menu-logout:hover {
+
+    color: #dc3545;
+
+    background: #fff5f6;
+
+    border-color: #ffe1e5;
+}
+
+
+.customer-menu-logout:hover .customer-menu-icon {
+
+    background: #ffe8eb;
+
+    color: #dc3545;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.customer-sidebar::-webkit-scrollbar {
+
+    width: 4px;
+}
+
+
+.customer-sidebar::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.customer-sidebar::-webkit-scrollbar-thumb {
+
+    background: #dedee8;
+
+    border-radius: 10px;
+}
+
+
+.customer-sidebar::-webkit-scrollbar-thumb:hover {
+
+    background: #c7c7d5;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.customer-menu-item:focus-visible,
+.customer-sidebar-brand-link:focus-visible {
+
+    outline: 2px solid #5b3df5;
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .customer-sidebar {
+
+        width: 150px;
+        min-width: 150px;
+
+        padding: 14px 8px;
+    }
+
+
+    .customer-brand-logo {
+
+        width: 36px;
+        height: 36px;
+
+        min-width: 36px;
+
+        flex-basis: 36px;
+
+        font-size: 16px;
+    }
+
+
+    .customer-brand-text strong {
+
+        font-size: 10px;
+    }
+
+
+    .customer-brand-text small {
+
+        font-size: 8px;
+    }
+
+
+    .customer-menu-item {
+
+        min-height: 43px;
+
+        gap: 6px;
+
+        padding: 5px;
+
+        font-size: 10px;
+    }
+
+
+    .customer-menu-icon {
+
+        width: 30px;
+        height: 30px;
+
+        min-width: 30px;
+
+        flex-basis: 30px;
+
+        font-size: 14px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-sidebar {
+
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .customer-sidebar *,
+    .customer-sidebar *::before,
+    .customer-sidebar *::after {
+
+        transition: none !important;
+
+        animation: none !important;
+    }
+}

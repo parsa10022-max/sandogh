@@ -3,266 +3,129 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Enums\LoanRequestStatus;
+use App\Enums\LoanStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoanRequest\StoreCustomerLoanRequestRequest;
 use App\Models\LoanRequest;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LoanRequestController extends Controller
 {
     /**
      * فرم ثبت درخواست وام
      */
-    public function create()
+    public function create(): View|RedirectResponse
     {
         $customer = auth()->user()->customer;
 
         /*
         |--------------------------------------------------------------------------
-        | 1. بررسی وام فعال
+        | بررسی امکان ثبت درخواست جدید
         |--------------------------------------------------------------------------
         */
 
-        if ($customer->loans()->active()->exists()) {
+        $restriction = $this->getLoanRequestRestriction($customer);
 
+        if ($restriction) {
             return redirect()
                 ->route('customer.loan-requests.index')
-                ->with(
-                    'error',
-                    'شما در حال حاضر یک وام فعال دارید و امکان ثبت درخواست وام جدید وجود ندارد.'
-                );
+                ->with('error', $restriction);
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | 2. بررسی درخواست در حال بررسی
-        |--------------------------------------------------------------------------
-        */
-
-        $hasPendingRequest = LoanRequest::query()
-            ->where('customer_id', $customer->id)
-            ->where(
-                'status',
-                LoanRequestStatus::PENDING->value
-            )
-            ->exists();
-
-        if ($hasPendingRequest) {
-
-            return redirect()
-                ->route('customer.loan-requests.index')
-                ->with(
-                    'error',
-                    'شما یک درخواست وام در حال بررسی دارید و امکان ثبت درخواست جدید وجود ندارد.'
-                );
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | 3. بررسی آخرین درخواست رد شده
-        |--------------------------------------------------------------------------
-        */
-
-        $latestRejectedRequest = LoanRequest::query()
-            ->where('customer_id', $customer->id)
-            ->where(
-                'status',
-                LoanRequestStatus::REJECTED->value
-            )
-            ->latest('id')
-            ->first();
-
-
-        if ($latestRejectedRequest?->next_review_date) {
-
-            $nextReviewDate = Carbon::parse(
-                $latestRejectedRequest->next_review_date
-            )->startOfDay();
-
-            $today = now()->startOfDay();
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | هنوز تاریخ مراجعه نرسیده
-            |--------------------------------------------------------------------------
-            */
-
-            if ($today->lt($nextReviewDate)) {
-
-                return redirect()
-                    ->route('customer.loan-requests.index')
-                    ->with(
-                        'error',
-                        'امکان ثبت درخواست جدید تا تاریخ ' .
-                        jdate($nextReviewDate)->format('Y/m/d') .
-                        ' وجود ندارد.'
-                    );
-            }
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | اجازه ثبت درخواست
-        |--------------------------------------------------------------------------
-        */
 
         return view('customer.loan_requests.create');
     }
 
 
+    /**
+     * ثبت درخواست وام
+     */
+    public function store(
+        StoreCustomerLoanRequestRequest $request
+    ): RedirectResponse {
+        $customer = auth()->user()->customer;
 
-public function store(
-    StoreCustomerLoanRequestRequest $request
-) {
-    $customer = auth()->user()->customer;
+        /*
+        |--------------------------------------------------------------------------
+        | بررسی امکان ثبت درخواست جدید
+        |--------------------------------------------------------------------------
+        */
 
-    /*
-    |--------------------------------------------------------------------------
-    | 1. بررسی وام فعال
-    |--------------------------------------------------------------------------
-    */
+        $restriction = $this->getLoanRequestRestriction($customer);
 
-    if ($customer->loans()->active()->exists()) {
-
-        return back()
-            ->withInput()
-            ->with(
-                'error',
-                'شما در حال حاضر یک وام فعال دارید و امکان ثبت درخواست وام جدید وجود ندارد.'
-            );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 2. بررسی درخواست در حال بررسی
-    |--------------------------------------------------------------------------
-    */
-
-    $hasPendingRequest = LoanRequest::query()
-        ->where(
-            'customer_id',
-            $customer->id
-        )
-        ->where(
-            'status',
-            LoanRequestStatus::PENDING->value
-        )
-        ->exists();
-
-
-    if ($hasPendingRequest) {
-
-        return back()
-            ->withInput()
-            ->with(
-                'error',
-                'شما یک درخواست وام در حال بررسی دارید و امکان ثبت درخواست جدید وجود ندارد.'
-            );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 3. بررسی آخرین درخواست رد شده
-    |--------------------------------------------------------------------------
-    */
-
-    $latestRejectedRequest = LoanRequest::query()
-        ->where(
-            'customer_id',
-            $customer->id
-        )
-        ->where(
-            'status',
-            LoanRequestStatus::REJECTED->value
-        )
-        ->latest('id')
-        ->first();
-
-
-    if ($latestRejectedRequest?->next_review_date) {
-
-        $nextReviewDate = Carbon::parse(
-            $latestRejectedRequest->next_review_date
-        )->startOfDay();
-
-        $today = now()->startOfDay();
+        if ($restriction) {
+            return back()
+                ->withInput()
+                ->with('error', $restriction);
+        }
 
 
         /*
         |--------------------------------------------------------------------------
-        | هنوز تاریخ مراجعه نرسیده
+        | ثبت درخواست
         |--------------------------------------------------------------------------
         */
 
-        if ($today->lt($nextReviewDate)) {
+        LoanRequest::create([
 
-            return back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'امکان ثبت درخواست جدید تا تاریخ ' .
-                    jdate($nextReviewDate)->format('Y/m/d') .
-                    ' وجود ندارد.'
-                );
-        }
+            'customer_id' =>
+                $customer->id,
+
+            'requested_amount' =>
+                $request->validated('requested_amount'),
+
+            'description' =>
+                $request->validated('description'),
+
+            'status' =>
+                LoanRequestStatus::PENDING,
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | موفقیت
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->route('customer.loan-requests.index')
+            ->with(
+                'success',
+                'درخواست وام شما با موفقیت ثبت شد و در حال بررسی است.'
+            );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | 4. ثبت درخواست جدید
-    |--------------------------------------------------------------------------
-    */
-
-    LoanRequest::create([
-
-        'customer_id' =>
-            $customer->id,
-
-        'requested_amount' =>
-            $request->validated('requested_amount'),
-
-        'description' =>
-            $request->validated('description'),
-
-        'status' =>
-            LoanRequestStatus::PENDING,
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 5. موفقیت
-    |--------------------------------------------------------------------------
-    */
-
-    return redirect()
-        ->route(
-            'customer.loan-requests.index'
-        )
-        ->with(
-            'success',
-            'درخواست وام شما با موفقیت ثبت شد و در حال بررسی است.'
-        );
-}
 
     /**
      * لیست درخواست‌های وام مشتری
      */
-    public function index()
+    public function index(): View
     {
         $customer = auth()->user()->customer;
 
 
         /*
         |--------------------------------------------------------------------------
-        | وام فعال
+        | آخرین درخواست مشتری
+        |--------------------------------------------------------------------------
+        */
+
+        $latestRequest = LoanRequest::query()
+            ->where('customer_id', $customer->id)
+            ->with([
+                'loanType',
+                'loan',
+            ])
+            ->latest('id')
+            ->first();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | وضعیت وام فعال
         |--------------------------------------------------------------------------
         */
 
@@ -304,41 +167,13 @@ public function store(
 
         /*
         |--------------------------------------------------------------------------
-        | امکان ثبت درخواست جدید
+        | بررسی امکان ثبت درخواست جدید
         |--------------------------------------------------------------------------
         */
 
-        $canCreateNewRequest = true;
+        $restriction = $this->getLoanRequestRestriction($customer);
 
-
-        // وام فعال
-        if ($hasActiveLoan) {
-            $canCreateNewRequest = false;
-        }
-
-
-        // درخواست در حال بررسی
-        if ($hasPendingRequest) {
-            $canCreateNewRequest = false;
-        }
-
-
-        // محدودیت تاریخ درخواست رد شده
-        if (
-            $canCreateNewRequest &&
-            $latestRejectedRequest?->next_review_date
-        ) {
-
-            $nextReviewDate = Carbon::parse(
-                $latestRejectedRequest->next_review_date
-            )->startOfDay();
-
-            if (
-                now()->startOfDay()->lt($nextReviewDate)
-            ) {
-                $canCreateNewRequest = false;
-            }
-        }
+        $canCreateNewRequest = $restriction === null;
 
 
         /*
@@ -367,6 +202,7 @@ public function store(
                 'hasActiveLoan',
                 'hasPendingRequest',
                 'latestRejectedRequest',
+                'latestRequest',
                 'canCreateNewRequest'
             )
         );
@@ -378,7 +214,7 @@ public function store(
      */
     public function show(
         LoanRequest $loanRequest
-    ) {
+    ): View {
         $customer = auth()->user()->customer;
 
 
@@ -410,5 +246,223 @@ public function store(
             'customer.loan_requests.show',
             compact('loanRequest')
         );
+    }
+
+
+    /**
+     * بررسی امکان ثبت درخواست وام جدید
+     *
+     * خروجی:
+     *
+     * null
+     *      یعنی ثبت درخواست مجاز است.
+     *
+     * string
+     *      یعنی ثبت درخواست ممنوع است و متن پیام را برمی‌گرداند.
+     */
+    private function getLoanRequestRestriction($customer): ?string
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | 1. وام فعال
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $customer->loans()
+                ->active()
+                ->exists()
+        ) {
+            return 'شما در حال حاضر یک وام فعال دارید و امکان ثبت درخواست وام جدید وجود ندارد.';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 2. آخرین درخواست مشتری
+        |--------------------------------------------------------------------------
+        */
+
+        $latestRequest = LoanRequest::query()
+            ->where('customer_id', $customer->id)
+            ->with('loan')
+            ->latest('id')
+            ->first();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | هنوز هیچ درخواستی ثبت نشده
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$latestRequest) {
+            return null;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 3. درخواست در حال بررسی
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $latestRequest->status ===
+            LoanRequestStatus::PENDING
+        ) {
+            return 'شما یک درخواست وام در حال بررسی دارید و امکان ثبت درخواست جدید وجود ندارد.';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 4. درخواست تایید شده
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $latestRequest->status ===
+            LoanRequestStatus::APPROVED
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | تایید شده ولی هنوز Loan ساخته نشده
+            |--------------------------------------------------------------------------
+            |
+            | تا زمانی که فرآیند ایجاد وام کامل نشده، اجازه درخواست جدید نداریم.
+            |
+            */
+
+            if (!$latestRequest->loan_id) {
+
+                return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Loan وجود دارد
+            |--------------------------------------------------------------------------
+            */
+
+            $loan = $latestRequest->loan;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | اگر Loan پیدا نشد
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$loan) {
+
+                return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | وام فعال
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $loan->status ===
+                LoanStatus::ACTIVE
+            ) {
+
+                return 'درخواست وام شما تأیید شده و وام شما فعال است؛ تا زمان تسویه وام امکان ثبت درخواست جدید وجود ندارد.';
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | وام تسویه شده
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $loan->status ===
+                LoanStatus::FINISHED
+            ) {
+
+                return null;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | وام لغو شده یا وضعیت غیرمنتظره
+            |--------------------------------------------------------------------------
+            */
+
+            return 'درخواست وام قبلی شما هنوز در وضعیت نهایی قابل ثبت درخواست جدید نیست.';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 5. درخواست رد شده
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $latestRequest->status ===
+            LoanRequestStatus::REJECTED
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | تاریخ مراجعه بعدی
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$latestRequest->next_review_date) {
+
+                return 'درخواست وام قبلی شما رد شده است و هنوز تاریخ مجاز برای درخواست مجدد تعیین نشده است.';
+            }
+
+
+            $nextReviewDate = Carbon::parse(
+                $latestRequest->next_review_date
+            )->startOfDay();
+
+
+            $today = now()->startOfDay();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | هنوز تاریخ نرسیده
+            |--------------------------------------------------------------------------
+            */
+
+            if ($today->lt($nextReviewDate)) {
+
+                return 'امکان ثبت درخواست جدید تا تاریخ ' .
+                    jdate($nextReviewDate)->format('Y/m/d') .
+                    ' وجود ندارد.';
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | تاریخ رسیده
+            |--------------------------------------------------------------------------
+            */
+
+            return null;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | وضعیت ناشناخته
+        |--------------------------------------------------------------------------
+        */
+
+        return 'وضعیت درخواست وام قبلی شما اجازه ثبت درخواست جدید را نمی‌دهد.';
     }
 }

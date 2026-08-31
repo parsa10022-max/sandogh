@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enums\InstallmentStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Loan;
 use App\Models\Installment;
+use App\Models\Loan;
 use App\Services\Payment\PaymentService;
 use Illuminate\Http\Request;
-
 
 class OtherInstallmentPaymentController extends Controller
 {
@@ -17,74 +17,99 @@ class OtherInstallmentPaymentController extends Controller
     }
 
 
-    public function create()
+    /**
+     * نمایش صفحه پرداخت قسط دیگران
+     *
+     * جستجو و نمایش نتیجه در همان صفحه
+     */
+    public function create(Request $request)
     {
-        return view(
-            'customer.installments.others.create'
-        );
-    }
-
-
-    public function search(Request $request)
-    {
-        $request->validate([
-            'loan_number' => 'required|string',
-        ]);
-
-
-        $input = preg_replace(
-            '/\D/',
-            '',
-            $request->loan_number
-        );
-
-
-        $loan = Loan::with([
-            'customer',
-            'loanType',
-            'installments',
-        ])
-            ->get()
-            ->first(fn ($loan) =>
-                $loan->search_loan_number === $input
-            );
-
-
-        if (! $loan) {
-
-            return back()->withErrors([
-                'loan_number'
-                => 'وامی با این شماره پیدا نشد.'
-            ]);
-
-        }
+        $loan = null;
+        $installment = null;
 
 
         /*
-         | اولین قسط قابل پرداخت
+        |--------------------------------------------------------------------------
+        | جستجوی وام
+        |--------------------------------------------------------------------------
         */
 
-        $installment = $loan->installments
-            ->where(
-                'status',
-                \App\Enums\InstallmentStatus::PENDING
-            )
-            ->sortBy('installment_number')
-            ->first();
+        if ($request->filled('loan_number')) {
+
+            $input = preg_replace(
+                '/\D/',
+                '',
+                $request->loan_number
+            );
 
 
-        if (! $installment) {
+            $loan = Loan::with([
+                'customer',
+                'loanType',
+                'installments',
+            ])
+                ->where('loan_number', $input)
+                ->first();
 
-            return back()->withErrors([
-                'loan_number'
-                => 'تمام اقساط این وام پرداخت شده است.'
-            ]);
 
+            /*
+            |--------------------------------------------------------------------------
+            | وام پیدا نشد
+            |--------------------------------------------------------------------------
+            */
+
+            if (! $loan) {
+
+                return view(
+                    'customer.installments.others.create',
+                    [
+                        'loan' => null,
+                        'installment' => null,
+                        'searchError' =>
+                            'وامی با این شماره پیدا نشد.',
+                    ]
+                );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | اولین قسط قابل پرداخت
+            |--------------------------------------------------------------------------
+            */
+
+            $installment = $loan->installments
+                ->where(
+                    'status',
+                    InstallmentStatus::PENDING
+                )
+                ->sortBy('installment_number')
+                ->first();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | تمام اقساط پرداخت شده
+            |--------------------------------------------------------------------------
+            */
+
+            if (! $installment) {
+
+                return view(
+                    'customer.installments.others.create',
+                    [
+                        'loan' => $loan,
+                        'installment' => null,
+                        'searchError' =>
+                            'تمام اقساط این وام پرداخت شده است.',
+                    ]
+                );
+            }
         }
 
 
         return view(
-            'customer.installments.others.result',
+            'customer.installments.others.create',
             compact(
                 'loan',
                 'installment'
@@ -93,13 +118,15 @@ class OtherInstallmentPaymentController extends Controller
     }
 
 
-
+    /**
+     * شروع پرداخت قسط دیگران
+     */
     public function pay(Request $request)
     {
         $request->validate([
             'installment_id' => [
                 'required',
-                'exists:installments,id'
+                'exists:installments,id',
             ],
         ]);
 
@@ -110,8 +137,45 @@ class OtherInstallmentPaymentController extends Controller
             );
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | جلوگیری از پرداخت قسط خود مشتری
+        |--------------------------------------------------------------------------
+        */
+
+        $customer = auth()->user()->customer;
+
+
+        if (
+            $customer &&
+            $installment->loan->customer_id === $customer->id
+        ) {
+
+            return back()->with(
+                'error',
+                'برای پرداخت قسط خودتان از بخش پرداخت اقساط خود استفاده کنید.'
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | شروع پرداخت
+        |--------------------------------------------------------------------------
+        */
+
         $result = $this->paymentService
             ->startPayment($installment);
+
+
+        if (! ($result['success'] ?? false)) {
+
+            return back()->with(
+                'error',
+                $result['message']
+                ?? 'خطا در شروع پرداخت.'
+            );
+        }
 
 
         return redirect()->away(

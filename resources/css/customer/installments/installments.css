@@ -1197,3 +1197,126 @@
     }
 }
 
+    /* =========================================================
+    SEARCH ERROR BOX
+    ========================================================= */
+
+    .customer-other-installment-search-error-box {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+
+
+        margin-bottom: 16px;
+        padding: 13px 15px;
+
+        border: 1px solid rgba(220, 53, 69, 0.18);
+        border-radius: 15px;
+
+        background: linear-gradient(
+            135deg,
+            rgba(220, 53, 69, 0.07),
+            rgba(255, 235, 238, 0.55)
+        );
+
+        box-shadow:
+            0 4px 14px rgba(220, 53, 69, 0.06);
+
+
+    }
+
+    /* =========================================================
+    ICON
+    ========================================================= */
+
+    .customer-other-installment-search-error-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background: rgba(220, 53, 69, 0.11);
+
+        color: #dc3545;
+
+        font-size: 18px;
+
+
+    }
+
+    /* =========================================================
+    CONTENT
+    ========================================================= */
+
+    .customer-other-installment-search-error-content {
+        min-width: 0;
+    }
+
+    /* =========================================================
+    LABEL
+    ========================================================= */
+
+    .customer-other-installment-search-error-label {
+        display: block;
+
+
+        margin-bottom: 3px;
+
+        color: #8a3a43;
+
+        font-size: 0.72rem;
+        font-weight: 650;
+
+
+    }
+
+    /* =========================================================
+    MESSAGE
+    ========================================================= */
+
+    .customer-other-installment-search-error-content strong {
+        display: block;
+
+
+        color: #6f2934;
+
+        font-size: 0.83rem;
+        font-weight: 750;
+
+        line-height: 1.7;
+
+
+    }
+
+    /* =========================================================
+    MOBILE
+    ========================================================= */
+
+    @media (max-width: 575.98px) {
+
+
+        .customer-other-installment-search-error-box {
+            padding: 12px 13px;
+            gap: 11px;
+        }
+
+        .customer-other-installment-search-error-icon {
+            width: 39px;
+            height: 39px;
+            flex-basis: 39px;
+
+            font-size: 16px;
+        }
+
+        .customer-other-installment-search-error-content strong {
+            font-size: 0.78rem;
+        }
+
+
+    }

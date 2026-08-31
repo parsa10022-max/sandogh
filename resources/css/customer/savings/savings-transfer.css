@@ -1,0 +1,767 @@
+/* =========================================================
+   CUSTOMER — SAVINGS TRANSFER
+   Purple + Blue / White
+   RTL / Mobile First / PWA
+   ========================================================= */
+
+.customer-savings-transfer {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.customer-savings-transfer *,
+.customer-savings-transfer *::before,
+.customer-savings-transfer *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-savings-transfer-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+.customer-savings-transfer-header-icon {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, .13),
+        rgba(13, 110, 253, .10)
+    );
+
+    color: #6f42c1;
+
+    font-size: 23px;
+}
+
+.customer-savings-transfer-header-content {
+    min-width: 0;
+}
+
+.customer-savings-transfer-header-content h2 {
+    margin: 0 0 4px;
+
+    color: #343a40;
+
+    font-size: 1.12rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.customer-savings-transfer-header-content p {
+    margin: 0;
+
+    color: #6c757d;
+
+    font-size: .80rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.customer-savings-transfer-card {
+    width: 100%;
+
+    padding: 22px;
+
+    background: #fff;
+
+    border: 1px solid rgba(111, 66, 193, .11);
+    border-radius: 20px;
+
+    box-shadow:
+        0 8px 28px rgba(33, 37, 41, .065);
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.customer-savings-transfer-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    color: #343a40;
+
+    font-size: .94rem;
+    font-weight: 800;
+}
+
+.customer-savings-transfer-card-title-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: rgba(111, 66, 193, .10);
+
+    color: #6f42c1;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   SEARCH ROW
+   ========================================================= */
+
+.customer-savings-transfer-search-row {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.customer-savings-transfer-search-input {
+    position: relative;
+
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SEARCH ICON
+   ========================================================= */
+
+.customer-savings-transfer-search-icon {
+    position: absolute;
+
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #6f42c1;
+
+    font-size: 17px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+   ========================================================= */
+
+.customer-savings-transfer-search-input input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 43px 0 14px;
+
+    border: 1px solid #dee2e6;
+    border-radius: 13px;
+
+    background: #fff;
+
+    color: #343a40;
+
+    font-size: .88rem;
+    font-weight: 500;
+
+    outline: none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+.customer-savings-transfer-search-input input::placeholder {
+    color: #adb5bd;
+}
+
+.customer-savings-transfer-search-input input:focus {
+    border-color: rgba(111, 66, 193, .55);
+
+    box-shadow:
+        0 0 0 3px rgba(111, 66, 193, .08);
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+   ========================================================= */
+
+.customer-savings-transfer-search-button {
+    height: 48px;
+    min-width: 100px;
+
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 0 17px;
+
+    border: 0;
+    border-radius: 13px;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    color: #fff;
+
+    font-size: .83rem;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 16px rgba(111, 66, 193, .19);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease;
+}
+
+.customer-savings-transfer-search-button i {
+    font-size: 16px;
+}
+
+.customer-savings-transfer-search-button:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 9px 20px rgba(111, 66, 193, .24);
+}
+
+.customer-savings-transfer-search-button:active {
+    transform: translateY(0);
+}
+
+.customer-savings-transfer-search-button:disabled {
+    opacity: .6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   CUSTOMER RESULT
+   ========================================================= */
+
+.customer-savings-transfer-result {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    margin-top: 15px;
+    padding: 14px 15px;
+
+    border-radius: 15px;
+}
+
+.customer-savings-transfer-result.d-none {
+    display: none !important;
+}
+
+
+/* =========================================================
+   RESULT ICON
+   ========================================================= */
+
+.customer-savings-transfer-result-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   RESULT CONTENT
+   ========================================================= */
+
+.customer-savings-transfer-result-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.customer-savings-transfer-result-content span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: .72rem;
+    font-weight: 650;
+}
+
+.customer-savings-transfer-result-content strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: .92rem;
+    font-weight: 800;
+}
+
+.customer-savings-transfer-result-content small {
+    display: block;
+
+    font-size: .75rem;
+}
+
+.customer-savings-transfer-result-content small b {
+    margin-right: 4px;
+
+    font-size: .80rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   RESULT SUCCESS
+   ========================================================= */
+
+.customer-savings-transfer-result-success {
+    border: 1px solid rgba(13, 110, 253, .14);
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, .075),
+        rgba(13, 110, 253, .06)
+    );
+}
+
+.customer-savings-transfer-result-success
+.customer-savings-transfer-result-icon {
+    background: rgba(13, 110, 253, .11);
+
+    color: #0d6efd;
+}
+
+.customer-savings-transfer-result-success
+.customer-savings-transfer-result-content span {
+    color: #6c757d;
+}
+
+.customer-savings-transfer-result-success
+.customer-savings-transfer-result-content strong {
+    color: #343a40;
+}
+
+.customer-savings-transfer-result-success
+.customer-savings-transfer-result-content small {
+    color: #6c757d;
+}
+
+
+/* =========================================================
+   RESULT ERROR
+   ========================================================= */
+
+.customer-savings-transfer-result-error {
+    border: 1px solid rgba(220, 53, 69, .17);
+
+    background: linear-gradient(
+        135deg,
+        rgba(220, 53, 69, .08),
+        rgba(220, 53, 69, .045)
+    );
+}
+
+.customer-savings-transfer-result-error
+.customer-savings-transfer-result-icon {
+    background: rgba(220, 53, 69, .11);
+
+    color: #dc3545;
+}
+
+.customer-savings-transfer-result-error
+.customer-savings-transfer-result-content span,
+.customer-savings-transfer-result-error
+.customer-savings-transfer-result-content strong {
+    color: #842029;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.customer-savings-transfer-amount {
+    margin-top: 18px;
+}
+
+.customer-savings-transfer-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #495057;
+
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   AMOUNT INPUT
+   ========================================================= */
+
+.customer-savings-transfer-amount-input {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+}
+
+.customer-savings-transfer-amount-input input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 14px 0 55px;
+
+    border: 1px solid #dee2e6;
+    border-radius: 13px;
+
+    background: #fff;
+
+    color: #343a40;
+
+    font-size: .90rem;
+    font-weight: 500;
+
+    outline: none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-savings-transfer-amount-input input::placeholder {
+    color: #adb5bd;
+}
+
+.customer-savings-transfer-amount-input input:focus {
+    border-color: rgba(111, 66, 193, .55);
+
+    box-shadow:
+        0 0 0 3px rgba(111, 66, 193, .08);
+}
+
+.customer-savings-transfer-amount-input span {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #6c757d;
+
+    font-size: .74rem;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   VALIDATION ERROR
+   ========================================================= */
+
+.customer-savings-transfer-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 7px;
+
+    color: #dc3545;
+
+    font-size: .73rem;
+}
+
+
+/* =========================================================
+   PAYMENT BUTTON
+   ========================================================= */
+
+.customer-savings-transfer-pay-button {
+    width: 100%;
+    min-height: 64px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 19px;
+    padding: 10px 12px;
+
+    border: 0;
+    border-radius: 16px;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    color: #fff;
+
+    text-align: right;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(111, 66, 193, .19);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease;
+}
+
+.customer-savings-transfer-pay-button:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 11px 25px rgba(111, 66, 193, .25);
+}
+
+.customer-savings-transfer-pay-button:active {
+    transform: translateY(0);
+}
+
+.customer-savings-transfer-pay-button:disabled {
+    opacity: .48;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   PAYMENT ICON
+   ========================================================= */
+
+.customer-savings-transfer-pay-icon {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(255, 255, 255, .15);
+
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   PAYMENT CONTENT
+   ========================================================= */
+
+.customer-savings-transfer-pay-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.customer-savings-transfer-pay-content strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #fff;
+
+    font-size: .91rem;
+    font-weight: 800;
+}
+
+.customer-savings-transfer-pay-content small {
+    display: block;
+
+    color: rgba(255, 255, 255, .78);
+
+    font-size: .72rem;
+}
+
+
+/* =========================================================
+   PAYMENT ARROW
+   ========================================================= */
+
+.customer-savings-transfer-pay-arrow {
+    flex: 0 0 auto;
+
+    color: #fff;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   TABLET / DESKTOP
+   ========================================================= */
+
+@media (min-width: 576px) {
+
+    .customer-savings-transfer {
+        max-width: 900px;
+    }
+
+    .customer-savings-transfer-card {
+        padding: 24px;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .customer-savings-transfer-card {
+        padding: 15px;
+        border-radius: 17px;
+    }
+
+    .customer-savings-transfer-header {
+        gap: 11px;
+    }
+
+    .customer-savings-transfer-header-icon {
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
+
+        font-size: 20px;
+    }
+
+    .customer-savings-transfer-header-content h2 {
+        font-size: 1rem;
+    }
+
+    .customer-savings-transfer-header-content p {
+        font-size: .72rem;
+    }
+
+    .customer-savings-transfer-card-title {
+        font-size: .87rem;
+    }
+
+    .customer-savings-transfer-search-row {
+        gap: 7px;
+    }
+
+    .customer-savings-transfer-search-button {
+        width: 46px;
+        min-width: 46px;
+
+        padding: 0;
+    }
+
+    .customer-savings-transfer-search-button span {
+        display: none;
+    }
+
+    .customer-savings-transfer-result {
+        padding: 12px;
+    }
+
+    .customer-savings-transfer-result-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+    .customer-savings-transfer-search-button {
+        width: 43px;
+        min-width: 43px;
+    }
+
+    .customer-savings-transfer-search-input input,
+    .customer-savings-transfer-amount-input input {
+        height: 44px;
+    }
+
+    .customer-savings-transfer-pay-button {
+        min-height: 59px;
+    }
+
+}

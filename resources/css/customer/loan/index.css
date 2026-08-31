@@ -1,0 +1,1909 @@
+/* =========================================================
+CUSTOMER LOANS
+Design System #1
+Purple + Blue / RTL / Bootstrap 5.3
+Mobile First / PWA
+Modern Card UI
+========================================================= */
+
+/* =========================================================
+BASE
+========================================================= */
+
+.customer-loans-page {
+    width: 100%;
+    min-width: 0;
+
+
+    direction: rtl;
+
+    box-sizing: border-box;
+
+
+}
+
+.customer-loans-page *,
+.customer-loans-page *::before,
+.customer-loans-page *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+PAGE HEADER
+========================================================= */
+
+.customer-loans-header {
+    width: 100%;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+
+
+}
+
+.customer-loans-header-main {
+    min-width: 0;
+
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+
+}
+
+.customer-loans-header-content {
+    min-width: 0;
+}
+
+.customer-loans-title {
+    margin: 0;
+
+
+    color: #25283a;
+
+    font-size: 1.15rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+
+
+}
+
+.customer-loans-subtitle {
+    margin: 3px 0 0;
+
+
+    color: #858896;
+
+    font-size: .72rem;
+    line-height: 1.5;
+
+    font-weight: 600;
+
+
+}
+
+.customer-loans-header-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border-radius: 13px;
+
+    font-size: 1.15rem;
+
+    box-shadow:
+        0 6px 16px rgba(77, 57, 200, .16);
+
+
+}
+
+.customer-loans-back {
+    flex-shrink: 0;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 34px;
+
+    padding: 7px 10px;
+
+    color: #5d43d9;
+
+    background: #f4f2ff;
+
+    border: 1px solid #e2dcfb;
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: .68rem;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+
+
+}
+
+.customer-loans-back:hover {
+    color: #ffffff;
+
+
+    background: #6040e8;
+
+    border-color: #6040e8;
+
+
+}
+
+.customer-loans-back:active {
+    transform: translateY(1px);
+}
+
+/* =========================================================
+SUMMARY
+========================================================= */
+
+.customer-loans-summary {
+    width: 100%;
+
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-bottom: 14px;
+
+
+}
+
+.customer-loans-summary-card {
+    min-width: 0;
+
+
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 4px 14px rgba(35, 45, 75, .045);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+
+
+}
+
+.customer-loans-summary-card:hover {
+    transform: translateY(-1px);
+
+
+    border-color: #d8d2f7;
+
+    box-shadow:
+        0 7px 18px rgba(60, 45, 150, .07);
+
+
+}
+
+.customer-loans-summary-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 1.05rem;
+
+
+}
+
+.customer-loans-summary-icon.total {
+    color: #6040e8;
+    background: #f1efff;
+}
+
+.customer-loans-summary-icon.active {
+    color: #29904d;
+    background: #eaf8ef;
+}
+
+.customer-loans-summary-icon.finished {
+    color: #657083;
+    background: #eef1f5;
+}
+
+.customer-loans-summary-icon.remaining {
+    color: #4168e9;
+    background: #edf2ff;
+}
+
+.customer-loans-summary-content {
+    min-width: 0;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+
+}
+
+.customer-loans-summary-label {
+    color: #858896;
+
+
+    font-size: .64rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+
+}
+
+.customer-loans-summary-value {
+    color: #292b3a;
+
+
+    font-size: .92rem;
+
+    line-height: 1.3;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+
+}
+
+.customer-loans-summary-value.success {
+    color: #29904d;
+}
+
+.customer-loans-summary-value.danger {
+    color: #d34a50;
+}
+
+.customer-loans-summary-value small {
+    color: #858896;
+
+
+    font-size: .56rem;
+
+    font-weight: 700;
+
+
+}
+
+/* =========================================================
+LIST SECTION
+========================================================= */
+
+.customer-loans-list-section {
+    width: 100%;
+
+
+    padding: 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 16px rgba(35, 45, 75, .045);
+
+
+}
+
+/* =========================================================
+LIST HEADER
+========================================================= */
+
+.customer-loans-list-header {
+    width: 100%;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+    padding-bottom: 11px;
+
+    border-bottom: 1px solid #edf0f5;
+
+
+}
+
+.customer-loans-list-title {
+    min-width: 0;
+
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+
+}
+
+.customer-loans-list-title-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border-radius: 10px;
+
+    font-size: 1rem;
+
+
+}
+
+.customer-loans-list-title h2 {
+    margin: 0;
+
+
+    color: #292b3a;
+
+    font-size: .95rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+
+
+}
+
+.customer-loans-list-title span {
+    display: block;
+
+
+    margin-top: 2px;
+
+    color: #858896;
+
+    font-size: .62rem;
+
+    font-weight: 600;
+
+
+}
+
+.customer-loans-count {
+    flex-shrink: 0;
+
+
+    display: inline-flex;
+    align-items: baseline;
+
+    gap: 4px;
+
+    padding: 5px 9px;
+
+    color: #6040e8;
+
+    background: #f5f3ff;
+
+    border: 1px solid #e7e2ff;
+
+    border-radius: 20px;
+
+    white-space: nowrap;
+
+
+}
+
+.customer-loans-count strong {
+    font-size: .78rem;
+
+
+    font-weight: 900;
+
+
+}
+
+.customer-loans-count span {
+    font-size: .60rem;
+
+
+    font-weight: 700;
+
+
+}
+
+/* =========================================================
+LOAN GRID
+========================================================= */
+
+.customer-loans-grid {
+    width: 100%;
+
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 11px;
+
+
+}
+
+/* =========================================================
+LOAN CARD
+========================================================= */
+
+.customer-loan-card {
+    width: 100%;
+    min-width: 0;
+
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #fdfdff 100%
+        );
+
+    border: 1px solid #e1e4ed;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 14px rgba(35, 45, 75, .045);
+
+    overflow: hidden;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+
+
+}
+
+.customer-loan-card:hover {
+    transform: translateY(-2px);
+
+
+    border-color: #d5cff7;
+
+    box-shadow:
+        0 9px 22px rgba(60, 45, 150, .08);
+
+
+}
+
+/* =========================================================
+CARD HEADER
+========================================================= */
+
+.customer-loan-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    gap: 10px;
+
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid #edf0f5;
+
+
+}
+
+.customer-loan-card-title {
+    min-width: 0;
+
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+
+}
+
+.customer-loan-card-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1efff,
+            #edf2ff
+        );
+
+    border: 1px solid #e5e0ff;
+
+    border-radius: 11px;
+
+    font-size: 1.08rem;
+
+
+}
+
+.customer-loan-card-name {
+    min-width: 0;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+
+}
+
+.customer-loan-card-label {
+    color: #858896;
+
+
+    font-size: .60rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-card-name strong {
+    color: #292b3a;
+
+
+    font-size: .82rem;
+
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+
+}
+
+/* =========================================================
+STATUS
+========================================================= */
+
+.customer-loan-status {
+    flex-shrink: 0;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: .61rem;
+
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+
+}
+
+.customer-loan-status.active {
+    color: #247a42;
+    background: #e7f7ed;
+}
+
+.customer-loan-status.finished {
+    color: #5f6879;
+    background: #eef1f5;
+}
+
+.customer-loan-status.cancelled {
+    color: #c23b42;
+    background: #fff0f1;
+}
+
+/* =========================================================
+LOAN TYPE
+========================================================= */
+
+.customer-loan-type {
+    display: inline-flex;
+    align-items: center;
+
+
+    gap: 5px;
+
+    width: fit-content;
+
+    max-width: 100%;
+
+    margin-top: 10px;
+
+    padding: 4px 8px;
+
+    color: #6040e8;
+
+    background: #f6f4ff;
+
+    border-radius: 7px;
+
+    font-size: .61rem;
+
+    font-weight: 800;
+
+
+}
+
+.customer-loan-type i {
+    font-size: .68rem;
+}
+
+/* =========================================================
+MAIN AMOUNT
+========================================================= */
+
+.customer-loan-main {
+    margin-top: 10px;
+
+
+    padding: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8f7ff,
+            #f5f8ff
+        );
+
+    border: 1px solid #e7e4f8;
+
+    border-radius: 11px;
+
+
+}
+
+.customer-loan-main-label {
+    margin-bottom: 4px;
+
+
+    color: #777b8d;
+
+    font-size: .62rem;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-main-value {
+    display: flex;
+    align-items: baseline;
+
+
+    gap: 5px;
+
+
+}
+
+.customer-loan-main-value strong {
+    color: #4031a7;
+
+
+    font-size: 1.12rem;
+
+    line-height: 1.3;
+
+    font-weight: 900;
+
+    letter-spacing: -.2px;
+
+
+}
+
+.customer-loan-main-value small {
+    color: #777b8d;
+
+
+    font-size: .60rem;
+
+    font-weight: 700;
+
+
+}
+
+/* =========================================================
+DATA GRID
+========================================================= */
+
+.customer-loan-data-grid {
+    display: grid;
+
+
+    grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+
+    margin-top: 9px;
+
+
+}
+
+.customer-loan-data {
+    min-width: 0;
+
+
+    padding: 9px;
+
+    background: #f8f9fc;
+
+    border: 1px solid #edf0f5;
+
+    border-radius: 9px;
+
+
+}
+
+.customer-loan-data span {
+    display: block;
+
+
+    margin-bottom: 4px;
+
+    color: #858896;
+
+    font-size: .59rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-data strong {
+    display: block;
+
+
+    color: #303342;
+
+    font-size: .73rem;
+
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+
+}
+
+.customer-loan-data small {
+    color: #858896;
+
+
+    font-size: .48rem;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-data.success {
+    background: #f5fbf7;
+
+
+    border-color: #e0f0e5;
+
+
+}
+
+.customer-loan-data.success strong {
+    color: #29904d;
+}
+
+.customer-loan-data.danger {
+    background: #fff8f8;
+
+
+    border-color: #f4e3e4;
+
+
+}
+
+.customer-loan-data.danger strong {
+    color: #d34a50;
+}
+
+/* =========================================================
+PROGRESS
+========================================================= */
+
+.customer-loan-progress-section {
+    margin-top: 11px;
+
+
+    padding: 10px;
+
+    background: #fafaff;
+
+    border: 1px solid #eceaf7;
+
+    border-radius: 10px;
+
+
+}
+
+.customer-loan-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    gap: 8px;
+
+    margin-bottom: 6px;
+
+
+}
+
+.customer-loan-progress-header span {
+    color: #777b8d;
+
+
+    font-size: .60rem;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-progress-header strong {
+    color: #6040e8;
+
+
+    font-size: .68rem;
+
+    font-weight: 900;
+
+
+}
+
+.customer-loan-progress-track {
+    width: 100%;
+    height: 7px;
+
+
+    overflow: hidden;
+
+    background: #e9ebf3;
+
+    border-radius: 20px;
+
+
+}
+
+.customer-loan-progress-bar {
+    height: 100%;
+
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border-radius: inherit;
+
+    transition: width .4s ease;
+
+
+}
+
+.customer-loan-progress-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    gap: 8px;
+
+    margin-top: 6px;
+
+
+}
+
+.customer-loan-progress-footer span {
+    color: #858896;
+
+
+    font-size: .53rem;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+
+}
+
+/* =========================================================
+CARD FOOTER
+========================================================= */
+
+.customer-loan-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    gap: 10px;
+
+    margin-top: 11px;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #edf0f5;
+
+
+}
+
+.customer-loan-start-date {
+    min-width: 0;
+
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+
+}
+
+.customer-loan-start-icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border-radius: 8px;
+
+    font-size: .78rem;
+
+
+}
+
+.customer-loan-start-date > div:last-child {
+    min-width: 0;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1px;
+
+
+}
+
+.customer-loan-start-date span {
+    color: #858896;
+
+
+    font-size: .53rem;
+
+    font-weight: 700;
+
+
+}
+
+.customer-loan-start-date strong {
+    color: #303342;
+
+
+    font-size: .61rem;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+
+}
+
+.customer-loan-details-button {
+    flex-shrink: 0;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 34px;
+
+    padding: 6px 11px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: .61rem;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    box-shadow:
+        0 4px 9px rgba(74, 61, 190, .14);
+
+    transition:
+        transform .18s ease,
+        opacity .18s ease,
+        box-shadow .18s ease;
+
+
+}
+
+.customer-loan-details-button:hover {
+    color: #ffffff;
+
+
+    opacity: .94;
+
+    box-shadow:
+        0 6px 13px rgba(74, 61, 190, .20);
+
+
+}
+
+.customer-loan-details-button:active {
+    transform: translateY(1px);
+}
+
+/* =========================================================
+EMPTY STATE
+========================================================= */
+
+.customer-loans-empty {
+    width: 100%;
+
+
+    padding: 35px 16px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fafaff
+        );
+
+    border: 1px dashed #dcdfea;
+
+    border-radius: 13px;
+
+
+}
+
+.customer-loans-empty-icon {
+    width: 58px;
+    height: 58px;
+
+
+    margin: 0 auto 11px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+
+    background: #f1efff;
+
+    border: 1px solid #e4dfff;
+
+    border-radius: 16px;
+
+    font-size: 1.45rem;
+
+
+}
+
+.customer-loans-empty-title {
+    margin: 0;
+
+
+    color: #303342;
+
+    font-size: .90rem;
+
+    font-weight: 900;
+
+
+}
+
+.customer-loans-empty-text {
+    margin: 5px 0 0;
+
+
+    color: #858896;
+
+    font-size: .65rem;
+
+    line-height: 1.7;
+
+    font-weight: 600;
+
+
+}
+
+/* =========================================================
+PAGINATION
+========================================================= */
+
+.customer-loans-pagination {
+    display: flex;
+
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 13px;
+
+
+}
+
+.customer-loans-pagination .pagination {
+    margin: 0;
+
+
+    gap: 4px;
+
+
+}
+
+.customer-loans-pagination .page-link {
+    min-width: 32px;
+    height: 32px;
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 8px;
+
+    color: #5d43d9;
+
+    background: #ffffff;
+
+    border: 1px solid #e1e4ec;
+
+    border-radius: 8px !important;
+
+    font-size: .59rem;
+
+    font-weight: 800;
+
+
+}
+
+.customer-loans-pagination .page-item.active .page-link {
+    color: #ffffff;
+
+
+    background:
+        linear-gradient(
+            135deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border-color: transparent;
+
+
+}
+
+.customer-loans-pagination .page-link:hover {
+    color: #4168e9;
+
+
+    background: #f5f3ff;
+
+    border-color: #d3ccf7;
+
+
+}
+
+/* =========================================================
+TABLET
+========================================================= */
+
+@media (min-width: 768px) {
+
+
+    .customer-loans-header {
+        margin-bottom: 18px;
+    }
+
+    .customer-loans-title {
+        font-size: 1.25rem;
+    }
+
+    .customer-loans-subtitle {
+        font-size: .76rem;
+    }
+
+    .customer-loans-header-icon {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+
+        font-size: 1.25rem;
+    }
+
+    .customer-loans-summary {
+        grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .customer-loans-summary-card {
+        min-height: 76px;
+
+        padding: 11px 12px;
+    }
+
+    .customer-loans-summary-icon {
+        width: 43px;
+        height: 43px;
+        min-width: 43px;
+    }
+
+    .customer-loans-list-section {
+        padding: 15px;
+    }
+
+    .customer-loans-grid {
+        grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .customer-loan-card {
+        padding: 13px;
+    }
+
+
+}
+
+/* =========================================================
+DESKTOP
+========================================================= */
+
+@media (min-width: 992px) {
+
+
+    .customer-loans-header {
+        margin-bottom: 20px;
+    }
+
+    .customer-loans-title {
+        font-size: 1.35rem;
+    }
+
+    .customer-loans-subtitle {
+        font-size: .80rem;
+    }
+
+    .customer-loans-header-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+
+        border-radius: 14px;
+
+        font-size: 1.35rem;
+    }
+
+    .customer-loans-back {
+        min-height: 38px;
+
+        padding: 8px 13px;
+
+        font-size: .72rem;
+    }
+
+
+    /* SUMMARY */
+
+    .customer-loans-summary {
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+    .customer-loans-summary-card {
+        min-height: 82px;
+
+        gap: 11px;
+
+        padding: 12px 14px;
+
+        border-radius: 14px;
+    }
+
+    .customer-loans-summary-icon {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+
+        border-radius: 12px;
+
+        font-size: 1.18rem;
+    }
+
+    .customer-loans-summary-label {
+        font-size: .68rem;
+    }
+
+    .customer-loans-summary-value {
+        font-size: .96rem;
+    }
+
+
+    /* LIST */
+
+    .customer-loans-list-section {
+        padding: 17px;
+
+        border-radius: 16px;
+    }
+
+    .customer-loans-list-header {
+        margin-bottom: 14px;
+
+        padding-bottom: 13px;
+    }
+
+    .customer-loans-list-title-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+
+        border-radius: 11px;
+
+        font-size: 1.08rem;
+    }
+
+    .customer-loans-list-title h2 {
+        font-size: 1.02rem;
+    }
+
+    .customer-loans-list-title span {
+        font-size: .67rem;
+    }
+
+    .customer-loans-count {
+        padding: 6px 11px;
+    }
+
+    .customer-loans-count strong {
+        font-size: .82rem;
+    }
+
+    .customer-loans-grid {
+        grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+
+    /* CARD */
+
+    .customer-loan-card {
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+    .customer-loan-card-header {
+        padding-bottom: 11px;
+    }
+
+    .customer-loan-card-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+
+        border-radius: 12px;
+    }
+
+    .customer-loan-card-label {
+        font-size: .63rem;
+    }
+
+    .customer-loan-card-name strong {
+        font-size: .86rem;
+    }
+
+    .customer-loan-status {
+        padding: 6px 10px;
+
+        font-size: .64rem;
+    }
+
+
+    /* AMOUNT */
+
+    .customer-loan-main {
+        padding: 13px;
+
+        border-radius: 12px;
+    }
+
+    .customer-loan-main-label {
+        font-size: .65rem;
+    }
+
+    .customer-loan-main-value strong {
+        font-size: 1.25rem;
+    }
+
+
+    /* DATA */
+
+    .customer-loan-data-grid {
+        gap: 8px;
+    }
+
+    .customer-loan-data {
+        padding: 10px;
+    }
+
+    .customer-loan-data span {
+        font-size: .62rem;
+    }
+
+    .customer-loan-data strong {
+        font-size: .77rem;
+    }
+
+
+    /* PROGRESS */
+
+    .customer-loan-progress-section {
+        padding: 11px;
+    }
+
+    .customer-loan-progress-header span {
+        font-size: .63rem;
+    }
+
+    .customer-loan-progress-header strong {
+        font-size: .71rem;
+    }
+
+    .customer-loan-progress-track {
+        height: 8px;
+    }
+
+    .customer-loan-progress-footer span {
+        font-size: .55rem;
+    }
+
+
+    /* FOOTER */
+
+    .customer-loan-start-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+    }
+
+    .customer-loan-start-date span {
+        font-size: .55rem;
+    }
+
+    .customer-loan-start-date strong {
+        font-size: .64rem;
+    }
+
+    .customer-loan-details-button {
+        min-height: 36px;
+
+        padding: 7px 13px;
+
+        font-size: .65rem;
+    }
+
+
+}
+
+/* =========================================================
+VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+
+    .customer-loans-header {
+        margin-bottom: 11px;
+    }
+
+    .customer-loans-header-main {
+        gap: 7px;
+    }
+
+    .customer-loans-header-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+
+        border-radius: 10px;
+
+        font-size: .95rem;
+    }
+
+    .customer-loans-title {
+        font-size: .98rem;
+    }
+
+    .customer-loans-subtitle {
+        font-size: .59rem;
+    }
+
+    .customer-loans-back {
+        min-height: 31px;
+
+        padding: 5px 7px;
+
+        font-size: .58rem;
+    }
+
+    .customer-loans-summary {
+        gap: 6px;
+    }
+
+    .customer-loans-summary-card {
+        min-height: 62px;
+
+        gap: 6px;
+
+        padding: 7px;
+    }
+
+    .customer-loans-summary-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+
+        border-radius: 9px;
+
+        font-size: .86rem;
+    }
+
+    .customer-loans-summary-label {
+        font-size: .52rem;
+    }
+
+    .customer-loans-summary-value {
+        font-size: .72rem;
+    }
+
+    .customer-loans-list-section {
+        padding: 9px;
+
+        border-radius: 12px;
+    }
+
+    .customer-loans-list-title {
+        gap: 6px;
+    }
+
+    .customer-loans-list-title-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+
+        border-radius: 8px;
+
+        font-size: .85rem;
+    }
+
+    .customer-loans-list-title h2 {
+        font-size: .82rem;
+    }
+
+    .customer-loans-list-title span {
+        font-size: .53rem;
+    }
+
+    .customer-loans-count {
+        padding: 4px 7px;
+    }
+
+    .customer-loans-count strong {
+        font-size: .68rem;
+    }
+
+    .customer-loans-count span {
+        font-size: .51rem;
+    }
+
+    .customer-loans-grid {
+        gap: 8px;
+    }
+
+    .customer-loan-card {
+        padding: 9px;
+
+        border-radius: 11px;
+    }
+
+    .customer-loan-card-icon {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+
+        border-radius: 9px;
+
+        font-size: .88rem;
+    }
+
+    .customer-loan-card-label {
+        font-size: .51rem;
+    }
+
+    .customer-loan-card-name strong {
+        font-size: .69rem;
+    }
+
+    .customer-loan-status {
+        padding: 4px 6px;
+
+        font-size: .49rem;
+    }
+
+    .customer-loan-type {
+        margin-top: 8px;
+
+        padding: 3px 6px;
+
+        font-size: .52rem;
+    }
+
+    .customer-loan-main {
+        margin-top: 8px;
+
+        padding: 9px;
+    }
+
+    .customer-loan-main-label {
+        font-size: .52rem;
+    }
+
+    .customer-loan-main-value strong {
+        font-size: .95rem;
+    }
+
+    .customer-loan-main-value small {
+        font-size: .49rem;
+    }
+
+    .customer-loan-data-grid {
+        gap: 5px;
+
+        margin-top: 7px;
+    }
+
+    .customer-loan-data {
+        padding: 7px;
+    }
+
+    .customer-loan-data span {
+        font-size: .49rem;
+    }
+
+    .customer-loan-data strong {
+        font-size: .62rem;
+    }
+
+    .customer-loan-data small {
+        font-size: .40rem;
+    }
+
+    .customer-loan-progress-section {
+        margin-top: 8px;
+
+        padding: 8px;
+    }
+
+    .customer-loan-progress-header span {
+        font-size: .51rem;
+    }
+
+    .customer-loan-progress-header strong {
+        font-size: .57rem;
+    }
+
+    .customer-loan-progress-track {
+        height: 5px;
+    }
+
+    .customer-loan-progress-footer span {
+        font-size: .44rem;
+    }
+
+    .customer-loan-card-footer {
+        margin-top: 8px;
+
+        padding-top: 8px;
+    }
+
+    .customer-loan-start-icon {
+        width: 27px;
+        height: 27px;
+        min-width: 27px;
+
+        font-size: .68rem;
+    }
+
+    .customer-loan-start-date span {
+        font-size: .44rem;
+    }
+
+    .customer-loan-start-date strong {
+        font-size: .53rem;
+    }
+
+    .customer-loan-details-button {
+        min-height: 29px;
+
+        padding: 5px 8px;
+
+        font-size: .51rem;
+    }
+
+
+}
+
+/* =========================================================
+REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+
+    .customer-loans-summary-card,
+    .customer-loan-card,
+    .customer-loan-details-button,
+    .customer-loans-back,
+    .customer-loan-progress-bar {
+        transition: none;
+    }
+
+
+}

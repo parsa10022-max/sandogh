@@ -1,89 +1,174 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
-@section('title','اطلاعات قسط')
+@section('title', 'پرداخت قسط دیگران')
+@section('header_title', 'پرداخت قسط')
+@section('header_subtitle', 'پرداخت قسط عضو دیگر')
 
 @section('content')
 
-    <div class="container py-4">
+    <div class="customer-other-installment">
 
-        <div class="card shadow">
+        {{-- =========================================================
+             Header
+        ========================================================== --}}
+        <div class="customer-other-installment-header">
 
-            <div class="card-header">
+            <div class="customer-other-installment-header-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
 
-                <h5>
+            <div class="customer-other-installment-header-content">
+
+                <h2>
                     پرداخت قسط دیگران
-                </h5>
+                </h2>
+
+                <p>
+                    اطلاعات قسط را بررسی کرده و سپس پرداخت را انجام دهید.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {{-- =========================================================
+             Installment Information Card
+        ========================================================== --}}
+        <div class="customer-other-installment-card">
+
+            <div class="customer-other-installment-card-title">
+
+            <span class="customer-other-installment-card-title-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </span>
+
+                <span>
+                اطلاعات قسط
+            </span>
 
             </div>
 
 
-            <div class="card-body">
+            {{-- =====================================================
+                 Compact Information Grid
+            ====================================================== --}}
+            <div class="customer-other-installment-info-grid">
+
+                <div class="customer-other-installment-info-item">
+        <span class="customer-other-installment-info-label">
+            نام عضو
+        </span>
+
+                    <strong>
+                        {{ $installment->loan->customer->full_name }}
+                    </strong>
+                </div>
 
 
-                <p>
-                    <strong>نام عضو:</strong>
+                <div class="customer-other-installment-info-item">
+        <span class="customer-other-installment-info-label">
+            شماره وام
+        </span>
 
-                    {{ $installment->loan->customer->full_name }}
-
-                </p>
-
-
-                <p>
-                    <strong>شماره وام:</strong>
-
-                    <span dir="ltr">
-        {{ $installment->loan->full_loan_number }}
-    </span>
-
-                </p>
+                    <strong dir="ltr">
+                        {{ $installment->loan->full_loan_number }}
+                    </strong>
+                </div>
 
 
-                <p>
-                    <strong>نوع وام:</strong>
+                <div class="customer-other-installment-info-item">
+        <span class="customer-other-installment-info-label">
+            نوع وام
+        </span>
 
-                    {{ $installment->loan->loanType->name }}
-
-                </p>
-
-
-                <p>
-                    <strong>شماره قسط:</strong>
-
-                    {{ $installment->installment_number }}
-
-                </p>
+                    <strong>
+                        {{ $installment->loan->loanType->name }}
+                    </strong>
+                </div>
 
 
-                <p>
-                    <strong>مبلغ:</strong>
+                <div class="customer-other-installment-info-item">
+        <span class="customer-other-installment-info-label">
+            شماره قسط
+        </span>
 
-                    {{ number_format($installment->amount) }}
-                    ریال
-
-                </p>
-
-
-                <form method="POST"
-                      action="{{ route('customer.installments.others.pay') }}">
-
-                    @csrf
-
-                    <input type="hidden"
-                           name="installment_id"
-                           value="{{ $installment->id }}">
-
-
-                    <button class="btn btn-success">
-
-                        پرداخت قسط
-
-                    </button>
-
-
-                </form>
-
+                    <strong>
+                        {{ $installment->installment_number }}
+                    </strong>
+                </div>
 
             </div>
+
+
+            {{-- =====================================================
+                 Amount
+            ====================================================== --}}
+
+
+
+            {{-- =====================================================
+                 Notice
+            ====================================================== --}}
+            <div class="customer-other-installment-notice">
+
+                <div class="customer-other-installment-notice-icon">
+                    <i class="bi bi-info-circle-fill"></i>
+                </div>
+
+                <div class="customer-other-installment-notice-content">
+
+                    <strong>
+                        توجه
+                    </strong>
+
+                    <p>
+                        این قسط متعلق به عضو دیگری است.
+                        پس از تأیید، مبلغ قسط از طریق درگاه پرداخت خواهد شد.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- =====================================================
+                 Payment
+            ====================================================== --}}
+            <form method="POST"
+                  action="{{ route('customer.installments.others.pay') }}">
+
+                @csrf
+
+                <input type="hidden"
+                       name="installment_id"
+                       value="{{ $installment->id }}">
+
+                <button type="submit"
+                        class="customer-other-installment-pay-button">
+
+        <span class="customer-other-installment-pay-icon">
+            <i class="bi bi-credit-card-fill"></i>
+        </span>
+
+                    <span class="customer-other-installment-pay-content">
+
+            <strong>
+                پرداخت قسط
+            </strong>
+
+            <span class="customer-other-installment-pay-amount">
+                {{ number_format($installment->amount) }}
+                <small>ریال</small>
+            </span>
+
+        </span>
+
+                    <i class="bi bi-arrow-left customer-other-installment-pay-arrow"></i>
+
+                </button>
+
+            </form>
 
         </div>
 

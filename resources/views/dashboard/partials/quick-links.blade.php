@@ -1,5 +1,6 @@
 <div class="row g-3 mt-2">
 
+
     <div class="col-md-4">
 
         <a href="{{ route('customers.create') }}"
@@ -18,6 +19,7 @@
         </a>
 
     </div>
+
 
     <div class="col-md-4">
 
@@ -38,6 +40,7 @@
 
     </div>
 
+
     <div class="col-md-4">
 
         <a href="{{ route('loans.overdue') }}"
@@ -56,5 +59,31 @@
         </a>
 
     </div>
+
+
+    {{-- پنل مشتری خود کاربر --}}
+    @if(auth()->user()->customer_id)
+
+        <div class="col-md-4">
+
+            <a href="{{ route('customer.dashboard') }}"
+               class="card border-0 shadow-sm text-decoration-none h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-circle fs-2 text-info"></i>
+
+                    <div class="mt-2 fw-bold">
+                        پنل مشتری من
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    @endif
+
 
 </div>

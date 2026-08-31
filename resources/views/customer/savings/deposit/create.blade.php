@@ -2,9 +2,6 @@
 
 @section('title', 'واریز به حساب پس‌انداز')
 
-@push('styles')
-    @vite('resources/css/customer/savings-deposit.css')
-@endpush
 
 @section('content')
 

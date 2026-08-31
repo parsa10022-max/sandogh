@@ -12,11 +12,6 @@ return new class extends Migration
 
             $table->id();
 
-            // نوع کمک
-            $table->foreignId('donation_type_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
             // حساب مقصد
             $table->foreignId('account_id')
                 ->constrained()

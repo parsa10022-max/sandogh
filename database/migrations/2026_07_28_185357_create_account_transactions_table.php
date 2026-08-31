@@ -54,10 +54,9 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
 
+            // روش پرداخت
             $table->unsignedTinyInteger('payment_method')
-                ->nullable()
-                ->after('transaction_source');
-
+                ->nullable();
 
             // توضیحات
             $table->text('description')
@@ -73,10 +72,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('account_transactions', function (Blueprint $table) {
-
-            $table->dropColumn('payment_method');
-
-        });
+        Schema::dropIfExists('account_transactions');
     }
 };

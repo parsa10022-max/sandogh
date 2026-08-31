@@ -6,9 +6,7 @@
 
 @section('header_subtitle', 'برداشت وجه از حساب پس‌انداز شما')
 
-@push('styles')
-    @vite('resources/css/customer/savings-withdrawal.css')
-@endpush
+
 
 @section('content')
 

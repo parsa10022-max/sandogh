@@ -88,7 +88,7 @@ class PaymentController extends Controller
             if ($payment instanceof SavingsTransfer) {
 
                 return redirect()->route(
-                    'customer.savings-transfer.success',
+                    'customer.savings.deposit.savings-transfer.success',
                     $payment
                 );
             }
@@ -102,7 +102,10 @@ class PaymentController extends Controller
 
             if ($payment instanceof LoanPayment) {
 
-                if ($payment->loan->customer_id === auth()->user()->customer?->id) {
+                if (
+                    $payment->loan->customer_id ===
+                    auth()->user()->customer?->id
+                ) {
 
                     return redirect()->route(
                         'customer.installments.payment.success',
@@ -111,7 +114,7 @@ class PaymentController extends Controller
                 }
 
                 return redirect()->route(
-                    'payments.success',
+                    'customer.installments.others.payment.success',
                     $payment
                 );
             }

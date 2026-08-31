@@ -60,4 +60,19 @@ class InstallmentController extends Controller
             compact('payment')
         );
     }
+    public function othersPaymentSuccess(\App\Models\LoanPayment $payment)
+    {
+        $customer = auth()->user()->customer;
+
+        abort_unless(
+            $customer &&
+            $payment->loan->customer_id !== $customer->id,
+            403
+        );
+
+        return view(
+            'customer.installments.others.success',
+            compact('payment')
+        );
+    }
 }

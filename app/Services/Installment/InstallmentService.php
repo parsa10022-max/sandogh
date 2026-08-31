@@ -22,7 +22,7 @@ class InstallmentService
 
             foreach ($schedule as $item) {
 
-                Installment::create([
+                Installment::create(array(
 
                     'loan_id' => $loan->id,
 
@@ -30,13 +30,14 @@ class InstallmentService
 
                     'amount' => (int) $item['amount'],
 
+
                     'due_date' => $item['gregorian_date'],
 
                     'status' => InstallmentStatus::PENDING,
 
                     'created_by' => auth()->id(),
 
-                ]);
+                ));
 
             }
 

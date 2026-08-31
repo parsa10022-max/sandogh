@@ -1,0 +1,1209 @@
+/* =========================================================
+   CUSTOMER LOAN SHOW
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   Mobile First / PWA
+   Responsive
+   ========================================================= */
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.customer-loan-show-page {
+    width: 100%;
+    min-width: 0;
+
+    direction: rtl;
+    box-sizing: border-box;
+}
+
+.customer-loan-show-page *,
+.customer-loan-show-page *::before,
+.customer-loan-show-page *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-loan-show-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.customer-loan-show-header-main {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.customer-loan-back {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #5d43d9;
+    background: #f4f2ff;
+
+    border: 1px solid #e1dcfb;
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 1rem;
+
+    transition: .18s ease;
+}
+
+.customer-loan-back:hover {
+    color: #ffffff;
+    background: #6040e8;
+    border-color: #6040e8;
+}
+
+.customer-loan-show-header-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        135deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-radius: 11px;
+
+    font-size: 1.15rem;
+}
+
+.customer-loan-show-title {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.customer-loan-show-title h1 {
+    margin: 0;
+
+    color: #25283a;
+
+    font-size: 1.2rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+}
+
+.customer-loan-show-title span {
+    color: #777b8d;
+
+    font-size: .82rem;
+    line-height: 1.5;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.customer-loan-show-status {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: .76rem;
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-loan-show-status.active {
+    color: #247a42;
+    background: #dff7e7;
+}
+
+.customer-loan-show-status.finished {
+    color: #536174;
+    background: #eef1f5;
+}
+
+.customer-loan-show-status.cancelled {
+    color: #c23b42;
+    background: #fff0f1;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.customer-loan-show-summary {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+}
+
+.customer-loan-summary-card {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 13px rgba(35, 45, 75, .05);
+}
+
+.customer-loan-summary-card-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        135deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-radius: 10px;
+
+    font-size: 1rem;
+}
+
+.customer-loan-summary-card span {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #777b8d;
+
+    font-size: .76rem;
+    line-height: 1.5;
+
+    font-weight: 700;
+}
+
+.customer-loan-summary-card strong {
+    display: block;
+
+    color: #292b3a;
+
+    font-size: .95rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-loan-summary-card small {
+    color: #858896;
+
+    font-size: .68rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
+
+.customer-loan-progress-card,
+.customer-loan-info-card,
+.customer-loan-installments-card {
+    width: 100%;
+
+    margin-bottom: 12px;
+
+    padding: 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e6ef;
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 13px rgba(35, 45, 75, .05);
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.customer-loan-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+}
+
+.customer-loan-section-title-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6040e8;
+    background: #f3f1ff;
+
+    border-radius: 10px;
+
+    font-size: 1rem;
+}
+
+.customer-loan-section-title h2 {
+    margin: 0;
+
+    color: #292b3a;
+
+    font-size: 1rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+}
+
+.customer-loan-section-title span {
+    display: block;
+
+    margin-top: 1px;
+
+    color: #858896;
+
+    font-size: .76rem;
+    line-height: 1.5;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.customer-loan-progress-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 9px;
+}
+
+.customer-loan-progress-card-header h2 {
+    margin: 0;
+
+    color: #292b3a;
+
+    font-size: 1rem;
+    line-height: 1.5;
+
+    font-weight: 900;
+}
+
+.customer-loan-progress-card-header span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #858896;
+
+    font-size: .76rem;
+
+    font-weight: 600;
+}
+
+.customer-loan-progress-card-header > strong {
+    color: #6040e8;
+
+    font-size: 1rem;
+
+    font-weight: 900;
+}
+
+.customer-loan-progress-track {
+    width: 100%;
+    height: 8px;
+
+    overflow: hidden;
+
+    background: #edf0f7;
+
+    border-radius: 10px;
+}
+
+.customer-loan-progress-fill {
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-radius: inherit;
+}
+
+.customer-loan-progress-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-top: 11px;
+}
+
+.customer-loan-progress-stats > div {
+    min-width: 0;
+
+    padding: 8px;
+
+    background: #f8f9fc;
+
+    border: 1px solid #edf0f5;
+
+    border-radius: 9px;
+}
+
+.customer-loan-progress-stats span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #858896;
+
+    font-size: .70rem;
+
+    font-weight: 700;
+}
+
+.customer-loan-progress-stats strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .82rem;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.customer-loan-progress-stats small {
+    color: #858896;
+
+    font-size: .65rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   LOAN INFORMATION
+   ========================================================= */
+
+.customer-loan-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+}
+
+.customer-loan-info-item {
+    min-width: 0;
+
+    padding: 9px;
+
+    background: #f8f9fc;
+
+    border: 1px solid #edf0f5;
+
+    border-radius: 9px;
+}
+
+.customer-loan-info-item span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #858896;
+
+    font-size: .70rem;
+
+    line-height: 1.5;
+
+    font-weight: 700;
+}
+
+.customer-loan-info-item strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .82rem;
+
+    line-height: 1.5;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   INSTALLMENTS
+   ========================================================= */
+
+.customer-loan-installments-list {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+}
+
+.customer-installment-item {
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        58px 1fr 1.25fr auto;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px;
+
+    background: #f8f9fc;
+
+    border: 1px solid #edf0f5;
+
+    border-radius: 10px;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.customer-installment-item:hover {
+    border-color: #d8d2f7;
+
+    box-shadow:
+        0 3px 10px rgba(60, 45, 150, .06);
+}
+
+
+/* =========================================================
+   INSTALLMENT NUMBER
+   ========================================================= */
+
+.customer-installment-number {
+    width: 58px;
+    min-width: 58px;
+
+    min-height: 52px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 8px;
+
+    background: #f3f1ff;
+
+    border: 1px solid #e1dcfb;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.customer-installment-number span {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #858896;
+
+    font-size: .68rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+}
+
+.customer-installment-number strong {
+    display: block;
+
+    color: #4e3cc7;
+
+    font-size: .88rem;
+
+    line-height: 1.5;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   INSTALLMENT DATE / AMOUNT
+   ========================================================= */
+
+.customer-installment-date,
+.customer-installment-amount {
+    min-width: 0;
+}
+
+.customer-installment-date span,
+.customer-installment-amount span {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #858896;
+
+    font-size: .68rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+}
+
+.customer-installment-date strong,
+.customer-installment-amount strong {
+    display: block;
+
+    color: #303342;
+
+    font-size: .80rem;
+
+    line-height: 1.5;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.customer-installment-amount strong {
+    color: #4e3cc7;
+}
+
+.customer-installment-amount small {
+    color: #858896;
+
+    font-size: .62rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INSTALLMENT STATUS
+   ========================================================= */
+
+.customer-installment-status {
+    flex-shrink: 0;
+}
+
+.customer-installment-status span {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 5px 8px;
+
+    border-radius: 20px;
+
+    font-size: .67rem;
+
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-installment-status .paid {
+    color: #247a42;
+    background: #dff7e7;
+}
+
+.customer-installment-status .overdue {
+    color: #b83a40;
+    background: #fff0f1;
+}
+
+.customer-installment-status .pending {
+    color: #87691b;
+    background: #fff6d9;
+}
+
+
+/* =========================================================
+   PAYMENT ACTION
+   ========================================================= */
+
+.customer-installment-action {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 6px;
+}
+
+.customer-installment-pay-form {
+    margin: 0;
+}
+
+.customer-installment-pay-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 6px 10px;
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        135deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border: 0;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: .68rem;
+
+    line-height: 1.4;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px rgba(80, 60, 200, .15);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease;
+}
+
+.customer-installment-pay-btn:hover {
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(80, 60, 200, .20);
+}
+
+.customer-installment-pay-btn:active {
+    transform: translateY(0);
+}
+
+.customer-installment-pay-btn i {
+    font-size: .75rem;
+}
+
+
+/* =========================================================
+   EMPTY INSTALLMENTS
+   ========================================================= */
+
+.customer-loan-installments-empty {
+    padding: 25px 15px;
+
+    text-align: center;
+
+    color: #858896;
+
+    background: #f8f9fc;
+
+    border: 1px dashed #dfe3ec;
+
+    border-radius: 10px;
+}
+
+.customer-loan-installments-empty i {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #6040e8;
+
+    font-size: 1.8rem;
+}
+
+.customer-loan-installments-empty span {
+    font-size: .80rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.customer-loan-show-footer {
+    display: flex;
+
+    justify-content: flex-start;
+
+    margin-top: 4px;
+}
+
+.customer-loan-back-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 8px 12px;
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        90deg,
+        #6040e8,
+        #4168e9
+    );
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: .76rem;
+
+    font-weight: 900;
+
+    transition: .18s ease;
+}
+
+.customer-loan-back-button:hover {
+    color: #ffffff;
+
+    opacity: .94;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    .customer-loan-show-title h1 {
+        font-size: 1.22rem;
+    }
+
+    .customer-loan-show-title span {
+        font-size: .84rem;
+    }
+
+    .customer-loan-summary-card {
+        padding: 12px;
+    }
+
+    .customer-loan-summary-card span {
+        font-size: .78rem;
+    }
+
+    .customer-loan-summary-card strong {
+        font-size: .98rem;
+    }
+
+    .customer-installment-item {
+        grid-template-columns:
+            58px 1fr 1.2fr auto;
+    }
+
+    .customer-installment-number {
+        width: 58px;
+        min-width: 58px;
+
+        min-height: 52px;
+    }
+
+    .customer-installment-number strong,
+    .customer-installment-date strong,
+    .customer-installment-amount strong {
+        font-size: .82rem;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .customer-loan-show-header {
+        margin-bottom: 16px;
+    }
+
+    .customer-loan-show-title h1 {
+        font-size: 1.35rem;
+    }
+
+    .customer-loan-show-title span {
+        font-size: .86rem;
+    }
+
+    .customer-loan-show-header-icon {
+        width: 42px;
+        height: 42px;
+
+        font-size: 1.2rem;
+    }
+
+    .customer-loan-summary-card {
+        padding: 13px;
+    }
+
+    .customer-loan-summary-card span {
+        font-size: .80rem;
+    }
+
+    .customer-loan-summary-card strong {
+        font-size: 1.02rem;
+    }
+
+    .customer-loan-section-title h2,
+    .customer-loan-progress-card-header h2 {
+        font-size: 1.04rem;
+    }
+
+    .customer-loan-installments-list {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .customer-installment-item {
+        padding: 11px;
+
+        grid-template-columns:
+            62px 1fr 1.25fr auto;
+    }
+
+    .customer-installment-number {
+        width: 62px;
+        min-width: 62px;
+
+        min-height: 54px;
+    }
+
+    .customer-installment-number strong,
+    .customer-installment-date strong,
+    .customer-installment-amount strong {
+        font-size: .84rem;
+    }
+
+    .customer-installment-status span {
+        font-size: .70rem;
+
+        padding: 5px 9px;
+    }
+
+    .customer-installment-pay-btn {
+        padding: 6px 11px;
+
+        font-size: .70rem;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-loan-show-header {
+        align-items: flex-start;
+    }
+
+    .customer-loan-show-title h1 {
+        font-size: 1.10rem;
+    }
+
+    .customer-loan-show-title span {
+        font-size: .78rem;
+    }
+
+    .customer-loan-show-status {
+        padding: 4px 8px;
+
+        font-size: .68rem;
+    }
+
+    .customer-loan-show-summary {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .customer-loan-summary-card {
+        padding: 10px;
+    }
+
+    .customer-loan-progress-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-loan-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* -----------------------------------------------------
+       موبایل: هر قسط یک کارت کامل
+       ----------------------------------------------------- */
+
+    .customer-loan-installments-list {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .customer-installment-item {
+        grid-template-columns:
+            64px 1fr;
+
+        gap: 8px;
+
+        padding: 10px;
+    }
+
+
+    /* شماره قسط در موبایل */
+
+    .customer-installment-number {
+        width: 64px;
+        min-width: 64px;
+
+        min-height: 56px;
+
+        padding: 7px 8px;
+    }
+
+    .customer-installment-number strong {
+        font-size: .90rem;
+    }
+
+
+    /* وضعیت و پرداخت */
+
+    .customer-installment-status {
+        grid-column: 1 / -1;
+
+        display: flex;
+
+        justify-content: flex-start;
+
+        padding-top: 7px;
+
+        border-top: 1px solid #e9ecf2;
+    }
+
+    .customer-installment-action {
+        width: 100%;
+
+        flex-direction: row;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 8px;
+    }
+
+    .customer-installment-pay-btn {
+        padding: 7px 11px;
+
+        font-size: .70rem;
+    }
+
+    .customer-loan-back-button {
+        width: 100%;
+
+        font-size: .78rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .customer-loan-show-title h1 {
+        font-size: 1.04rem;
+    }
+
+    .customer-loan-show-title span {
+        font-size: .74rem;
+    }
+
+    .customer-loan-show-header-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .customer-loan-back {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+    }
+
+    .customer-installment-item {
+        padding: 9px;
+    }
+
+    .customer-installment-number {
+        width: 60px;
+        min-width: 60px;
+
+        min-height: 53px;
+    }
+
+    .customer-installment-number strong,
+    .customer-installment-date strong,
+    .customer-installment-amount strong {
+        font-size: .76rem;
+    }
+
+    .customer-installment-pay-btn {
+        padding: 6px 8px;
+
+        font-size: .66rem;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .customer-loan-back,
+    .customer-installment-item,
+    .customer-installment-pay-btn,
+    .customer-loan-back-button {
+        transition: none;
+    }
+}
