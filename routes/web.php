@@ -24,6 +24,7 @@ use App\Http\Controllers\Customer\DonationController as CustomerDonationControll
 use App\Http\Controllers\Account\BalanceAdjustmentController;
 use App\Http\Controllers\SystemAccountController;
 use App\Http\Controllers\DonationController as PublicDonationController;
+use App\Http\Controllers\Customer\ServicesController;
 
 
 
@@ -578,6 +579,10 @@ Route::middleware(['auth', 'customer.access'])
         | Customer Loan Requests
         |--------------------------------------------------------------------------
         */
+        Route::get('/services', [ServicesController::class, 'index'])
+            ->name('services');
+
+
 
         Route::get(
             'loan-request/create',

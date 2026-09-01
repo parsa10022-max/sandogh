@@ -94,7 +94,7 @@ blade
         {{-- =================================================
              خدمات
         ================================================== --}}
-        <a href="#"
+        <a href="{{ route('customer.services') }}"
            class="customer-menu-item
            {{ request()->routeIs('customer.services.*') ? 'active' : '' }}">
 
@@ -109,27 +109,7 @@ blade
         </a>
 
 
-        {{-- =================================================
-             پیام‌ها
-        ================================================== --}}
-        <a href="#"
-           class="customer-menu-item
-           {{ request()->routeIs('customer.messages.*') ? 'active' : '' }}">
-
-            <span class="customer-menu-icon">
-                <i class="bi bi-chat-square-text"></i>
-            </span>
-
-            <span class="customer-menu-label">
-                پیام‌ها
-            </span>
-
-            {{-- تعداد پیام‌ها --}}
-            <span class="customer-menu-badge">
-                0
-            </span>
-
-        </a>
+  
 
 
         {{-- =================================================

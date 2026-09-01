@@ -1,0 +1,476 @@
+    /* =========================================================
+       CUSTOMER SERVICES
+       Design System #1
+       Purple + Blue / RTL / Bootstrap 5.3
+       Mobile First / PWA
+       ========================================================= */
+
+.customer-services {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.customer-services *,
+.customer-services *::before,
+.customer-services *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.services-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+.services-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.services-subtitle {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 0.82rem;
+}
+
+.services-header-icon {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.06);
+
+    color: #4f46e5;
+    font-size: 1.2rem;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.services-section {
+    margin-bottom: 28px;
+}
+
+.services-section-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 13px;
+}
+
+.section-title-icon {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(99, 102, 241, 0.14);
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #4f46e5;
+
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.services-section-title h2 {
+    margin: 0;
+
+    font-size: 0.98rem;
+    font-weight: 800;
+}
+
+.services-section-title span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #94a3b8;
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+
+/* =========================================================
+   CARD BASE
+   ========================================================= */
+
+.service-card {
+    position: relative;
+
+    width: 100%;
+
+    border: 1px solid #e8eaf3;
+    border-radius: 17px;
+
+    background: #ffffff;
+
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.055);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(99, 102, 241, 0.24);
+
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.09);
+}
+
+
+/* =========================================================
+   ACCOUNT CARD
+   ========================================================= */
+
+.account-card {
+    padding: 16px;
+}
+
+.service-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.service-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #f1f3ff;
+
+    color: #4f46e5;
+
+    font-size: 1.15rem;
+}
+
+.service-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.service-card-body {
+    margin-top: 14px;
+}
+
+.service-card-body h3 {
+    margin: 0 0 5px;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.account-number {
+    color: #94a3b8;
+
+    direction: ltr;
+    text-align: right;
+
+    font-size: 0.74rem;
+    letter-spacing: 0.5px;
+}
+
+.account-balance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 14px;
+    padding-top: 12px;
+
+    border-top: 1px solid #f1f3f7;
+}
+
+.account-balance span {
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.account-balance strong {
+    color: #1e293b;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.account-balance small {
+    margin-right: 3px;
+
+    color: #94a3b8;
+
+    font-size: 0.62rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACCOUNT ACTIONS
+   ========================================================= */
+
+.service-card-actions {
+    display: flex;
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+.service-action {
+    flex: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+
+    padding: 7px 10px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    transition: 0.18s ease;
+}
+
+.service-action:hover {
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    background: #f8f9ff;
+}
+
+.service-action.primary {
+    border-color: #e0e7ff;
+    background: #f4f5ff;
+    color: #4f46e5;
+}
+
+.service-action.primary:hover {
+    background: #eef0ff;
+}
+
+.service-action i {
+    margin-left: 5px;
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+   ========================================================= */
+
+.feature-card {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 76px;
+
+    padding: 13px 14px;
+
+    text-decoration: none;
+
+    color: inherit;
+}
+
+.feature-card:hover {
+    color: inherit;
+}
+
+.feature-icon {
+    width: 43px;
+    height: 43px;
+
+    flex: 0 0 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #f1f3ff;
+
+    color: #4f46e5;
+
+    font-size: 1.05rem;
+}
+
+.feature-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.feature-content h3 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.feature-content p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 0.69rem;
+    line-height: 1.65;
+}
+
+.feature-arrow {
+    flex: 0 0 auto;
+
+    color: #94a3b8;
+
+    font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   ACCOUNT COLOR DIFFERENCE
+   ========================================================= */
+
+.savings-card .service-icon {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.current-card .service-icon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 576px) {
+
+    .services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .services-header {
+        margin-bottom: 26px;
+    }
+
+    .services-title {
+        font-size: 1.5rem;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .customer-services {
+        max-width: 1100px;
+        margin-inline: auto;
+    }
+
+    .services-grid {
+        gap: 15px;
+    }
+
+    .services-section {
+        margin-bottom: 34px;
+    }
+
+    .account-card {
+        padding: 18px;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .services-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+}
+
