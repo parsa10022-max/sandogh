@@ -1,35 +1,30 @@
-    /* =========================================================
-       CUSTOMER SETTINGS
-       Design System #1
-       Purple + Blue / RTL / Bootstrap 5.3
-       Mobile First / PWA
-       ========================================================= */
-
-
-    /* =========================================================
-       PAGE
-       ========================================================= */
+/* =========================================================
+CUSTOMER SETTINGS
+Design System #1
+Purple + Blue / RTL / Bootstrap 5.3
+Mobile First / PWA
+Compact Layout
+========================================================= */
 
 .customer-settings {
     width: 100%;
     min-width: 0;
 }
 
-
 /* =========================================================
-   PAGE HEADER
-   ========================================================= */
+PAGE HEADER
+========================================================= */
 
 .customer-settings-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: .75rem;
 }
 
 .customer-settings-title {
     display: flex;
     align-items: center;
-    gap: .5rem;
-    margin: 0 0 .35rem;
-    font-size: 1.25rem;
+    gap: .4rem;
+    margin: 0 0 .2rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: #1f2937;
 }
@@ -38,9 +33,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     color: #5b3df5;
     background: rgba(91, 61, 245, .10);
 }
@@ -48,21 +43,20 @@
 .customer-settings-description {
     margin: 0;
     color: #6b7280;
-    font-size: .88rem;
+    font-size: .78rem;
 }
 
-
 /* =========================================================
-   SETTINGS CARD
-   ========================================================= */
+SETTINGS CARD
+========================================================= */
 
 .customer-settings-card {
     border: 1px solid #e9e7f4 !important;
-    border-radius: 18px !important;
+    border-radius: 14px !important;
     background: #fff;
-    box-shadow: 0 6px 20px rgba(31, 41, 55, .055) !important;
+    box-shadow: 0 4px 14px rgba(31, 41, 55, .05) !important;
     overflow: hidden;
-    margin-bottom: 1rem;
+    margin-bottom: .6rem;
 }
 
 .customer-settings-card:last-child {
@@ -70,37 +64,36 @@
 }
 
 .customer-settings-card .card-body {
-    padding: 1.25rem !important;
+    padding: .8rem !important;
 }
 
-
 /* =========================================================
-   CARD HEADER
-   ========================================================= */
+CARD HEADER
+========================================================= */
 
 .customer-settings-card-header {
     display: flex;
     align-items: center;
-    gap: .85rem;
-    margin-bottom: 1.25rem;
+    gap: .65rem;
+    margin-bottom: .7rem;
 }
 
 .customer-settings-icon {
     flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
+    width: 38px;
+    height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 14px;
+    border-radius: 10px;
     color: #5b3df5;
     background: rgba(91, 61, 245, .09);
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .customer-settings-card-title {
-    margin: 0 0 .2rem;
-    font-size: .98rem;
+    margin: 0 0 .1rem;
+    font-size: .9rem;
     font-weight: 800;
     color: #1f2937;
 }
@@ -108,16 +101,15 @@
 .customer-settings-card-subtitle {
     display: block;
     color: #8a8f98;
-    font-size: .78rem;
+    font-size: .7rem;
 }
 
-
 /* =========================================================
-   ACCOUNT INFORMATION
-   ========================================================= */
+ACCOUNT INFORMATION
+========================================================= */
 
 .customer-settings-field {
-    margin-bottom: 1rem;
+    margin-bottom: .6rem;
 }
 
 .customer-settings-field:last-child {
@@ -126,56 +118,51 @@
 
 .customer-settings-label {
     display: block;
-    margin-bottom: .4rem;
+    margin-bottom: .2rem;
     color: #6b7280;
-    font-size: .78rem;
+    font-size: .72rem;
     font-weight: 600;
 }
 
 .customer-settings-value {
-    min-height: 44px;
+    min-height: 38px;
     display: flex;
     align-items: center;
-    padding: .65rem .85rem;
+    padding: .4rem .65rem;
     border: 1px solid #ececf3;
-    border-radius: 12px;
+    border-radius: 9px;
     background: #f8f8fb;
     color: #374151;
-    font-size: .88rem;
+    font-size: .8rem;
     font-weight: 600;
 }
 
-
 /* =========================================================
-   FORM
-   ========================================================= */
+FORM
+========================================================= */
 
 .customer-settings-form-group {
-    margin-bottom: 1rem;
-}
-
-.customer-settings-form-group:last-of-type {
-    margin-bottom: 1.25rem;
+    margin-bottom: .55rem;
 }
 
 .customer-settings-form-label {
     display: block;
-    margin-bottom: .4rem;
+    margin-bottom: .2rem;
     color: #4b5563;
-    font-size: .82rem;
+    font-size: .72rem;
     font-weight: 700;
 }
 
 .customer-settings-form-control {
     width: 100%;
-    min-height: 46px;
-    padding: .65rem .85rem;
+    min-height: 38px;
+    padding: .4rem .65rem;
     border: 1px solid #e2e3eb;
-    border-radius: 12px;
+    border-radius: 9px;
     outline: none;
     background: #fff;
     color: #1f2937;
-    font-size: .88rem;
+    font-size: .8rem;
     transition:
         border-color .2s ease,
         box-shadow .2s ease,
@@ -192,45 +179,45 @@
     color: #a1a5ad;
 }
 
-
 /* =========================================================
-   SUCCESS / ERROR
-   ========================================================= */
+SUCCESS / ERROR
+========================================================= */
 
 .customer-settings-alert {
     border: 0;
-    border-radius: 12px;
-    font-size: .82rem;
-    margin-bottom: 1rem;
+    border-radius: 9px;
+    font-size: .75rem;
+    margin-bottom: .6rem;
+    padding: .5rem .7rem;
 }
 
 .customer-settings-errors {
-    padding: .75rem 1rem;
+    padding: .5rem .7rem;
 }
 
 .customer-settings-errors ul {
     padding-right: 1rem;
+    margin-bottom: 0;
 }
 
-
 /* =========================================================
-   BUTTON
-   ========================================================= */
+BUTTON
+========================================================= */
 
 .customer-settings-submit {
     width: 100%;
-    min-height: 46px;
+    min-height: 38px;
     border: 0;
-    border-radius: 12px;
+    border-radius: 9px;
     background: linear-gradient(
         135deg,
         #5b3df5,
         #4f7cff
     );
     color: #fff;
-    font-size: .88rem;
+    font-size: .78rem;
     font-weight: 700;
-    box-shadow: 0 5px 14px rgba(91, 61, 245, .18);
+    box-shadow: 0 4px 10px rgba(91, 61, 245, .16);
     transition:
         transform .2s ease,
         box-shadow .2s ease,
@@ -240,26 +227,25 @@
 .customer-settings-submit:hover {
     color: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 7px 18px rgba(91, 61, 245, .24);
+    box-shadow: 0 6px 14px rgba(91, 61, 245, .22);
 }
 
 .customer-settings-submit:active {
     transform: translateY(0);
 }
 
-
 /* =========================================================
-   NOTIFICATIONS
-   ========================================================= */
+NOTIFICATIONS
+========================================================= */
 
 .customer-settings-notification-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    padding: .85rem;
+    gap: .75rem;
+    padding: .6rem .7rem;
     border: 1px solid #ececf3;
-    border-radius: 13px;
+    border-radius: 9px;
     background: #fafafe;
     color: inherit;
     text-decoration: none;
@@ -279,44 +265,126 @@
 .customer-settings-notification-content {
     display: flex;
     align-items: center;
-    gap: .7rem;
+    gap: .55rem;
 }
 
 .customer-settings-notification-content i {
     color: #5b3df5;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .customer-settings-notification-text {
-    font-size: .82rem;
+    font-size: .76rem;
     font-weight: 600;
     color: #374151;
 }
 
 .customer-settings-notification-arrow {
     color: #9ca3af;
+    font-size: .8rem;
 }
 
-
 /* =========================================================
-   DESKTOP
-   ========================================================= */
+DESKTOP
+========================================================= */
 
 @media (min-width: 768px) {
 
+
     .customer-settings-card .card-body {
-        padding: 1.5rem !important;
+        padding: .9rem !important;
     }
 
     .customer-settings-submit {
         width: auto;
-        min-width: 170px;
-        padding-inline: 1.25rem;
+        min-width: 150px;
+        padding-inline: 1rem;
     }
 
     .customer-settings-field {
         margin-bottom: 0;
     }
 
+
+}
+/* OTP VERIFICATION */
+
+.customer-settings-otp-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    margin-bottom: .7rem;
+    padding: .6rem .7rem;
+    border: 1px solid #ececf3;
+    border-radius: 9px;
+    background: #fafafe;
+    color: #6b7280;
+    font-size: .72rem;
 }
 
+.customer-settings-otp-mobile strong {
+    color: #374151;
+    font-size: .85rem;
+    direction: ltr;
+    text-align: right;
+}
+
+.customer-settings-otp-input {
+    text-align: center;
+    direction: ltr;
+    letter-spacing: .25rem;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.customer-settings-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    color: #5b3df5;
+    text-decoration: none;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.customer-settings-back-link:hover {
+    color: #4f7cff;
+}
+.customer-settings-password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.customer-settings-password-input {
+    padding-left: 2.6rem;
+}
+
+.customer-settings-password-toggle {
+    position: absolute;
+    left: .65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.8rem;
+    height: 1.8rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #8b8fa3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.customer-settings-password-toggle:hover {
+    color: #5b3df5;
+}
+
+.customer-settings-password-toggle:focus {
+    outline: none;
+}
+
+.customer-settings-password-toggle i {
+    font-size: .95rem;
+}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Installment;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -15,6 +16,8 @@ class NotificationController extends Controller
     public function index(): View
     {
         $user = Auth::user();
+
+        $customer = $user->customer;
 
         /*
         |--------------------------------------------------------------------------
@@ -29,6 +32,24 @@ class NotificationController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | تعداد اقساط معوق
+        |--------------------------------------------------------------------------
+        */
+
+        $overdueCount = 0;
+
+        if ($customer) {
+            $overdueCount = Installment::query()
+                ->whereHas('loan', function ($query) use ($customer) {
+                    $query->where('customer_id', $customer->id);
+                })
+                ->where('due_date', '<', now()->toDateString())
+                ->where('status', '!=', 'paid')
+                ->count();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | لیست اعلان‌ها
         |--------------------------------------------------------------------------
         */
@@ -38,17 +59,12 @@ class NotificationController extends Controller
             ->latest('id')
             ->paginate(15);
 
-        /*
-        |--------------------------------------------------------------------------
-        | نمایش صفحه اعلان‌ها
-        |--------------------------------------------------------------------------
-        */
-
         return view(
             'customer.notifications.index',
             compact(
                 'notifications',
-                'unreadCount'
+                'unreadCount',
+                'overdueCount'
             )
         );
     }

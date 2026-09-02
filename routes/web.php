@@ -554,6 +554,42 @@ Route::middleware(['auth', 'customer.access'])
     ->name('customer.')
     ->group(function () {
 
+        Route::get(
+            'settings',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'index']
+        )->name('settings.index');
+
+        Route::put(
+            'settings/password',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'updatePassword']
+        )->name('settings.password.update');
+
+        Route::put(
+            'settings/account',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'updateAccount']
+        )->name('settings.account.update');
+
+        Route::get(
+            'settings/mobile/verify',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'showMobileVerification']
+        )->name('settings.mobile.verify');
+
+        Route::post(
+            'settings/mobile/verify',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'verifyMobile']
+        )->name('settings.mobile.verify.submit');
+
+        Route::get(
+            'settings/password/verify',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'showPasswordVerification']
+        )->name('settings.password.verify');
+
+        Route::post(
+            'settings/password/verify',
+            [\App\Http\Controllers\Customer\SettingsController::class, 'verifyPassword']
+        )->name('settings.password.verify.submit');
+
+
         Route::get('/loans', [LoanController::class, 'index'])
             ->name('loans.index');
 

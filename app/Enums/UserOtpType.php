@@ -9,4 +9,6 @@ enum UserOtpType: string
     case PASSWORD_RESET = 'password_reset';
 
     case CHANGE_MOBILE = 'change_mobile';
+
+    case CHANGE_PASSWORD = 'change_password';
 }
