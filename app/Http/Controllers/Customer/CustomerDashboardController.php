@@ -7,19 +7,19 @@ use App\Enums\AccountType;
 use App\Enums\InstallmentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\AccountTransaction;
+use App\Models\Installment;
 use App\Models\Loan;
 use App\Models\LoanRequest;
 use App\Models\Notification;
-use Illuminate\Support\Facades\Auth;
-use App\Models\AccountTransaction;
 use App\Services\Date\JalaliDateService;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerDashboardController extends Controller
 {
     public function index(JalaliDateService $jalaliDateService)
     {
         $user = Auth::user();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -47,10 +47,10 @@ class CustomerDashboardController extends Controller
         );
 
         /*
-|--------------------------------------------------------------------------
-| آخرین تراکنش‌های مشتری
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | آخرین تراکنش‌های مشتری
+        |--------------------------------------------------------------------------
+        */
 
         $latestTransactions = AccountTransaction::query()
             ->whereIn('account_id', $accounts->pluck('id'))
@@ -60,14 +60,16 @@ class CustomerDashboardController extends Controller
             ->get()
             ->map(function (AccountTransaction $transaction) use ($jalaliDateService) {
 
-                $transaction->jalali_transaction_date =
-                    $jalaliDateService->fromDatabase(
-                        $transaction->transaction_date->toDateString()
-                    );
+                if ($transaction->transaction_date) {
+
+                    $transaction->jalali_transaction_date =
+                        $jalaliDateService->fromDatabase(
+                            $transaction->transaction_date->toDateString()
+                        );
+                }
 
                 return $transaction;
             });
-
 
         /*
         |--------------------------------------------------------------------------
@@ -76,7 +78,6 @@ class CustomerDashboardController extends Controller
         */
 
         $totalBalance = $accounts->sum('balance');
-
 
         /*
         |--------------------------------------------------------------------------
@@ -91,18 +92,17 @@ class CustomerDashboardController extends Controller
             ->latest('id')
             ->first();
 
-
         /*
         |--------------------------------------------------------------------------
         | اقساط معوق
         |--------------------------------------------------------------------------
         */
 
-        $overdueInstallmentsCount = 0;
+        $overdueInstallments = collect();
 
         if ($activeLoan) {
 
-            $overdueInstallmentsCount = $activeLoan
+            $overdueInstallments = $activeLoan
                 ->installments()
                 ->where(
                     'status',
@@ -114,9 +114,82 @@ class CustomerDashboardController extends Controller
                     '<',
                     now()->toDateString()
                 )
-                ->count();
+                ->orderBy('installment_number')
+                ->get();
         }
 
+        $overdueInstallmentsCount = $overdueInstallments->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | ایجاد اعلان برای اقساط معوق
+        |--------------------------------------------------------------------------
+        |
+        | برای هر قسط فقط یک اعلان معوق ایجاد می‌شود.
+        | شناسه قسط داخل data ذخیره می‌شود تا اعلان تکراری ساخته نشود.
+        |
+        */
+
+        foreach ($overdueInstallments as $installment) {
+
+            $alreadyNotified = Notification::query()
+                ->where(
+                    'user_id',
+                    $user->id
+                )
+                ->where(
+                    'type',
+                    'overdue_installment'
+                )
+                ->where(
+                    'data->installment_id',
+                    $installment->id
+                )
+                ->exists();
+
+            if ($alreadyNotified) {
+                continue;
+            }
+
+            Notification::create([
+
+                'user_id' => $user->id,
+
+                'type' => 'overdue_installment',
+
+                'title' => 'قسط شما معوق شده است.',
+
+                'message' =>
+                    'قسط شماره ' .
+                    $installment->installment_number .
+                    ' وام شما از تاریخ سررسید گذشته و هنوز پرداخت نشده است.',
+
+                'data' => [
+
+                    'amount' =>
+                        $installment->amount,
+
+                    'loan_id' =>
+                        $installment->loan_id,
+
+                    'installment_id' =>
+                        $installment->id,
+
+                    'installment_number' =>
+                        $installment->installment_number,
+
+                    'due_date' =>
+                        $installment->due_date?->toDateString(),
+
+                    'overdue_days' =>
+                        $installment->overdue_days,
+
+                ],
+
+                'read_at' => null,
+
+            ]);
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -136,14 +209,10 @@ class CustomerDashboardController extends Controller
             ->orderBy('account_number')
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | آخرین درخواست وام مشتری
         |--------------------------------------------------------------------------
-        |
-        | این متغیر برای نمایش وضعیت درخواست فعلی استفاده می‌شود.
-        |
         */
 
         $latestLoanRequest = LoanRequest::query()
@@ -154,16 +223,11 @@ class CustomerDashboardController extends Controller
             ->latest('id')
             ->first();
 
-
-
         /*
-|--------------------------------------------------------------------------
-| اعلان‌های خوانده‌نشده مشتری
-|--------------------------------------------------------------------------
-|
-| اعلان‌ها فقط یک بار در بالای داشبورد نمایش داده می‌شوند.
-|
-*/
+        |--------------------------------------------------------------------------
+        | اعلان‌های خوانده‌نشده مشتری
+        |--------------------------------------------------------------------------
+        */
 
         $notifications = Notification::query()
             ->where('user_id', $user->id)
@@ -171,38 +235,23 @@ class CustomerDashboardController extends Controller
             ->latest('id')
             ->get();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | علامت‌گذاری اعلان‌ها به عنوان خوانده‌شده
-        |--------------------------------------------------------------------------
-        |
-        | اعلان‌ها در همین بار صفحه نمایش داده می‌شوند.
-        | اما بعد از آن دیگر در داشبورد نمایش داده نخواهند شد.
-        |
-        */
-
-        if ($notifications->isNotEmpty()) {
-
-            Notification::query()
-                ->where('user_id', $user->id)
-                ->whereNull('read_at')
-                ->update([
-                    'read_at' => now(),
-                ]);
-        }
-
-
         /*
         |--------------------------------------------------------------------------
         | تعداد اعلان‌های خوانده‌نشده
         |--------------------------------------------------------------------------
         */
 
-        $unreadNotificationsCount = Notification::query()
-            ->where('user_id', $user->id)
-            ->whereNull('read_at')
-            ->count();
+        $unreadNotificationsCount = $notifications->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | علامت‌گذاری اعلان‌ها به عنوان خوانده‌شده
+        |--------------------------------------------------------------------------
+        |
+        | اعلان‌ها در همین بار داشبورد نمایش داده می‌شوند.
+        |
+        */
+
 
 
         /*
@@ -220,6 +269,7 @@ class CustomerDashboardController extends Controller
                 'currentAccount',
                 'totalBalance',
                 'activeLoan',
+                'overdueInstallments',
                 'overdueInstallmentsCount',
                 'donationAccounts',
                 'latestLoanRequest',

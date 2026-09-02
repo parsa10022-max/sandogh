@@ -109,41 +109,27 @@ blade
         </a>
 
 
-  
+
 
 
         {{-- =================================================
              اعلان‌ها
         ================================================== --}}
         <a href="{{ route('customer.notifications.index') }}"
-           class="customer-menu-item
-           {{ request()->routeIs('customer.notifications.*') ? 'active' : '' }}">
+           class="customer-menu-item">
 
-            <span class="customer-menu-icon">
-                <i class="bi bi-bell"></i>
-            </span>
+    <span class="customer-menu-icon">
+        <i class="bi bi-bell"></i>
+    </span>
 
             <span class="customer-menu-label">
-                اعلان‌ها
-            </span>
+        اعلان‌ها
+    </span>
 
-            @php
-                $sidebarUnreadNotificationsCount = auth()->user()
-                    ?->notifications()
-                    ->whereNull('read_at')
-                    ->count() ?? 0;
-            @endphp
-
-            @if($sidebarUnreadNotificationsCount > 0)
-
-                <span class="customer-menu-badge">
-
-                    {{ $sidebarUnreadNotificationsCount > 99
-                        ? '99+'
-                        : $sidebarUnreadNotificationsCount }}
-
-                </span>
-
+            @if($unreadNotificationsCount > 0)
+                <span class="customer-notification-badge">
+            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+        </span>
             @endif
 
         </a>
@@ -152,7 +138,7 @@ blade
         {{-- =================================================
              تنظیمات
         ================================================== --}}
-        <a href="#"
+        <a href="{{ route('customer.settings.index') }}"
            class="customer-menu-item
            {{ request()->routeIs('customer.settings.*') ? 'active' : '' }}">
 
@@ -184,7 +170,7 @@ blade
         {{-- =================================================
              پروفایل
         ================================================== --}}
-        <a href="#"
+        <a href="{{ route('customer.profile.index') }}"
            class="customer-menu-item
            {{ request()->routeIs('customer.profile.*') ? 'active' : '' }}">
 

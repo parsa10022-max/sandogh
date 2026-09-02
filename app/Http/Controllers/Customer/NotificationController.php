@@ -5,27 +5,16 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
     /**
      * لیست اعلان‌های مشتری
      */
-    public function index()
+    public function index(): View
     {
         $user = Auth::user();
-
-        /*
-        |--------------------------------------------------------------------------
-        | اعلان‌های مشتری
-        |--------------------------------------------------------------------------
-        */
-
-        $notifications = Notification::query()
-            ->where('user_id', $user->id)
-            ->latest('id')
-            ->paginate(15);
-
 
         /*
         |--------------------------------------------------------------------------
@@ -38,24 +27,16 @@ class NotificationController extends Controller
             ->whereNull('read_at')
             ->count();
 
-
         /*
         |--------------------------------------------------------------------------
-        | خوانده‌شدن اعلان‌ها
+        | لیست اعلان‌ها
         |--------------------------------------------------------------------------
-        |
-        | فقط زمانی که مشتری وارد صفحه اعلان‌ها می‌شود
-        | اعلان‌های خوانده‌نشده خوانده‌شده می‌شوند.
-        |
         */
 
-        Notification::query()
+        $notifications = Notification::query()
             ->where('user_id', $user->id)
-            ->whereNull('read_at')
-            ->update([
-                'read_at' => now(),
-            ]);
-
+            ->latest('id')
+            ->paginate(15);
 
         /*
         |--------------------------------------------------------------------------
@@ -72,4 +53,3 @@ class NotificationController extends Controller
         );
     }
 }
-

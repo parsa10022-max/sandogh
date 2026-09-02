@@ -10,6 +10,7 @@ use App\Enums\AccountStatus;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Models\Withdrawal;
+use App\Models\Notification;
 
 class SavingsWithdrawalController extends Controller
 {
@@ -82,7 +83,48 @@ class SavingsWithdrawalController extends Controller
 
                 createdBy: auth()->id(),
 
-            );
+        );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | اعلان برداشت موفق
+            |--------------------------------------------------------------------------
+            */
+
+            Notification::create([
+
+                'user_id' => auth()->id(),
+
+                'type' => 'savings_withdrawal_success',
+
+                'title' => 'برداشت با موفقیت ثبت شد.',
+
+                'message' =>
+                    'مبلغ ' .
+                    number_format($withdrawal->amount) .
+                    ' ریال از حساب پس‌انداز شما برداشت شد.',
+
+                'data' => [
+
+                    'amount' =>
+                        $withdrawal->amount,
+
+                    'withdrawal_id' =>
+                        $withdrawal->id,
+
+                    'account_id' =>
+                        $account->id,
+
+                    'account_number' =>
+                        $account->account_number,
+
+                ],
+
+                'read_at' => null,
+
+            ]);
+
 
             return redirect()->route(
                 'customer.savings.withdrawal.success',

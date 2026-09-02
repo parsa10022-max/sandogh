@@ -35,6 +35,7 @@
 @import "./customer/loan/index.css";
 @import "./customer/loan/loan-show.css";
 @import "./customer/services/services.css";
+@import "./customer/notifications/notifications.css";
 @import "./customer/savings/transactions.css";
 @import "./customer/savings/savings-deposit.css";
 @import "./customer/savings/savings-transfer-success.css";
