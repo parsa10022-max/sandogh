@@ -57,6 +57,27 @@ class JalaliDateService
             ->format('Y/m/d');
     }
 
+
+    /**
+     * تاریخ امروز به صورت کامل
+     */
+    public function todayFull(): string
+    {
+        return Jalalian::fromCarbon(
+            now()->timezone('Asia/Tehran')
+        )->format('l d F Y');
+    }
+
+    /**
+     * ساعت فعلی ایران
+     */
+    public function currentTime(): string
+    {
+        return now()
+            ->timezone('Asia/Tehran')
+            ->format('H:i');
+    }
+
     /**
      * اولین سررسید
      */

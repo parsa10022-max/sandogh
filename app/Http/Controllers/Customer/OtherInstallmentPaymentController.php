@@ -16,7 +16,6 @@ class OtherInstallmentPaymentController extends Controller
     ) {
     }
 
-
     /**
      * نمایش صفحه پرداخت قسط دیگران
      *
@@ -26,7 +25,6 @@ class OtherInstallmentPaymentController extends Controller
     {
         $loan = null;
         $installment = null;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -42,7 +40,6 @@ class OtherInstallmentPaymentController extends Controller
                 $request->loan_number
             );
 
-
             $loan = Loan::with([
                 'customer',
                 'loanType',
@@ -50,7 +47,6 @@ class OtherInstallmentPaymentController extends Controller
             ])
                 ->where('loan_number', $input)
                 ->first();
-
 
             /*
             |--------------------------------------------------------------------------
@@ -71,7 +67,6 @@ class OtherInstallmentPaymentController extends Controller
                 );
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | اولین قسط قابل پرداخت
@@ -85,7 +80,6 @@ class OtherInstallmentPaymentController extends Controller
                 )
                 ->sortBy('installment_number')
                 ->first();
-
 
             /*
             |--------------------------------------------------------------------------
@@ -107,7 +101,6 @@ class OtherInstallmentPaymentController extends Controller
             }
         }
 
-
         return view(
             'customer.installments.others.create',
             compact(
@@ -116,7 +109,6 @@ class OtherInstallmentPaymentController extends Controller
             )
         );
     }
-
 
     /**
      * شروع پرداخت قسط دیگران
@@ -130,12 +122,10 @@ class OtherInstallmentPaymentController extends Controller
             ],
         ]);
 
-
         $installment = Installment::with('loan')
             ->findOrFail(
                 $request->installment_id
             );
-
 
         /*
         |--------------------------------------------------------------------------
@@ -144,7 +134,6 @@ class OtherInstallmentPaymentController extends Controller
         */
 
         $customer = auth()->user()->customer;
-
 
         if (
             $customer &&
@@ -157,16 +146,17 @@ class OtherInstallmentPaymentController extends Controller
             );
         }
 
-
         /*
         |--------------------------------------------------------------------------
-        | شروع پرداخت
+        | شروع پرداخت قسط دیگران
         |--------------------------------------------------------------------------
         */
 
         $result = $this->paymentService
-            ->startPayment($installment);
-
+            ->startPayment(
+                $installment,
+                true
+            );
 
         if (! ($result['success'] ?? false)) {
 
@@ -176,7 +166,6 @@ class OtherInstallmentPaymentController extends Controller
                 ?? 'خطا در شروع پرداخت.'
             );
         }
-
 
         return redirect()->away(
             $result['redirect_url']

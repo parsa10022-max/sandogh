@@ -223,34 +223,7 @@ class CustomerDashboardController extends Controller
             ->latest('id')
             ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | اعلان‌های خوانده‌نشده مشتری
-        |--------------------------------------------------------------------------
-        */
 
-        $notifications = Notification::query()
-            ->where('user_id', $user->id)
-            ->whereNull('read_at')
-            ->latest('id')
-            ->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | تعداد اعلان‌های خوانده‌نشده
-        |--------------------------------------------------------------------------
-        */
-
-        $unreadNotificationsCount = $notifications->count();
-
-        /*
-        |--------------------------------------------------------------------------
-        | علامت‌گذاری اعلان‌ها به عنوان خوانده‌شده
-        |--------------------------------------------------------------------------
-        |
-        | اعلان‌ها در همین بار داشبورد نمایش داده می‌شوند.
-        |
-        */
 
 
 
@@ -273,8 +246,6 @@ class CustomerDashboardController extends Controller
                 'overdueInstallmentsCount',
                 'donationAccounts',
                 'latestLoanRequest',
-                'notifications',
-                'unreadNotificationsCount',
                 'latestTransactions'
             )
         );

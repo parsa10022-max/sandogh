@@ -6,6 +6,52 @@
        0-991px  : Bottom Navigation
        992px+   : Sidebar
        ========================================================= */
+    /* =========================================================
+       CUSTOMER CSS
+       ========================================================= */
+
+    @import "./customer.css";
+
+
+    /* =========================================================
+       CUSTOMER MODULES
+       ========================================================= */
+
+    @import "./customer/installments/installments.css";
+    @import "./customer/installments/installments-others.css";
+    @import "./customer/installments/success.css";
+
+    @import "./customer/payments/payment-success.css";
+
+    @import "./customer/donations/donations.css";
+
+    @import "./customer/dashboard/dashboard.css";
+
+    @import "./customer/sidebar/sidebar.css";
+
+    @import "./customer/loan/index.css";
+    @import "./customer/loan/loan-show.css";
+
+    @import "./customer/services/services.css";
+
+    @import "./customer/profile/profile.css";
+
+    @import "./customer/settings/settings.css";
+
+    @import "./customer/notifications/notifications.css";
+
+    @import "./customer/savings/transactions.css";
+    @import "./customer/savings/savings-deposit.css";
+    @import "./customer/savings/savings-transfer-success.css";
+    @import "./customer/savings/savings-withdrawal.css";
+    @import "./customer/savings/savings-transfer.css";
+    @import "./customer/savings/savings-withdrawal-success.css";
+
+    @import "./customer/loan-requests/loan-requests.css";
+    @import "./customer/loan-requests/loan-request-show.css";
+
+    @import "./account/customer-account.css";
+
 
 .customer-panel {
     min-height: 100vh;

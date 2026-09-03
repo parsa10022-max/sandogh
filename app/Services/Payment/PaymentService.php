@@ -23,10 +23,17 @@ class PaymentService
      * شروع فرآیند پرداخت
      */
     public function startPayment(
-        Installment $installment
+        Installment $installment,
+        bool $allowOthers = false
     ): array {
 
-        $this->validatePayment($installment);
+        $this->validatePayment(
+            $installment,
+            $allowOthers
+        );
+
+        // اطمینان از داشتن اطلاعات وام
+        $installment->loadMissing('loan');
 
         $trackingCode = $this->trackingCodeService->generate();
 
@@ -34,10 +41,17 @@ class PaymentService
 
             'payment_type' => 'installment',
 
+            // شناسه‌های دیتابیس
             'loan_id' => $installment->loan_id,
 
             'installment_id' => $installment->id,
 
+            // اطلاعات نمایشی
+            'loan_number' => $installment->loan->loan_number,
+
+            'installment_number' => $installment->installment_number,
+
+            // اطلاعات پرداخت
             'reference_id' => $installment->id,
 
             'amount' => $installment->amount,
@@ -271,10 +285,16 @@ class PaymentService
      * اعتبارسنجی پرداخت
      */
     private function validatePayment(
-        Installment $installment
+        Installment $installment,
+        bool $allowOthers = false
     ): void {
 
-        // وام باید فعال باشد
+        /*
+        |--------------------------------------------------------------------------
+        | وام باید فعال باشد
+        |--------------------------------------------------------------------------
+        */
+
         if ($installment->loan->status !== LoanStatus::ACTIVE) {
 
             throw new \DomainException(
@@ -282,7 +302,13 @@ class PaymentService
             );
         }
 
-        // قسط نباید قبلاً پرداخت شده باشد
+
+        /*
+        |--------------------------------------------------------------------------
+        | قسط نباید قبلاً پرداخت شده باشد
+        |--------------------------------------------------------------------------
+        */
+
         if ($installment->status === InstallmentStatus::PAID) {
 
             throw new \DomainException(
@@ -290,7 +316,43 @@ class PaymentService
             );
         }
 
-        // همه اقساط قبلی باید پرداخت شده باشند
+
+        /*
+        |--------------------------------------------------------------------------
+        | بررسی مالکیت قسط
+        |--------------------------------------------------------------------------
+        |
+        | در پرداخت عادی، قسط باید متعلق به مشتری فعلی باشد.
+        |
+        | در پرداخت قسط دیگران، این بررسی عمداً انجام نمی‌شود.
+        |
+        */
+
+        if (! $allowOthers) {
+
+            $customer = auth()->user()?->customer;
+
+            if (
+                ! $customer ||
+                $installment->loan->customer_id !== $customer->id
+            ) {
+
+                throw new \DomainException(
+                    'این قسط متعلق به شما نیست.'
+                );
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ترتیب پرداخت اقساط
+        |--------------------------------------------------------------------------
+        |
+        | حتی در پرداخت اقساط دیگران نیز باید اقساط قبلی پرداخت شده باشند.
+        |
+        */
+
         $hasPreviousUnpaid = $installment->loan
             ->installments()
             ->where(

@@ -2464,3 +2464,53 @@
     }
 }
 
+    .customer-header-logout-form {
+        margin: 0;
+    }
+
+    .customer-header-logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .35rem;
+        min-height: 34px;
+        padding: .4rem .65rem;
+        border: 1px solid #ececf3;
+        border-radius: 8px;
+        background: #fff;
+        color: #777b8f;
+        font-family: inherit;
+        font-size: .72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .customer-header-logout i {
+        font-size: .9rem;
+    }
+
+    .customer-header-logout:hover {
+        border-color: #e6dfff;
+        background: #faf9ff;
+        color: #5b3df5;
+    }
+
+    .customer-header-logout:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(91, 61, 245, .08);
+    }
+
+    @media (max-width: 575.98px) {
+
+        .customer-header-logout span {
+            display: none;
+        }
+
+        .customer-header-logout {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+        }
+
+    }

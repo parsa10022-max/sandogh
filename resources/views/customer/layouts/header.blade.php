@@ -59,7 +59,7 @@
     <div class="customer-header-left">
 
 
-        
+
 
         {{-- اعلان --}}
         @php
@@ -83,17 +83,19 @@
 
         </a>
 
-
+        @php
+            $jalaliDateService = app(\App\Services\Date\JalaliDateService::class);
+        @endphp
         {{-- تاریخ --}}
         <div class="customer-header-date">
 
-                    <span class="customer-header-datetime-icon">
-                        <i class="bi bi-calendar3"></i>
-                    </span>
+    <span class="customer-header-datetime-icon">
+        <i class="bi bi-calendar3"></i>
+    </span>
 
             <span>
-                        شنبه ۱۷ مرداد ۱۴۰۵
-                    </span>
+        {{ $jalaliDateService->todayFull() }}
+    </span>
 
         </div>
 
@@ -101,16 +103,37 @@
         {{-- ساعت --}}
         <div class="customer-header-time">
 
-                    <span class="customer-header-datetime-icon">
-                        <i class="bi bi-clock"></i>
-                    </span>
+    <span class="customer-header-datetime-icon">
+        <i class="bi bi-clock"></i>
+    </span>
 
             <span>
-                        ۱۷:۳۵
-                    </span>
+        {{ $jalaliDateService->currentTime() }}
+    </span>
 
         </div>
 
+
+        <form method="POST"
+              action="{{ route('logout') }}"
+              class="customer-header-logout-form">
+
+            @csrf
+
+            <button type="submit"
+                    class="customer-header-logout"
+                    title="خروج"
+                    aria-label="خروج">
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>
+            خروج
+        </span>
+
+            </button>
+
+        </form>
     </div>
 
 </header>

@@ -6,430 +6,19 @@
 
     <div class="customer-dashboard">
 
-        {{-- =========================================================
-     اعلان‌های مشتری
-     اطلاعات از Notification خوانده می‌شود
-     ========================================================= --}}
-
-        @if($notifications->isNotEmpty())
-
-            @foreach($notifications as $notification)
-
-                {{-- =====================================================
-                    اعلان تأیید وام
-                    ===================================================== --}}
-
-                @if($notification->type === 'loan_request_approved')
-
-                    <div class="loan-request-notice loan-request-notice-approved">
-
-                        <div class="loan-request-notice-icon">
-                            <i class="bi bi-check-lg"></i>
-                        </div>
-
-                        <div class="loan-request-notice-content">
-
-                            <div class="loan-request-notice-title">
-                                {{ $notification->title }}
-                            </div>
-
-                            <div class="loan-request-notice-text">
-                                {{ $notification->message }}
-                            </div>
-
-                            @if(is_array($notification->data))
-
-                                <div class="loan-request-notice-details">
-
-                                    {{-- مبلغ وام --}}
-                                    @if(isset($notification->data['approved_amount']))
-
-                                        <div class="loan-request-detail">
-
-                                    <span class="loan-request-detail-label">
-                                        مبلغ وام
-                                    </span>
-
-                                            <strong>
-                                                {{ number_format($notification->data['approved_amount']) }}
-                                                ریال
-                                            </strong>
-
-                                        </div>
-
-                                    @endif
-
-                                    {{-- تعداد اقساط --}}
-                                    @if(isset($notification->data['approved_installment_count']))
-
-                                        <div class="loan-request-detail">
-
-                                    <span class="loan-request-detail-label">
-                                        تعداد اقساط
-                                    </span>
-
-                                            <strong>
-                                                {{ $notification->data['approved_installment_count'] }}
-                                                قسط
-                                            </strong>
-
-                                        </div>
-
-                                    @endif
-
-                                    {{-- دوره بازپرداخت --}}
-                                    @if(isset($notification->data['approved_installment_interval']))
-
-                                        <div class="loan-request-detail">
-
-                                    <span class="loan-request-detail-label">
-                                        دوره بازپرداخت
-                                    </span>
-
-                                            <strong>
-
-                                                @switch($notification->data['approved_installment_interval'])
-
-                                                    @case(1)
-                                                    ماهانه
-                                                    @break
-
-                                                    @case(2)
-                                                    هر دو ماه
-                                                    @break
-
-                                                    @case(3)
-                                                    هر سه ماه
-                                                    @break
-
-                                                    @default
-                                                    ---
-                                                @endswitch
-
-                                            </strong>
-
-                                        </div>
-
-                                    @endif
-
-                                </div>
-
-                                {{-- پیام مدیر --}}
-                                @if(!empty($notification->data['review_note']))
-
-                                    <div class="loan-request-notice-note">
-
-                                        <i class="bi bi-chat-left-text"></i>
-
-                                        <span>
-                                    {{ $notification->data['review_note'] }}
-                                </span>
-
-                                    </div>
-
-                                @endif
-
-                            @endif
-
-                            {{-- تاریخ اعلان --}}
-                            <div class="loan-request-notice-note">
-
-                                <i class="bi bi-calendar-event"></i>
-
-                                <span>
-                            {{ jdate($notification->created_at)->format('Y/m/d H:i') }}
-                        </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- =====================================================
-                        اعلان رد وام
-                        ===================================================== --}}
-
-                @elseif($notification->type === 'loan_request_rejected')
-
-                    <div class="loan-request-notice loan-request-notice-rejected">
-
-                        <div class="loan-request-notice-icon">
-                            <i class="bi bi-x-lg"></i>
-                        </div>
-
-                        <div class="loan-request-notice-content">
-
-                            <div class="loan-request-notice-title">
-                                {{ $notification->title }}
-                            </div>
-
-                            <div class="loan-request-notice-text">
-                                {{ $notification->message }}
-                            </div>
-
-                            @if(is_array($notification->data))
-
-                                <div class="loan-request-notice-details">
-
-                                    {{-- مبلغ درخواستی --}}
-                                    @if(isset($notification->data['requested_amount']))
-
-                                        <div class="loan-request-detail">
-
-                                    <span class="loan-request-detail-label">
-                                        مبلغ درخواستی
-                                    </span>
-
-                                            <strong>
-                                                {{ number_format($notification->data['requested_amount']) }}
-                                                ریال
-                                            </strong>
-
-                                        </div>
-
-                                    @endif
-
-                                </div>
-
-                                {{-- پیام مدیر --}}
-                                @if(!empty($notification->data['review_note']))
-
-                                    <div class="loan-request-notice-note">
-
-                                        <i class="bi bi-chat-left-text"></i>
-
-                                        <span>
-                                    {{ $notification->data['review_note'] }}
-                                </span>
-
-                                    </div>
-
-                                @endif
-
-                                {{-- تاریخ مراجعه مجدد --}}
-                                @if(!empty($notification->data['next_review_date']))
-
-                                    <div class="loan-request-notice-next-date">
-
-                                        <i class="bi bi-calendar-event"></i>
-
-                                        <span>
-                                    تاریخ مراجعه مجدد:
-                                </span>
-
-                                        <strong>
-                                            {{ $notification->data['next_review_date'] }}
-                                        </strong>
-
-                                    </div>
-
-                                @endif
-
-                            @endif
-
-                            {{-- تاریخ اعلان --}}
-                            <div class="loan-request-notice-note">
-
-                                <i class="bi bi-calendar-event"></i>
-
-                                <span>
-                            {{ jdate($notification->created_at)->format('Y/m/d H:i') }}
-                        </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    {{-- =====================================================
-                        اعلان وام واریز شده
-                        ===================================================== --}}
-
-                @elseif($notification->type === 'loan_disbursed')
-
-                    <div class="loan-request-notice loan-request-notice-approved">
-
-                        {{-- آیکون --}}
-                        <div class="loan-request-notice-icon">
-                            <i class="bi bi-wallet2"></i>
-                        </div>
-
-
-                        <div class="loan-request-notice-content">
-
-                            {{-- عنوان --}}
-                            <div class="loan-request-notice-title">
-                                {{ $notification->title }}
-                            </div>
-
-
-                            {{-- پیام --}}
-                            @if($notification->message)
-
-                                <div class="loan-request-notice-text">
-                                    {{ $notification->message }}
-                                </div>
-
-                            @endif
-
-
-                            {{-- اطلاعات وام --}}
-                            @if(is_array($notification->data))
-
-                                <div class="loan-request-notice-details">
-
-                                    @if(isset($notification->data['loan_amount']))
-
-                                        <div class="loan-request-detail">
-
-                            <span class="loan-request-detail-label">
-                                مبلغ وام
-                            </span>
-
-                                            <strong>
-                                                {{ number_format($notification->data['loan_amount']) }}
-                                                ریال
-                                            </strong>
-
-                                        </div>
-
-                                    @endif
-
-                                </div>
-
-                            @endif
-
-
-                            {{-- توضیح برداشت --}}
-                            <div class="loan-request-notice-note">
-
-                                <i class="bi bi-info-circle"></i>
-
-                                <span>
-                    مبلغ وام به حساب پس‌انداز شما واریز شده است.
-                    برای دریافت وجه، درخواست برداشت ثبت کنید.
-                </span>
-
-                            </div>
-
-
-                            {{-- =================================================
-                                دکمه برداشت
-                                ================================================= --}}
-
-                            <div class="loan-notification-action mt-3">
-
-                                <a href="{{ route('customer.savings.withdrawal.create') }}"
-                                   class="loan-notification-withdraw-btn">
-
-                    <span class="loan-notification-withdraw-icon">
-                        <i class="bi bi-wallet2"></i>
-                    </span>
-
-                                    <span class="loan-notification-withdraw-content">
-
-                        <strong>
-                            درخواست برداشت وجه
-                        </strong>
-
-                        <small>
-                            برای دریافت مبلغ وام، درخواست برداشت ثبت کنید.
-                        </small>
-
-                    </span>
-
-                                    <i class="bi bi-chevron-left loan-notification-withdraw-arrow"></i>
-
-                                </a>
-
-                            </div>
-
-
-                            {{-- تاریخ اعلان --}}
-                            <div class="loan-request-notice-note mt-3">
-
-                                <i class="bi bi-calendar-event"></i>
-
-                                <span>
-                    {{ jdate($notification->created_at)->format('Y/m/d H:i') }}
-                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- =====================================================
-                        سایر اعلان‌ها
-                        ===================================================== --}}
-
-                @else
-
-
-
-                    <div class="loan-request-notice">
-
-                        <div class="loan-request-notice-icon">
-                            <i class="bi bi-bell"></i>
-                        </div>
-
-                        <div class="loan-request-notice-content">
-
-                            <div class="loan-request-notice-title">
-                                {{ $notification->title }}
-                            </div>
-
-                            @if($notification->message)
-
-                                <div class="loan-request-notice-text">
-                                    {{ $notification->message }}
-                                </div>
-
-                            @endif
-
-                            {{-- تاریخ اعلان --}}
-                            <div class="loan-request-notice-note mt-3">
-
-                                <i class="bi bi-calendar-event"></i>
-
-                                <span>
-                            {{ jdate($notification->created_at)->format('Y/m/d H:i') }}
-                        </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                @endif
-
-            @endforeach
-
-        @endif
 
 
 
 
         {{-- =========================================================
-     وضعیت مالی من
-     ========================================================= --}
+             وضعیت مالی من
+        ========================================================= --}}
         <section class="customer-financial-section">
 
-            {{-- =====================================================
-                 HEADER
-            ====================================================== --}}
+            {{-- Header --}}
             <div class="customer-financial-section-header">
 
                 <div>
-
                     <h2>
                         وضعیت مالی من
                     </h2>
@@ -437,30 +26,20 @@
                     <span>
                 خلاصه حساب و وام
             </span>
-
                 </div>
 
-
                 <span class="customer-financial-section-status">
-
             <i class="bi bi-check-circle-fill"></i>
-
             فعال
-
         </span>
 
             </div>
 
 
-            {{-- =====================================================
-                 FINANCIAL CARDS
-            ====================================================== --}}
+            {{-- Financial Cards --}}
             <div class="customer-financial-cards">
 
-
-                {{-- =================================================
-                     مجموع موجودی
-                ================================================== --}}
+                {{-- مجموع موجودی --}}
                 <div class="customer-financial-card-item total">
 
                     <div class="customer-financial-card-icon">
@@ -474,13 +53,11 @@
                 </span>
 
                         <strong class="customer-financial-card-value">
-
                             {{ number_format($totalBalance) }}
 
                             <small>
                                 ریال
                             </small>
-
                         </strong>
 
                     </div>
@@ -488,22 +65,19 @@
                 </div>
 
 
-                {{-- =================================================
-                     حساب‌های مشتری
-                     کاملاً داینامیک
-                ================================================== --}}
+                {{-- حساب‌های مشتری --}}
                 @foreach($accounts as $account)
 
-                    <div
-                        class="customer-financial-card-item
-                    {{ $account->account_type === \App\Enums\AccountType::SAVING
-                        ? 'savings'
-                        : ($account->account_type === \App\Enums\AccountType::CURRENT
-                            ? 'current'
-                            : 'account') }}"
-                    >
+                    <div class="customer-financial-card-item
+                @if($account->account_type === \App\Enums\AccountType::SAVING)
+                        savings
+@elseif($account->account_type === \App\Enums\AccountType::CURRENT)
+                        current
+@else
+                        account
+@endif
+                        ">
 
-                        {{-- آیکون --}}
                         <div class="customer-financial-card-icon">
 
                             @if($account->account_type === \App\Enums\AccountType::SAVING)
@@ -523,7 +97,6 @@
                         </div>
 
 
-                        {{-- محتوا --}}
                         <div class="customer-financial-card-content">
 
                     <span class="customer-financial-card-label">
@@ -546,21 +119,16 @@
 
 
                             <strong class="customer-financial-card-value">
-
                                 {{ number_format($account->balance) }}
 
                                 <small>
                                     ریال
                                 </small>
-
                             </strong>
 
 
                             <span class="customer-financial-card-meta">
-
-                        حساب
-                        {{ $account->account_number }}
-
+                        حساب {{ $account->account_number }}
                     </span>
 
                         </div>
@@ -570,9 +138,7 @@
                 @endforeach
 
 
-                {{-- =================================================
-                     وام فعال
-                ================================================== --}}
+                {{-- وام فعال --}}
                 <div class="customer-financial-card-item loan">
 
                     <div class="customer-financial-card-icon">
@@ -584,7 +150,6 @@
                 <span class="customer-financial-card-label">
                     وام فعال
                 </span>
-
 
                         @if($activeLoan)
 
@@ -598,12 +163,8 @@
 
                             </strong>
 
-
                             <span class="customer-financial-card-meta">
-
-                        وام
-                        {{ $activeLoan->full_loan_number }}
-
+                        وام {{ $activeLoan->full_loan_number }}
                     </span>
 
                         @else
@@ -619,9 +180,7 @@
                 </div>
 
 
-                {{-- =================================================
-                     اقساط معوق
-                ================================================== --}}
+                {{-- اقساط معوق --}}
                 <div class="customer-financial-card-item overdue">
 
                     <div class="customer-financial-card-icon">
@@ -633,7 +192,6 @@
                 <span class="customer-financial-card-label">
                     اقساط معوق
                 </span>
-
 
                         @if($overdueInstallmentsCount > 0)
 
@@ -647,7 +205,6 @@
 
                             </strong>
 
-
                             <span class="customer-financial-card-meta danger-text">
                         نیاز به پرداخت
                     </span>
@@ -658,7 +215,6 @@
                                 بدون معوقه
                             </strong>
 
-
                             <span class="customer-financial-card-meta success-text">
                         پرداخت منظم است
                     </span>
@@ -668,7 +224,6 @@
                     </div>
 
                 </div>
-
 
             </div>
 

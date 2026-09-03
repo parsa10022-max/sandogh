@@ -23,17 +23,31 @@ class FakeGateway implements GatewayInterface
 
                 'token' => $token,
 
-                'payment_type' => $paymentData['payment_type'] ?? null,
+                'payment_type' =>
+                    $paymentData['payment_type'] ?? null,
 
-                'reference_id' => $paymentData['reference_id'] ?? null,
+                'reference_id' =>
+                    $paymentData['reference_id'] ?? null,
 
-                'loan_id' => $paymentData['loan_id'] ?? null,
+                // شناسه‌های دیتابیس
+                'loan_id' =>
+                    $paymentData['loan_id'] ?? null,
 
-                'installment_id' => $paymentData['installment_id'] ?? null,
+                'installment_id' =>
+                    $paymentData['installment_id'] ?? null,
 
-                'tracking_code' => $paymentData['tracking_code'] ?? null,
+                // اطلاعات نمایشی
+                'loan_number' =>
+                    $paymentData['loan_number'] ?? null,
 
-                'amount' => $paymentData['amount'] ?? null,
+                'installment_number' =>
+                    $paymentData['installment_number'] ?? null,
+
+                'tracking_code' =>
+                    $paymentData['tracking_code'] ?? null,
+
+                'amount' =>
+                    $paymentData['amount'] ?? null,
 
             ]),
         ];
@@ -45,7 +59,8 @@ class FakeGateway implements GatewayInterface
     public function verify(array $callbackData): array
     {
         $result = FakeGatewayResult::tryFrom(
-                $callbackData['result'] ?? FakeGatewayResult::SUCCESS->value
+                $callbackData['result']
+                ?? FakeGatewayResult::SUCCESS->value
             ) ?? FakeGatewayResult::SUCCESS;
 
         return match ($result) {
@@ -54,13 +69,18 @@ class FakeGateway implements GatewayInterface
 
                 'success' => true,
 
-                'transaction_id' => 'TX' . strtoupper(Str::random(12)),
+                'transaction_id' =>
+                    'TX' . strtoupper(Str::random(12)),
 
-                'reference_number' => now()->format('YmdHis') . rand(1000, 9999),
+                'reference_number' =>
+                    now()->format('YmdHis')
+                    . rand(1000, 9999),
 
-                'card_number' => '603799******1234',
+                'card_number' =>
+                    '603799******1234',
 
-                'message' => 'پرداخت با موفقیت انجام شد.',
+                'message' =>
+                    'پرداخت با موفقیت انجام شد.',
 
             ],
 
@@ -68,7 +88,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'پرداخت ناموفق بود.',
+                'message' =>
+                    'پرداخت ناموفق بود.',
 
             ],
 
@@ -76,7 +97,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'کاربر پرداخت را لغو کرد.',
+                'message' =>
+                    'کاربر پرداخت را لغو کرد.',
 
             ],
 
@@ -84,7 +106,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'مهلت پرداخت به پایان رسید.',
+                'message' =>
+                    'مهلت پرداخت به پایان رسید.',
 
             ],
 
@@ -92,7 +115,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'بانک پرداخت را تأیید نکرد.',
+                'message' =>
+                    'بانک پرداخت را تأیید نکرد.',
 
             ],
 
@@ -100,7 +124,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'Callback تکراری دریافت شد.',
+                'message' =>
+                    'Callback تکراری دریافت شد.',
 
             ],
 
@@ -108,7 +133,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'مبلغ پرداخت نامعتبر است.',
+                'message' =>
+                    'مبلغ پرداخت نامعتبر است.',
 
             ],
 
@@ -116,7 +142,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'توکن پرداخت نامعتبر است.',
+                'message' =>
+                    'توکن پرداخت نامعتبر است.',
 
             ],
 
@@ -124,7 +151,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'امضای دیجیتال نامعتبر است.',
+                'message' =>
+                    'امضای دیجیتال نامعتبر است.',
 
             ],
 
@@ -132,7 +160,8 @@ class FakeGateway implements GatewayInterface
 
                 'success' => false,
 
-                'message' => 'ارتباط با درگاه بانکی برقرار نشد.',
+                'message' =>
+                    'ارتباط با درگاه بانکی برقرار نشد.',
 
             ],
         };

@@ -154,11 +154,6 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
         ->middleware('admin.access')
         ->name('dashboard');
 
-    Route::post(
-        '/logout',
-        LogoutController::class
-    )
-        ->name('logout');
 
 
 
@@ -548,11 +543,32 @@ Route::middleware('auth')
 | Customer Panel Routes
 |--------------------------------------------------------------------------
 */
+// خروج مشترک
+Route::post(
+    '/logout',
+    LogoutController::class
+)
+    ->middleware('auth')
+    ->name('logout');
+
+
+// مسیرهای مشتری
+Route::middleware(['auth', 'customer.access'])
+    ->prefix('customer')
+    ->name('customer.')
+    ->group(function () {
+
+        // Routeهای پنل مشتری
+
+    });
+
 
 Route::middleware(['auth', 'customer.access'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {
+
+
 
         Route::get(
             'settings',

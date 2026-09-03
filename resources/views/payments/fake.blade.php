@@ -21,27 +21,24 @@
 
                     </div>
 
-
                     <div class="card-body">
-
 
                         <div class="alert alert-info">
                             این صفحه فقط برای تست سیستم پرداخت صندوق است.
                         </div>
 
-
                         @php
                             $paymentType = $data['payment_type'] ?? null;
                         @endphp
 
-
-
                         <table class="table table-bordered align-middle">
 
-
                             {{-- ======================= وام ======================= --}}
-                            @if(in_array($paymentType, ['loan', 'loan_payment', 'installment']))
-
+                            @if(in_array($paymentType, [
+                                'loan',
+                                'loan_payment',
+                                'installment'
+                            ]))
 
                                 <tr>
                                     <th width="220">
@@ -53,33 +50,28 @@
                                     </td>
                                 </tr>
 
-
                                 <tr>
                                     <th>
                                         شماره وام
                                     </th>
 
                                     <td>
-                                        {{ $data['loan_id'] ?? '-' }}
+                                        {{ $data['loan_number'] ?? '-' }}
                                     </td>
                                 </tr>
-
 
                                 <tr>
                                     <th>
-                                        شناسه قسط
+                                        شماره قسط
                                     </th>
 
                                     <td>
-                                        {{ $data['installment_id'] ?? '-' }}
+                                        {{ $data['installment_number'] ?? '-' }}
                                     </td>
                                 </tr>
 
-
-
                                 {{-- ======================= پس انداز ======================= --}}
                             @elseif($paymentType === 'savings_transfer')
-
 
                                 <tr>
                                     <th width="220">
@@ -91,7 +83,6 @@
                                     </td>
                                 </tr>
 
-
                                 <tr>
                                     <th>
                                         شماره پیگیری
@@ -102,16 +93,12 @@
                                     </td>
                                 </tr>
 
-
-
-
                                 {{-- ======================= کمک ======================= --}}
                             @elseif(in_array($paymentType, [
                                 'donation',
                                 'donation_customer',
                                 'donation_public'
                             ]))
-
 
                                 <tr>
                                     <th width="220">
@@ -122,15 +109,10 @@
                                         کمک به:
 
                                         <strong class="text-success">
-
                                             {{ $data['account_name'] ?? '-' }}
-
                                         </strong>
-
                                     </td>
                                 </tr>
-
-
 
                                 <tr>
                                     <th>
@@ -142,8 +124,6 @@
                                     </td>
                                 </tr>
 
-
-
                                 <tr>
                                     <th>
                                         شماره پیگیری
@@ -154,11 +134,9 @@
                                     </td>
                                 </tr>
 
-
                             @endif
 
-
-
+                            {{-- ======================= مبلغ ======================= --}}
 
                             <tr>
                                 <th>
@@ -166,15 +144,12 @@
                                 </th>
 
                                 <td>
-
                                     {{ number_format($data['amount'] ?? 0) }}
-
                                     ریال
-
                                 </td>
                             </tr>
 
-
+                            {{-- ======================= کد رهگیری ======================= --}}
 
                             <tr>
                                 <th>
@@ -186,7 +161,7 @@
                                 </td>
                             </tr>
 
-
+                            {{-- ======================= توکن ======================= --}}
 
                             <tr>
                                 <th>
@@ -198,59 +173,49 @@
                                 </td>
                             </tr>
 
-
                         </table>
-
-
 
                         <hr>
 
-
-
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
 
+                            {{-- ======================= پرداخت موفق ======================= --}}
 
                             <a href="{{ route('payments.callback', array_merge($data, [
-                            'result' => 'success'
-                        ])) }}"
+                                'result' => 'success'
+                            ])) }}"
                                class="btn btn-success">
-
 
                                 <i class="bi bi-check-circle"></i>
 
                                 پرداخت موفق
 
-
                             </a>
 
-
-
+                            {{-- ======================= پرداخت ناموفق ======================= --}}
 
                             <a href="{{ route('payments.callback', array_merge($data, [
-                            'result' => 'failed'
-                        ])) }}"
+                                'result' => 'failed'
+                            ])) }}"
                                class="btn btn-danger">
-
 
                                 <i class="bi bi-x-circle"></i>
 
                                 پرداخت ناموفق
 
-
                             </a>
 
-
-
+                            {{-- ======================= انصراف ======================= --}}
 
                             @if(in_array($paymentType, [
-         'donation',
-         'donation_customer',
-         'donation_public'
-     ]))
+                                'donation',
+                                'donation_customer',
+                                'donation_public'
+                            ]))
 
                                 <a href="{{ route('customer.donations.payment', [
-        'donationPayment' => $data['reference_id']
-    ]) }}"
+                                    'donationPayment' => $data['reference_id']
+                                ]) }}"
                                    class="btn btn-warning">
 
                                     <i class="bi bi-arrow-counterclockwise"></i>
@@ -273,10 +238,7 @@
 
                             @endif
 
-
-
                         </div>
-
 
                     </div>
 
