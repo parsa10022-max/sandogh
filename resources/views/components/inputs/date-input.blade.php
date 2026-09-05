@@ -6,7 +6,7 @@
 'readonly' => false,
 'disabled' => false,
 'placeholder' => '1405/04/28',
-'col' => 'col-12 col-md-6',
+'col' => null,
 ])
 
 <x-form.group :col="$col">

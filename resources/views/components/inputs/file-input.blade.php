@@ -3,7 +3,7 @@
 'name',
 'required' => false,
 'accept' => 'image/*',
-'col' => 'col-12 col-md-6',
+'col' => null,
 ])
 <x-form.group :col="$col" >
     <x-form.label

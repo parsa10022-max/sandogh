@@ -1,42 +1,66 @@
-<aside class="h-100 bg-white">
+<aside class="admin-sidebar" id="adminSidebar">
 
     @php
         $user = auth()->user();
     @endphp
 
-    <div class="p-3 border-bottom">
 
-        <h5 class="mb-0 fw-bold text-center">
-            منوی اصلی
-        </h5>
+    {{-- =====================================================
+         SIDEBAR HEADER
+         ===================================================== --}}
+
+    <div class="admin-sidebar-header">
+
+        <div class="admin-sidebar-brand">
+
+            <div class="admin-sidebar-brand-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+
+            <div class="admin-sidebar-brand-text">
+
+                <div class="admin-sidebar-brand-title">
+                    صندوق
+                </div>
+
+                <div class="admin-sidebar-brand-subtitle">
+                    مدیریت صندوق
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="list-group list-group-flush rounded-0">
 
-        @foreach(config('menu') as $index => $group)
+    {{-- =====================================================
+         SIDEBAR MENU
+         ===================================================== --}}
+
+    <nav class="admin-sidebar-menu">
+
+        @foreach(config('menu', []) as $index => $group)
 
             @php
-
                 $children = collect($group['children'] ?? []);
 
-              $visibleChildren = $children->filter(function ($item) use ($user) {
+                $visibleChildren = $children->filter(function ($item) use ($user) {
 
-    if (! isset($item['roles'])) {
-        return true;
-    }
+                    if (!isset($item['roles'])) {
+                        return true;
+                    }
 
-    if (! $user) {
-        return false;
-    }
+                    if (!$user) {
+                        return false;
+                    }
 
-    return in_array(
-        $user->role,
-        $item['roles'],
-        true
-    );
-
-});
+                    return in_array(
+                        $user->role,
+                        $item['roles'],
+                        true
+                    );
+                });
 
                 if ($visibleChildren->isEmpty()) {
                     continue;
@@ -44,60 +68,99 @@
 
                 $groupActive = $visibleChildren->contains(function ($item) {
 
-                    return collect($item['active'] ?? [$item['route']])
-                        ->contains(fn ($route) => request()->routeIs($route));
+                    $activeRoutes = $item['active'] ?? [];
 
+                    if (empty($activeRoutes) && isset($item['route'])) {
+                        $activeRoutes = [$item['route']];
+                    }
+
+                    return collect($activeRoutes)->contains(
+                        fn ($route) => request()->routeIs($route)
+                    );
                 });
-
             @endphp
 
-            <button
-                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center fw-semibold {{ $groupActive ? '' : 'collapsed' }}"
-                data-bs-toggle="collapse"
-                data-bs-target="#menu{{ $index }}"
-                type="button"
-            >
+            <div class="admin-sidebar-group">
 
-                <span>
+                <button
+                    type="button"
+                    class="admin-sidebar-group-toggle
+                {{ $groupActive ? 'is-active' : 'collapsed' }}"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#adminMenu{{ $index }}"
+                    aria-controls="adminMenu{{ $index }}"
+                    aria-expanded="{{ $groupActive ? 'true' : 'false' }}"
+                >
 
-                    <i class="bi bi-{{ $group['icon'] }} ms-2"></i>
+            <span class="admin-sidebar-group-label">
 
-                    {{ $group['title'] }}
-
+                <span class="admin-sidebar-group-icon">
+                    <i class="bi bi-{{ $group['icon'] ?? 'circle' }}"></i>
                 </span>
 
-                <i class="bi bi-chevron-down small"></i>
+                <span class="admin-sidebar-group-title">
+                    {{ $group['title'] ?? '' }}
+                </span>
 
-            </button>
+            </span>
 
-            <div
-                id="menu{{ $index }}"
-                class="collapse {{ $groupActive ? 'show' : '' }}"
-            >
+                    <i class="bi bi-chevron-down admin-sidebar-chevron"></i>
 
-                <div class="list-group list-group-flush">
+                </button>
 
-                    @foreach($visibleChildren as $item)
 
-                        @php
+                <div
+                    id="adminMenu{{ $index }}"
+                    class="collapse {{ $groupActive ? 'show' : '' }}"
+                >
 
-                            $active = collect($item['active'] ?? [$item['route']])
-                                ->contains(fn ($route) => request()->routeIs($route));
+                    <div class="admin-sidebar-submenu">
 
-                        @endphp
+                        @foreach($visibleChildren as $item)
 
-                        <a
-                            href="{{ Route::has($item['route']) ? route($item['route']) : '#' }}"
-                            class="list-group-item list-group-item-action ps-5 {{ $active ? 'active' : '' }}"
-                        >
+                            @php
 
-                            <i class="bi bi-{{ $item['icon'] }} ms-2"></i>
+                                $activeRoutes = $item['active'] ?? [];
 
-                            {{ $item['title'] }}
+                                if (empty($activeRoutes) && isset($item['route'])) {
+                                    $activeRoutes = [$item['route']];
+                                }
 
-                        </a>
+                                $active = collect($activeRoutes)->contains(
+                                    fn ($route) => request()->routeIs($route)
+                                );
 
-                    @endforeach
+                                $routeName = $item['route'] ?? null;
+
+                                $hasRoute = $routeName
+                                    && Route::has($routeName);
+
+                            @endphp
+
+
+                            <a
+                                href="{{ $hasRoute ? route($routeName) : '#' }}"
+                                class="admin-sidebar-link
+                            {{ $active ? 'active' : '' }}
+                                {{ !$hasRoute ? 'disabled' : '' }}"
+                                @if(!$hasRoute)
+                                aria-disabled="true"
+                                @endif
+                            >
+
+                        <span class="admin-sidebar-link-icon">
+                            <i class="bi bi-{{ $item['icon'] ?? 'circle' }}"></i>
+                        </span>
+
+                                <span class="admin-sidebar-link-title">
+                            {{ $item['title'] ?? '' }}
+                        </span>
+
+                            </a>
+
+                        @endforeach
+
+                    </div>
 
                 </div>
 
@@ -105,6 +168,6 @@
 
         @endforeach
 
-    </div>
+    </nav>
 
 </aside>

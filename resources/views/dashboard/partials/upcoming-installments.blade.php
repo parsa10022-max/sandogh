@@ -1,42 +1,68 @@
-<div class="card border-0 shadow-sm mt-4">
+<div class="card dashboard-upcoming-installments-card">
 
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    {{-- Header --}}
+    <div class="card-header dashboard-upcoming-installments-header">
 
-        <h6 class="mb-0 fw-bold">
-            سررسیدهای ۷ روز آینده
-        </h6>
+        <div class="dashboard-upcoming-installments-title">
 
-        <span class="badge bg-primary">
+            <div class="dashboard-section-icon dashboard-upcoming-icon">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+
+            <div>
+                <h6 class="mb-1 fw-bold">
+                    سررسیدهای ۷ روز آینده
+                </h6>
+
+                <small class="text-muted">
+                    اقساطی که به‌زودی سررسید می‌شوند
+                </small>
+            </div>
+
+        </div>
+
+        <span class="dashboard-upcoming-count">
+            <i class="bi bi-list-check"></i>
 
             {{ $dashboard['upcomingInstallments']->count() }}
 
             قسط
-
         </span>
 
     </div>
 
-    <div class="table-responsive">
 
-        <table class="table table-hover align-middle mb-0">
+    {{-- Table --}}
+    <div class="table-responsive dashboard-upcoming-table-wrapper">
 
-            <thead class="table-light">
+        <table class="table dashboard-upcoming-table align-middle mb-0">
 
+            <thead>
             <tr>
 
-                <th>وام</th>
+                <th>
+                    وام
+                </th>
 
-                <th>عضو</th>
+                <th>
+                    عضو
+                </th>
 
-                <th>سررسید</th>
+                <th>
+                    سررسید
+                </th>
 
-                <th>مبلغ</th>
+                <th>
+                    مبلغ
+                </th>
 
-                <th>باقیمانده</th>
+                <th>
+                    زمان باقی‌مانده
+                </th>
 
             </tr>
-
             </thead>
+
 
             <tbody>
 
@@ -44,48 +70,117 @@
 
                 <tr>
 
+                    {{-- Loan --}}
                     <td>
 
-                        {{ $installment->loan->loanType->prefix }}
-                        -
-                        {{ $installment->loan->loan_number }}
+                        <div class="dashboard-upcoming-loan">
+
+                            <span class="dashboard-upcoming-loan-prefix">
+                                {{ $installment->loan->loanType->prefix }}
+                            </span>
+
+                            <span class="dashboard-upcoming-loan-number">
+                                {{ $installment->loan->loan_number }}
+                            </span>
+
+                        </div>
 
                     </td>
 
+
+                    {{-- Customer --}}
                     <td>
 
-                        {{ $installment->loan->customer->full_name }}
+                        <div class="dashboard-upcoming-customer">
+
+                            <div class="dashboard-upcoming-customer-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                            <span>
+                                {{ $installment->loan->customer->full_name }}
+                            </span>
+
+                        </div>
 
                     </td>
 
+
+                    {{-- Due Date --}}
                     <td>
 
-                        {{ $installment->due_date_jalali }}
+                        <span class="dashboard-upcoming-date">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            {{ $installment->due_date_jalali }}
+
+                        </span>
 
                     </td>
 
+
+                    {{-- Amount --}}
                     <td>
 
-                        {{ number_format($installment->amount) }}
+                        <div class="dashboard-upcoming-amount">
+
+                            {{ number_format($installment->amount) }}
+
+                            <small>
+                                ریال
+                            </small>
+
+                        </div>
 
                     </td>
 
+
+                    {{-- Remaining Days --}}
                     <td>
 
-                        {{ now()->startOfDay()->diffInDays($installment->due_date) }}
-                        روز
+                        @php
+                            $remainingDays = now()
+                                ->startOfDay()
+                                ->diffInDays($installment->due_date);
+                        @endphp
+
+                        <span class="dashboard-upcoming-days">
+
+                            <i class="bi bi-clock"></i>
+
+                            {{ $remainingDays }}
+
+                            روز
+
+                        </span>
 
                     </td>
 
                 </tr>
 
+
             @empty
 
                 <tr>
 
-                    <td colspan="5" class="text-center py-4 text-muted">
+                    <td colspan="5">
 
-                        سررسیدی در ۷ روز آینده وجود ندارد.
+                        <div class="dashboard-upcoming-empty-state">
+
+                            <div class="dashboard-upcoming-empty-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+
+                            <div class="fw-bold">
+                                سررسیدی در ۷ روز آینده وجود ندارد
+                            </div>
+
+                            <small class="text-muted">
+                                در حال حاضر قسط نزدیکی برای پرداخت وجود ندارد.
+                            </small>
+
+                        </div>
 
                     </td>
 

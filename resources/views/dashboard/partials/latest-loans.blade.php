@@ -1,37 +1,51 @@
-<div class="card border-0 shadow-sm mt-4">
+<div class="card dashboard-latest-loans-card">
 
-    <div class="card-header bg-white">
+    {{-- Header --}}
+    <div class="card-header dashboard-latest-loans-header">
 
-        <h6 class="mb-0 fw-bold">
+        <div class="dashboard-latest-loans-title">
 
-            آخرین وام‌ها
+            <div class="dashboard-section-icon dashboard-loans-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
 
-        </h6>
+            <div>
+                <h6 class="mb-1 fw-bold">
+                    آخرین وام‌ها
+                </h6>
+
+                <small class="text-muted">
+                    آخرین وام‌های ثبت‌شده در صندوق
+                </small>
+            </div>
+
+        </div>
+
+        <span class="dashboard-latest-loans-count">
+            <i class="bi bi-list-check"></i>
+
+            {{ $dashboard['latestLoans']->count() }}
+
+            وام
+        </span>
 
     </div>
 
-    <div class="table-responsive">
 
-        <table class="table table-hover align-middle mb-0">
+    {{-- Table --}}
+    <div class="table-responsive dashboard-latest-loans-table-wrapper">
 
-            <thead class="table-light">
+        <table class="table dashboard-latest-loans-table align-middle mb-0">
 
+            <thead>
             <tr>
-
-                <th>شماره</th>
-
+                <th>شماره وام</th>
                 <th>عضو</th>
-
                 <th>نوع وام</th>
-
                 <th>مبلغ</th>
-
                 <th>وضعیت</th>
-
-                <th></th>
-
+                <th class="text-center">عملیات</th>
             </tr>
-
             </thead>
 
             <tbody>
@@ -40,40 +54,78 @@
 
                 <tr>
 
+                    {{-- Loan Number --}}
+                    <td>
+                        <div class="dashboard-loan-number">
+                            <span>
+                                {{ $loan->loan_number }}
+                            </span>
+                            <span class="dashboard-loan-prefix">
+                                {{ $loan->loanType->prefix }}
+                            </span>
+
+
+
+                        </div>
+                    </td>
+
+
+                    {{-- Customer --}}
+                    <td>
+                        <div class="dashboard-customer-name">
+
+                            <div class="dashboard-customer-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                            <span>
+                                {{ $loan->customer->full_name }}
+                            </span>
+
+                        </div>
+                    </td>
+
+
+                    {{-- Loan Type --}}
+                    <td>
+                        <span class="dashboard-loan-type">
+                            {{ $loan->loanType->name }}
+                        </span>
+                    </td>
+
+
+                    {{-- Amount --}}
+                    <td>
+                        <span class="dashboard-loan-amount">
+
+                            {{ number_format($loan->loan_amount) }}
+
+                            <small>ریال</small>
+
+                        </span>
+                    </td>
+
+
+                    {{-- Status --}}
                     <td>
 
-                        {{ $loan->loanType->prefix }}-{{ $loan->loan_number }}
+                        <span class="badge dashboard-loan-status
+                            dashboard-loan-status-{{ $loan->status->value }}">
+
+                            {{ $loan->status->label() }}
+
+                        </span>
 
                     </td>
 
-                    <td>
 
-                        {{ $loan->customer->full_name }}
+                    {{-- Action --}}
+                    <td class="text-center">
 
-                    </td>
+                        <a href="{{ route('loans.show', $loan) }}"
+                           class="btn btn-sm dashboard-loan-action">
 
-                    <td>
-
-                        {{ $loan->loanType->name }}
-
-                    </td>
-
-                    <td>
-
-                        {{ number_format($loan->loan_amount) }}
-
-                    </td>
-
-                    <td>
-
-                        {{ $loan->status->label() }}
-
-                    </td>
-
-                    <td class="text-end">
-
-                        <a href="{{ route('loans.show',$loan) }}"
-                           class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
 
                             مشاهده
 
@@ -87,10 +139,23 @@
 
                 <tr>
 
-                    <td colspan="6"
-                        class="text-center py-4 text-muted">
+                    <td colspan="6">
 
-                        وامی ثبت نشده است.
+                        <div class="dashboard-empty-state">
+
+                            <div class="dashboard-empty-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+
+                            <div class="fw-bold">
+                                وامی ثبت نشده است
+                            </div>
+
+                            <small class="text-muted">
+                                هنوز هیچ وامی در سیستم ثبت نشده است.
+                            </small>
+
+                        </div>
 
                     </td>
 
@@ -105,3 +170,4 @@
     </div>
 
 </div>
+

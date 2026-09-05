@@ -22,6 +22,10 @@ class LoanPayment extends Model
         'bank_transaction_id',
         'bank_reference_number',
         'paid_at',
+
+        'accounting_status',
+        'accounting_confirmed_by',
+        'accounting_confirmed_at',
     ];
 
     /**
@@ -33,7 +37,13 @@ class LoanPayment extends Model
             'amount'   => 'integer',
             'gateway'  => PaymentGateway::class,
             'paid_at'  => 'datetime',
+            'accounting_status' =>
+                \App\Enums\AccountingStatus::class,
+
+            'accounting_confirmed_at' =>
+                'datetime',
         ];
+
     }
 
     /*
@@ -66,6 +76,13 @@ class LoanPayment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function accountingConfirmedBy(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'accounting_confirmed_by'
+        );
+    }
     /*
     |--------------------------------------------------------------------------
     | Scopes

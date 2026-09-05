@@ -1,0 +1,349 @@
+/* =========================================================
+   CUSTOMER EDIT
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+.customer-edit-page {
+    direction: rtl;
+    width: 100%;
+    padding: 1rem;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.customer-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.1rem;
+
+    background: #ffffff;
+
+    border: 1px solid #e9e7f2;
+    border-radius: 1rem;
+
+    box-shadow: 0 4px 18px rgba(39, 32, 77, 0.06);
+}
+
+.customer-edit-header__content {
+    display: flex;
+    align-items: center;
+
+    gap: 0.85rem;
+
+    min-width: 0;
+}
+
+.customer-edit-header__icon {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.85rem;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #4f6bed
+    );
+
+    color: #ffffff;
+
+    font-size: 1.3rem;
+
+    box-shadow: 0 5px 14px rgba(111, 66, 193, 0.2);
+}
+
+.customer-edit-header__text {
+    min-width: 0;
+}
+
+.customer-edit-title {
+    margin: 0;
+
+    color: #29243d;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    line-height: 1.6;
+}
+
+.customer-edit-description {
+    margin: 0.2rem 0 0;
+
+    color: #77738a;
+
+    font-size: 0.82rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.customer-edit-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    flex-shrink: 0;
+
+    min-height: 42px;
+
+    padding: 0.55rem 0.85rem;
+
+    background: #ffffff;
+
+    border: 1px solid #dedbea;
+    border-radius: 0.7rem;
+
+    color: #5d5675;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.customer-edit-back-btn:hover {
+    background: #6f42c1;
+
+    border-color: #6f42c1;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.customer-edit-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e9e7f2;
+    border-radius: 1rem;
+
+    box-shadow: 0 5px 22px rgba(39, 32, 77, 0.07);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.customer-edit-card__header {
+    padding: 1rem 1.1rem;
+
+    background: #faf9fd;
+
+    border-bottom: 1px solid #eceaf3;
+}
+
+.customer-edit-card__title {
+    display: flex;
+    align-items: center;
+
+    gap: 0.75rem;
+}
+
+.customer-edit-card__icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.75rem;
+
+    background: #f0ebfb;
+
+    color: #6f42c1;
+
+    font-size: 1.1rem;
+}
+
+.customer-edit-card__title h2 {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.customer-edit-card__title p {
+    margin: 0.2rem 0 0;
+
+    color: #817c91;
+
+    font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.customer-edit-card__body {
+    padding: 1rem;
+}
+
+.customer-edit-form {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.customer-edit-actions {
+    display: flex;
+    flex-direction: column-reverse;
+
+    gap: 0.7rem;
+
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+
+    border-top: 1px solid #eceaf3;
+}
+
+.customer-edit-submit-btn,
+.customer-edit-cancel-btn {
+    min-height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    border-radius: 0.7rem;
+
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+
+/* =========================================================
+   SUBMIT
+   ========================================================= */
+
+.customer-edit-submit-btn {
+    background: #6f42c1;
+
+    border: 1px solid #6f42c1;
+
+    color: #ffffff;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.18);
+}
+
+.customer-edit-submit-btn:hover {
+    background: #5d35a5;
+
+    border-color: #5d35a5;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CANCEL
+   ========================================================= */
+
+.customer-edit-cancel-btn {
+    background: #ffffff;
+
+    border: 1px solid #dedbea;
+
+    color: #5d5675;
+}
+
+.customer-edit-cancel-btn:hover {
+    background: #f7f5fb;
+
+    color: #3f3954;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .customer-edit-page {
+        padding: 1.5rem;
+    }
+
+    .customer-edit-header {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .customer-edit-title {
+        font-size: 1.35rem;
+    }
+
+    .customer-edit-card__body {
+        padding: 1.35rem;
+    }
+
+    .customer-edit-actions {
+        flex-direction: row;
+
+        justify-content: flex-end;
+    }
+
+    .customer-edit-submit-btn,
+    .customer-edit-cancel-btn {
+        min-width: 140px;
+    }
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .customer-edit-page {
+        padding: 1.75rem 2rem;
+    }
+
+    .customer-edit-card__body {
+        padding: 1.5rem;
+    }
+}

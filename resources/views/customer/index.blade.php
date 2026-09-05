@@ -4,48 +4,63 @@
 
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid customers-page">
 
-        <x-page-header title="مدیریت مشتریان">
+        {{-- =====================================================
+             PAGE HEADER
+        ====================================================== --}}
 
-            <a
-                href="{{ route('customers.create') }}"
-                class="btn btn-primary">
+        <div class="customers-page-header">
 
-                <i class="bi bi-plus-circle"></i>
-                مشتری جدید
-            </a>
+            <x-page-header title="مدیریت مشتریان">
 
-        </x-page-header>
+                <a
+                    href="{{ route('customers.create') }}"
+                    class="btn btn-primary customers-add-btn"
+                >
+                    <i class="bi bi-plus-circle"></i>
+                    <span>مشتری جدید</span>
+                </a>
 
-        {{-- Search --}}
-        <x-search-box
-            :action="route('customers.index')"
-        />
+            </x-page-header>
 
-        {{-- Table --}}
+        </div>
+
+
+        {{-- =====================================================
+             SEARCH
+        ====================================================== --}}
+
+        <div class="customers-search">
+
+            <x-search-box
+                :action="route('customers.index')"
+            />
+
+        </div>
+
+
+        {{-- =====================================================
+             TABLE
+        ====================================================== --}}
+
         <x-datatable.table>
 
-            <div class="card-body p-0">
+            <div class="customers-table-wrapper">
 
-                <table class="table table-hover table-striped align-middle mb-0">
+                <table class="table customers-table mb-0">
 
-                    <thead class="table-dark">
+                    <thead>
 
                     <tr>
-
                         <th>کد</th>
-
                         <th>نام</th>
-
                         <th>کد ملی</th>
-
                         <th>موبایل</th>
-
                         <th>وضعیت</th>
-
-                        <th width="120">عملیات</th>
-
+                        <th class="customers-actions-column">
+                            عملیات
+                        </th>
                     </tr>
 
                     </thead>
@@ -56,21 +71,38 @@
 
                         <tr>
 
-                            <td>{{ $customer->customer_code }}</td>
+                            <td data-label="کد">
+                                <span class="customer-code">
+                                    {{ $customer->customer_code }}
+                                </span>
+                            </td>
 
-                            <td>{{ $customer->full_name }}</td>
+                            <td data-label="نام">
+                                <span class="customer-name">
+                                    {{ $customer->full_name }}
+                                </span>
+                            </td>
 
-                            <td>{{ $customer->national_code }}</td>
+                            <td data-label="کد ملی">
+                                {{ $customer->national_code }}
+                            </td>
 
-                            <td>{{ $customer->mobile }}</td>
+                            <td data-label="موبایل">
+                                {{ $customer->mobile }}
+                            </td>
 
-                            <td>
+                            <td data-label="وضعیت">
 
-                                {{ $customer->status->label()}}
+                                <span class="customer-status">
+                                    {{ $customer->status->label() }}
+                                </span>
 
                             </td>
 
-                            <td class="text-center">
+                            <td
+                                data-label="عملیات"
+                                class="customers-actions"
+                            >
 
                                 <div class="d-flex justify-content-center gap-1">
 
@@ -90,10 +122,20 @@
 
                         <tr>
 
-                            <td colspan="6"
-                                class="text-center py-4">
+                            <td
+                                colspan="6"
+                                class="customers-empty"
+                            >
 
-                                مشتری ثبت نشده است.
+                                <div class="customers-empty-content">
+
+                                    <i class="bi bi-people"></i>
+
+                                    <span>
+                                        مشتری ثبت نشده است.
+                                    </span>
+
+                                </div>
 
                             </td>
 
@@ -109,9 +151,14 @@
 
         </x-datatable.table>
 
+
+        {{-- =====================================================
+             PAGINATION
+        ====================================================== --}}
+
         <x-pagination :items="$customers"/>
-        {{-- Pagination --}}
 
     </div>
 
 @endsection
+

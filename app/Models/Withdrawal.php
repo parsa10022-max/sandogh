@@ -30,6 +30,10 @@ class Withdrawal extends Model
         'paid_by',
         'paid_at',
 
+        'accounting_status',
+        'accounting_confirmed_by',
+        'accounting_confirmed_at',
+
     ];
 
 
@@ -42,6 +46,12 @@ class Withdrawal extends Model
         'amount' => 'integer',
 
         'paid_at' => 'datetime',
+
+        'accounting_status' =>
+            \App\Enums\AccountingStatus::class,
+
+        'accounting_confirmed_at' =>
+            'datetime',
 
     ];
 
@@ -74,7 +84,13 @@ class Withdrawal extends Model
         );
     }
 
-
+    public function accountingConfirmedBy(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'accounting_confirmed_by'
+        );
+    }
     /*
     |--------------------------------------------------------------------------
     | Helpers

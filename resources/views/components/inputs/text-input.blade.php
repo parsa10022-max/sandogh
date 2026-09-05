@@ -3,7 +3,7 @@
 'name',
 'type' => 'text',
 'required' => false,
-'col' => 'col-12 col-md-6',
+'col' => null,
 ])
 
 <x-form.group :col="$col">

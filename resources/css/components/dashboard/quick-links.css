@@ -1,0 +1,337 @@
+/* =========================================================
+   DASHBOARD - QUICK LINKS
+   Design System #1
+   Purple + Blue
+   RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.dashboard-quick-links {
+    margin-top: 1.5rem;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dashboard-quick-links-header {
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 1rem;
+}
+
+
+.dashboard-quick-links-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+}
+
+
+/* =========================================================
+   SECTION ICON
+   ========================================================= */
+
+.dashboard-quick-links-icon {
+    width: 46px;
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(111, 66, 193, 0.10);
+
+    color: #6f42c1;
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   QUICK LINK
+   ========================================================= */
+
+.dashboard-quick-link {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.85rem;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 1rem;
+
+    border: 1px solid rgba(0, 0, 0, 0.06);
+
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    box-shadow: 0 0.25rem 0.9rem rgba(0, 0, 0, 0.05);
+
+    text-decoration: none;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.dashboard-quick-link:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 0.7rem 1.5rem rgba(0, 0, 0, 0.10);
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.dashboard-quick-link-icon {
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    font-size: 1.25rem;
+
+    transition: transform 0.25s ease;
+}
+
+
+.dashboard-quick-link:hover .dashboard-quick-link-icon {
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   PRIMARY
+   ========================================================= */
+
+.dashboard-quick-link-primary .dashboard-quick-link-icon {
+    background: rgba(13, 110, 253, 0.10);
+
+    color: #0d6efd;
+}
+
+
+.dashboard-quick-link-primary:hover {
+    border-color: rgba(13, 110, 253, 0.20);
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.dashboard-quick-link-success .dashboard-quick-link-icon {
+    background: rgba(25, 135, 84, 0.10);
+
+    color: #198754;
+}
+
+
+.dashboard-quick-link-success:hover {
+    border-color: rgba(25, 135, 84, 0.20);
+}
+
+
+/* =========================================================
+   DANGER
+   ========================================================= */
+
+.dashboard-quick-link-danger .dashboard-quick-link-icon {
+    background: rgba(220, 53, 69, 0.10);
+
+    color: #dc3545;
+}
+
+
+.dashboard-quick-link-danger:hover {
+    border-color: rgba(220, 53, 69, 0.20);
+}
+
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+.dashboard-quick-link-info .dashboard-quick-link-icon {
+    background: rgba(13, 202, 240, 0.10);
+
+    color: #0dcaf0;
+}
+
+
+.dashboard-quick-link-info:hover {
+    border-color: rgba(13, 202, 240, 0.20);
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.dashboard-quick-link-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.dashboard-quick-link-title {
+    color: #212529;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+.dashboard-quick-link-description {
+    margin-top: 0.2rem;
+
+    color: #6c757d;
+
+    font-size: 0.72rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.dashboard-quick-link-arrow {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    min-width: 30px;
+
+    border-radius: 8px;
+
+    background: #f8f9fa;
+
+    color: #6c757d;
+
+    font-size: 0.75rem;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.dashboard-quick-link:hover .dashboard-quick-link-arrow {
+    background: rgba(13, 110, 253, 0.08);
+
+    color: #0d6efd;
+
+    transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-quick-links {
+        margin-top: 1rem;
+    }
+
+
+    .dashboard-quick-links-title {
+        gap: 0.65rem;
+    }
+
+
+    .dashboard-quick-links-icon {
+        width: 42px;
+        height: 42px;
+
+        min-width: 42px;
+
+        border-radius: 11px;
+
+        font-size: 1.1rem;
+    }
+
+
+    .dashboard-quick-link {
+        padding: 0.85rem;
+
+        border-radius: 14px;
+    }
+
+
+    .dashboard-quick-link-icon {
+        width: 44px;
+        height: 44px;
+
+        min-width: 44px;
+
+        border-radius: 11px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .dashboard-quick-link-description {
+        font-size: 0.7rem;
+    }
+
+
+    .dashboard-quick-link-arrow {
+        width: 28px;
+        height: 28px;
+
+        min-width: 28px;
+    }
+
+}

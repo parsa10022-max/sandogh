@@ -1,0 +1,240 @@
+Folder PATH listing
+Volume serial number is E2D4-FA94
+C:\PROJECTS\SANDOGH-GITHUB\RESOURCES\VIEWS
+|   dashboard.blade.php
+|   welcome.blade.php
+|   
++---accounts
+|   |   customer-create.blade.php
+|   |   customer-edit.blade.php
+|   |   index.blade.php
+|   |   show.blade.php
+|   |   transactions.blade.php
+|   |   
+|   +---adjustment
+|   |       create.blade.php
+|   |       
+|   +---deposit
+|   |       create.blade.php
+|   |       
+|   \---withdrawal
+|           create.blade.php
+|           index.blade.php
+|           
++---auth
+|       login.blade.php
+|       otp.blade.php
+|       
++---components
+|   |   action-buttons.blade.php
+|   |   app-logo-icon.blade.php
+|   |   app-logo.blade.php
+|   |   auth-header.blade.php
+|   |   page-header.blade.php
+|   |   pagination.blade.php
+|   |   search-box.blade.php
+|   |   
+|   +---customer
+|   |       action-card.blade.php
+|   |       card.blade.php
+|   |       stat-card.blade.php
+|   |       status-badge.blade.php
+|   |       
+|   +---dashboard
+|   |       stat-card.blade.php
+|   |       
+|   +---datatable
+|   |       table.blade.php
+|   |       
+|   +---form
+|   |       error.blade.php
+|   |       group.blade.php
+|   |       help.blade.php
+|   |       label.blade.php
+|   |       required.blade.php
+|   |       
+|   \---inputs
+|           date-input.blade.php
+|           file-input.blade.php
+|           iban-input.blade.php
+|           mobile-input.blade.php
+|           money-input.blade.php
+|           national-code-input.blade.php
+|           password-input.blade.php
+|           select-input.blade.php
+|           text-input.blade.php
+|           textarea-input.blade.php
+|           
++---customer
+|   |   archive.blade.php
+|   |   create.blade.php
+|   |   dashboard.blade.php
+|   |   edit.blade.php
+|   |   index.blade.php
+|   |   show.blade.php
+|   |   _form.blade.php
+|   |   _picker.blade.php
+|   |   
+|   +---accounts
+|   |       index.blade.php
+|   |       
+|   +---donations
+|   |       create.blade.php
+|   |       payment.blade.php
+|   |       success.blade.php
+|   |       
+|   +---installments
+|   |   |   index.blade.php
+|   |   |   success.blade.php
+|   |   |   
+|   |   \---others
+|   |           create.blade.php
+|   |           result.blade.php
+|   |           success.blade.php
+|   |           
+|   +---layouts
+|   |       app.blade.php
+|   |       header.blade.php
+|   |       sidebar.blade.php
+|   |       
+|   +---loans
+|   |       index.blade.php
+|   |       show.blade.php
+|   |       
+|   +---loan_requests
+|   |       create.blade.php
+|   |       index.blade.php
+|   |       show.blade.php
+|   |       
+|   +---notifications
+|   |       index.blade.php
+|   |       
+|   +---payments
+|   |       success.blade.php
+|   |       
+|   +---profile
+|   |       index.blade.php
+|   |       
+|   +---savings
+|   |   |   transactions.blade.php
+|   |   |   
+|   |   +---deposit
+|   |   |       create.blade.php
+|   |   |       savings-transfer.blade.php
+|   |   |       
+|   |   \---withdrawal
+|   |           create.blade.php
+|   |           success.blade.php
+|   |           
+|   +---savings-transfer
+|   |       create.blade.php
+|   |       failed.blade.php
+|   |       success.blade.php
+|   |       
+|   +---services
+|   |       index.blade.php
+|   |       
+|   \---settings
+|           index.blade.php
+|           verify-mobile.blade.php
+|           verify-password.blade.php
+|           
++---dashboard
+|   |   index.blade.php
+|   |   
+|   \---partials
+|           latest-loans.blade.php
+|           latest-payments.blade.php
+|           loan-statistics.blade.php
+|           overdue-installments.blade.php
+|           quick-links.blade.php
+|           upcoming-installments.blade.php
+|           
++---donation
+|       create.blade.php
+|       success.blade.php
+|       
++---donations
+|       index.blade.php
+|       manual-create.blade.php
+|       
++---layouts
+|   |   alerts.blade.php
+|   |   app.blade.php
+|   |   bootstrap.blade.php
+|   |   footer.blade.php
+|   |   guest.blade.php
+|   |   head.blade.php
+|   |   header.blade.php
+|   |   sidebar.blade.php
+|   |   
+|   \---auth
+|           card.blade.php
+|           simple.blade.php
+|           split.blade.php
+|           
++---loan
+|   |   create.blade.php
+|   |   edit.blade.php
+|   |   index.blade.php
+|   |   overdue.blade.php
+|   |   show.blade.php
+|   |   _form.blade.php
+|   |   _guarantors.blade.php
+|   |   _preview.blade.php
+|   |   
+|   \---partials
+|           dates.blade.php
+|           guarantors-show.blade.php
+|           installments.blade.php
+|           loan-info.blade.php
+|           request-info.blade.php
+|           summary.blade.php
+|           system-info.blade.php
+|           
++---loan-types
+|       create.blade.php
+|       edit.blade.php
+|       index.blade.php
+|       _form.blade.php
+|       
++---loan_requests
+|       create.blade.php
+|       edit.blade.php
+|       index.blade.php
+|       show.blade.php
+|       
++---payments
+|       fake.blade.php
+|       
++---receipts
+|   |   fund-contribution.blade.php
+|   |   layout.blade.php
+|   |   loan.blade.php
+|   |   payment.blade.php
+|   |   saving-deposit.blade.php
+|   |   saving-withdraw.blade.php
+|   |   savings-transfer.blade.php
+|   |   
+|   \---partials
+|           bank.blade.php
+|           customer.blade.php
+|           footer.blade.php
+|           header.blade.php
+|           transaction.blade.php
+|           
++---system-accounts
+|       create.blade.php
+|       edit.blade.php
+|       index.blade.php
+|       _form.blade.php
+|       
++---test
+|       components.blade.php
+|       form.blade.php
+|       layout.blade.php
+|       
+\---withdrawals
+        index.blade.php
+        show.blade.php
+        

@@ -5,7 +5,7 @@
 'value' => '',
 'placeholder' => '',
 'required' => false,
-'col' => 'col-12',
+'col' => null,
 ])
 
 <x-form.group :col="$col">

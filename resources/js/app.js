@@ -15,6 +15,7 @@ import './components/inputs/select-input';
 import './components/inputs/textarea-input';
 import './components/inputs/file-input';
 import './components/inputs/sheba-input';
+import './admin.js';
 
 import './loan/loan-form';
 

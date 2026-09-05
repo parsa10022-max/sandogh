@@ -1,7 +1,10 @@
 @props([
-'col' => 'col-12 col-md-6',
+'col' => null,
 ])
 
-<div {{ $attributes->class([$col, 'mb-3']) }}>
+<div {{ $attributes->class([
+    'mb-3',
+    $col,
+]) }}>
     {{ $slot }}
 </div>

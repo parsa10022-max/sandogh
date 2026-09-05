@@ -1,0 +1,484 @@
+/* =========================================================
+   DASHBOARD - LATEST PAYMENTS
+   Design System #1
+   Purple + Blue
+   RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.dashboard-latest-payments-card {
+    margin-top: 1.5rem;
+
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    box-shadow: 0 0.25rem 0.9rem rgba(0, 0, 0, 0.06);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dashboard-latest-payments-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding: 1rem 1.25rem;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.dashboard-latest-payments-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SECTION ICON
+   ========================================================= */
+
+.dashboard-payments-icon {
+    width: 46px;
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(13, 110, 253, 0.10);
+
+    color: #0d6efd;
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   COUNT
+   ========================================================= */
+
+.dashboard-latest-payments-count {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.35rem;
+
+    padding: 0.4rem 0.7rem;
+
+    border-radius: 999px;
+
+    background: rgba(25, 135, 84, 0.10);
+
+    color: #198754;
+
+    font-size: 0.78rem;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.dashboard-latest-payments-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.dashboard-latest-payments-table {
+    width: 100%;
+
+    min-width: 720px;
+
+    margin-bottom: 0;
+
+    color: #212529;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.dashboard-latest-payments-table thead th {
+    padding: 0.85rem 1rem;
+
+    background: #f8f9fa;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    color: #6c757d;
+
+    font-size: 0.78rem;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.dashboard-latest-payments-table tbody td {
+    padding: 0.9rem 1rem;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    vertical-align: middle;
+}
+
+
+/* آخرین ردیف بدون border */
+.dashboard-latest-payments-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* Hover */
+.dashboard-latest-payments-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.dashboard-latest-payments-table tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.025);
+}
+
+
+/* =========================================================
+   LOAN
+   ========================================================= */
+
+.dashboard-payment-loan {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.45rem;
+
+    direction: ltr;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-payment-loan-prefix {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+
+    padding: 0.25rem 0.45rem;
+
+    border-radius: 7px;
+
+    background: rgba(111, 66, 193, 0.10);
+
+    color: #6f42c1;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+}
+
+
+.dashboard-payment-loan-number {
+    color: #343a40;
+
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.dashboard-payment-customer {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.55rem;
+
+    min-width: 150px;
+
+    font-size: 0.85rem;
+
+    font-weight: 500;
+}
+
+
+.dashboard-payment-customer-icon {
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(13, 110, 253, 0.08);
+
+    color: #0d6efd;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.dashboard-payment-amount {
+    color: #198754;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-payment-amount small {
+    margin-right: 0.2rem;
+
+    color: #6c757d;
+
+    font-size: 0.7rem;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.dashboard-payment-date {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.35rem;
+
+    color: #495057;
+
+    font-size: 0.82rem;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-payment-date i {
+    color: #6f42c1;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   TRACKING CODE
+   ========================================================= */
+
+.dashboard-payment-tracking {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.35rem;
+
+    padding: 0.35rem 0.55rem;
+
+    border-radius: 8px;
+
+    background: #f8f9fa;
+
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    color: #495057;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+
+    direction: ltr;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-payment-tracking i {
+    color: #0d6efd;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.dashboard-payment-empty-state {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.35rem;
+
+    padding: 2.5rem 1rem;
+
+    text-align: center;
+}
+
+
+.dashboard-payment-empty-icon {
+    width: 52px;
+    height: 52px;
+
+    margin-bottom: 0.35rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(13, 110, 253, 0.08);
+
+    color: #0d6efd;
+
+    font-size: 1.4rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-latest-payments-card {
+        margin-top: 1rem;
+
+        border-radius: 14px;
+    }
+
+
+    .dashboard-latest-payments-header {
+        align-items: flex-start;
+
+        padding: 0.9rem 1rem;
+    }
+
+
+    .dashboard-latest-payments-title {
+        gap: 0.65rem;
+    }
+
+
+    .dashboard-payments-icon {
+        width: 42px;
+        height: 42px;
+
+        min-width: 42px;
+
+        border-radius: 11px;
+
+        font-size: 1.1rem;
+    }
+
+
+    .dashboard-latest-payments-count {
+        padding: 0.35rem 0.55rem;
+
+        font-size: 0.72rem;
+    }
+
+
+    .dashboard-latest-payments-table thead th,
+    .dashboard-latest-payments-table tbody td {
+        padding: 0.75rem 0.8rem;
+    }
+
+
+    .dashboard-payment-customer {
+        min-width: 135px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .dashboard-latest-payments-header {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .dashboard-latest-payments-count {
+        align-self: flex-start;
+    }
+
+
+    .dashboard-latest-payments-table {
+        min-width: 680px;
+    }
+
+}

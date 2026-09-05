@@ -30,6 +30,25 @@
 @import "./components/inputs/textarea-input.css";
 @import "./components/inputs/file-input.css";
 @import "./components/inputs/sheba-input.css";
+@import "./components/dashboard/stat-card.css";
+@import "./components/dashboard/overdue-installments.css";
+@import "./components/dashboard/latest-loans.css";
+@import "./components/dashboard/latest-payments.css";
+@import "./components/dashboard/upcoming-installments.css";
+@import "./components/dashboard/quick-links.css";
+@import "./components/dashboard/action-needed.css";
+@import "./components/layout/admin-sidebar.css";
+@import "./admin/header.css";
+@import "./admin/customers/index.css";
+@import "admin/customers/input-componet.css";
+@import "admin/customers/customer-create.css";
+@import "admin/customers/customer-show.css";
+@import "admin/customers/customer-edit.css";
+@import "admin/customers/customer-archive.css";
+@import "admin/customers/pagination.css";
+
+@import "./components/layout/admin-sidebar.css";
+@import "./admin/header.css";
 
 
 /* =========================================================

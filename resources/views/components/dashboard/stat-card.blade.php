@@ -4,36 +4,41 @@
 'icon',
 'color' => 'primary',
 'subValue' => null,
+'unit' => null,
 ])
 
-<div class="card border-0 shadow-sm h-100 dashboard-stat-card">
+<div class="card dashboard-stat-card h-100">
 
     <div class="card-body">
 
-        <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex justify-content-between align-items-start gap-3">
 
-            <div>
+            <div class="flex-grow-1">
 
-                <div class="text-muted small mb-2">
+                <div class="dashboard-stat-title">
                     {{ $title }}
                 </div>
 
-                <div class="fs-2 fw-bold">
-                    {{ $value }}
+                <div class="dashboard-stat-value">
+                    {{ is_numeric($value) ? number_format($value) : $value }}
+
+                    @if($unit)
+                        <span class="dashboard-stat-unit">
+                            {{ $unit }}
+                        </span>
+                    @endif
                 </div>
 
                 @if($subValue)
-                    <div class="small text-muted mt-2">
-                        {{ $subValue }}
+                    <div class="dashboard-stat-subvalue">
+                        {{ is_numeric($subValue) ? number_format($subValue) : $subValue }}
                     </div>
                 @endif
 
             </div>
 
-            <div class="rounded-circle bg-{{ $color }} bg-opacity-10 p-3">
-
-                <i class="bi {{ $icon }} text-{{ $color }} fs-3"></i>
-
+            <div class="dashboard-stat-icon bg-{{ $color }} bg-opacity-10">
+                <i class="bi {{ $icon }} text-{{ $color }}"></i>
             </div>
 
         </div>
@@ -42,20 +47,5 @@
 
 </div>
 
-<style>
 
-    .dashboard-stat-card{
 
-        transition:.25s;
-
-    }
-
-    .dashboard-stat-card:hover{
-
-        transform:translateY(-4px);
-
-        box-shadow:0 .75rem 1.5rem rgba(0,0,0,.12)!important;
-
-    }
-
-</style>

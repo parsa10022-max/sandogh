@@ -1,0 +1,558 @@
+/* =========================================================
+   CUSTOMER CREATE
+   Design System #1
+   RTL / Bootstrap 5.3 / Mobile First
+   ========================================================= */
+
+.customer-create-page {
+    direction: rtl;
+    width: 100%;
+    padding: 1rem;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.customer-create-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.1rem;
+
+    background: #ffffff;
+    border: 1px solid #e9e7f2;
+    border-radius: 1rem;
+
+    box-shadow: 0 4px 18px rgba(39, 32, 77, 0.06);
+}
+
+.customer-create-header__content {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+.customer-create-header__icon {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.85rem;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #4f6bed
+    );
+
+    color: #ffffff;
+    font-size: 1.35rem;
+
+    box-shadow: 0 5px 14px rgba(111, 66, 193, 0.2);
+}
+
+.customer-create-header__text {
+    min-width: 0;
+}
+
+.customer-create-title {
+    margin: 0;
+
+    color: #29243d;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    line-height: 1.6;
+}
+
+.customer-create-description {
+    margin: 0.2rem 0 0;
+
+    color: #77738a;
+
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.customer-create-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+
+    flex-shrink: 0;
+
+    min-height: 42px;
+    padding: 0.55rem 0.85rem;
+
+    color: #5d5675;
+    background: #ffffff;
+
+    border: 1px solid #dedbea;
+    border-radius: 0.7rem;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.customer-create-back-btn:hover {
+    color: #ffffff;
+    background: #6f42c1;
+    border-color: #6f42c1;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.customer-create-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e9e7f2;
+    border-radius: 1rem;
+
+    box-shadow: 0 5px 22px rgba(39, 32, 77, 0.07);
+}
+
+.customer-create-card__header {
+    padding: 1rem 1.1rem;
+
+    background: #faf9fd;
+
+    border-bottom: 1px solid #eceaf3;
+}
+
+.customer-create-card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.customer-create-card__icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.75rem;
+
+    background: #f0ebfb;
+    color: #6f42c1;
+
+    font-size: 1.1rem;
+}
+
+.customer-create-card__title h2 {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.customer-create-card__title p {
+    margin: 0.2rem 0 0;
+
+    color: #817c91;
+
+    font-size: 0.78rem;
+}
+
+.customer-create-card__body {
+    padding: 1rem;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.customer-create-form {
+    width: 100%;
+}
+
+.customer-form-section {
+    padding: 1rem;
+
+    background: #ffffff;
+
+    border: 1px solid #ebe9f2;
+    border-radius: 0.9rem;
+
+    margin-bottom: 1rem;
+}
+
+.customer-form-section--account {
+    background: #fcfbff;
+}
+
+.customer-form-section__header {
+    display: flex;
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding-bottom: 0.9rem;
+    margin-bottom: 1rem;
+
+    border-bottom: 1px solid #eeeaf5;
+}
+
+.customer-form-section__icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    background: #f0ebfb;
+    color: #6f42c1;
+
+    font-size: 1rem;
+}
+
+.customer-form-section__title {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.customer-form-section__description {
+    margin: 0.15rem 0 0;
+
+    color: #817c91;
+
+    font-size: 0.76rem;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.customer-form-grid {
+    display: grid;
+
+    gap: 1rem;
+
+    width: 100%;
+}
+
+.customer-form-grid--two {
+    grid-template-columns: 1fr;
+}
+
+.customer-form-field {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   FORM LABEL
+   ========================================================= */
+
+.customer-form-label {
+    display: block;
+
+    margin-bottom: 0.45rem;
+
+    color: #454055;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.customer-form-control {
+    width: 100%;
+    min-height: 44px;
+
+    border: 1px solid #ddd9e8;
+    border-radius: 0.65rem;
+
+    background: #ffffff;
+
+    color: #302b45;
+
+    font-family: inherit;
+    font-size: 0.84rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.customer-form-control:focus {
+    border-color: #6f42c1;
+
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.1);
+}
+
+.customer-form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.customer-form-error {
+    margin-top: 0.35rem;
+
+    color: #dc3545;
+
+    font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   ACCOUNT NUMBER
+   ========================================================= */
+
+.account-number-box {
+    display: flex;
+    align-items: stretch;
+
+    width: 100%;
+
+    direction: ltr;
+
+    border: 1px solid #ddd9e8;
+    border-radius: 0.65rem;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.account-number-box:focus-within {
+    border-color: #6f42c1;
+
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.1);
+}
+
+.account-prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 65px;
+    padding: 0 0.65rem;
+
+    background: #f3f0fa;
+
+    color: #6f42c1;
+
+    border-left: 1px solid #ddd9e8;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.account-suffix {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 44px;
+
+    padding: 0 0.75rem;
+
+    border: 0;
+    outline: 0;
+
+    background: #ffffff;
+
+    color: #302b45;
+
+    font-family: inherit;
+    font-size: 0.84rem;
+}
+
+
+/* =========================================================
+   MONEY
+   ========================================================= */
+
+.customer-money-field {
+    position: relative;
+}
+
+.customer-money-field .customer-form-control {
+    padding-left: 3.8rem;
+}
+
+.customer-money-field__unit {
+    position: absolute;
+
+    left: 0.75rem;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #817c91;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.customer-create-actions {
+    display: flex;
+    flex-direction: column-reverse;
+
+    gap: 0.7rem;
+
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+
+    border-top: 1px solid #eceaf3;
+}
+
+.customer-submit-btn,
+.customer-cancel-btn {
+    min-height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    border-radius: 0.7rem;
+
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.customer-submit-btn {
+    border: 1px solid #6f42c1;
+
+    background: #6f42c1;
+    color: #ffffff;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.18);
+}
+
+.customer-submit-btn:hover {
+    background: #5d35a5;
+    border-color: #5d35a5;
+
+    transform: translateY(-1px);
+}
+
+.customer-cancel-btn {
+    border: 1px solid #dedbea;
+
+    background: #ffffff;
+    color: #5d5675;
+}
+
+.customer-cancel-btn:hover {
+    background: #f7f5fb;
+    color: #3f3954;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .customer-create-page {
+        padding: 1.5rem;
+    }
+
+    .customer-create-header {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .customer-create-title {
+        font-size: 1.35rem;
+    }
+
+    .customer-create-card__body {
+        padding: 1.35rem;
+    }
+
+    .customer-form-section {
+        padding: 1.2rem;
+    }
+
+    .customer-form-grid--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .customer-create-actions {
+        flex-direction: row;
+
+        justify-content: flex-end;
+    }
+
+    .customer-submit-btn,
+    .customer-cancel-btn {
+        min-width: 130px;
+    }
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .customer-create-page {
+        padding: 1.75rem 2rem;
+    }
+
+    .customer-create-card__body {
+        padding: 1.5rem;
+    }
+
+    .customer-form-section {
+        padding: 1.35rem;
+    }
+}

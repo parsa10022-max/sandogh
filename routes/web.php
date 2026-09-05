@@ -5,7 +5,8 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Customer\LoanController;
+use App\Http\Controllers\Loan\LoanController;
+use App\Http\Controllers\Customer\LoanController as CustomerLoanController;
 use App\Http\Controllers\LoanType\LoanTypeController;
 use App\Http\Controllers\PaymentController;
 use App\Models\User;
@@ -27,7 +28,7 @@ use App\Http\Controllers\DonationController as PublicDonationController;
 use App\Http\Controllers\Customer\ServicesController;
 use App\Http\Controllers\Customer\SettingsController;
 use App\Http\Controllers\Customer\ProfileController;
-
+use App\Http\Controllers\Admin\AccountingController;
 
 
 
@@ -490,7 +491,40 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
         [DonationController::class, 'index']
     )
         ->name('donations.index');
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Accounting
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin/accounting')
+        ->name('admin.accounting.')
+        ->group(function () {
 
+            Route::get(
+                '/',
+                [AccountingController::class, 'index']
+            )->name('index');
+
+            Route::get(
+                '/savings-transfers',
+                [AccountingController::class, 'savingsTransfers']
+            )->name('savings-transfers');
+
+            Route::get(
+                '/withdrawals',
+                [AccountingController::class, 'withdrawals']
+            )->name('withdrawals');
+
+            Route::get(
+                '/loan-payments',
+                [AccountingController::class, 'loanPayments']
+            )->name('loan-payments');
+
+            Route::post(
+                '/{type}/{id}/confirm',
+                [AccountingController::class, 'confirm']
+            )->name('confirm');
+        });
 
 });
 
@@ -552,15 +586,8 @@ Route::post(
     ->name('logout');
 
 
-// مسیرهای مشتری
-Route::middleware(['auth', 'customer.access'])
-    ->prefix('customer')
-    ->name('customer.')
-    ->group(function () {
 
-        // Routeهای پنل مشتری
 
-    });
 
 
 Route::middleware(['auth', 'customer.access'])
@@ -570,10 +597,7 @@ Route::middleware(['auth', 'customer.access'])
 
 
 
-        Route::get(
-            'settings',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'index']
-        )->name('settings.index');
+
 
         Route::put(
             'settings/password',
@@ -606,10 +630,10 @@ Route::middleware(['auth', 'customer.access'])
         )->name('settings.password.verify.submit');
 
 
-        Route::get('/loans', [LoanController::class, 'index'])
+        Route::get('/loans', [CustomerLoanController::class, 'index'])
             ->name('loans.index');
 
-        Route::get('/loans/{loan}', [LoanController::class, 'show'])
+        Route::get('/loans/{loan}', [CustomerLoanController::class, 'show'])
             ->name('loans.show');
 
 

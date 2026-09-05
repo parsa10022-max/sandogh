@@ -1,56 +1,69 @@
-<div class="card border-0 shadow-sm mt-4">
+<div class="card dashboard-overdue-card">
 
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    {{-- Header --}}
+    <div class="card-header dashboard-overdue-header">
 
-        <h6 class="mb-0 fw-bold">
-            اقساط معوق
-        </h6>
+        <div class="dashboard-overdue-title">
 
-        <div>
+            <div class="dashboard-section-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
 
-            <span class="badge bg-warning text-dark me-2">
+            <div>
+                <h6 class="mb-1 fw-bold">
+                    اقساط معوق
+                </h6>
+
+                <small class="text-muted">
+                    اقساطی که از تاریخ سررسید گذشته‌اند
+                </small>
+            </div>
+
+        </div>
+
+
+        {{-- Summary --}}
+        <div class="dashboard-overdue-summary">
+
+            <span class="dashboard-overdue-count">
+                <i class="bi bi-list-check"></i>
 
                 {{ $dashboard['overdueInstallments']->count() }}
 
                 قسط
-
             </span>
 
-            <span class="badge bg-danger">
+            <span class="dashboard-overdue-amount">
+                <i class="bi bi-cash-stack"></i>
 
                 {{ number_format($dashboard['overdueInstallments']->sum('amount')) }}
 
                 ریال
-
             </span>
 
         </div>
 
     </div>
 
-    <div class="table-responsive">
 
-        <table class="table table-hover align-middle mb-0">
+    {{-- Table --}}
+    <div class="table-responsive dashboard-overdue-table-wrapper">
 
-            <thead class="table-light">
+        <table class="table dashboard-overdue-table align-middle mb-0">
+
+            <thead>
 
             <tr>
-
                 <th>وام</th>
-
                 <th>عضو</th>
-
                 <th>سررسید</th>
-
                 <th>مبلغ</th>
-
                 <th>تأخیر</th>
-
                 <th class="text-center">عملیات</th>
-
             </tr>
 
             </thead>
+
 
             <tbody>
 
@@ -70,37 +83,79 @@
 
                 @endphp
 
+
                 <tr>
 
+                    {{-- Loan --}}
                     <td>
-                        {{ $installment->loan->loan_number }}
 
-                        -
-                        {{ $installment->loan->loanType->prefix }}
+                        <div class="dashboard-loan-number">
+
+                            <span class="dashboard-loan-prefix">
+                                {{ $installment->loan->loanType->prefix }}
+                            </span>
+
+                            <span>
+                                {{ $installment->loan->loan_number }}
+                            </span>
+
+                        </div>
 
                     </td>
 
+
+                    {{-- Customer --}}
                     <td>
 
-                        {{ $installment->loan->customer->full_name }}
+                        <div class="dashboard-customer-name">
+
+                            <div class="dashboard-customer-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                            <span>
+                                {{ $installment->loan->customer->full_name }}
+                            </span>
+
+                        </div>
 
                     </td>
 
+
+                    {{-- Due date --}}
                     <td>
 
-                        {{ $installment->due_date_jalali }}
+                        <span class="dashboard-due-date">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            {{ $installment->due_date_jalali }}
+
+                        </span>
 
                     </td>
 
+
+                    {{-- Amount --}}
                     <td>
 
-                        {{ number_format($installment->amount) }}
+                        <span class="dashboard-installment-amount">
+
+                            {{ number_format($installment->amount) }}
+
+                            <small>ریال</small>
+
+                        </span>
 
                     </td>
 
+
+                    {{-- Overdue days --}}
                     <td>
 
-                        <span class="badge bg-{{ $color }} ">
+                        <span class="badge dashboard-overdue-badge bg-{{ $color }}">
+
+                            <i class="bi bi-clock-history"></i>
 
                             {{ $installment->overdue_days }}
 
@@ -110,18 +165,30 @@
 
                     </td>
 
+
+                    {{-- Action --}}
                     <td class="text-center">
 
                         @if (!$installment->payment)
 
                             <a href="{{ route('loans.show', $installment->loan) }}"
-                               class="btn btn-sm btn-outline-success">
+                               class="btn btn-sm dashboard-overdue-action">
 
-                                <i class="bi bi-credit-card"></i>
+                                <i class="bi bi-eye"></i>
 
-                                پرداخت
+                                مشاهده وام
 
                             </a>
+
+                        @else
+
+                            <span class="dashboard-paid-label">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                پرداخت شده
+
+                            </span>
 
                         @endif
 
@@ -129,13 +196,30 @@
 
                 </tr>
 
+
             @empty
 
                 <tr>
 
-                    <td colspan="6" class="text-center py-4 text-muted">
+                    <td colspan="6">
 
-                        قسط معوقی وجود ندارد.
+                        <div class="dashboard-empty-state">
+
+                            <div class="dashboard-empty-icon">
+
+                                <i class="bi bi-check-circle"></i>
+
+                            </div>
+
+                            <div class="fw-bold">
+                                قسط معوقی وجود ندارد
+                            </div>
+
+                            <small class="text-muted">
+                                در حال حاضر تمام اقساط در وضعیت مناسب هستند.
+                            </small>
+
+                        </div>
 
                     </td>
 

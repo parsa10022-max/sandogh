@@ -6,6 +6,17 @@ import {
 } from '../../utils/input-helper.js';
 
 
+/**
+ * --------------------------------------------------------------------------
+ * Mobile Input Component
+ * --------------------------------------------------------------------------
+ * Project : Sandogh
+ * Laravel : 12
+ * Bootstrap : 5
+ * RTL
+ * --------------------------------------------------------------------------
+ */
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -15,148 +26,406 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
+/**
+ * Initialize
+ */
 function initMobileInput(input) {
 
-    const wrapper = input.closest('[class*="col-"]');
+    /*
+     * ساختار جدید:
+     *
+     * .customer-form-field
+     *      └── input
+     *      ├── .mobile-feedback
+     *      └── .status-icon i
+     *
+     * ساختار قدیمی نیز به عنوان fallback پشتیبانی می‌شود.
+     */
 
-    const feedback = wrapper.querySelector('.mobile-feedback');
+    const wrapper =
+        input.closest('.customer-form-field')
+        || input.closest('.mb-3')
+        || input.closest('[class*="col-"]');
 
-    const live = input.dataset.live === 'true';
+    if (!wrapper) {
+        return;
+    }
 
-    const icon = wrapper.querySelector('.status-icon i');
 
-    // جلوگیری از ورود حروف
-    input.addEventListener('keydown', function (e) {
+    const feedback =
+        wrapper.querySelector('.mobile-feedback');
+
+
+    const icon =
+        wrapper.querySelector('.status-icon i');
+
+
+    const live =
+        input.dataset.live === 'true';
+
+
+    /**
+     * فقط اعداد
+     */
+    input.addEventListener('keydown', function (event) {
 
         const allow = [
             'Backspace',
             'Delete',
             'ArrowLeft',
             'ArrowRight',
+            'ArrowUp',
+            'ArrowDown',
             'Tab',
             'Home',
             'End'
         ];
 
-        if (allow.includes(e.key))
-            return;
 
-        if (!/^\d$/.test(e.key))
-            e.preventDefault();
+        if (allow.includes(event.key)) {
+            return;
+        }
+
+
+        /*
+         * اجازه Ctrl + A / C / V / X
+         */
+        if (
+            event.ctrlKey ||
+            event.metaKey
+        ) {
+            return;
+        }
+
+
+        if (!/^\d$/.test(event.key)) {
+            event.preventDefault();
+        }
 
     });
 
-    // Paste
+
+    /**
+     * Paste
+     */
     input.addEventListener('paste', function () {
 
         setTimeout(() => {
 
-            this.value = normalize(this.value);
+            this.value =
+                normalize(this.value);
 
-            if (live)
-                validate(this, feedback, icon);
+
+            clear(
+                this,
+                feedback,
+                icon
+            );
+
+
+            if (live) {
+
+                validate(
+                    this,
+                    feedback,
+                    icon
+                );
+
+            }
 
         }, 0);
 
     });
 
-    // تایپ
+
+    /**
+     * Input
+     */
     input.addEventListener('input', function () {
 
-        this.value = normalize(this.value);
+        this.value =
+            normalize(this.value);
 
-        clear(this, feedback, icon);
 
-        if (live)
-            validate(this, feedback, icon);
+        clear(
+            this,
+            feedback,
+            icon
+        );
+
+
+        if (live) {
+
+            validate(
+                this,
+                feedback,
+                icon
+            );
+
+        }
 
     });
 
-    // خروج
+
+    /**
+     * Blur
+     */
     input.addEventListener('blur', function () {
 
-        validate(this, feedback, icon);
+        validate(
+            this,
+            feedback,
+            icon
+        );
 
     });
+
+
+    /*
+     * اگر مقدار اولیه وجود داشته باشد،
+     * وضعیت آن را هنگام بارگذاری بررسی کن.
+     */
+    if (input.value !== '') {
+
+        input.value =
+            normalize(input.value);
+
+    }
 
 }
 
+
+/**
+ * Normalize
+ */
 function normalize(value) {
 
-    value = trim(value);
+    value =
+        trim(value);
 
-    value = toEnglishNumbers(value);
 
-    value = onlyDigits(value);
+    value =
+        toEnglishNumbers(value);
 
-    value = maxLength(value, 11);
 
+    value =
+        onlyDigits(value);
+
+
+    value =
+        maxLength(value, 11);
+
+
+    /*
+     * تبدیل 98xxxxxxxxxx
+     * به 09xxxxxxxxx
+     */
     if (value.startsWith('98')) {
 
-        value = '0' + value.substring(2);
+        value =
+            '0' + value.substring(2);
 
     }
+
 
     return value;
 
 }
 
-function clear(input, feedback, icon) {
 
-    input.classList.remove('is-valid');
-    input.classList.remove('is-invalid');
+/**
+ * Clear Validation
+ */
+function clear(
+    input,
+    feedback,
+    icon
+) {
 
-    feedback.className = 'mobile-feedback';
+    input.classList.remove(
+        'is-valid',
+        'is-invalid'
+    );
 
-    feedback.textContent = '';
 
-    icon.className = 'bi';
+    if (feedback) {
+
+        feedback.className =
+            'mobile-feedback';
+
+        feedback.textContent =
+            '';
+
+    }
+
+
+    if (icon) {
+
+        icon.className =
+            'bi';
+
+    }
 
 }
 
-function validate(input, feedback, icon) {
 
-    clear(input, feedback, icon);
+/**
+ * Validate
+ */
+function validate(
+    input,
+    feedback,
+    icon
+) {
 
-    const value = input.value;
+    clear(
+        input,
+        feedback,
+        icon
+    );
 
-    if (value === '')
-        return;
 
+    const value =
+        input.value;
+
+
+    /*
+     * اگر خالی است
+     */
+    if (value === '') {
+
+        if (input.hasAttribute('required')) {
+
+            input.classList.add(
+                'is-invalid'
+            );
+
+
+            if (feedback) {
+
+                feedback.classList.add(
+                    'invalid-feedback'
+                );
+
+                feedback.textContent =
+                    'وارد کردن شماره موبایل الزامی است.';
+
+            }
+
+
+            if (icon) {
+
+                icon.className =
+                    'bi bi-x-circle-fill text-danger';
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+
+    /*
+     * شروع با 09
+     */
     if (!value.startsWith('09')) {
 
-        input.classList.add('is-invalid');
+        input.classList.add(
+            'is-invalid'
+        );
 
-        feedback.classList.add('invalid-feedback');
 
-        feedback.textContent = 'شماره موبایل باید با 09 شروع شود.';
+        if (feedback) {
 
-        icon.className = 'bi bi-x-circle-fill text-danger';
+            feedback.classList.add(
+                'invalid-feedback'
+            );
 
-        return;
+            feedback.textContent =
+                'شماره موبایل باید با 09 شروع شود.';
+
+        }
+
+
+        if (icon) {
+
+            icon.className =
+                'bi bi-x-circle-fill text-danger';
+
+        }
+
+
+        return false;
 
     }
 
+
+    /*
+     * طول
+     */
     if (value.length !== 11) {
 
-        input.classList.add('is-invalid');
+        input.classList.add(
+            'is-invalid'
+        );
 
-        feedback.classList.add('invalid-feedback');
 
-        feedback.textContent = 'شماره موبایل باید 11 رقم باشد.';
+        if (feedback) {
 
-        icon.className = 'bi bi-x-circle-fill text-danger';
+            feedback.classList.add(
+                'invalid-feedback'
+            );
 
-        return;
+            feedback.textContent =
+                'شماره موبایل باید 11 رقم باشد.';
+
+        }
+
+
+        if (icon) {
+
+            icon.className =
+                'bi bi-x-circle-fill text-danger';
+
+        }
+
+
+        return false;
 
     }
 
-    input.classList.add('is-valid');
 
-    feedback.classList.add('valid-feedback');
+    /*
+     * معتبر
+     */
+    input.classList.add(
+        'is-valid'
+    );
 
-    feedback.textContent = 'شماره موبایل معتبر است.';
 
-    icon.className = 'bi bi-check-circle-fill text-success';
+    if (feedback) {
+
+        feedback.classList.add(
+            'valid-feedback'
+        );
+
+        feedback.textContent =
+            'شماره موبایل معتبر است.';
+
+    }
+
+
+    if (icon) {
+
+        icon.className =
+            'bi bi-check-circle-fill text-success';
+
+    }
+
+
+    return true;
 
 }

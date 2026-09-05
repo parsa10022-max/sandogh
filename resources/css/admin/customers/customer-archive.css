@@ -1,0 +1,562 @@
+/* =========================================================
+   CUSTOMER INDEX
+   Design System #1
+   RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+.customer-index-page {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-index-header {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.customer-index-header__content {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+}
+
+.customer-index-header__icon {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+    background: rgba(111, 66, 193, .10);
+    border: 1px solid rgba(111, 66, 193, .15);
+
+    color: #6f42c1;
+    font-size: 1.35rem;
+}
+
+.customer-index-header__text {
+    min-width: 0;
+}
+
+.customer-index-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.customer-index-description {
+    margin: .15rem 0 0;
+    color: #6c757d;
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   SEARCH CARD
+   ========================================================= */
+
+.customer-index-search-card {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+
+    box-shadow: 0 .25rem .9rem rgba(0, 0, 0, .045);
+
+    overflow: hidden;
+}
+
+.customer-index-search-card__header {
+    padding: 1rem 1rem .85rem;
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.customer-index-search-card__title {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.customer-index-search-card__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+    background: rgba(13, 110, 253, .09);
+    border: 1px solid rgba(13, 110, 253, .13);
+
+    color: #0d6efd;
+    font-size: 1.05rem;
+}
+
+.customer-index-search-card__title h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.customer-index-search-card__title p {
+    margin: .15rem 0 0;
+    color: #6c757d;
+    font-size: .78rem;
+}
+
+.customer-index-search-card__body {
+    padding: 1rem;
+}
+
+.customer-index-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.customer-index-search-input {
+    flex: 1;
+}
+
+.customer-index-search-input .form-label {
+    margin-bottom: .45rem;
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.customer-index-search-input .form-control {
+    min-height: 44px;
+    border-radius: 10px;
+}
+
+.customer-index-search-input .form-control:focus {
+    border-color: rgba(111, 66, 193, .45);
+    box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .10);
+}
+
+.customer-index-search-actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.customer-index-search-btn,
+.customer-index-clear-btn {
+    min-height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+
+    border-radius: 10px;
+    padding: .55rem 1rem;
+
+    font-weight: 600;
+}
+
+.customer-index-search-btn {
+    background: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.customer-index-search-btn:hover,
+.customer-index-search-btn:focus {
+    background: #5f35ad;
+    border-color: #5f35ad;
+}
+
+.customer-index-clear-btn {
+    color: #6c757d;
+    background: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.customer-index-clear-btn:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.customer-index-table-card {
+    width: 100%;
+
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+
+    box-shadow: 0 .25rem .9rem rgba(0, 0, 0, .045);
+
+    overflow: hidden;
+}
+
+.customer-index-table-card__header {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.customer-index-table-card__title {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.customer-index-table-card__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+    background: rgba(111, 66, 193, .09);
+    border: 1px solid rgba(111, 66, 193, .13);
+
+    color: #6f42c1;
+    font-size: 1.05rem;
+}
+
+.customer-index-table-card__title h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.customer-index-table-card__title p {
+    margin: .15rem 0 0;
+    color: #6c757d;
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.customer-index-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.customer-index-table {
+    width: 100%;
+    min-width: 760px;
+}
+
+.customer-index-table thead th {
+    padding: .9rem .85rem;
+
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+
+    color: #495057;
+    font-size: .78rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-index-table tbody td {
+    padding: .85rem;
+    border-bottom: 1px solid #f0f1f3;
+
+    color: #343a40;
+    font-size: .84rem;
+
+    white-space: nowrap;
+}
+
+.customer-index-table tbody tr {
+    transition:
+        background-color .15s ease,
+        box-shadow .15s ease;
+}
+
+.customer-index-table tbody tr:hover {
+    background: #faf9fd;
+}
+
+.customer-index-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   TABLE VALUES
+   ========================================================= */
+
+.customer-index-code {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 30px;
+    padding: .2rem .55rem;
+
+    border-radius: 8px;
+
+    background: rgba(111, 66, 193, .08);
+    color: #6f42c1;
+
+    font-weight: 700;
+    font-size: .78rem;
+}
+
+.customer-index-name {
+    font-weight: 600;
+    color: #343a40;
+}
+
+.customer-index-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 30px;
+    padding: .2rem .65rem;
+
+    border-radius: 999px;
+
+    background: rgba(25, 135, 84, .09);
+    border: 1px solid rgba(25, 135, 84, .14);
+
+    color: #198754;
+
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.customer-index-actions-column {
+    width: 120px;
+    text-align: center;
+}
+
+.customer-index-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+}
+
+.customer-index-action-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    transition:
+        transform .15s ease,
+        background-color .15s ease,
+        border-color .15s ease;
+}
+
+.customer-index-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.customer-index-action-btn--view {
+    color: #0d6efd;
+    background: rgba(13, 110, 253, .08);
+    border: 1px solid rgba(13, 110, 253, .15);
+}
+
+.customer-index-action-btn--view:hover {
+    color: #0a58ca;
+    background: rgba(13, 110, 253, .14);
+}
+
+.customer-index-action-btn--restore {
+    color: #198754;
+    background: rgba(25, 135, 84, .08);
+    border: 1px solid rgba(25, 135, 84, .15);
+}
+
+.customer-index-action-btn--restore:hover {
+    color: #146c43;
+    background: rgba(25, 135, 84, .14);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.customer-index-empty {
+    height: 220px;
+
+    text-align: center;
+    vertical-align: middle !important;
+
+    color: #6c757d;
+}
+
+.customer-index-empty__icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto .75rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+
+    color: #adb5bd;
+    font-size: 1.4rem;
+}
+
+.customer-index-empty__text {
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.customer-index-pagination {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 1rem;
+}
+
+.customer-index-pagination .pagination {
+    margin-bottom: 0;
+    gap: .25rem;
+}
+
+.customer-index-pagination .page-link {
+    min-width: 38px;
+    min-height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px !important;
+    border: 1px solid #dee2e6;
+
+    color: #6f42c1;
+}
+
+.customer-index-pagination .page-item.active .page-link {
+    background: #6f42c1;
+    border-color: #6f42c1;
+    color: #fff;
+}
+
+.customer-index-pagination .page-link:hover {
+    background: rgba(111, 66, 193, .08);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .customer-index-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .customer-index-title {
+        font-size: 1.5rem;
+    }
+
+    .customer-index-search-form {
+        flex-direction: row;
+        align-items: end;
+    }
+
+    .customer-index-search-actions {
+        flex: 0 0 auto;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .customer-index-page {
+        padding-bottom: 1rem;
+    }
+
+    .customer-index-search-card__header,
+    .customer-index-search-card__body,
+    .customer-index-table-card__header {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .customer-index-table thead th,
+    .customer-index-table tbody td {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    .customer-index-header__icon {
+        width: 56px;
+        height: 56px;
+        flex-basis: 56px;
+    }
+
+    .customer-index-title {
+        font-size: 1.6rem;
+    }
+
+    .customer-index-search-card,
+    .customer-index-table-card {
+        border-radius: 18px;
+    }
+
+}

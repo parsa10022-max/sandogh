@@ -1,0 +1,348 @@
+/* =========================================================
+   ADMIN DASHBOARD
+   ACTION NEEDED
+   Design System #1
+   Purple + Blue / RTL
+   ========================================================= */
+
+.admin-dashboard-action-needed {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.admin-dashboard-section-header {
+    margin-bottom: 1rem;
+}
+
+.admin-dashboard-section-header h2 {
+    margin: 0;
+    color: #27233a;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.admin-dashboard-section-header p {
+    margin: .3rem 0 0;
+    color: #77718d;
+    font-size: .78rem;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   ACTION GRID
+   Desktop: 4 cards per row
+   ========================================================= */
+
+.admin-action-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+/* =========================================================
+   ACTION CARD
+   ========================================================= */
+
+.admin-action-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+
+    padding: .9rem;
+
+    border: 1px solid rgba(31, 25, 61, .08);
+    border-radius: 14px;
+
+    background: #fff;
+    color: #27233a;
+    text-decoration: none;
+
+    box-shadow: 0 .2rem .7rem rgba(31, 25, 61, .045);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease,
+        background-color .2s ease;
+}
+
+.admin-action-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(91, 61, 245, .16);
+
+    background: #fff;
+
+    box-shadow: 0 .5rem 1.2rem rgba(31, 25, 61, .08);
+
+    color: #27233a;
+}
+
+.admin-action-card:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.admin-action-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+/* Primary */
+.admin-action-icon-primary {
+    background: #f0edff;
+    color: #5b3df5;
+}
+
+/* Success */
+.admin-action-icon-success {
+    background: #edf9f2;
+    color: #198754;
+}
+
+/* Warning */
+.admin-action-icon-warning {
+    background: #fff7e6;
+    color: #d99000;
+}
+
+/* Info */
+.admin-action-icon-info {
+    background: #edf5ff;
+    color: #3874ff;
+}
+
+/* Purple */
+.admin-action-icon-purple {
+    background: #f4efff;
+    color: #7a4cff;
+}
+
+/* Teal */
+.admin-action-icon-teal {
+    background: #eaf9f8;
+    color: #168b87;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.admin-action-content {
+    min-width: 0;
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.admin-action-content strong {
+    display: block;
+
+    min-width: 0;
+
+    color: #302b46;
+
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1.5;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-action-content small {
+    display: block;
+
+    min-width: 0;
+
+    color: #77718d;
+
+    font-size: .7rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.admin-action-arrow {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #aaa5b8;
+
+    font-size: .75rem;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+.admin-action-card:hover .admin-action-arrow {
+    color: #5b3df5;
+    transform: translateX(-2px);
+}
+
+/* =========================================================
+   TABLET
+   2 cards per row
+   ========================================================= */
+
+@media (max-width: 1199.98px) {
+    .admin-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .85rem;
+    }
+}
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+    .admin-dashboard-action-needed {
+        margin-bottom: 1.25rem;
+    }
+
+    .admin-dashboard-section-header {
+        margin-bottom: .85rem;
+    }
+
+    .admin-action-grid {
+        gap: .75rem;
+    }
+
+    .admin-action-card {
+        min-height: 76px;
+        padding: .75rem;
+        border-radius: 13px;
+    }
+
+    .admin-action-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+
+        border-radius: 11px;
+        font-size: 1rem;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   1 card per row
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+    .admin-action-grid {
+        grid-template-columns: 1fr;
+        gap: .7rem;
+    }
+
+    .admin-action-card {
+        min-height: 72px;
+        padding: .7rem .75rem;
+        border-radius: 12px;
+    }
+
+    .admin-action-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+    .admin-action-content strong {
+        font-size: .8rem;
+    }
+
+    .admin-action-content small {
+        font-size: .68rem;
+    }
+}
+/* =========================================================
+   ADMIN ACTION COUNT
+   تعداد موارد نیازمند اقدام
+   ========================================================= */
+
+.admin-action-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 28px;
+    height: 28px;
+
+    padding: 0 8px;
+
+    margin-inline-start: 8px;
+
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 999px;
+
+    background: rgba(99, 102, 241, 0.08);
+
+    color: #4f46e5;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1;
+
+    vertical-align: middle;
+
+    direction: rtl;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Hover کارت */
+
+.admin-action-card:hover .admin-action-count {
+    background: rgba(99, 102, 241, 0.14);
+    border-color: rgba(99, 102, 241, 0.25);
+    transform: scale(1.04);
+}
+
+
+/* عدد صفر */
+
+.admin-action-count:empty {
+    display: none;
+}

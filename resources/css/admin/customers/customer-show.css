@@ -1,0 +1,722 @@
+/* =========================================================
+   CUSTOMER SHOW
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+.customer-show-page {
+    direction: rtl;
+    width: 100%;
+    padding: 1rem;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.customer-show-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e8e5f0;
+    border-radius: 1rem;
+
+    box-shadow: 0 5px 22px rgba(39, 32, 77, 0.07);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customer-show-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding: 1rem 1.15rem;
+
+    background: #faf9fd;
+
+    border-bottom: 1px solid #ece9f3;
+}
+
+.customer-show-card__title {
+    display: flex;
+    align-items: center;
+
+    gap: 0.75rem;
+}
+
+.customer-show-card__icon {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.8rem;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #4f6bed
+    );
+
+    color: #ffffff;
+
+    font-size: 1.25rem;
+
+    box-shadow: 0 5px 14px rgba(111, 66, 193, 0.18);
+}
+
+.customer-show-card__title h1 {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.customer-show-card__title p {
+    margin: 0.2rem 0 0;
+
+    color: #817c91;
+
+    font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.customer-show-card__body {
+    padding: 1rem;
+}
+
+
+/* =========================================================
+   CUSTOMER INFO
+   ========================================================= */
+
+.customer-info-box {
+    overflow: hidden;
+
+    margin-bottom: 1.25rem;
+
+    border: 1px solid #ebe8f2;
+    border-radius: 0.9rem;
+
+    background: #ffffff;
+}
+
+.customer-info-box__header {
+    display: flex;
+    align-items: center;
+
+    gap: 0.65rem;
+
+    padding: 0.85rem 1rem;
+
+    background: #fcfbff;
+
+    border-bottom: 1px solid #eeeaf5;
+}
+
+.customer-info-box__icon {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.65rem;
+
+    background: #f0ebfb;
+    color: #6f42c1;
+
+    font-size: 0.95rem;
+}
+
+.customer-info-box__title {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INFO TABLE
+   ========================================================= */
+
+.customer-info-table {
+    margin: 0;
+
+    border: 0;
+}
+
+.customer-info-table > tbody > tr > th {
+    width: 200px;
+
+    padding: 0.85rem 1rem;
+
+    background: #faf9fd;
+
+    color: #5b566b;
+
+    border-color: #eeeaf5;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.customer-info-table > tbody > tr > td {
+    padding: 0.85rem 1rem;
+
+    color: #302b45;
+
+    border-color: #eeeaf5;
+
+    font-size: 0.82rem;
+
+    font-weight: 500;
+}
+
+.customer-info-table > tbody > tr:last-child > th,
+.customer-info-table > tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   CUSTOMER VALUE
+   ========================================================= */
+
+.customer-value {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 30px;
+    padding: 0.3rem 0.65rem;
+
+    background: #f7f5fb;
+
+    border: 1px solid #ebe7f3;
+    border-radius: 0.5rem;
+
+    color: #413a55;
+
+    font-size: 0.8rem;
+}
+
+.customer-value--primary {
+    background: #f0ebfb;
+
+    border-color: #e2d8f5;
+
+    color: #6f42c1;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.customer-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.4rem;
+
+    padding: 0.35rem 0.7rem;
+
+    border-radius: 2rem;
+
+    background: #f0ebfb;
+
+    color: #6f42c1;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.customer-status::before {
+    content: "";
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   SECTION DIVIDER
+   ========================================================= */
+
+.customer-show-divider {
+    height: 1px;
+
+    margin: 1.35rem 0;
+
+    background: #ebe8f2;
+
+    border: 0;
+}
+
+
+/* =========================================================
+   ACCOUNTS HEADER
+   ========================================================= */
+
+.customer-accounts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 0.9rem;
+}
+
+.customer-accounts-title {
+    display: flex;
+    align-items: center;
+
+    gap: 0.65rem;
+}
+
+.customer-accounts-title__icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    background: #eef1ff;
+
+    color: #4f6bed;
+
+    font-size: 1rem;
+}
+
+.customer-accounts-title h2 {
+    margin: 0;
+
+    color: #302b45;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.customer-accounts-title p {
+    margin: 0.15rem 0 0;
+
+    color: #817c91;
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   ADD ACCOUNT BUTTON
+   ========================================================= */
+
+.customer-add-account-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.4rem;
+
+    min-height: 40px;
+
+    padding: 0.5rem 0.8rem;
+
+    border: 1px solid #6f42c1;
+    border-radius: 0.65rem;
+
+    background: #6f42c1;
+    color: #ffffff;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
+
+    transition: all 0.2s ease;
+}
+
+.customer-add-account-btn:hover {
+    background: #5d35a5;
+
+    border-color: #5d35a5;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ACCOUNTS TABLE
+   ========================================================= */
+
+.customer-accounts-table-wrapper {
+    overflow-x: auto;
+
+    border: 1px solid #ebe8f2;
+    border-radius: 0.85rem;
+}
+
+.customer-accounts-table {
+    margin: 0;
+
+    min-width: 650px;
+}
+
+.customer-accounts-table thead th {
+    padding: 0.8rem 0.75rem;
+
+    background: #faf9fd;
+
+    color: #5b566b;
+
+    border-color: #ebe8f2;
+
+    font-size: 0.76rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-accounts-table tbody td {
+    padding: 0.8rem 0.75rem;
+
+    color: #403a50;
+
+    border-color: #eeeaf5;
+
+    font-size: 0.78rem;
+
+    vertical-align: middle;
+}
+
+.customer-accounts-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.customer-accounts-table tbody tr:hover {
+    background: #fcfbff;
+}
+
+
+/* =========================================================
+   ACCOUNT NUMBER
+   ========================================================= */
+
+.customer-account-number {
+    display: inline-flex;
+
+    color: #6f42c1;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.customer-account-number:hover {
+    color: #4f6bed;
+}
+
+
+/* =========================================================
+   ACCOUNT TYPE / STATUS
+   ========================================================= */
+
+.customer-account-type {
+    display: inline-flex;
+
+    padding: 0.3rem 0.55rem;
+
+    background: #f0f3ff;
+
+    border: 1px solid #e1e6ff;
+    border-radius: 0.45rem;
+
+    color: #4f6bed;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.customer-account-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.35rem;
+
+    padding: 0.3rem 0.6rem;
+
+    background: #f4f7f5;
+
+    border: 1px solid #e2e9e4;
+    border-radius: 2rem;
+
+    color: #3f7654;
+
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+.customer-account-balance {
+    color: #302b45;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-account-balance__unit {
+    margin-right: 0.2rem;
+
+    color: #817c91;
+
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   ACCOUNT ACTION
+   ========================================================= */
+
+.customer-account-edit-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dcd8e8;
+    border-radius: 0.55rem;
+
+    background: #ffffff;
+    color: #6f42c1;
+
+    transition: all 0.2s ease;
+}
+
+.customer-account-edit-btn:hover {
+    background: #6f42c1;
+    border-color: #6f42c1;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.customer-empty-accounts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    min-height: 150px;
+
+    padding: 1.5rem;
+
+    background: #fcfbff;
+
+    border: 1px dashed #dcd7e9;
+    border-radius: 0.85rem;
+
+    color: #817c91;
+
+    text-align: center;
+
+    font-size: 0.8rem;
+}
+
+.customer-empty-accounts__icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f0ebfb;
+
+    color: #6f42c1;
+
+    font-size: 1.1rem;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .customer-show-page {
+        padding: 1.5rem;
+    }
+
+    .customer-show-card__header {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .customer-show-card__title h1 {
+        font-size: 1.3rem;
+    }
+
+    .customer-show-card__body {
+        padding: 1.35rem;
+    }
+
+    .customer-info-table > tbody > tr > th {
+        width: 220px;
+    }
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .customer-show-page {
+        padding: 1.75rem 2rem;
+    }
+
+    .customer-show-card__body {
+        padding: 1.5rem;
+    }
+}
+/* =========================================================
+   TWO COLUMN LAYOUT
+   ========================================================= */
+
+.customer-show-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    width: 100%;
+}
+
+.customer-info-box,
+.customer-accounts-box {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   ACCOUNTS CARD
+   ========================================================= */
+
+.customer-accounts-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #ebe8f2;
+    border-radius: 0.9rem;
+
+    box-shadow: 0 4px 16px rgba(39, 32, 77, 0.05);
+}
+
+
+/* =========================================================
+   ACCOUNT HEADER
+   ========================================================= */
+
+.customer-accounts-card .customer-accounts-header {
+    padding: 0.85rem 1rem;
+    margin-bottom: 0;
+
+    background: #fcfbff;
+
+    border-bottom: 1px solid #eeeaf5;
+}
+
+
+/* =========================================================
+   DESKTOP TWO COLUMNS
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .customer-show-grid {
+        grid-template-columns:
+            minmax(0, 0.9fr)
+            minmax(0, 1.1fr);
+
+        align-items: start;
+    }
+
+    .customer-info-box {
+        margin-bottom: 0;
+    }
+
+    .customer-show-card--header {
+        margin-bottom: 1rem;
+    }
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    .customer-show-grid {
+        grid-template-columns:
+            minmax(0, 0.85fr)
+            minmax(0, 1.15fr);
+
+        gap: 1.25rem;
+    }
+}

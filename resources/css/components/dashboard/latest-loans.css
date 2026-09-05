@@ -1,0 +1,362 @@
+    /* =========================================================
+       DASHBOARD - LATEST LOANS
+       Design System #1
+       Purple + Blue / RTL / Bootstrap 5.3
+       Mobile First / PWA
+       ========================================================= */
+
+
+    /* =========================================================
+       CARD
+       ========================================================= */
+
+.dashboard-latest-loans-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0.25rem 0.9rem rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dashboard-latest-loans-header {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    padding: 1rem 1.25rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+
+.dashboard-latest-loans-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+
+.dashboard-latest-loans-title h6 {
+    color: #212529;
+    font-size: 0.95rem;
+}
+
+
+.dashboard-section-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+}
+
+
+.dashboard-loans-icon {
+    background: rgba(111, 66, 193, 0.10);
+    color: #6f42c1;
+}
+
+
+/* =========================================================
+   COUNT
+   ========================================================= */
+
+.dashboard-latest-loans-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    padding: 0.4rem 0.7rem;
+
+    border-radius: 8px;
+
+    background: rgba(13, 110, 253, 0.08);
+    color: #0d6efd;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.dashboard-latest-loans-table-wrapper {
+    width: 100%;
+}
+
+
+.dashboard-latest-loans-table {
+    min-width: 760px;
+}
+
+
+.dashboard-latest-loans-table thead th {
+    background: #f8f9fa;
+
+    color: #6c757d;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    padding: 0.85rem 1rem;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-latest-loans-table tbody td {
+    color: #343a40;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.045);
+
+    padding: 0.9rem 1rem;
+
+    font-size: 0.84rem;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-latest-loans-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+.dashboard-latest-loans-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+
+.dashboard-latest-loans-table tbody tr:hover {
+    background: rgba(13, 110, 253, 0.025);
+}
+
+
+/* =========================================================
+   LOAN NUMBER
+   ========================================================= */
+
+.dashboard-loan-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    font-weight: 600;
+}
+
+
+.dashboard-loan-prefix {
+    color: #6f42c1;
+}
+
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.dashboard-customer-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    font-weight: 500;
+}
+
+
+.dashboard-customer-icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(13, 110, 253, 0.08);
+    color: #0d6efd;
+
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   LOAN TYPE
+   ========================================================= */
+
+.dashboard-loan-type {
+    color: #495057;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.dashboard-loan-amount {
+    color: #212529;
+    font-weight: 700;
+}
+
+
+.dashboard-loan-amount small {
+    color: #6c757d;
+
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.dashboard-loan-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0.42rem 0.65rem;
+
+    border-radius: 7px;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+
+/*
+ * مقادیر پیش‌فرض LoanStatus
+ * در صورت تفاوت valueهای Enum،
+ * فقط همین بخش اصلاح می‌شود.
+ */
+
+.dashboard-loan-status-active {
+    background: rgba(25, 135, 84, 0.10);
+    color: #198754;
+}
+
+
+.dashboard-loan-status-finished {
+    background: rgba(13, 110, 253, 0.10);
+    color: #0d6efd;
+}
+
+
+.dashboard-loan-status-cancelled {
+    background: rgba(220, 53, 69, 0.10);
+    color: #dc3545;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.dashboard-loan-action {
+    border-radius: 8px;
+
+    padding: 0.4rem 0.7rem;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    border: 1px solid rgba(13, 110, 253, 0.25);
+
+    color: #0d6efd;
+    background: rgba(13, 110, 253, 0.04);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.dashboard-loan-action:hover {
+    background: #0d6efd;
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.dashboard-empty-state {
+    min-height: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 0.35rem;
+
+    padding: 2rem 1rem;
+
+    text-align: center;
+}
+
+
+.dashboard-empty-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 0.5rem;
+
+    border-radius: 50%;
+
+    background: rgba(111, 66, 193, 0.10);
+    color: #6f42c1;
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-latest-loans-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-latest-loans-count {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dashboard-latest-loans-table {
+        min-width: 760px;
+    }
+}

@@ -2,53 +2,45 @@
 <html lang="fa" dir="rtl">
 
 <head>
-
     @include('layouts.head')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body class="bg-light">
+<body class="admin-body">
 
-<div class="d-flex flex-column min-vh-100">
+<div class="admin-layout">
 
-    {{-- Header --}}
-    @include('layouts.header')
+    {{-- Sidebar --}}
+    @include('layouts.sidebar')
 
-    <div class="container-fluid flex-grow-1">
+    <div class="admin-main">
 
-        <div class="row">
+        {{-- Header --}}
+        @include('layouts.header')
 
-            {{-- Sidebar --}}
-            <aside class="col-md-3 col-lg-2 p-0 bg-white border-start shadow-sm">
+        <main class="admin-content">
 
-                @include('layouts.sidebar')
+            @include('layouts.alerts')
 
-            </aside>
+            @hasSection('breadcrumb')
+                <div class="admin-breadcrumb">
+                    @yield('breadcrumb')
+                </div>
+            @endif
 
-            {{-- Main Content --}}
-            <main class="col-md-9 col-lg-10 py-4 px-4">
+            @yield('content')
 
-                @include('layouts.alerts')
+        </main>
 
-                @hasSection('breadcrumb')
-
-                    <div class="mb-3">
-                        @yield('breadcrumb')
-                    </div>
-
-                @endif
-
-                @yield('content')
-
-            </main>
-
-        </div>
+        {{-- Footer --}}
+        @include('layouts.footer')
 
     </div>
 
-    {{-- Footer --}}
-    @include('layouts.footer')
+</div>
 
+<div
+    class="admin-sidebar-overlay"
+    id="adminSidebarOverlay">
 </div>
 
 @stack('scripts')

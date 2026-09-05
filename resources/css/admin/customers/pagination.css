@@ -1,0 +1,170 @@
+/* =========================================================
+   PAGINATION
+   Design System #1
+   RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
+
+.app-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    margin-top: 1rem;
+}
+
+
+/* =========================================================
+   PAGINATION LIST
+   ========================================================= */
+
+.app-pagination .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .35rem;
+
+    margin: 0;
+    padding: 0;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   PAGE LINK
+   ========================================================= */
+
+.app-pagination .page-link {
+    min-width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: .35rem .65rem;
+
+    border: 1px solid #dee2e6;
+    border-radius: 9px !important;
+
+    background: #fff;
+    color: #495057;
+
+    font-size: .82rem;
+    font-weight: 600;
+
+    box-shadow: none;
+
+    transition:
+        background-color .15s ease,
+        border-color .15s ease,
+        color .15s ease,
+        transform .15s ease;
+}
+
+
+/* Hover */
+
+.app-pagination .page-link:hover {
+    background: rgba(111, 66, 193, .08);
+    border-color: rgba(111, 66, 193, .25);
+    color: #6f42c1;
+
+    transform: translateY(-1px);
+}
+
+
+/* Focus */
+
+.app-pagination .page-link:focus {
+    box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .10);
+    border-color: rgba(111, 66, 193, .35);
+}
+
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.app-pagination .page-item.active .page-link {
+    background: #6f42c1;
+    border-color: #6f42c1;
+    color: #fff;
+
+    box-shadow: 0 .2rem .5rem rgba(111, 66, 193, .18);
+}
+
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+.app-pagination .page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+
+    color: #adb5bd;
+
+    cursor: not-allowed;
+    opacity: .75;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   PREVIOUS / NEXT
+   ========================================================= */
+
+.app-pagination .page-item:first-child .page-link,
+.app-pagination .page-item:last-child .page-link {
+    padding-left: .8rem;
+    padding-right: .8rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .app-pagination {
+        margin-top: .85rem;
+    }
+
+    .app-pagination .pagination {
+        gap: .25rem;
+    }
+
+    .app-pagination .page-link {
+        min-width: 35px;
+        height: 35px;
+
+        padding: .3rem .5rem;
+
+        font-size: .76rem;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .app-pagination {
+        margin-top: 1.15rem;
+    }
+
+    .app-pagination .page-link {
+        min-width: 40px;
+        height: 40px;
+    }
+
+}

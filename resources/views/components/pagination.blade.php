@@ -1,6 +1,6 @@
 @if($items->hasPages())
 
-    <div class="d-flex justify-content-center mt-3">
+    <div class="app-pagination">
 
         {{ $items->links() }}
 
