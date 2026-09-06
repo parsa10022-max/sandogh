@@ -473,25 +473,20 @@ class LoanService
         return Loan::query()
 
             /*
-             * فقط وام‌هایی که قسط معوق دارند
+             * فقط وام‌هایی که حداقل یک قسط معوق دارند
              */
             ->whereHas('installments', function ($q) {
 
-                $q->where(
-                    'status',
-                    InstallmentStatus::PENDING
-                )
-                    ->whereDate(
-                        'due_date',
-                        '<',
-                        today()
-                    );
+                $q->where('status', InstallmentStatus::PENDING)
+                    ->whereDate('due_date', '<', today());
 
             })
 
-
             /*
-             * جستجو
+             * جستجو بر اساس:
+             * - شماره وام
+             * - نام
+             * - نام خانوادگی
              */
             ->when($search, function ($q) use ($search) {
 
@@ -522,7 +517,6 @@ class LoanService
 
             })
 
-
             /*
              * فیلتر نوع وام
              */
@@ -535,7 +529,6 @@ class LoanService
 
             })
 
-
             /*
              * اطلاعات مورد نیاز
              */
@@ -543,6 +536,9 @@ class LoanService
                 'customer',
                 'loanType',
 
+                /*
+                 * فقط اقساط معوق هر وام
+                 */
                 'installments' => function ($q) {
 
                     $q->where(
@@ -556,10 +552,8 @@ class LoanService
                         )
                         ->orderBy('due_date');
 
-                }
-
+                },
             ])
-
 
             /*
              * تعداد اقساط معوق
@@ -577,22 +571,17 @@ class LoanService
                             today()
                         );
 
-                }
-
+                },
             ])
-
 
             ->latest()
 
             ->get()
 
-
             /*
-             * فیلتر میزان تأخیر
+             * مرتب‌سازی بر اساس بیشترین تأخیر
              *
-             * چون overdue_days در مدل/محاسبات
-             * قابل استفاده در Query نیست،
-             * بعد از دریافت Collection فیلتر می‌کنیم.
+             * قدیمی‌ترین قسط معوق = بیشترین میزان تأخیر
              */
             ->sortByDesc(function ($loan) {
 
@@ -602,9 +591,15 @@ class LoanService
 
             })
 
-
+            /*
+             * فیلتر میزان تأخیر
+             */
             ->filter(function ($loan) use ($delay) {
 
+                /*
+                 * حالت پیش‌فرض:
+                 * همه وام‌های معوق نمایش داده شوند.
+                 */
                 if (!$delay) {
                     return true;
                 }
@@ -613,25 +608,41 @@ class LoanService
                         $loan->installments->first()
                     )->overdue_days ?? 0;
 
-
                 return match ($delay) {
 
+                    /*
+                     * کمتر از ۳۰ روز
+                     */
                     'less_30' =>
                         $days < 30,
 
-                    '30_90' =>
-                        $days >= 30 && $days <= 90,
+                    /*
+                     * ۳۰ تا کمتر از ۶۰ روز
+                     */
+                    '30_60' =>
+                        $days >= 30 && $days < 60,
 
+                    /*
+                     * ۶۰ تا ۹۰ روز
+                     */
+                    '60_90' =>
+                        $days >= 60 && $days <= 90,
+
+                    /*
+                     * بیشتر از ۹۰ روز
+                     */
                     'more_90' =>
                         $days > 90,
 
+                    /*
+                     * مقدار نامعتبر:
+                     * فیلتر اعمال نشود.
+                     */
                     default =>
                     true,
-
                 };
 
             })
-
 
             ->values();
     }

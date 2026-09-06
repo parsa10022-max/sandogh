@@ -36,15 +36,17 @@
 
             </div>
 
+
             <a
                 href="{{ route('loans.index') }}"
-                class="btn loan-back-btn">
+                class="btn loan-back-btn"
+            >
 
                 <i class="bi bi-arrow-right"></i>
 
                 <span>
-                    بازگشت به لیست وام‌ها
-                </span>
+                بازگشت به لیست وام‌ها
+            </span>
 
             </a>
 
@@ -68,9 +70,9 @@
 
                     <div class="loan-overdue-stat-content">
 
-                        <span class="loan-overdue-stat-label">
-                            وام‌های معوق
-                        </span>
+                    <span class="loan-overdue-stat-label">
+                        وام‌های معوق
+                    </span>
 
                         <strong class="loan-overdue-stat-value">
                             {{ number_format($statistics['loan_count']) }}
@@ -94,9 +96,9 @@
 
                     <div class="loan-overdue-stat-content">
 
-                        <span class="loan-overdue-stat-label">
-                            اقساط معوق
-                        </span>
+                    <span class="loan-overdue-stat-label">
+                        اقساط معوق
+                    </span>
 
                         <strong class="loan-overdue-stat-value">
                             {{ number_format($statistics['installment_count']) }}
@@ -120,9 +122,9 @@
 
                     <div class="loan-overdue-stat-content">
 
-                        <span class="loan-overdue-stat-label">
-                            مبلغ کل معوقات
-                        </span>
+                    <span class="loan-overdue-stat-label">
+                        مبلغ کل معوقات
+                    </span>
 
                         <strong class="loan-overdue-stat-value">
 
@@ -149,6 +151,11 @@
 
         <div class="loan-overdue-card">
 
+
+            {{-- =====================================================
+                 Card Header
+            ====================================================== --}}
+
             <div class="loan-overdue-card__header">
 
                 <div class="loan-overdue-card__title-wrapper">
@@ -172,9 +179,11 @@
                 </div>
 
             </div>
-            {{-- =========================================================
+
+
+            {{-- =====================================================
                  Search & Filters
-            ========================================================== --}}
+            ====================================================== --}}
 
             <div class="loan-overdue-filters">
 
@@ -257,7 +266,7 @@
                         >
 
                             <option value="">
-                                همه
+                                همه میزان تأخیر
                             </option>
 
                             <option
@@ -268,10 +277,17 @@
                             </option>
 
                             <option
-                                value="30_90"
-                                @selected(request('delay') === '30_90')
+                                value="30_60"
+                                @selected(request('delay') === '30_60')
                             >
-                            ۳۰ تا ۹۰ روز
+                            ۳۰ تا ۶۰ روز
+                            </option>
+
+                            <option
+                                value="60_90"
+                                @selected(request('delay') === '60_90')
+                            >
+                            ۶۰ تا ۹۰ روز
                             </option>
 
                             <option
@@ -296,7 +312,9 @@
 
                             <i class="bi bi-search"></i>
 
+                            <span>
                             جستجو
+                        </span>
 
                         </button>
 
@@ -308,7 +326,9 @@
 
                             <i class="bi bi-arrow-counterclockwise"></i>
 
+                            <span>
                             پاک کردن
+                        </span>
 
                         </a>
 
@@ -317,6 +337,11 @@
                 </form>
 
             </div>
+
+
+            {{-- =====================================================
+                 Table
+            ====================================================== --}}
 
             <div class="loan-overdue-card__body">
 
@@ -377,6 +402,7 @@
 
                                 $days = $oldest?->overdue_days ?? 0;
 
+
                                 $amountClass = match (true) {
 
                                     $amount >= 40000000 => 'danger',
@@ -387,9 +413,12 @@
 
                                 };
 
+
                                 $delayClass = match (true) {
 
-                                    $days >= 90 => 'danger',
+                                    $days > 90 => 'danger',
+
+                                    $days >= 60 => 'warning',
 
                                     $days >= 30 => 'warning',
 
@@ -405,15 +434,15 @@
                                 {{-- شماره وام --}}
                                 <td>
 
-                                    <span class="loan-overdue-number">
+                                <span class="loan-overdue-number">
 
-                                        {{ $loan->loanType->prefix }}
+                                    {{ $loan->loanType->prefix }}
 
-                                        <span>-</span>
+                                    <span>-</span>
 
-                                        {{ $loan->loan_number }}
+                                    {{ $loan->loan_number }}
 
-                                    </span>
+                                </span>
 
                                 </td>
 
@@ -428,8 +457,8 @@
                                         </div>
 
                                         <span>
-                                            {{ $loan->customer->full_name }}
-                                        </span>
+                                        {{ $loan->customer->full_name }}
+                                    </span>
 
                                     </div>
 
@@ -439,9 +468,9 @@
                                 {{-- نوع وام --}}
                                 <td>
 
-                                    <span class="loan-overdue-loan-type">
-                                        {{ $loan->loanType->name }}
-                                    </span>
+                                <span class="loan-overdue-loan-type">
+                                    {{ $loan->loanType->name }}
+                                </span>
 
                                 </td>
 
@@ -449,13 +478,13 @@
                                 {{-- اقساط معوق --}}
                                 <td class="text-center">
 
-                                    <span class="loan-overdue-badge loan-overdue-badge--danger">
+                                <span class="loan-overdue-badge loan-overdue-badge--danger">
 
-                                        <i class="bi bi-exclamation-circle"></i>
+                                    <i class="bi bi-exclamation-circle"></i>
 
-                                        {{ number_format($loan->overdue_count) }}
+                                    {{ number_format($loan->overdue_count) }}
 
-                                    </span>
+                                </span>
 
                                 </td>
 
@@ -463,16 +492,17 @@
                                 {{-- مبلغ معوق --}}
                                 <td class="text-center">
 
-                                    <span
-                                        class="loan-overdue-amount loan-overdue-amount--{{ $amountClass }}">
+                                <span
+                                    class="loan-overdue-amount loan-overdue-amount--{{ $amountClass }}"
+                                >
 
-                                        {{ number_format($amount) }}
+                                    {{ number_format($amount) }}
 
-                                        <small>
-                                            ریال
-                                        </small>
+                                    <small>
+                                        ریال
+                                    </small>
 
-                                    </span>
+                                </span>
 
                                 </td>
 
@@ -480,11 +510,11 @@
                                 {{-- قدیمی‌ترین سررسید --}}
                                 <td class="text-center">
 
-                                    <span class="loan-overdue-date">
+                                <span class="loan-overdue-date">
 
-                                        {{ $oldest?->due_date_jalali ?? '-' }}
+                                    {{ $oldest?->due_date_jalali ?? '-' }}
 
-                                    </span>
+                                </span>
 
                                 </td>
 
@@ -492,16 +522,17 @@
                                 {{-- بیشترین تأخیر --}}
                                 <td class="text-center">
 
-                                    <span
-                                        class="loan-overdue-delay loan-overdue-delay--{{ $delayClass }}">
+                                <span
+                                    class="loan-overdue-delay loan-overdue-delay--{{ $delayClass }}"
+                                >
 
-                                        {{ number_format($days) }}
+                                    {{ number_format($days) }}
 
-                                        <small>
-                                            روز
-                                        </small>
+                                    <small>
+                                        روز
+                                    </small>
 
-                                    </span>
+                                </span>
 
                                 </td>
 
@@ -511,15 +542,16 @@
 
                                     <a
                                         href="{{ route('loans.show', $loan) }}"
-                                        class="loan-overdue-action">
+                                        class="loan-overdue-action"
+                                    >
 
-                                        <span class="loan-overdue-action__icon">
-                                            <i class="bi bi-eye"></i>
-                                        </span>
+                                    <span class="loan-overdue-action__icon">
+                                        <i class="bi bi-eye"></i>
+                                    </span>
 
                                         <span>
-                                            مشاهده
-                                        </span>
+                                        مشاهده
+                                    </span>
 
                                     </a>
 
@@ -533,10 +565,13 @@
 
                                 <td
                                     colspan="8"
-                                    class="loan-overdue-empty">
+                                    class="loan-overdue-empty"
+                                >
 
                                     <div class="loan-overdue-empty__icon">
+
                                         <i class="bi bi-check-circle"></i>
+
                                     </div>
 
                                     <strong>
@@ -544,8 +579,8 @@
                                     </strong>
 
                                     <span>
-                                        در حال حاضر هیچ قسط سررسیدشده و پرداخت‌نشده‌ای ثبت نشده است.
-                                    </span>
+                                    در حال حاضر هیچ قسط سررسیدشده و پرداخت‌نشده‌ای ثبت نشده است.
+                                </span>
 
                                 </td>
 
