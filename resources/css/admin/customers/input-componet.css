@@ -1,17 +1,17 @@
-    /* =========================================================
-       CUSTOMER FORM
-       Design System #1
-       Purple + Blue
-       RTL
-       Bootstrap 5.3
-       Vazirmatn
-       Mobile First / PWA
-       ========================================================= */
+/* =========================================================
+   CUSTOMER FORM
+   Design System #1
+   Purple + Blue
+   RTL
+   Bootstrap 5.3
+   Vazirmatn
+   Mobile First / PWA
+   ========================================================= */
 
 
-    /* =========================================================
-       BASE
-       ========================================================= */
+/* =========================================================
+   BASE
+   ========================================================= */
 
 .customer-create-page {
     width: 100%;
@@ -404,7 +404,7 @@
 
 
 /* =========================================================
-   MOBILE
+   MOBILE INPUT
    ========================================================= */
 
 .customer-form-field .mobile-input {
@@ -414,7 +414,7 @@
 
 
 /* =========================================================
-   MONEY
+   MONEY INPUT
    ========================================================= */
 
 .customer-form-field .money-input {
@@ -441,10 +441,11 @@
 
 /* =========================================================
    SHEBA
+   Shared Component
    بانک | شماره شبا | IR
    ========================================================= */
 
-.customer-form-field .sheba-field {
+.sheba-field {
     display: flex;
 
     align-items: stretch;
@@ -476,7 +477,7 @@
    سمت راست
    ========================================================= */
 
-.customer-form-field .sheba-bank {
+.sheba-bank {
     display: flex;
 
     align-items: center;
@@ -502,7 +503,7 @@
     overflow: hidden;
 }
 
-.customer-form-field .sheba-bank__text {
+.sheba-bank__text {
     display: block;
 
     max-width: 100%;
@@ -522,7 +523,7 @@
    وسط
    ========================================================= */
 
-.customer-form-field .sheba-input {
+.sheba-input {
     display: block;
 
     flex: 1 1 0;
@@ -559,12 +560,12 @@
     white-space: nowrap;
 }
 
-.customer-form-field .sheba-input::placeholder {
+.sheba-input::placeholder {
     color: #adb5bd;
     opacity: 1;
 }
 
-.customer-form-field .sheba-input:focus {
+.sheba-input:focus {
     border: 0 !important;
 
     outline: 0;
@@ -581,7 +582,7 @@
    سمت چپ
    ========================================================= */
 
-.customer-form-field .sheba-prefix {
+.sheba-prefix {
     display: flex;
 
     align-items: center;
@@ -616,7 +617,7 @@
    SHEBA FOCUS
    ========================================================= */
 
-.customer-form-field .sheba-field:focus-within {
+.sheba-field:focus-within {
     border-color: #7567d1;
 
     box-shadow:
@@ -629,7 +630,7 @@
    SHEBA ERROR
    ========================================================= */
 
-.customer-form-field .sheba-field:has(.sheba-input.is-invalid) {
+.sheba-field:has(.sheba-input.is-invalid) {
     border-color: #dc3545;
 }
 
@@ -638,7 +639,7 @@
    SHEBA FEEDBACK
    ========================================================= */
 
-.customer-form-field .sheba-feedback {
+.sheba-feedback {
     display: block;
 
     width: 100%;
@@ -977,7 +978,7 @@
         row-gap: 22px;
     }
 
-    .customer-form-field .sheba-bank {
+    .sheba-bank {
         flex-basis: 84px;
 
         width: 84px;
@@ -1092,12 +1093,12 @@
        SHEBA MOBILE
        ----------------------------------------------------- */
 
-    .customer-form-field .sheba-field {
+    .sheba-field {
         height: 44px;
         border-radius: 9px;
     }
 
-    .customer-form-field .sheba-bank {
+    .sheba-bank {
         flex-basis: 68px;
 
         width: 68px;
@@ -1109,11 +1110,11 @@
         padding: 0 7px;
     }
 
-    .customer-form-field .sheba-bank__text {
+    .sheba-bank__text {
         font-size: 0.72rem;
     }
 
-    .customer-form-field .sheba-input {
+    .sheba-input {
         flex: 1 1 0;
 
         width: auto;
@@ -1125,7 +1126,7 @@
         font-size: 0.79rem;
     }
 
-    .customer-form-field .sheba-prefix {
+    .sheba-prefix {
         flex: 0 0 44px;
 
         width: 44px;
@@ -1243,11 +1244,11 @@
        SHEBA SMALL MOBILE
        ----------------------------------------------------- */
 
-    .customer-form-field .sheba-field {
+    .sheba-field {
         height: 43px;
     }
 
-    .customer-form-field .sheba-bank {
+    .sheba-bank {
         flex-basis: 62px;
 
         width: 62px;
@@ -1259,11 +1260,11 @@
         padding: 0 5px;
     }
 
-    .customer-form-field .sheba-bank__text {
+    .sheba-bank__text {
         font-size: 0.69rem;
     }
 
-    .customer-form-field .sheba-input {
+    .sheba-input {
         flex: 1 1 0;
 
         width: auto;
@@ -1275,7 +1276,7 @@
         font-size: 0.74rem;
     }
 
-    .customer-form-field .sheba-prefix {
+    .sheba-prefix {
         flex: 0 0 42px;
 
         width: 42px;

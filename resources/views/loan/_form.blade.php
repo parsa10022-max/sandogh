@@ -1,64 +1,86 @@
-{{-- ============================= --}}
-{{-- اطلاعات وام --}}
-{{-- ============================= --}}
+{{-- ========================================================================= --}}
+{{-- اطلاعات اصلی وام --}}
+{{-- ========================================================================= --}}
 
-<div class="row">
+<div class="loan-form-section">
 
-    <div class="col-md-6 mb-3">
+    <div class="loan-form-section__header">
+        <div class="loan-form-section__icon">
+            <i class="bi bi-cash-coin"></i>
+        </div>
 
-        @include('customer._picker',[
-     'name'=>'customer_id',
-     'label'=>'وام گیرنده',
-     'required'=>true,
-     'value'=>old(
-         'customer_id',
-         $loanRequest?->customer_id ?? $loan->customer_id ?? ''
-     )
+        <div>
+            <h3 class="loan-form-section__title">
+                اطلاعات وام
+            </h3>
 
-])
-
+            <p class="loan-form-section__subtitle">
+                اطلاعات اصلی وام را وارد کنید.
+            </p>
+        </div>
     </div>
 
-    <div class="col-md-6 mb-3">
 
-        <x-inputs.select-input
-            name="loan_type_id"
-            label="نوع وام"
-            :options="$loanTypes->pluck('name','id')->toArray()"
-            :attributesMap="$loanTypes
-                ->mapWithKeys(fn($item)=>[
-                    $item->id=>[
-                        'data-prefix'=>$item->prefix
-                    ]
-                ])
-                ->toArray()"
-            :value="old('loan_type_id', $loan->loan_type_id ?? '')"
-            required
-        />
+    <div class="row g-3">
 
-    </div>
+        {{-- وام گیرنده --}}
+        <div class="col-12 col-lg-6">
 
-</div>
+            @include('customer._picker', [
+                'name' => 'customer_id',
+                'label' => 'وام گیرنده',
+                'required' => true,
+                'value' => old(
+                    'customer_id',
+                    $loanRequest?->customer_id ?? $loan->customer_id ?? ''
+                )
+            ])
 
-<div class="row">
+        </div>
 
-    <div class="row">
 
-        <div class="col-md-6 mb-3">
+        {{-- نوع وام --}}
+        <div class="col-12 col-lg-6">
 
-            <label class="form-label">
+            <x-inputs.select-input
+                name="loan_type_id"
+                label="نوع وام"
+                :options="$loanTypes->pluck('name', 'id')->toArray()"
+                :attributesMap="$loanTypes
+                    ->mapWithKeys(fn($item) => [
+                        $item->id => [
+                            'data-prefix' => $item->prefix
+                        ]
+                    ])
+                    ->toArray()"
+                :value="old(
+                    'loan_type_id',
+                    $loan->loan_type_id ?? ''
+                )"
+                required
+            />
+
+        </div>
+
+
+        {{-- شماره وام --}}
+        <div class="col-12 col-lg-6">
+
+            <label
+                for="loan_number"
+                class="form-label">
                 شماره وام
             </label>
 
-            <div class="d-flex loan-number-box">
+            <div class="loan-number-box">
 
-            <span
-                id="loan-prefix"
-                class="loan-prefix">
+                <span
+                    id="loan-prefix"
+                    class="loan-prefix">
 
-                {{ $loan->loanType?->prefix ?? '----' }}
+                    {{ $loan->loanType?->prefix ?? '----' }}
 
-            </span>
+                </span>
 
                 <input
                     type="text"
@@ -66,13 +88,100 @@
                     name="loan_number"
                     class="form-control"
                     value="{{ old('loan_number', $loan->loan_number ?? '') }}"
-                    required>
+                    required
+                >
 
             </div>
 
-            <small class="text-muted">
-                پیش شماره بر اساس نوع وام به صورت خودکار نمایش داده می‌شود.
-            </small>
+            <div class="loan-form-help">
+                <i class="bi bi-info-circle"></i>
+                پیش‌شماره بر اساس نوع وام به‌صورت خودکار نمایش داده می‌شود.
+            </div>
+
+        </div>
+
+
+        {{-- مبلغ وام --}}
+        <div class="col-12 col-lg-6">
+
+            <label
+                for="loan_amount"
+                class="form-label">
+                مبلغ وام
+            </label>
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    id="loan_amount"
+                    name="loan_amount"
+                    class="form-control money-input"
+                    value="{{ old(
+        'loan_amount',
+        $loanRequest?->approved_amount ?? $loan->loan_amount ?? ''
+    ) }}"
+                    autocomplete="off"
+                    required
+                >
+
+                <span class="input-group-text">
+                    ریال
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {{-- تعداد اقساط --}}
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <x-inputs.text-input
+                name="installment_count"
+                label="تعداد اقساط"
+                :value="old(
+                    'installment_count',
+                    $loan->installment_count ?? ''
+                )"
+                required
+            />
+
+        </div>
+
+
+        {{-- دوره پرداخت --}}
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <x-inputs.select-input
+                name="installment_interval"
+                label="دوره پرداخت اقساط"
+                :options="\App\Enums\InstallmentInterval::options()"
+                :value="old(
+                    'installment_interval',
+                    $loan->installment_interval?->value
+                )"
+                required
+            />
+
+        </div>
+
+
+        {{-- تاریخ ثبت --}}
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <x-inputs.date-input
+                name="start_date"
+                label="تاریخ ثبت وام"
+                :value="old(
+                    'start_date',
+                    $loan->exists
+                        ? $loan->start_date_jalali
+                        : app(\App\Services\Date\JalaliDateService::class)->today()
+                )"
+                required
+            />
 
         </div>
 
@@ -80,195 +189,189 @@
 
 </div>
 
-<div class="row">
 
-    <div class="col-md-4 mb-3">
+{{-- ========================================================================= --}}
+{{-- ضامن‌ها --}}
+{{-- ========================================================================= --}}
 
-        <input type="number"
-               name="loan_amount"
-               class="form-control"
-               value="{{ old(
-            'loan_amount',
-            $loanRequest?->approved_amount ?? $loan->loan_amount
-       ) }}">
+<div class="loan-form-section loan-guarantors-section">
+
+    <div class="loan-form-section__header">
+
+        <div class="loan-form-section__icon loan-form-section__icon--purple">
+            <i class="bi bi-people"></i>
+        </div>
+
+        <div>
+            <h3 class="loan-form-section__title">
+                ضامن‌های وام
+            </h3>
+
+            <p class="loan-form-section__subtitle">
+                اطلاعات ضامن اول و دوم را وارد کنید.
+            </p>
+        </div>
 
     </div>
 
-    <div class="col-md-4 mb-3">
 
-        <x-inputs.text-input
-            name="installment_count"
-            label="تعداد اقساط"
-            :value="old('installment_count', $loan->installment_count ?? '')"
-            required
-        />
+    <div class="loan-form-section__content">
 
-    </div>
-
-    <div class="col-md-4 mb-3">
-
-        <x-inputs.select-input
-            name="installment_interval"
-            label="دوره پرداخت اقساط"
-            :options="\App\Enums\InstallmentInterval::options()"
-            :value="old(
-                'installment_interval',
-                $loan->installment_interval?->value
-            )"
-            required
-        />
+        @include('loan._guarantors')
 
     </div>
 
 </div>
 
-{{-- ============================= --}}
-{{-- تاریخ ها --}}
-{{-- ============================= --}}
 
-<div class="row">
-
-    <div class="col-md-4 mb-3">
-
-        <x-inputs.date-input
-            name="start_date"
-            label="تاریخ ثبت وام"
-            :value="old(
-    'start_date',
-    $loan->exists
-        ? $loan->start_date_jalali
-        : app(\App\Services\Date\JalaliDateService::class)->today()
-)"
-            required
-        />
-
-    </div>
-
-  @include('loan._guarantors')
-
-
-
-
-
-
-</div>
-
-{{-- ============================= --}}
-{{-- پیش نمایش --}}
-{{-- ============================= --}}
+{{-- ========================================================================= --}}
+{{-- پیش‌نمایش محاسبه وام --}}
+{{-- ========================================================================= --}}
 
 <div
     id="loan-preview-card"
-    class="card border-success shadow-sm mt-4 d-none">
+    class="loan-preview-card d-none">
 
-    <div class="card-header bg-success text-white">
+    <div class="loan-preview-card__header">
 
-        <i class="bi bi-calculator me-2"></i>
+        <div class="loan-preview-card__icon">
+            <i class="bi bi-calculator"></i>
+        </div>
 
-        نتیجه محاسبه وام
+        <div>
+            <h3 class="loan-preview-card__title">
+                نتیجه محاسبه وام
+            </h3>
+
+            <p class="loan-preview-card__subtitle">
+                اطلاعات محاسبه‌شده وام
+            </p>
+        </div>
 
     </div>
 
-    <div class="card-body">
 
-        <div class="row">
+    <div class="loan-preview-card__body">
 
-            <div class="col-md-3 mb-3">
+        <div class="row g-3">
 
-                <small class="text-muted">
+            {{-- تاریخ ثبت --}}
+            <div class="col-6 col-md-4 col-lg-3">
 
-                    تاریخ ثبت
+                <div class="loan-preview-item">
 
-                </small>
+                    <span class="loan-preview-item__label">
+                        تاریخ ثبت
+                    </span>
 
-                <div
-                    id="preview-start-date"
-                    class="fw-bold">
+                    <strong
+                        id="preview-start-date"
+                        class="loan-preview-item__value">
 
-                    -
+                        -
 
-                </div>
-
-            </div>
-
-            <div class="col-md-3 mb-3">
-
-                <small class="text-muted">
-
-                    اولین سررسید
-
-                </small>
-
-                <div
-                    id="preview-first-date"
-                    class="fw-bold">
-
-                    -
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-md-3 mb-3">
 
-                <small class="text-muted">
+            {{-- اولین سررسید --}}
+            <div class="col-6 col-md-4 col-lg-3">
 
-                    آخرین سررسید
+                <div class="loan-preview-item">
 
-                </small>
+                    <span class="loan-preview-item__label">
+                        اولین سررسید
+                    </span>
 
-                <div
-                    id="preview-last-date"
-                    class="fw-bold">
+                    <strong
+                        id="preview-first-date"
+                        class="loan-preview-item__value">
 
-                    -
+                        -
 
-                </div>
-
-            </div>
-
-            <div class="col-md-3 mb-3">
-
-                <small class="text-muted">
-
-                    مبلغ هر قسط
-
-                </small>
-
-                <div
-                    id="preview-installment"
-                    class="fw-bold text-success">
-
-                    -
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-md-3 mb-3">
 
-                <small class="text-muted">
+            {{-- آخرین سررسید --}}
+            <div class="col-6 col-md-4 col-lg-3">
 
-                    تعداد اقساط
+                <div class="loan-preview-item">
 
-                </small>
+                    <span class="loan-preview-item__label">
+                        آخرین سررسید
+                    </span>
 
-                <div
-                    id="preview-count"
-                    class="fw-bold">
+                    <strong
+                        id="preview-last-date"
+                        class="loan-preview-item__value">
 
-                    -
+                        -
+
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-md-3 d-flex align-items-end">
+
+            {{-- مبلغ قسط --}}
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__label">
+                        مبلغ هر قسط
+                    </span>
+
+                    <strong
+                        id="preview-installment"
+                        class="loan-preview-item__value loan-preview-item__value--success">
+
+                        -
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {{-- تعداد اقساط --}}
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__label">
+                        تعداد اقساط
+                    </span>
+
+                    <strong
+                        id="preview-count"
+                        class="loan-preview-item__value">
+
+                        -
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {{-- مشاهده برنامه --}}
+            <div class="col-12 col-md-8 col-lg-3 d-flex">
 
                 <button
                     type="button"
                     id="show-schedule"
-                    class="btn btn-outline-primary w-100"
+                    class="btn btn-outline-primary w-100 align-self-end"
                     disabled>
 
                     <i class="bi bi-list-ul me-1"></i>
@@ -285,18 +388,41 @@
 
 </div>
 
-{{-- ============================= --}}
+
+{{-- ========================================================================= --}}
 {{-- توضیحات --}}
-{{-- ============================= --}}
+{{-- ========================================================================= --}}
 
-<div class="row mt-4">
+<div class="loan-form-section">
 
-    <div class="col-md-12">
+    <div class="loan-form-section__header">
+
+        <div class="loan-form-section__icon loan-form-section__icon--blue">
+            <i class="bi bi-chat-left-text"></i>
+        </div>
+
+        <div>
+            <h3 class="loan-form-section__title">
+                توضیحات
+            </h3>
+
+            <p class="loan-form-section__subtitle">
+                در صورت نیاز توضیحات مربوط به وام را وارد کنید.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="loan-form-section__content">
 
         <x-inputs.textarea-input
             name="description"
             label="توضیحات"
-            :value="old('description', $loan->description ?? '')"
+            :value="old(
+                'description',
+                $loan->description ?? ''
+            )"
         />
 
     </div>
@@ -304,107 +430,112 @@
 </div>
 
 
+{{-- ========================================================================= --}}
+{{-- تاریخ سرور --}}
+{{-- ========================================================================= --}}
 
 <input
     type="hidden"
     id="server-date"
-    value="{{ now()->toDateString() }}">
+    value="{{ now()->toDateString() }}"
+>
 
 
-
-
-
-
-{{-- ============================= --}}
+{{-- ========================================================================= --}}
 {{-- برنامه اقساط --}}
-{{-- ============================= --}}
+{{-- ========================================================================= --}}
 
 <div
     id="loan-schedule-card"
-    class="card border-0 shadow-sm mt-4 d-none">
+    class="loan-schedule-card d-none">
 
-    <div class="card-header bg-primary text-white py-2">
+    <div class="loan-schedule-card__header">
 
-        <i class="bi bi-calendar-week me-1"></i>
+        <div class="loan-schedule-card__title-wrapper">
 
-        برنامه بازپرداخت وام
+            <div class="loan-schedule-card__icon">
+                <i class="bi bi-calendar-week"></i>
+            </div>
+
+            <div>
+
+                <h3 class="loan-schedule-card__title">
+                    برنامه بازپرداخت وام
+                </h3>
+
+                <p class="loan-schedule-card__subtitle">
+                    جزئیات سررسید و مبلغ اقساط
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body py-3">
 
-        <div class="row justify-content-center">
+    <div class="loan-schedule-card__body">
 
-            <div class="col-lg-7 col-md-9">
+        <div class="table-responsive">
 
-                <div class="table-responsive">
+            <table class="table loan-schedule-table align-middle text-center mb-0">
 
-                    <table class="table table-sm table-hover align-middle text-center mb-2">
+                <thead>
 
-                        <thead class="table-light">
+                <tr>
 
-                        <tr>
+                    <th>
+                        قسط
+                    </th>
 
-                            <th style="width:80px">
+                    <th>
+                        سررسید
+                    </th>
 
-                                قسط
+                    <th>
+                        مبلغ
+                    </th>
 
-                            </th>
+                </tr>
 
-                            <th style="width:160px">
+                </thead>
 
-                                سررسید
+                <tbody id="loan-schedule-body">
+                </tbody>
 
-                            </th>
+            </table>
 
-                            <th style="width:180px" class="text-center">
+        </div>
 
-                                مبلغ
 
-                            </th>
+        <div class="loan-schedule-summary">
 
-                        </tr>
+            <div>
 
-                        </thead>
+                <span>
+                    تعداد اقساط
+                </span>
 
-                        <tbody id="loan-schedule-body">
+                <strong id="schedule-total-count">
+                    -
+                </strong>
 
-                        </tbody>
+            </div>
 
-                    </table>
 
-                </div>
+            <div>
 
-                <div
-                    class="d-flex justify-content-between align-items-center border-top pt-2 small">
+                <span>
+                    جمع اقساط
+                </span>
 
-                    <span>
+                <strong
+                    id="schedule-total-amount"
+                    class="text-success">
 
-                        تعداد اقساط :
+                    -
 
-                        <strong id="schedule-total-count">
-
-                            -
-
-                        </strong>
-
-                    </span>
-
-                    <span>
-
-                        جمع اقساط :
-
-                        <strong
-                            id="schedule-total-amount"
-                            class="text-success">
-
-                            -
-
-                        </strong>
-
-                    </span>
-
-                </div>
+                </strong>
 
             </div>
 
@@ -413,34 +544,45 @@
     </div>
 
 </div>
+
+
+{{-- ========================================================================= --}}
+{{-- دکمه‌های فرم --}}
+{{-- ========================================================================= --}}
+
 {{-- ============================= --}}
-{{-- دکمه ها --}}
+{{-- دکمه های فرم --}}
 {{-- ============================= --}}
 
-<div class="d-flex justify-content-between align-items-center mt-4">
+<div class="loan-form-actions">
 
-    <div>
+    <button
+        type="submit"
+        class="loan-action-btn loan-action-primary">
 
-        <button
-            type="submit"
-            class="btn btn-success">
+        <span class="loan-action-icon">
+            <i class="bi bi-check-lg"></i>
+        </span>
 
-            <i class="bi bi-check-circle me-1"></i>
-
+        <span>
             ذخیره وام
+        </span>
 
-        </button>
+    </button>
 
-        <a
-            href="{{ route('loans.index') }}"
-            class="btn btn-secondary">
+    <a
+        href="{{ route('loans.index') }}"
+        class="loan-action-btn loan-action-secondary">
 
-            <i class="bi bi-x-circle me-1"></i>
+        <span class="loan-action-icon">
+            <i class="bi bi-x-lg"></i>
+        </span>
 
+        <span>
             انصراف
+        </span>
 
-        </a>
-
-    </div>
+    </a>
 
 </div>
+

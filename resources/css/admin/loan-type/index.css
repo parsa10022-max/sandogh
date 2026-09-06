@@ -1,0 +1,535 @@
+    /* =========================================================
+       Loan Types
+       Design System #1
+       ========================================================= */
+
+.loan-types-page {
+    direction: rtl;
+}
+
+
+/* =========================================================
+   Create Button
+   ========================================================= */
+
+.loan-types-page .loan-type-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    min-height: 44px;
+    padding: .65rem 1rem;
+
+    border: 0;
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    box-shadow: 0 5px 14px rgba(13, 110, 253, .16);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.loan-types-page .loan-type-create-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(13, 110, 253, .22);
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.loan-types-page .loan-types-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e8eaf3;
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 24px rgba(35, 40, 70, .06);
+}
+
+
+/* =========================================================
+   Card Header
+   ========================================================= */
+
+.loan-types-page .loan-types-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding: 1.15rem 1.25rem;
+
+    background: #fff;
+
+    border-bottom: 1px solid #edf0f5;
+}
+
+
+.loan-types-page .loan-types-title {
+    display: flex;
+    align-items: center;
+
+    gap: .85rem;
+}
+
+
+.loan-types-page .loan-types-title h6 {
+    color: #24263a;
+
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+
+.loan-types-page .loan-types-title small {
+    color: #8a8fa3;
+
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   Header Icon
+   ========================================================= */
+
+.loan-types-page .loan-types-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    color: #fff;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    box-shadow:
+        0 6px 14px rgba(111, 66, 193, .18);
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   Count
+   ========================================================= */
+
+.loan-types-page .loan-types-count {
+    display: flex;
+    align-items: center;
+
+    gap: .45rem;
+
+    padding: .45rem .75rem;
+
+    border-radius: 10px;
+
+    background: #f7f8fc;
+
+    color: #8a8fa3;
+
+    font-size: .75rem;
+}
+
+
+.loan-types-page .loan-types-count strong {
+    color: #4d3a91;
+
+    font-size: .9rem;
+}
+
+
+/* =========================================================
+   Table
+   ========================================================= */
+
+.loan-types-page .loan-types-table {
+    min-width: 700px;
+
+    margin-bottom: 0;
+}
+
+
+.loan-types-page .loan-types-table thead th {
+    padding: .9rem 1.25rem;
+
+    background: #f8f9fc;
+
+    border-bottom: 1px solid #e9ebf2;
+
+    color: #6f7487;
+
+    font-size: .78rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.loan-types-page .loan-types-table tbody td {
+    padding: 1rem 1.25rem;
+
+    border-bottom: 1px solid #f0f1f5;
+
+    color: #393c4d;
+
+    font-size: .85rem;
+}
+
+
+.loan-types-page .loan-types-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+.loan-types-page .loan-types-table tbody tr {
+    transition:
+        background-color .18s ease;
+}
+
+
+.loan-types-page .loan-types-table tbody tr:hover {
+    background: #fafaff;
+}
+
+
+/* =========================================================
+   Loan Name
+   ========================================================= */
+
+.loan-types-page .loan-type-name {
+    display: flex;
+    align-items: center;
+
+    gap: .75rem;
+}
+
+
+.loan-types-page .loan-type-small-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: #f1edff;
+
+    color: #6650a8;
+
+    font-size: .95rem;
+}
+
+
+.loan-types-page .loan-type-name .fw-bold {
+    color: #303346;
+
+    font-size: .85rem;
+}
+
+
+.loan-types-page .loan-type-name small {
+    display: block;
+
+    max-width: 350px;
+
+    margin-top: .2rem;
+
+    color: #999daf;
+
+    font-size: .72rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   Prefix
+   ========================================================= */
+
+.loan-types-page .loan-prefix {
+    display: inline-flex;
+    align-items: center;
+
+    padding: .38rem .7rem;
+
+    border-radius: 8px;
+
+    background: #f2f6ff;
+
+    color: #3568b8;
+
+    font-family: monospace;
+
+    font-size: .82rem;
+    font-weight: 700;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================================
+   Status
+   ========================================================= */
+
+.loan-types-page .loan-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: .45rem;
+
+    padding: .38rem .7rem;
+
+    border-radius: 50px;
+
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+
+.loan-types-page .loan-status-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+
+/* Active */
+
+.loan-types-page .loan-status-active {
+    background: #eaf8f0;
+    color: #21864a;
+}
+
+.loan-types-page .loan-status-active .loan-status-dot {
+    background: #2eaa61;
+}
+
+
+/* Inactive */
+
+.loan-types-page .loan-status-inactive {
+    background: #fff1f1;
+    color: #c34d4d;
+}
+
+.loan-types-page .loan-status-inactive .loan-status-dot {
+    background: #dc5c5c;
+}
+
+
+/* Other */
+
+.loan-types-page .loan-status-default {
+    background: #f1f2f5;
+    color: #707484;
+}
+
+.loan-types-page .loan-status-default .loan-status-dot {
+    background: #9296a5;
+}
+
+
+/* =========================================================
+   Actions
+   ========================================================= */
+
+.loan-types-page .actions-column {
+    width: 140px;
+}
+
+
+.loan-types-page .loan-type-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   Empty State
+   ========================================================= */
+
+.loan-types-page .loan-types-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4rem 1rem;
+
+    text-align: center;
+}
+
+
+.loan-types-page .empty-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+    border-radius: 18px;
+
+    background: #f1edff;
+
+    color: #6f42c1;
+
+    font-size: 1.5rem;
+}
+
+
+.loan-types-page .loan-types-empty h6 {
+    margin-bottom: .4rem;
+
+    color: #343747;
+
+    font-weight: 700;
+}
+
+
+.loan-types-page .loan-types-empty p {
+    margin-bottom: 1.2rem;
+
+    color: #969aaa;
+
+    font-size: .8rem;
+}
+
+
+.loan-types-page .loan-types-empty .btn {
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-types-page .loan-types-card {
+        border-radius: 14px;
+    }
+
+
+    .loan-types-page .loan-types-card-header {
+        align-items: flex-start;
+
+        padding: 1rem;
+    }
+
+
+    .loan-types-page .loan-types-title small {
+        display: none;
+    }
+
+
+    .loan-types-page .loan-types-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .loan-types-page .loan-types-count {
+        padding: .35rem .6rem;
+    }
+
+
+    .loan-types-page .loan-types-table thead th,
+    .loan-types-page .loan-types-table tbody td {
+        padding: .8rem;
+    }
+
+
+    .loan-types-page .loan-type-name small {
+        max-width: 160px;
+    }
+
+
+    .loan-types-page .loan-type-create-btn span {
+        display: none;
+    }
+
+
+    .loan-types-page .loan-type-create-btn {
+        width: 42px;
+        height: 42px;
+
+        padding: 0;
+
+        border-radius: 11px;
+    }
+
+}
+
+
+/* =========================================================
+   Very Small Screens
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .loan-types-page .loan-types-card-header {
+        gap: .5rem;
+    }
+
+
+    .loan-types-page .loan-types-title {
+        gap: .6rem;
+    }
+
+
+    .loan-types-page .loan-types-icon {
+        width: 36px;
+        height: 36px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+
+    .loan-types-page .loan-types-title h6 {
+        font-size: .85rem;
+    }
+
+
+    .loan-types-page .loan-types-count span {
+        display: none;
+    }
+
+}

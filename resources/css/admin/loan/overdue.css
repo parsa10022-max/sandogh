@@ -1,0 +1,783 @@
+/* =========================================================
+   LOAN OVERDUE
+   Design System #1
+   Purple + Blue / RTL
+   ========================================================= */
+
+.loan-overdue-page {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.loan-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.15rem;
+
+    background: #fff;
+
+    border: 1px solid #e8e4f4;
+    border-radius: 16px;
+
+    box-shadow: 0 4px 18px rgba(65, 42, 120, .06);
+}
+
+.loan-page-header__content {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+
+    min-width: 0;
+}
+
+.loan-page-header__icon {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #f0ebff;
+    color: #6542d3;
+
+    font-size: 1.3rem;
+}
+
+.loan-page-header__icon--danger {
+    background: #fff0f1;
+    color: #c0394b;
+}
+
+.loan-page-header__title {
+    margin: 0;
+
+    color: #29233d;
+
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.loan-page-header__subtitle {
+    margin-top: .25rem;
+
+    color: #81798f;
+
+    font-size: .82rem;
+}
+
+.loan-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    min-height: 40px;
+
+    padding: .5rem .8rem;
+
+    color: #5b3cc4;
+    background: #fff;
+
+    border: 1px solid #ddd6f5;
+    border-radius: 10px;
+
+    font-size: .85rem;
+    font-weight: 700;
+
+    transition: .2s ease;
+}
+
+.loan-back-btn:hover {
+    color: #fff;
+    background: #5b3cc4;
+    border-color: #5b3cc4;
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.loan-overdue-statistics {
+    margin-bottom: 1.25rem;
+}
+
+.loan-overdue-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    height: 100%;
+    min-height: 105px;
+
+    padding: 1rem 1.1rem;
+
+    background: #fff;
+
+    border: 1px solid #e8e4f4;
+    border-radius: 16px;
+
+    box-shadow: 0 4px 18px rgba(65, 42, 120, .055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.loan-overdue-stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 24px rgba(65, 42, 120, .09);
+}
+
+.loan-overdue-stat-icon {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 1.3rem;
+}
+
+.loan-overdue-stat-card--danger .loan-overdue-stat-icon {
+    background: #fff0f1;
+    color: #c0394b;
+}
+
+.loan-overdue-stat-card--warning .loan-overdue-stat-icon {
+    background: #fff7e5;
+    color: #c88a00;
+}
+
+.loan-overdue-stat-card--amount .loan-overdue-stat-icon {
+    background: #f0ebff;
+    color: #6542d3;
+}
+
+.loan-overdue-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.loan-overdue-stat-label {
+    color: #81798f;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.loan-overdue-stat-value {
+    color: #2f2940;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.loan-overdue-stat-value small {
+    font-size: .7rem;
+    color: #81798f;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.loan-overdue-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e8e4f4;
+    border-radius: 18px;
+
+    box-shadow: 0 5px 22px rgba(65, 42, 120, .065);
+}
+
+.loan-overdue-card__header {
+    padding: 1rem 1.15rem;
+
+    background: #faf9ff;
+
+    border-bottom: 1px solid #ebe8f5;
+}
+
+.loan-overdue-card__title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.loan-overdue-card__icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f0ebff;
+    color: #6542d3;
+}
+
+.loan-overdue-card__title {
+    margin: 0;
+
+    color: #39314f;
+
+    font-size: .95rem;
+    font-weight: 800;
+}
+
+.loan-overdue-card__subtitle {
+    margin-top: .2rem;
+
+    color: #898197;
+
+    font-size: .76rem;
+}
+
+.loan-overdue-card__body {
+    padding: 0;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.loan-overdue-table {
+    min-width: 1050px;
+}
+
+.loan-overdue-table thead th {
+    padding: .9rem .75rem;
+
+    background: #faf9ff;
+
+    color: #655d76;
+
+    border-bottom: 1px solid #e8e4f4;
+
+    font-size: .78rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.loan-overdue-table tbody td {
+    padding: .85rem .75rem;
+
+    color: #40394e;
+
+    border-color: #eeeaf5;
+
+    font-size: .82rem;
+
+    white-space: nowrap;
+}
+
+.loan-overdue-table tbody tr {
+    transition: background .15s ease;
+}
+
+.loan-overdue-table tbody tr:hover {
+    background: #fbfaff;
+}
+
+
+/* =========================================================
+   LOAN NUMBER
+   ========================================================= */
+
+.loan-overdue-number {
+    color: #5b3cc4;
+    font-weight: 800;
+}
+
+.loan-overdue-number span {
+    color: #aaa3b7;
+    margin: 0 .15rem;
+}
+
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.loan-overdue-customer {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+
+    font-weight: 700;
+}
+
+.loan-overdue-customer__icon {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f0ebff;
+    color: #6542d3;
+
+    font-size: .85rem;
+}
+
+.loan-overdue-loan-type {
+    color: #5f586d;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.loan-overdue-badge,
+.loan-overdue-delay,
+.loan-overdue-amount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem;
+
+    border-radius: 999px;
+
+    font-weight: 800;
+}
+
+.loan-overdue-badge {
+    min-width: 42px;
+    padding: .35rem .65rem;
+}
+
+.loan-overdue-badge--danger {
+    color: #b52e42;
+    background: #fff0f2;
+    border: 1px solid #ffd7dc;
+}
+
+
+/* مبلغ */
+
+.loan-overdue-amount {
+    padding: .35rem .65rem;
+}
+
+.loan-overdue-amount small {
+    margin-right: .2rem;
+    font-size: .65rem;
+}
+
+.loan-overdue-amount--danger {
+    color: #b52e42;
+    background: #fff0f2;
+}
+
+.loan-overdue-amount--warning {
+    color: #a66a00;
+    background: #fff7df;
+}
+
+.loan-overdue-amount--success {
+    color: #27784d;
+    background: #eefaf3;
+}
+
+
+/* تأخیر */
+
+.loan-overdue-delay {
+    padding: .35rem .65rem;
+}
+
+.loan-overdue-delay small {
+    font-size: .65rem;
+}
+
+.loan-overdue-delay--danger {
+    color: #b52e42;
+    background: #fff0f2;
+}
+
+.loan-overdue-delay--warning {
+    color: #a66a00;
+    background: #fff7df;
+}
+
+.loan-overdue-delay--secondary {
+    color: #6c6675;
+    background: #f2f1f4;
+}
+
+
+/* تاریخ */
+
+.loan-overdue-date {
+    color: #5f586d;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.loan-overdue-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+
+    min-width: 90px;
+
+    padding: .4rem .65rem;
+
+    color: #5b3cc4;
+    background: #fff;
+
+    border: 1px solid #dcd5f5;
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: .76rem;
+    font-weight: 800;
+
+    transition: .2s ease;
+}
+
+.loan-overdue-action:hover {
+    color: #fff;
+    background: #5b3cc4;
+    border-color: #5b3cc4;
+}
+
+.loan-overdue-action__icon {
+    display: inline-flex;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.loan-overdue-empty {
+    padding: 4rem 1rem !important;
+
+    text-align: center;
+
+    color: #81798f;
+}
+
+.loan-overdue-empty__icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto .9rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eefaf3;
+    color: #2d8a59;
+
+    font-size: 1.5rem;
+}
+
+.loan-overdue-empty strong {
+    display: block;
+
+    margin-bottom: .35rem;
+
+    color: #413a50;
+
+    font-size: .9rem;
+}
+
+.loan-overdue-empty span {
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .loan-back-btn {
+        width: 100%;
+    }
+
+    .loan-page-header__content {
+        align-items: flex-start;
+    }
+
+    .loan-page-header__title {
+        font-size: 1rem;
+    }
+
+    .loan-page-header__subtitle {
+        line-height: 1.7;
+    }
+
+    .loan-overdue-stat-card {
+        min-height: 92px;
+    }
+
+    .loan-overdue-card__header {
+        padding: .9rem 1rem;
+    }
+
+    .loan-overdue-table {
+        min-width: 1050px;
+    }
+}
+/* ==========================================================================
+   Loan Overdue - Search & Filters
+   ========================================================================== */
+
+.loan-overdue-filters {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #eef0f4;
+    border-bottom: 1px solid #eef0f4;
+    background: #fafbfc;
+}
+
+
+/* فرم */
+
+.loan-overdue-filters__form {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.5fr) minmax(180px, 1fr) minmax(180px, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+
+/* فیلد */
+
+.loan-overdue-filter-search,
+.loan-overdue-filter-item {
+    min-width: 0;
+}
+
+
+.loan-overdue-filter-search label,
+.loan-overdue-filter-item label {
+    display: block;
+    margin-bottom: .45rem;
+    font-size: .82rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+
+/* Search */
+
+.loan-overdue-search-box {
+    position: relative;
+}
+
+
+.loan-overdue-search-box > i {
+    position: absolute;
+    top: 50%;
+    right: .9rem;
+    transform: translateY(-50%);
+    color: #8b95a5;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+
+.loan-overdue-search-box .form-control {
+    min-height: 44px;
+    padding-right: 2.6rem;
+    border: 1px solid #dfe3e8;
+    border-radius: .75rem;
+    background: #fff;
+    font-size: .9rem;
+}
+
+
+.loan-overdue-search-box .form-control:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .10);
+}
+
+
+/* Select */
+
+.loan-overdue-filter-item .form-select {
+    min-height: 44px;
+    border: 1px solid #dfe3e8;
+    border-radius: .75rem;
+    background-color: #fff;
+    font-size: .9rem;
+    cursor: pointer;
+}
+
+
+.loan-overdue-filter-item .form-select:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .10);
+}
+
+
+/* Actions */
+
+.loan-overdue-filter-actions {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+
+/* دکمه */
+
+.loan-overdue-filter-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    padding: .65rem 1rem;
+    border-radius: .75rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: .85rem;
+    font-weight: 600;
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+/* جستجو */
+
+.loan-overdue-filter-btn--primary {
+    background: #6f42c1;
+    border-color: #6f42c1;
+    color: #fff;
+}
+
+
+.loan-overdue-filter-btn--primary:hover {
+    background: #5d36a4;
+    border-color: #5d36a4;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .18);
+}
+
+
+/* پاک کردن */
+
+.loan-overdue-filter-btn--reset {
+    background: #fff;
+    border-color: #dfe3e8;
+    color: #6b7280;
+}
+
+
+.loan-overdue-filter-btn--reset:hover {
+    background: #f8f9fa;
+    border-color: #cfd4da;
+    color: #374151;
+}
+
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+
+    .loan-overdue-filters__form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .loan-overdue-filter-search {
+        grid-column: 1 / -1;
+    }
+
+
+    .loan-overdue-filter-actions {
+        justify-content: flex-start;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .loan-overdue-filters {
+        padding: .9rem;
+    }
+
+
+    .loan-overdue-filters__form {
+        grid-template-columns: 1fr;
+        gap: .8rem;
+    }
+
+
+    .loan-overdue-filter-search {
+        grid-column: auto;
+    }
+
+
+    .loan-overdue-filter-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+
+
+    .loan-overdue-filter-btn {
+        width: 100%;
+    }
+
+}

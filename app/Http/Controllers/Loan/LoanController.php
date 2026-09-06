@@ -17,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 use App\Services\Date\JalaliDateService;
 use App\Models\LoanRequest;
 use App\Models\Notification;
+use App\Models\LoanType;
 
 
 
@@ -33,17 +34,95 @@ class LoanController extends Controller
     ) {
     }
 
+
+/**
+ * لیست وام‌ها
+ */
     /**
      * لیست وام‌ها
      */
     public function index(Request $request): View
     {
+        /*
+        |--------------------------------------------------------------------------
+        | جستجو
+        |--------------------------------------------------------------------------
+        */
+
+        $search = $request->input('search');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | فیلتر وضعیت
+        |--------------------------------------------------------------------------
+        |
+        | null     = همه وام‌ها
+        | active   = وام‌های فعال
+        | finished = وام‌های تسویه‌شده
+        | overdue  = وام‌های دارای قسط معوق
+        |
+        */
+
+        $status = $request->input('status');
+
+        $allowedStatuses = [
+            'active',
+            'finished',
+            'overdue',
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | اگر فیلتر خالی یا نامعتبر بود
+        | همه وام‌ها نمایش داده شوند.
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $status === null ||
+            $status === '' ||
+            !in_array($status, $allowedStatuses, true)
+        ) {
+            $status = null;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | دریافت وام‌ها
+        |--------------------------------------------------------------------------
+        */
+
         $loans = $this->loanService->getPaginated(
-            search: $request->input('search')
+            search: $search,
+            status: $status
         );
 
-        return view('loan.index', compact('loans'));
+
+        /*
+        |--------------------------------------------------------------------------
+        | حفظ Search و Filter در Pagination
+        |--------------------------------------------------------------------------
+        */
+
+        $loans->appends([
+            'search' => $search,
+            'status' => $status,
+        ]);
+
+
+        return view('loan.index', [
+
+            'loans' => $loans,
+
+            'search' => $search,
+
+            'status' => $status,
+
+        ]);
     }
+
 
     /**
      * فرم ثبت
@@ -478,26 +557,39 @@ class LoanController extends Controller
         ]);
 
     }
-
-    public function overdue()
+    public function overdue(Request $request)
     {
-        $loans = $this->loanService->overdue();
+        $loans = $this->loanService->overdue(
+            search: $request->input('search'),
+            loanType: $request->filled('loan_type')
+                ? (int) $request->input('loan_type')
+                : null,
+            delay: $request->input('delay')
+        );
+
+        $loanTypes = LoanType::query()
+            ->orderBy('name')
+            ->get();
 
         return view('loan.overdue', [
 
             'loans' => $loans,
 
+            'loanTypes' => $loanTypes,
+
             'statistics' => [
 
                 'loan_count' => $loans->count(),
 
-                'installment_count' => $loans->sum('overdue_count'),
+                'installment_count' =>
+                    $loans->sum('overdue_count'),
 
-                'amount' => $loans->sum(function ($loan) {
+                'amount' =>
+                    $loans->sum(function ($loan) {
 
-                    return $loan->installments->sum('amount');
+                        return $loan->installments->sum('amount');
 
-                }),
+                    }),
 
             ],
 

@@ -1,0 +1,548 @@
+/* =========================================================
+Account Transactions
+Design #1
+Purple + Blue / Light / RTL / Mobile First
+========================================================= */
+
+.account-transactions-page {
+    direction: rtl;
+    padding-bottom: 2rem;
+}
+
+/* =========================================================
+Header
+========================================================= */
+
+.account-transactions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.account-transactions-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.account-transactions-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    color: #6d28d9;
+    background: #ede9fe;
+    font-size: 1.2rem;
+}
+
+.account-transactions-title {
+    margin: 0;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.account-transactions-subtitle {
+    margin: .2rem 0 0;
+    color: #6b7280;
+    font-size: .75rem;
+}
+
+/* =========================================================
+Back Button
+========================================================= */
+
+.account-transactions-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 42px;
+    padding: .5rem .85rem;
+    border: 1px solid #dbe1e8;
+    border-radius: 10px;
+    color: #475569;
+    background: #fff;
+    text-decoration: none;
+    font-size: .77rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(30, 41, 59, .05);
+    transition: all .2s ease;
+}
+
+.account-transactions-back-btn:hover {
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    background: #f8f9ff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+Summary Card
+========================================================= */
+
+.account-summary-card,
+.account-transactions-card {
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(30, 41, 59, .06);
+}
+
+.account-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .9rem 1.1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.account-summary-title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    color: #1f2937;
+    font-size: .88rem;
+    font-weight: 800;
+}
+
+.account-summary-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #6d28d9;
+    background: #ede9fe;
+}
+
+.account-number-badge {
+    padding: .4rem .7rem;
+    border-radius: 8px;
+    color: #3730a3;
+    background: #eef2ff;
+    font-size: .75rem;
+    font-weight: 750;
+}
+
+.account-summary-body {
+    padding: 1.1rem;
+}
+
+.account-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+
+.account-summary-item {
+    min-height: 76px;
+    padding: .8rem;
+    border: 1px solid #edf0f4;
+    border-radius: 12px;
+    background: #fafbfc;
+}
+
+.account-summary-label {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: .4rem;
+    color: #6b7280;
+    font-size: .73rem;
+    font-weight: 700;
+}
+
+.account-summary-label i {
+    color: #6d28d9;
+}
+
+.account-summary-item > strong {
+    color: #1f2937;
+    font-size: .86rem;
+}
+
+.account-current-balance {
+    border-color: #ddd6fe;
+    background: linear-gradient(135deg, #faf8ff, #f5f8ff);
+}
+
+.account-current-balance .account-summary-label i {
+    color: #4f46e5;
+}
+
+.account-balance-value {
+    display: flex;
+    align-items: baseline;
+    gap: .35rem;
+}
+
+.account-balance-value strong {
+    color: #15803d;
+    font-size: 1.1rem;
+    font-weight: 850;
+}
+
+.account-balance-value span {
+    color: #64748b;
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+/* =========================================================
+Transactions Card
+========================================================= */
+
+.account-transactions-card {
+    margin-bottom: 0;
+}
+
+.account-transactions-card-header {
+    padding: .9rem 1.1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.account-transactions-card-title {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+}
+
+.account-transactions-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #2563eb;
+    background: #dbeafe;
+}
+
+.account-transactions-card-title h6 {
+    margin: 0;
+    color: #1f2937;
+    font-size: .87rem;
+    font-weight: 800;
+}
+
+.account-transactions-card-title small {
+    display: block;
+    margin-top: .15rem;
+    color: #6b7280;
+    font-size: .7rem;
+}
+
+.account-transactions-body {
+    padding: 0;
+}
+
+/* =========================================================
+Table
+========================================================= */
+
+.account-transactions-table-wrapper {
+    width: 100%;
+}
+
+.account-transactions-table {
+    min-width: 1050px;
+    margin: 0;
+}
+
+.account-transactions-table thead th {
+    padding: .85rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #6b7280;
+    background: #f8fafc;
+    font-size: .76rem;
+    font-weight: 800;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.account-transactions-table tbody td {
+    padding: .9rem 1rem;
+    border-color: #edf0f4;
+    color: #374151;
+    font-size: .8rem;
+    text-align: center;
+}
+
+.account-transactions-table tbody tr {
+    transition: background-color .15s ease;
+}
+
+.account-transactions-table tbody tr:hover {
+    background: #fafaff;
+}
+
+/* =========================================================
+Date
+========================================================= */
+
+.transaction-date {
+    color: #475569;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+/* =========================================================
+Transaction Number
+========================================================= */
+
+.transaction-number {
+    display: inline-block;
+    padding: .3rem .5rem;
+    border-radius: 7px;
+    color: #475569;
+    background: #f1f5f9;
+    font-size: .73rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* =========================================================
+Payment Method
+========================================================= */
+
+.transaction-payment-method {
+    color: #475569;
+    font-size: .77rem;
+    font-weight: 650;
+}
+
+/* =========================================================
+Transaction Type
+========================================================= */
+
+.transaction-type {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .35rem .6rem;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.transaction-type-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.transaction-type.deposit {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.transaction-type.deposit .transaction-type-dot {
+    background: #22c55e;
+}
+
+.transaction-type.withdrawal {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.transaction-type.withdrawal .transaction-type-dot {
+    background: #ef4444;
+}
+
+.transaction-type.adjustment {
+    color: #a16207;
+    background: #fef3c7;
+}
+
+.transaction-type.adjustment .transaction-type-dot {
+    background: #eab308;
+}
+
+.transaction-type.other {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+.transaction-type.other .transaction-type-dot {
+    background: #64748b;
+}
+
+/* =========================================================
+Amount
+========================================================= */
+
+.transaction-amount,
+.transaction-balance {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: .3rem;
+    white-space: nowrap;
+}
+
+.transaction-amount strong {
+    color: #1f2937;
+    font-size: .82rem;
+}
+
+.transaction-balance strong {
+    color: #2563eb;
+    font-size: .82rem;
+}
+
+.transaction-amount span,
+.transaction-balance span {
+    color: #6b7280;
+    font-size: .67rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+Description
+========================================================= */
+
+.transaction-description {
+    display: inline-block;
+    max-width: 220px;
+    overflow: hidden;
+    color: #64748b;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+Empty
+========================================================= */
+
+.transactions-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 250px;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.transactions-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    margin-bottom: .75rem;
+    border-radius: 17px;
+    color: #7c3aed;
+    background: #f0eaff;
+    font-size: 1.4rem;
+}
+
+.transactions-empty h6 {
+    margin: 0 0 .35rem;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+.transactions-empty p {
+    margin: 0;
+    color: #6b7280;
+    font-size: .77rem;
+}
+
+/* =========================================================
+Pagination
+========================================================= */
+
+.transactions-pagination {
+    padding: 1rem;
+    border-top: 1px solid #edf0f4;
+}
+
+.transactions-pagination .pagination {
+    justify-content: center;
+    margin: 0;
+}
+
+/* =========================================================
+Desktop
+========================================================= */
+
+@media (min-width: 768px) {
+
+
+    .account-summary-body {
+        padding: 1.25rem;
+    }
+
+    .account-summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .account-summary-header,
+    .account-transactions-card-header {
+        padding: 1rem 1.25rem;
+    }
+
+
+}
+
+/* =========================================================
+Mobile
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+
+    .account-transactions-header {
+        align-items: center;
+    }
+
+    .account-transactions-title-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .account-transactions-title {
+        font-size: .92rem;
+    }
+
+    .account-transactions-subtitle {
+        font-size: .68rem;
+    }
+
+    .account-transactions-back-btn {
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+        padding: 0;
+    }
+
+    .account-transactions-back-btn span {
+        display: none;
+    }
+
+    .account-summary-header {
+        align-items: center;
+    }
+
+    .account-number-badge {
+        font-size: .68rem;
+    }
+
+    .account-transactions-table {
+        min-width: 1050px;
+    }
+
+}

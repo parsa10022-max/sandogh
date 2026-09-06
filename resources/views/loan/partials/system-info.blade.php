@@ -1,42 +1,72 @@
-<div class="card shadow-sm border-0 mt-4">
+{{-- =========================================================
+     اطلاعات سیستم
+     Design System #1
+========================================================= --}}
 
-    <div class="card-header bg-light">
+<div class="loan-system-card">
 
-        <h6 class="mb-0 fw-bold">
+    {{-- Header --}}
+    <div class="loan-section-header">
 
-            اطلاعات سیستم
+        <div class="loan-section-title">
 
-        </h6>
+            <span class="loan-section-icon">
+                <i class="bi bi-gear"></i>
+            </span>
+
+            <div>
+
+                <h6 class="mb-0">
+                    اطلاعات سیستم
+                </h6>
+
+                <small>
+                    اطلاعات ثبت، ویرایش و وضعیت وام
+                </small>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body">
+
+    {{-- Body --}}
+    <div class="loan-system-body">
 
         <div class="row g-3">
 
-            <div class="col-lg-6">
 
-                <div class="loan-info-item">
+            {{-- وضعیت --}}
+            <div class="col-12 col-md-6">
 
-                    <span class="loan-info-title">
+                <div class="loan-system-item">
 
-                        وضعیت :
+                    <span class="loan-system-label">
+
+                        <i class="bi bi-circle-half"></i>
+
+                        وضعیت
 
                     </span>
 
-                    <span class="loan-info-value">
+                    <span class="loan-system-value">
 
-                        @if($loan->status->value == 1)
+                        @if($loan->status->value === \App\Enums\LoanStatus::ACTIVE->value)
 
-                            <span class="badge bg-success">
+                            <span class="loan-system-status loan-system-status-active">
+
+                                <i class="bi bi-check-circle-fill"></i>
 
                                 فعال
 
                             </span>
 
-                        @elseif($loan->status->value == 2)
+                        @elseif($loan->status->value === \App\Enums\LoanStatus::FINISHED->value)
 
-                            <span class="badge bg-primary">
+                            <span class="loan-system-status loan-system-status-finished">
+
+                                <i class="bi bi-check2-all"></i>
 
                                 پایان یافته
 
@@ -44,7 +74,9 @@
 
                         @else
 
-                            <span class="badge bg-danger">
+                            <span class="loan-system-status loan-system-status-cancelled">
+
+                                <i class="bi bi-x-circle-fill"></i>
 
                                 لغو شده
 
@@ -58,81 +90,97 @@
 
             </div>
 
-            <div class="col-lg-6">
 
-                <div class="loan-info-item">
+            {{-- ایجاد کننده --}}
+            <div class="col-12 col-md-6">
 
-                    <span class="loan-info-title">
+                <div class="loan-system-item">
 
-                        ایجاد کننده :
+                    <span class="loan-system-label">
+
+                        <i class="bi bi-person-plus"></i>
+
+                        ایجاد کننده
 
                     </span>
 
-                    <span class="loan-info-value">
+                    <strong class="loan-system-value">
 
                         {{ $loan->creator?->name ?? '-' }}
 
-                    </span>
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-lg-6">
 
-                <div class="loan-info-item">
+            {{-- تاریخ ایجاد --}}
+            <div class="col-12 col-md-6">
 
-                    <span class="loan-info-title">
+                <div class="loan-system-item">
 
-                        تاریخ ایجاد :
+                    <span class="loan-system-label">
 
-                    </span>
+                        <i class="bi bi-calendar-plus"></i>
 
-                    <span class="loan-info-value">
-
-                        {{ $loan->created_at_jalali }}
+                        تاریخ ایجاد
 
                     </span>
+
+                    <strong class="loan-system-value loan-system-date">
+
+                        {{ $loan->created_at_jalali ?? '-' }}
+
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-lg-6">
 
-                <div class="loan-info-item">
+            {{-- آخرین ویرایش --}}
+            <div class="col-12 col-md-6">
 
-                    <span class="loan-info-title">
+                <div class="loan-system-item">
 
-                        آخرین ویرایش :
+                    <span class="loan-system-label">
 
-                    </span>
+                        <i class="bi bi-calendar-check"></i>
 
-                    <span class="loan-info-value">
-
-                        {{ $loan->updated_at_jalali }}
+                        آخرین ویرایش
 
                     </span>
+
+                    <strong class="loan-system-value loan-system-date">
+
+                        {{ $loan->updated_at_jalali ?? '-' }}
+
+                    </strong>
 
                 </div>
 
             </div>
 
-            <div class="col-lg-6">
 
-                <div class="loan-info-item">
+            {{-- ویرایش کننده --}}
+            <div class="col-12 col-md-6">
 
-                    <span class="loan-info-title">
+                <div class="loan-system-item">
 
-                        ویرایش کننده :
+                    <span class="loan-system-label">
+
+                        <i class="bi bi-person-gear"></i>
+
+                        ویرایش کننده
 
                     </span>
 
-                    <span class="loan-info-value">
+                    <strong class="loan-system-value">
 
                         {{ $loan->updater?->name ?? '-' }}
 
-                    </span>
+                    </strong>
 
                 </div>
 

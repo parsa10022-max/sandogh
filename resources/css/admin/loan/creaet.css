@@ -1,0 +1,602 @@
+css
+    /*
+    |--------------------------------------------------------------------------
+    | LOAN CREATE PAGE
+    | Design System #1
+    | Purple + Blue / RTL / Bootstrap 5.3
+    |--------------------------------------------------------------------------
+    */
+
+.loan-create-page {
+    width: 100%;
+    min-width: 0;
+    padding: 1rem;
+}
+
+
+/* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
+
+.loan-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.15rem;
+
+    background: #fff;
+
+    border: 1px solid #e7e7ef;
+    border-radius: 1rem;
+
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+
+.loan-page-header__content {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+
+    min-width: 0;
+}
+
+
+.loan-page-header__icon {
+    flex: 0 0 auto;
+
+    width: 3rem;
+    height: 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.85rem;
+
+    background: rgba(111, 66, 193, 0.10);
+    color: #6f42c1;
+
+    font-size: 1.35rem;
+}
+
+
+.loan-page-header__title {
+    margin: 0;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    color: #252533;
+}
+
+
+.loan-page-header__subtitle {
+    margin-top: 0.2rem;
+
+    font-size: 0.82rem;
+    color: #777784;
+}
+
+
+/* ==========================================================================
+   BACK BUTTON
+   ========================================================================== */
+
+.loan-back-btn {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+
+    min-height: 2.45rem;
+
+    padding: 0.45rem 0.85rem;
+
+    border: 1px solid #d9d9e3;
+    border-radius: 0.7rem;
+
+    background: #fff;
+    color: #555564;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.loan-back-btn:hover {
+    background: #f7f5fc;
+    border-color: #c8b9e8;
+    color: #6f42c1;
+
+    transform: translateX(2px);
+}
+
+
+.loan-back-btn i {
+    font-size: 0.95rem;
+}
+
+
+/* ==========================================================================
+   FORM CARD
+   ========================================================================== */
+
+.loan-form-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e5e5ed;
+    border-radius: 1rem;
+
+    box-shadow: 0 5px 22px rgba(0, 0, 0, 0.045);
+}
+
+
+/* ==========================================================================
+   CARD HEADER
+   ========================================================================== */
+
+.loan-form-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    padding: 1rem 1.15rem;
+
+    border-bottom: 1px solid #eeeeF3;
+    background: #fff;
+}
+
+
+.loan-form-card__header-icon {
+    flex: 0 0 auto;
+
+    width: 2.65rem;
+    height: 2.65rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.75rem;
+
+    background: rgba(13, 110, 253, 0.09);
+    color: #0d6efd;
+
+    font-size: 1.15rem;
+}
+
+
+.loan-form-card__title {
+    margin: 0;
+
+    color: #292936;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+.loan-form-card__subtitle {
+    margin-top: 0.15rem;
+
+    color: #858591;
+
+    font-size: 0.78rem;
+}
+
+
+/* ==========================================================================
+   CARD BODY
+   ========================================================================== */
+
+.loan-form-card__body {
+    padding: 1.25rem;
+}
+
+
+/* ==========================================================================
+   FORM ELEMENTS
+   ========================================================================== */
+
+/*
+ * این بخش برای هماهنگی فرم موجود با Design System #1 است.
+ * ساختار loan._form تغییر نمی‌کند.
+ */
+
+.loan-create-page .form-label {
+    margin-bottom: 0.4rem;
+
+    color: #3c3c48;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+
+.loan-create-page .form-control,
+.loan-create-page .form-select {
+    min-height: 2.7rem;
+
+    border-color: #dfe0e8;
+    border-radius: 0.65rem;
+
+    background-color: #fff;
+
+    font-size: 0.87rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.loan-create-page .form-control:focus,
+.loan-create-page .form-select:focus {
+    border-color: #8b6bc9;
+
+    box-shadow:
+        0 0 0 0.2rem rgba(111, 66, 193, 0.10);
+}
+
+
+.loan-create-page textarea.form-control {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+
+.loan-create-page .input-group .form-control {
+    border-radius: 0.65rem;
+}
+
+
+/* ==========================================================================
+   VALIDATION
+   ========================================================================== */
+
+.loan-create-page .is-invalid {
+    border-color: #dc3545;
+}
+
+
+.loan-create-page .invalid-feedback {
+    font-size: 0.76rem;
+}
+
+
+/* ==========================================================================
+   SECTION SEPARATORS
+   ========================================================================== */
+
+.loan-create-page .loan-section,
+.loan-create-page .form-section {
+    margin-bottom: 1.25rem;
+
+    padding: 1rem;
+
+    border: 1px solid #ececf2;
+    border-radius: 0.85rem;
+
+    background: #fcfcfe;
+}
+
+
+.loan-create-page .loan-section-title,
+.loan-create-page .form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    margin-bottom: 1rem;
+
+    color: #353541;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+
+.loan-create-page .loan-section-title i,
+.loan-create-page .form-section-title i {
+    color: #6f42c1;
+}
+
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.loan-create-page .btn {
+    border-radius: 0.65rem;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+
+.loan-create-page .btn-primary {
+    border-color: #6f42c1;
+    background-color: #6f42c1;
+}
+
+
+.loan-create-page .btn-primary:hover {
+    border-color: #5f35aa;
+    background-color: #5f35aa;
+}
+
+
+.loan-create-page .btn-success {
+    border-radius: 0.65rem;
+}
+
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+    .loan-create-page {
+        padding: 0.75rem;
+    }
+
+    .loan-page-header {
+        align-items: stretch;
+        flex-direction: column;
+
+        padding: 0.9rem;
+    }
+
+    .loan-page-header__content {
+        align-items: flex-start;
+    }
+
+    .loan-page-header__icon {
+        width: 2.65rem;
+        height: 2.65rem;
+
+        font-size: 1.15rem;
+    }
+
+    .loan-page-header__title {
+        font-size: 1rem;
+    }
+
+    .loan-page-header__subtitle {
+        font-size: 0.75rem;
+    }
+
+    .loan-back-btn {
+        width: 100%;
+    }
+
+    .loan-form-card {
+        border-radius: 0.85rem;
+    }
+
+    .loan-form-card__header {
+        padding: 0.9rem;
+    }
+
+    .loan-form-card__body {
+        padding: 0.9rem;
+    }
+
+    .loan-create-page .loan-section,
+    .loan-create-page .form-section {
+        padding: 0.85rem;
+    }
+}
+
+
+/* ==========================================================================
+   SMALL MOBILE
+   ========================================================================== */
+
+@media (max-width: 575.98px) {
+
+    .loan-page-header__subtitle {
+        display: none;
+    }
+
+    .loan-form-card__subtitle {
+        display: none;
+    }
+
+    .loan-create-page .form-control,
+    .loan-create-page .form-select {
+        min-height: 2.8rem;
+    }
+}
+
+
+/* ==========================================================================
+   DESKTOP
+   ========================================================================== */
+
+@media (min-width: 992px) {
+
+    .loan-create-page {
+        padding: 1.25rem;
+    }
+
+    .loan-page-header {
+        padding: 1.1rem 1.35rem;
+    }
+
+    .loan-form-card__body {
+        padding: 1.5rem;
+    }
+}
+
+/* =========================================================
+   LOAN FORM ACTIONS
+   Design System #1
+   Purple + Blue / White / Soft Shadow
+   ========================================================= */
+
+.loan-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 28px;
+    padding-top: 20px;
+
+    border-top: 1px solid #e9e7f2;
+}
+
+
+/* =========================================================
+   BASE BUTTON
+   ========================================================= */
+
+.loan-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 46px;
+    padding: 8px 20px;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.loan-action-icon {
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   PRIMARY — PURPLE
+   ========================================================= */
+
+.loan-action-primary {
+    color: #ffffff;
+
+    background: #6f42c1;
+    border: 1px solid #6f42c1;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .20);
+}
+
+.loan-action-primary .loan-action-icon {
+    color: #ffffff;
+    background: rgba(255, 255, 255, .16);
+}
+
+.loan-action-primary:hover {
+    color: #ffffff;
+
+    background: #5f35ad;
+    border-color: #5f35ad;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 6px 16px rgba(111, 66, 193, .28);
+}
+
+.loan-action-primary:active {
+    transform: translateY(0);
+
+    box-shadow: 0 3px 8px rgba(111, 66, 193, .18);
+}
+
+
+/* =========================================================
+   SECONDARY — WHITE
+   ========================================================= */
+
+.loan-action-secondary {
+    color: #5f5b69;
+
+    background: #ffffff;
+    border: 1px solid #d9d5e5;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .04);
+}
+
+.loan-action-secondary .loan-action-icon {
+    color: #6f42c1;
+    background: #f2eefb;
+}
+
+.loan-action-secondary:hover {
+    color: #5f35ad;
+
+    background: #faf8ff;
+    border-color: #b9a9d9;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 13px rgba(111, 66, 193, .10);
+}
+
+.loan-action-secondary:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .loan-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .loan-action-btn {
+        width: 100%;
+        min-height: 48px;
+    }
+
+}

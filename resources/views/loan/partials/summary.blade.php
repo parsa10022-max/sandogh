@@ -1,261 +1,385 @@
-<div class="card shadow-sm border-0 mb-4">
+<div class="loan-summary-card">
 
-    <div class="card-header bg-light border-bottom">
-        <h6 class="mb-0 fw-bold text-primary">
-            خلاصه بازپرداخت
-        </h6>
+    {{-- =====================================================
+         HEADER
+    ====================================================== --}}
+
+    <div class="loan-summary-header">
+
+        <div class="loan-summary-title">
+
+            <span class="loan-summary-title-icon">
+                <i class="bi bi-bar-chart-line"></i>
+            </span>
+
+            <span>
+                خلاصه بازپرداخت
+            </span>
+
+        </div>
+
     </div>
 
 
-    <div class="card-body">
+    {{-- =====================================================
+         MAIN SUMMARY
+    ====================================================== --}}
+
+    <div class="loan-summary-body">
 
         <div class="row g-3">
 
 
             {{-- مبلغ کل وام --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            مبلغ کل وام
-                        </div>
+                <div class="loan-summary-item">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-cash-stack"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            مبلغ کل وام
+                        </span>
+
+                        <strong class="loan-summary-value">
                             {{ number_format($loan->loan_amount) }}
-                            ریال
-                        </div>
+                            <small>ریال</small>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- تعداد کل اقساط --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            تعداد کل اقساط
-                        </div>
+                <div class="loan-summary-item">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-list-ol"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            تعداد کل اقساط
+                        </span>
+
+                        <strong class="loan-summary-value">
                             {{ $loan->installment_count }}
-                            قسط
-                        </div>
+                            <small>قسط</small>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- اقساط پرداخت شده --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            اقساط پرداخت شده
-                        </div>
+                <div class="loan-summary-item loan-summary-item-success">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-check-circle"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            اقساط پرداخت شده
+                        </span>
+
+                        <strong class="loan-summary-value">
                             {{ $loan->installments
                                 ->where('status', \App\Enums\InstallmentStatus::PAID)
                                 ->count()
                             }}
-                            قسط
-                        </div>
+                            <small>قسط</small>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- اقساط باقی مانده --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            اقساط باقی مانده
-                        </div>
+                <div class="loan-summary-item loan-summary-item-warning">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-hourglass-split"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            اقساط باقی مانده
+                        </span>
+
+                        <strong class="loan-summary-value">
                             {{ $loan->installments
-                                ->where('status', '!=', \App\Enums\InstallmentStatus::PAID)
+                                ->where(
+                                    'status',
+                                    '!=',
+                                    \App\Enums\InstallmentStatus::PAID
+                                )
                                 ->count()
                             }}
-                            قسط
-                        </div>
+                            <small>قسط</small>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- مبلغ پرداخت شده --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            مبلغ پرداخت شده
-                        </div>
+                <div class="loan-summary-item loan-summary-item-success">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-wallet2"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            مبلغ پرداخت شده
+                        </span>
+
+                        <strong class="loan-summary-value">
+
                             {{ number_format(
                                 $loan->installments
-                                ->where('status', \App\Enums\InstallmentStatus::PAID)
-                                ->sum('amount')
+                                    ->where(
+                                        'status',
+                                        \App\Enums\InstallmentStatus::PAID
+                                    )
+                                    ->sum('amount')
                             ) }}
-                            ریال
-                        </div>
+
+                            <small>ریال</small>
+
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- مانده بدهی --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            مانده بدهی
-                        </div>
+                <div class="loan-summary-item loan-summary-item-danger">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-exclamation-circle"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            مانده بدهی
+                        </span>
+
+                        <strong class="loan-summary-value">
+
                             {{ number_format(
                                 $loan->loan_amount -
                                 $loan->installments
-                                ->where('status', \App\Enums\InstallmentStatus::PAID)
-                                ->sum('amount')
+                                    ->where(
+                                        'status',
+                                        \App\Enums\InstallmentStatus::PAID
+                                    )
+                                    ->sum('amount')
                             ) }}
-                            ریال
-                        </div>
+
+                            <small>ریال</small>
+
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- اولین سررسید --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            اولین سررسید
-                        </div>
+                <div class="loan-summary-item">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-calendar-event"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            اولین سررسید
+                        </span>
+
+                        <strong class="loan-summary-value loan-summary-date">
                             {{ $loan->first_due_date_jalali }}
-                        </div>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
 
             {{-- آخرین سررسید --}}
-            <div class="col-md-6 col-xl-3">
-                <div class="card shadow-sm border h-100">
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            آخرین سررسید
-                        </div>
+                <div class="loan-summary-item">
+
+                    <div class="loan-summary-item-icon">
+                        <i class="bi bi-calendar-check"></i>
                     </div>
 
-                    <div class="card-body">
-                        <div class="fw-bold fs-5">
+                    <div class="loan-summary-item-content">
+
+                        <span class="loan-summary-label">
+                            آخرین سررسید
+                        </span>
+
+                        <strong class="loan-summary-value loan-summary-date">
                             {{ $loan->last_due_date_jalali }}
-                        </div>
+                        </strong>
+
                     </div>
 
                 </div>
-            </div>
 
+            </div>
 
         </div>
 
 
-        {{-- قسط بعدی و پیشرفت --}}
-        <div class="row g-3 mt-3">
+        {{-- =====================================================
+             NEXT INSTALLMENT + PROGRESS
+        ====================================================== --}}
+
+        <div class="row g-3 mt-1">
 
 
             {{-- قسط بعدی --}}
-            <div class="col-md-6">
+            <div class="col-12 col-lg-6">
 
-                <div class="card shadow-sm border h-100">
+                @php
+                    $nextInstallment = $loan->installments
+                        ->where(
+                            'status',
+                            '!=',
+                            \App\Enums\InstallmentStatus::PAID
+                        )
+                        ->sortBy('installment_number')
+                        ->first();
+                @endphp
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            قسط بعدی
+                <div class="loan-summary-detail-card">
+
+                    <div class="loan-summary-detail-header">
+
+                        <div class="loan-summary-detail-title">
+
+                            <span class="loan-summary-detail-icon">
+                                <i class="bi bi-calendar2-check"></i>
+                            </span>
+
+                            <span>
+                                قسط بعدی
+                            </span>
+
                         </div>
+
                     </div>
 
 
-                    <div class="card-body">
-
-                        @php
-                            $nextInstallment = $loan->installments
-                                ->where('status', '!=', \App\Enums\InstallmentStatus::PAID)
-                                ->sortBy('installment_number')
-                                ->first();
-                        @endphp
-
+                    <div class="loan-summary-detail-body">
 
                         @if($nextInstallment)
 
-                            <div>
-                                قسط شماره:
-                                <strong>{{ $nextInstallment->installment_number }}</strong>
-                            </div>
+                            <div class="loan-next-installment">
 
-                            <div>
-                                مبلغ:
-                                <strong>
-                                    {{ number_format($nextInstallment->amount) }}
-                                    ریال
-                                </strong>
-                            </div>
+                                <div class="loan-next-row">
 
-                            <div>
-                                سررسید:
-                                <strong>
-                                    {{ $nextInstallment->due_date_jalali ?? $nextInstallment->due_date }}
-                                </strong>
+                                    <span>
+                                        شماره قسط
+                                    </span>
+
+                                    <strong>
+                                        {{ $nextInstallment->installment_number }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="loan-next-row">
+
+                                    <span>
+                                        مبلغ
+                                    </span>
+
+                                    <strong class="loan-next-amount">
+
+                                        {{ number_format($nextInstallment->amount) }}
+
+                                        <small>ریال</small>
+
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="loan-next-row">
+
+                                    <span>
+                                        سررسید
+                                    </span>
+
+                                    <strong>
+                                        {{ $nextInstallment->due_date_jalali ?? $nextInstallment->due_date }}
+                                    </strong>
+
+                                </div>
+
                             </div>
 
                         @else
 
-                            <span class="text-success fw-bold">
-                                وام تسویه شده است
-                            </span>
+                            <div class="loan-summary-completed">
+
+                                <span class="loan-summary-completed-icon">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </span>
+
+                                <span>
+                                    وام تسویه شده است
+                                </span>
+
+                            </div>
 
                         @endif
 
@@ -266,52 +390,85 @@
             </div>
 
 
-
             {{-- پیشرفت بازپرداخت --}}
-            <div class="col-md-6">
+            <div class="col-12 col-lg-6">
 
                 @php
+
                     $paidCount = $loan->installments
-                        ->where('status', \App\Enums\InstallmentStatus::PAID)
+                        ->where(
+                            'status',
+                            \App\Enums\InstallmentStatus::PAID
+                        )
                         ->count();
 
                     $progress = $loan->installment_count > 0
-                        ? round(($paidCount / $loan->installment_count) * 100)
+                        ? round(
+                            ($paidCount / $loan->installment_count) * 100
+                        )
                         : 0;
+
                 @endphp
 
 
-                <div class="card shadow-sm border h-100">
+                <div class="loan-summary-detail-card">
 
-                    <div class="card-header bg-light">
-                        <div class="small fw-bold text-primary">
-                            پیشرفت بازپرداخت
+                    <div class="loan-summary-detail-header">
+
+                        <div class="loan-summary-detail-title">
+
+                            <span class="loan-summary-detail-icon">
+                                <i class="bi bi-graph-up"></i>
+                            </span>
+
+                            <span>
+                                پیشرفت بازپرداخت
+                            </span>
+
                         </div>
+
                     </div>
 
 
-                    <div class="card-body">
+                    <div class="loan-summary-detail-body">
 
-                        <div class="fw-bold fs-5 mb-2">
-                            {{ $progress }}٪
+                        <div class="loan-progress-top">
+
+                            <strong>
+                                {{ $progress }}٪
+                            </strong>
+
+                            <span>
+                                {{ $paidCount }}
+                                از
+                                {{ $loan->installment_count }}
+                                قسط
+                            </span>
+
                         </div>
 
 
-                        <div class="progress" style="height: 12px;">
+                        <div class="loan-progress">
 
-                            <div class="progress-bar"
-                                 role="progressbar"
-                                 style="width: {{ $progress }}%">
+                            <div
+                                class="loan-progress-bar"
+                                role="progressbar"
+                                style="width: {{ $progress }}%;"
+                                aria-valuenow="{{ $progress }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100">
                             </div>
 
                         </div>
 
 
-                        <div class="small text-muted mt-2">
+                        <div class="loan-progress-description">
+
                             {{ $paidCount }}
                             قسط از
                             {{ $loan->installment_count }}
-                            قسط پرداخت شده
+                            قسط پرداخت شده است.
+
                         </div>
 
                     </div>
@@ -320,9 +477,7 @@
 
             </div>
 
-
         </div>
-
 
     </div>
 

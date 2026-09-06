@@ -1,0 +1,517 @@
+/* =========================================================
+Account Show
+Design #1
+Purple + Blue / Light / RTL / Mobile First
+========================================================= */
+
+.account-show-page {
+    direction: rtl;
+    padding-bottom: 2rem;
+}
+
+/* =========================================================
+Header
+========================================================= */
+
+.account-show-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: .25rem 0;
+}
+
+.account-show-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.account-show-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    color: #6d28d9;
+    background: #ede9fe;
+    font-size: 1.25rem;
+}
+
+.account-show-title {
+    margin: 0;
+    color: #111827;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.account-show-subtitle {
+    margin: .2rem 0 0;
+    color: #6b7280;
+    font-size: .76rem;
+}
+
+/* =========================================================
+Back Button
+========================================================= */
+
+.account-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 42px;
+    padding: .5rem .85rem;
+    border: 1px solid #dbe1e8;
+    border-radius: 10px;
+    color: #475569;
+    background: #fff;
+    font-size: .78rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(30, 41, 59, .05);
+    transition: .2s ease;
+}
+
+.account-back-btn:hover {
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    background: #f8f9ff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+Cards
+========================================================= */
+
+.account-info-card,
+.account-actions-card {
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(30, 41, 59, .06);
+}
+
+.account-info-header {
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.account-section-title {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    color: #1f2937;
+    font-size: .9rem;
+    font-weight: 800;
+}
+
+.account-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #6d28d9;
+    background: #ede9fe;
+    font-size: 1rem;
+}
+
+/* =========================================================
+Information
+========================================================= */
+
+.account-info-body {
+    padding: 1.1rem;
+}
+
+.account-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+
+.account-info-item {
+    min-height: 82px;
+    padding: .85rem;
+    border: 1px solid #edf0f4;
+    border-radius: 12px;
+    background: #fafbfc;
+}
+
+.account-info-label {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: .45rem;
+    color: #6b7280;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.account-info-label i {
+    color: #6d28d9;
+}
+
+.account-info-value {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    color: #1f2937;
+    font-size: .88rem;
+}
+
+.account-info-value.account-code {
+    display: block;
+}
+
+.account-number {
+    direction: ltr;
+    justify-content: flex-start;
+    letter-spacing: .3px;
+}
+
+/* =========================================================
+Account Type
+========================================================= */
+
+.account-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .3rem .55rem;
+    border-radius: 7px;
+    font-size: .7rem;
+    font-weight: 750;
+}
+
+.account-type-badge.customer {
+    color: #6d28d9;
+    background: #f0eaff;
+}
+
+.account-type-badge.system {
+    color: #1d4ed8;
+    background: #e0edff;
+}
+
+/* =========================================================
+Balance
+========================================================= */
+
+.account-balance-card {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd6fe;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #faf8ff,
+        #f5f8ff
+    );
+}
+
+.account-balance-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    color: #4f46e5;
+    background: #e0e7ff;
+    font-size: 1.25rem;
+}
+
+.account-balance-content {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.account-balance-label {
+    color: #6b7280;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.account-balance-value {
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+}
+
+.account-balance-value strong {
+    color: #111827;
+    font-size: 1.25rem;
+    font-weight: 850;
+}
+
+.account-balance-value span {
+    color: #64748b;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+/* =========================================================
+Actions
+========================================================= */
+
+.account-actions-card .card-body {
+    padding: 1rem;
+}
+
+.account-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+
+.account-action-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    min-height: 72px;
+    padding: .75rem .85rem;
+    border: 1px solid;
+    border-radius: 13px;
+    text-decoration: none;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+.account-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(30, 41, 59, .09);
+}
+
+.account-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    font-size: 1.15rem;
+}
+
+.account-action-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: .18rem;
+    min-width: 0;
+}
+
+.account-action-content strong {
+    font-size: .83rem;
+    font-weight: 800;
+}
+
+.account-action-content small {
+    font-size: .7rem;
+    opacity: .75;
+}
+
+.account-action-arrow {
+    font-size: .8rem;
+    opacity: .6;
+}
+
+/* =========================================================
+Deposit
+========================================================= */
+
+.account-action-btn.deposit {
+    border-color: #bbf7d0;
+    color: #15803d;
+    background: #f0fdf4;
+}
+
+.account-action-btn.deposit .account-action-icon {
+    background: #dcfce7;
+}
+
+.account-action-btn.deposit:hover {
+    border-color: #86efac;
+    background: #ecfdf5;
+}
+
+/* =========================================================
+Withdrawal
+========================================================= */
+
+.account-action-btn.withdrawal {
+    border-color: #fecaca;
+    color: #b91c1c;
+    background: #fff7f7;
+}
+
+.account-action-btn.withdrawal .account-action-icon {
+    background: #fee2e2;
+}
+
+.account-action-btn.withdrawal:hover {
+    border-color: #fca5a5;
+    background: #fff1f2;
+}
+
+/* =========================================================
+Transactions
+========================================================= */
+
+.account-action-btn.transactions {
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+    background: #eff6ff;
+}
+
+.account-action-btn.transactions .account-action-icon {
+    background: #dbeafe;
+}
+
+.account-action-btn.transactions:hover {
+    border-color: #93c5fd;
+    background: #eef5ff;
+}
+
+/* =========================================================
+Adjustment
+========================================================= */
+
+.account-action-btn.adjustment {
+    border-color: #fde68a;
+    color: #a16207;
+    background: #fffbeb;
+}
+
+.account-action-btn.adjustment .account-action-icon {
+    background: #fef3c7;
+}
+
+.account-action-btn.adjustment:hover {
+    border-color: #fcd34d;
+    background: #fff9df;
+}
+
+/* =========================================================
+Desktop
+========================================================= */
+
+@media (min-width: 768px) {
+
+
+    .account-show-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .account-info-header {
+        padding: 1.1rem 1.25rem;
+    }
+
+    .account-info-body {
+        padding: 1.25rem;
+    }
+
+    .account-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .account-actions-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .account-actions-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+}
+
+/* =========================================================
+Large Desktop
+========================================================= */
+
+@media (min-width: 1200px) {
+
+
+    .account-info-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .account-actions-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .account-action-btn {
+        min-height: 86px;
+    }
+
+
+}
+
+/* =========================================================
+Mobile
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+
+    .account-show-header {
+        align-items: stretch;
+    }
+
+    .account-show-title-wrapper {
+        flex: 1;
+    }
+
+    .account-show-title-icon {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .account-show-title {
+        font-size: .95rem;
+    }
+
+    .account-show-subtitle {
+        font-size: .7rem;
+    }
+
+    .account-back-btn {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+    }
+
+    .account-back-btn span {
+        display: none;
+    }
+
+    .account-info-item {
+        min-height: 76px;
+    }
+
+    .account-balance-value strong {
+        font-size: 1.1rem;
+    }
+
+
+}

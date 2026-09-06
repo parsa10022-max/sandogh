@@ -1,62 +1,116 @@
-<div class="card shadow-sm mb-4">
+{{-- =========================================================
+     تاریخ‌های وام
+     Design System #1
+========================================================= --}}
 
-    <div class="card-header bg-success text-white">
+<div class="loan-dates-card">
 
-        <i class="bi bi-calendar-event me-1"></i>
+    {{-- Header --}}
+    <div class="loan-section-header">
 
-        تاریخ‌های وام
+        <div class="loan-section-title">
+
+            <span class="loan-section-icon">
+                <i class="bi bi-calendar-event"></i>
+            </span>
+
+            <div>
+
+                <h6 class="mb-0">
+                    تاریخ‌های وام
+                </h6>
+
+                <small>
+                    تاریخ ثبت وام و سررسید بازپرداخت
+                </small>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body">
 
-        <div class="row">
+    {{-- Body --}}
+    <div class="loan-dates-body">
 
-            <div class="col-md-4 mb-3">
+        <div class="row g-3">
 
-                <small class="text-muted d-block">
 
-                    تاریخ ثبت وام
+            {{-- تاریخ ثبت --}}
+            <div class="col-12 col-md-4">
 
-                </small>
+                <div class="loan-date-item">
 
-                <strong>
+                    <div class="loan-date-icon">
+                        <i class="bi bi-calendar-plus"></i>
+                    </div>
 
-                    {{ $loan->start_date_jalali }}
+                    <div class="loan-date-content">
 
-                </strong>
+                        <span class="loan-date-label">
+                            تاریخ ثبت وام
+                        </span>
 
-            </div>
+                        <strong class="loan-date-value">
+                            {{ $loan->start_date_jalali ?? '-' }}
+                        </strong>
 
-            <div class="col-md-4 mb-3">
+                    </div>
 
-                <small class="text-muted d-block">
-
-                    اولین سررسید
-
-                </small>
-
-                <strong>
-
-                    {{ $loan->first_due_date_jalali }}
-
-                </strong>
+                </div>
 
             </div>
 
-            <div class="col-md-4 mb-3">
 
-                <small class="text-muted d-block">
+            {{-- اولین سررسید --}}
+            <div class="col-12 col-md-4">
 
-                    آخرین سررسید
+                <div class="loan-date-item">
 
-                </small>
+                    <div class="loan-date-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
 
-                <strong>
+                    <div class="loan-date-content">
 
-                    {{ $loan->last_due_date_jalali }}
+                        <span class="loan-date-label">
+                            اولین سررسید
+                        </span>
 
-                </strong>
+                        <strong class="loan-date-value">
+                            {{ $loan->first_due_date_jalali ?? '-' }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- آخرین سررسید --}}
+            <div class="col-12 col-md-4">
+
+                <div class="loan-date-item">
+
+                    <div class="loan-date-icon">
+                        <i class="bi bi-calendar-range"></i>
+                    </div>
+
+                    <div class="loan-date-content">
+
+                        <span class="loan-date-label">
+                            آخرین سررسید
+                        </span>
+
+                        <strong class="loan-date-value">
+                            {{ $loan->last_due_date_jalali ?? '-' }}
+                        </strong>
+
+                    </div>
+
+                </div>
 
             </div>
 

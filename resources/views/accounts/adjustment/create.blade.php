@@ -1,49 +1,71 @@
 @extends('layouts.app')
 
+@section('title', 'اصلاح موجودی حساب')
+
 @section('content')
 
-    <div class="container py-4">
+    <div class="container py-4 adjustment-page">
 
-        {{-- عنوان --}}
-        <div class="mb-4">
+        {{-- Header --}}
+        <div class="adjustment-header">
 
-            <h4 class="fw-bold mb-1">
-                <i class="bi bi-pencil-square text-primary"></i>
-                اصلاح موجودی حساب
-            </h4>
+            <div class="adjustment-title-wrapper">
 
-            <div class="text-muted">
-                اصلاح موجودی فقط برای اصلاح اشتباهات حسابداری استفاده می‌شود.
+                <div class="adjustment-title-icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+
+                <div>
+                    <h4 class="adjustment-title">
+                        اصلاح موجودی حساب
+                    </h4>
+
+                    <div class="adjustment-subtitle">
+                        اصلاح موجودی فقط برای اصلاح اشتباهات حسابداری
+                    </div>
+                </div>
+
             </div>
+
+            <a href="{{ route('accounts.show', $account) }}"
+               class="adjustment-back-btn">
+
+                <i class="bi bi-arrow-right"></i>
+                بازگشت
+
+            </a>
 
         </div>
 
 
         {{-- اطلاعات حساب --}}
-        <div class="card border border-2 shadow-sm rounded-4 mb-4">
+        <div class="adjustment-card adjustment-account-card">
 
-            <div class="card-header fw-bold">
+            <div class="adjustment-card-header">
 
-                <i class="bi bi-wallet2 text-primary"></i>
+                <div class="adjustment-section-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
 
+                <span>
                 اطلاعات حساب
+            </span>
 
             </div>
 
 
-            <div class="card-body">
+            <div class="adjustment-card-body">
 
-                <div class="row text-center">
+                <div class="adjustment-account-grid">
 
                     {{-- مالک --}}
-                    <div class="col-md-4 mb-3">
+                    <div class="adjustment-account-item">
 
-                        <small class="text-muted d-block">
-                            مالک حساب
-                        </small>
+                    <span class="adjustment-label">
+                        مالک حساب
+                    </span>
 
                         <strong>
-
                             @if($account->customer)
 
                                 {{ $account->customer->first_name }}
@@ -54,45 +76,41 @@
                                 حساب سیستمی
 
                             @endif
-
                         </strong>
 
                     </div>
 
 
                     {{-- شماره حساب --}}
-                    <div class="col-md-4 mb-3">
+                    <div class="adjustment-account-item">
 
-                        <small class="text-muted d-block">
-                            شماره حساب
-                        </small>
+                    <span class="adjustment-label">
+                        شماره حساب
+                    </span>
 
                         <strong dir="ltr">
-
                             {{ $account->account_number }}
-
                         </strong>
 
                     </div>
 
 
-                    {{-- موجودی فعلی --}}
-                    <div class="col-md-4 mb-3">
+                    {{-- موجودی --}}
+                    <div class="adjustment-account-item adjustment-balance-item">
 
-                        <small class="text-muted d-block">
-                            موجودی فعلی
-                        </small>
+                    <span class="adjustment-label">
+                        موجودی فعلی
+                    </span>
 
                         <strong
-                            class="text-success fs-5"
                             id="currentBalance"
                             data-value="{{ $account->balance }}"
                         >
-
                             {{ number_format($account->balance) }}
 
-                            ریال
-
+                            <small>
+                                ریال
+                            </small>
                         </strong>
 
                     </div>
@@ -105,18 +123,22 @@
 
 
         {{-- فرم --}}
-        <div class="card border border-2 shadow-sm rounded-4">
+        <div class="adjustment-card">
 
-            <div class="card-header fw-bold">
+            <div class="adjustment-card-header">
 
-                <i class="bi bi-arrow-repeat text-primary"></i>
+                <div class="adjustment-section-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
 
+                <span>
                 ثبت اصلاح موجودی
+            </span>
 
             </div>
 
 
-            <div class="card-body p-4">
+            <div class="adjustment-card-body">
 
                 <form
                     method="POST"
@@ -128,23 +150,24 @@
 
 
                     {{-- موجودی جدید --}}
-                    <div class="mb-4">
+                    <div class="adjustment-field">
 
                         <label
                             for="new_balance"
-                            class="form-label fw-bold"
+                            class="adjustment-form-label"
                         >
                             موجودی صحیح جدید
                         </label>
 
-                        <div class="input-group">
+
+                        <div class="adjustment-input-wrapper">
 
                             <input
                                 type="text"
                                 name="new_balance"
                                 id="new_balance"
                                 value="{{ old('new_balance') }}"
-                                class="form-control money-input @error('new_balance') is-invalid @enderror"
+                                class="form-control money-input adjustment-amount-input @error('new_balance') is-invalid @enderror"
                                 inputmode="numeric"
                                 autocomplete="off"
                                 data-live="true"
@@ -152,16 +175,16 @@
                                 required
                             >
 
-                            <span class="input-group-text">
-                                ریال
-                            </span>
+                            <span class="adjustment-input-unit">
+        ریال
+    </span>
 
                         </div>
 
 
                         @error('new_balance')
 
-                        <div class="text-danger small mt-1">
+                        <div class="adjustment-error">
                             {{ $message }}
                         </div>
 
@@ -173,133 +196,116 @@
                     {{-- اختلاف --}}
                     <div
                         id="differenceBox"
-                        class="alert alert-secondary d-none"
+                        class="adjustment-difference d-none"
                     >
 
-                        <div class="row text-center">
+                        <div class="adjustment-difference-grid">
 
-                            <div class="col-md-4 mb-2">
+                            <div>
 
-                                <small class="text-muted d-block">
-                                    موجودی فعلی
-                                </small>
+                            <span>
+                                موجودی فعلی
+                            </span>
 
                                 <strong id="displayCurrent">
                                     -
                                 </strong>
 
-                                ریال
+                                <small>
+                                    ریال
+                                </small>
 
                             </div>
 
 
-                            <div class="col-md-4 mb-2">
+                            <div>
 
-                                <small class="text-muted d-block">
-                                    موجودی جدید
-                                </small>
+                            <span>
+                                موجودی جدید
+                            </span>
 
                                 <strong id="displayNew">
                                     -
                                 </strong>
 
-                                ریال
+                                <small>
+                                    ریال
+                                </small>
 
                             </div>
 
 
-                            <div class="col-md-4 mb-2">
+                            <div>
 
-                                <small class="text-muted d-block">
-                                    اختلاف
-                                </small>
+                            <span>
+                                اختلاف
+                            </span>
 
                                 <strong id="displayDifference">
                                     -
                                 </strong>
 
-                                ریال
+                                <small>
+                                    ریال
+                                </small>
 
                             </div>
 
                         </div>
 
 
-                        <hr>
-
-
                         <div
                             id="differenceMessage"
-                            class="text-center fw-bold"
+                            class="adjustment-difference-message"
                         ></div>
 
                     </div>
 
 
-                    {{-- توضیحات --}}
-                    <div class="mb-4">
 
-                        <label
-                            for="description"
-                            class="form-label fw-bold"
-                        >
-                            دلیل اصلاح
-                        </label>
-
-                        <textarea
-                            name="description"
-                            id="description"
-                            rows="3"
-                            class="form-control @error('description') is-invalid @enderror"
-                            maxlength="255"
-                            placeholder="دلیل اصلاح موجودی را وارد کنید..."
-                        >{{ old('description') }}</textarea>
-
-
-                        @error('description')
-
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-
-                        @enderror
-
-                    </div>
 
 
                     {{-- هشدار --}}
-                    <div class="alert alert-warning">
+                    <div class="adjustment-warning">
 
                         <i class="bi bi-exclamation-triangle"></i>
 
-                        توجه: موجودی جدید جایگزین موجودی فعلی خواهد شد و
+                        <span>
+                        موجودی جدید جایگزین موجودی فعلی خواهد شد و
                         این عملیات در گردش حساب ثبت می‌شود.
+                    </span>
 
                     </div>
 
 
                     {{-- دکمه‌ها --}}
-                    <div class="d-flex gap-2">
+                    <div class="adjustment-actions">
 
                         <button
                             type="submit"
-                            class="btn btn-primary"
+                            class="adjustment-submit-btn"
                             id="submitButton"
                         >
 
                             <i class="bi bi-check-circle"></i>
 
+                            <span>
                             ثبت اصلاح موجودی
+                        </span>
 
                         </button>
 
 
                         <a
                             href="{{ route('accounts.show', $account) }}"
-                            class="btn btn-outline-secondary"
+                            class="adjustment-cancel-btn"
                         >
 
+                            <i class="bi bi-x-circle"></i>
+
+                            <span>
                             انصراف
+                        </span>
 
                         </a>
 
@@ -394,10 +400,8 @@
                 displayCurrent.textContent =
                     format(currentBalance);
 
-
                 displayNew.textContent =
                     format(newBalance);
-
 
                 displayDifference.textContent =
                     format(Math.abs(difference));
@@ -406,29 +410,33 @@
                 if (difference > 0) {
 
                     message.className =
-                        'text-center fw-bold text-success';
+                        'adjustment-difference-message text-success';
 
-                    message.innerHTML =
+                    message.textContent =
                         'موجودی حساب ' +
                         format(difference) +
                         ' ریال افزایش پیدا می‌کند.';
 
-                } else if (difference < 0) {
+                }
+
+                else if (difference < 0) {
 
                     message.className =
-                        'text-center fw-bold text-danger';
+                        'adjustment-difference-message text-danger';
 
-                    message.innerHTML =
+                    message.textContent =
                         'موجودی حساب ' +
                         format(Math.abs(difference)) +
                         ' ریال کاهش پیدا می‌کند.';
 
-                } else {
+                }
+
+                else {
 
                     message.className =
-                        'text-center fw-bold text-secondary';
+                        'adjustment-difference-message text-secondary';
 
-                    message.innerHTML =
+                    message.textContent =
                         'موجودی جدید با موجودی فعلی یکسان است.';
 
                 }

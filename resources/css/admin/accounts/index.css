@@ -1,0 +1,565 @@
+/* =========================================================
+Accounts Page
+Design #1
+Purple + Blue / Light / RTL / Mobile First
+========================================================= */
+
+.accounts-page {
+    direction: rtl;
+    padding-bottom: 2rem;
+}
+
+/* =========================================================
+Toolbar
+========================================================= */
+
+.accounts-toolbar-card,
+.accounts-list-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(30, 41, 59, 0.06);
+}
+
+.accounts-toolbar-card .card-body {
+    padding: 1rem;
+}
+
+.accounts-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+Search
+========================================================= */
+
+.accounts-search-box {
+    width: 100%;
+}
+
+.accounts-search-label {
+    display: block;
+    margin-bottom: .45rem;
+    color: #374151;
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.accounts-search-label i {
+    margin-left: .25rem;
+    color: #6d28d9;
+}
+
+.accounts-search-group {
+    width: 100%;
+}
+
+.accounts-search-input {
+    min-height: 44px;
+    border: 1px solid #d9dee7;
+    border-radius: 0 11px 11px 0 !important;
+    padding: .65rem .85rem;
+    color: #1f2937;
+    text-align: right;
+    box-shadow: none !important;
+}
+
+.accounts-search-input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, .10) !important;
+}
+
+.accounts-search-btn {
+    min-width: 48px;
+    min-height: 44px;
+    border: 0;
+    border-radius: 11px 0 0 11px !important;
+    color: #fff;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 5px 12px rgba(79, 70, 229, .18);
+    transition: .2s ease;
+}
+
+.accounts-search-btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+Statistics
+========================================================= */
+
+.accounts-statistics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+    width: 100%;
+}
+
+.accounts-stat-card {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    min-height: 76px;
+    padding: .8rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    background: #f8fafc;
+}
+
+.accounts-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 1.15rem;
+}
+
+.accounts-stat-card-purple .accounts-stat-icon {
+    color: #6d28d9;
+    background: #ede9fe;
+}
+
+.accounts-stat-card-blue .accounts-stat-icon {
+    color: #2563eb;
+    background: #dbeafe;
+}
+
+.accounts-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+}
+
+.accounts-stat-label {
+    color: #6b7280;
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+.accounts-stat-value {
+    color: #111827;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.accounts-stat-value small {
+    color: #6b7280;
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+List Header
+========================================================= */
+
+.accounts-list-card {
+    overflow: hidden;
+}
+
+.accounts-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.accounts-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.accounts-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    color: #6d28d9;
+    background: #ede9fe;
+    font-size: 1.15rem;
+}
+
+.accounts-title {
+    margin: 0;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.accounts-subtitle {
+    margin: .2rem 0 0;
+    color: #6b7280;
+    font-size: .75rem;
+}
+
+.accounts-count {
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    color: #4f46e5;
+    background: #eef2ff;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+/* =========================================================
+Table
+========================================================= */
+
+.accounts-list-body {
+    padding: 0;
+}
+
+.accounts-table-wrapper {
+    width: 100%;
+}
+
+.accounts-table {
+    min-width: 900px;
+    margin: 0;
+}
+
+.accounts-table thead th {
+    padding: .85rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #6b7280;
+    background: #f8fafc;
+    font-size: .77rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.accounts-table tbody td {
+    padding: .9rem 1rem;
+    border-color: #edf0f4;
+    color: #374151;
+    font-size: .84rem;
+}
+
+.accounts-table tbody tr {
+    transition: background-color .15s ease;
+}
+
+.accounts-table tbody tr:hover {
+    background: #fafaff;
+}
+
+.accounts-system-row {
+    background: #f8fbff;
+}
+
+/* =========================================================
+Account Number
+========================================================= */
+
+.accounts-number {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: #111827;
+    white-space: nowrap;
+}
+
+.accounts-customer-icon,
+.accounts-system-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+}
+
+.accounts-customer-icon {
+    color: #6d28d9;
+    background: #f0eaff;
+}
+
+.accounts-system-icon {
+    color: #2563eb;
+    background: #e8f1ff;
+}
+
+/* =========================================================
+Customer Code
+========================================================= */
+
+.accounts-customer-code {
+    display: inline-block;
+    padding: .28rem .55rem;
+    border-radius: 7px;
+    color: #475569;
+    background: #f1f5f9;
+    font-size: .76rem;
+    font-weight: 700;
+}
+
+.accounts-muted {
+    color: #9ca3af;
+}
+
+/* =========================================================
+Owner
+========================================================= */
+
+.accounts-owner {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    flex-wrap: wrap;
+}
+
+.accounts-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .28rem .55rem;
+    border-radius: 7px;
+    font-size: .7rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.accounts-type-badge.customer {
+    color: #6d28d9;
+    background: #f0eaff;
+}
+
+.accounts-type-badge.system {
+    color: #1d4ed8;
+    background: #e0edff;
+}
+
+.accounts-owner-name {
+    color: #1f2937;
+    font-weight: 700;
+}
+
+/* =========================================================
+Balance
+========================================================= */
+
+.accounts-balance {
+    display: flex;
+    align-items: baseline;
+    gap: .3rem;
+    white-space: nowrap;
+}
+
+.accounts-balance strong {
+    color: #111827;
+    font-size: .9rem;
+}
+
+.accounts-balance span {
+    color: #6b7280;
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+Status
+========================================================= */
+
+.accounts-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .32rem .65rem;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.accounts-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.accounts-status.active {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.accounts-status.active .accounts-status-dot {
+    background: #22c55e;
+}
+
+.accounts-status.inactive {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.accounts-status.inactive .accounts-status-dot {
+    background: #ef4444;
+}
+
+/* =========================================================
+View Button
+========================================================= */
+
+.accounts-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    min-height: 38px;
+    padding: .45rem .75rem;
+    border: 1px solid #ddd6fe;
+    border-radius: 9px;
+    color: #6d28d9;
+    background: #faf8ff;
+    font-size: .75rem;
+    font-weight: 750;
+    transition: .2s ease;
+}
+
+.accounts-view-btn:hover {
+    color: #fff;
+    border-color: #6d28d9;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+}
+
+/* =========================================================
+Empty
+========================================================= */
+
+.accounts-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 250px;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.accounts-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: .8rem;
+    border-radius: 18px;
+    color: #7c3aed;
+    background: #f0eaff;
+    font-size: 1.5rem;
+}
+
+.accounts-empty h6 {
+    margin: 0 0 .35rem;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+.accounts-empty p {
+    margin: 0;
+    color: #6b7280;
+    font-size: .8rem;
+}
+
+/* =========================================================
+Pagination
+========================================================= */
+
+.accounts-pagination {
+    padding: 1rem;
+    border-top: 1px solid #edf0f4;
+}
+
+.accounts-pagination .pagination {
+    justify-content: center;
+    margin: 0;
+}
+
+/* =========================================================
+Desktop
+========================================================= */
+
+@media (min-width: 768px) {
+
+
+    .accounts-toolbar-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .accounts-search-box {
+        width: 350px;
+    }
+
+    .accounts-statistics {
+        grid-template-columns: repeat(2, minmax(170px, 1fr));
+        width: auto;
+    }
+
+    .accounts-list-header {
+        padding: 1.1rem 1.25rem;
+    }
+
+
+}
+
+/* =========================================================
+Mobile
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+
+    .accounts-toolbar {
+        align-items: stretch;
+    }
+
+    .accounts-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .accounts-list-header {
+        align-items: flex-start;
+    }
+
+    .accounts-count {
+        width: 100%;
+        text-align: center;
+    }
+
+    .accounts-title-wrapper {
+        align-items: flex-start;
+    }
+
+    .accounts-subtitle {
+        line-height: 1.7;
+    }
+
+    .accounts-table {
+        min-width: 860px;
+    }
+
+    .accounts-view-btn span {
+        display: none;
+    }
+
+    .accounts-view-btn {
+        width: 38px;
+        padding: .45rem;
+    }
+
+
+}

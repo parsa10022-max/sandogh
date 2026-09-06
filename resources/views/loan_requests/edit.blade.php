@@ -4,47 +4,41 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid loan-request-edit-page">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        {{-- Header --}}
+        <x-page-header title="ویرایش درخواست وام">
+            <a href="{{ route('loan-requests.show', $loanRequest) }}"
+               class="btn loan-request-back-btn">
 
-            <h4 class="mb-0">
-                ویرایش درخواست وام
-            </h4>
+                <i class="bi bi-arrow-right"></i>
 
-            <div class="d-flex gap-2">
+                <span>بازگشت به درخواست</span>
 
-                <a href="{{ route('loan-requests.show', $loanRequest) }}"
-                   class="btn btn-secondary">
-
-                    <i class="bi bi-arrow-right"></i>
-
-                    بازگشت
-
-                </a>
-
-            </div>
-
-        </div>
+            </a>
+        </x-page-header>
 
 
-        {{-- پیام خطاهای Validation --}}
-
+        {{-- Validation Errors --}}
         @if($errors->any())
 
-            <div class="alert alert-danger">
+            <div class="loan-request-validation-card">
 
-                <ul class="mb-0">
+                <div class="loan-request-validation-icon">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
 
-                    @foreach($errors->all() as $error)
+                <div class="loan-request-validation-content">
 
-                        <li>
-                            {{ $error }}
-                        </li>
+                    <strong>خطا در اطلاعات وارد شده</strong>
 
-                    @endforeach
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
 
-                </ul>
+                </div>
 
             </div>
 
@@ -55,70 +49,93 @@
               action="{{ route('loan-requests.update', $loanRequest) }}">
 
             @csrf
-
             @method('PUT')
 
 
             {{-- اطلاعات اصلی درخواست --}}
+            <div class="loan-request-edit-card">
 
-            <div class="card shadow-sm border-0 mb-4">
+                <div class="loan-request-edit-card-header">
 
-                <div class="card-header bg-light">
+                    <div class="loan-request-edit-section-icon loan-icon-purple">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
 
-                    <strong>
-                        اطلاعات درخواست
-                    </strong>
+                    <div>
+                        <h5>اطلاعات درخواست</h5>
+                        <p>اطلاعات اصلی درخواست وام</p>
+                    </div>
 
                 </div>
 
-                <div class="card-body">
 
-                    <div class="row">
+                <div class="loan-request-edit-card-body">
 
+                    <div class="row g-3">
 
                         {{-- مشتری --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <div class="loan-request-readonly-field">
 
-                            <label class="form-label">
-                                عضو
-                            </label>
+                                <label class="form-label">
+                                    عضو
+                                </label>
 
-                            <input type="text"
-                                   class="form-control"
-                                   value="{{ $loanRequest->customer->full_name }}"
-                                   disabled>
+                                <div class="loan-request-readonly-input">
+
+                                    <i class="bi bi-person"></i>
+
+                                    <span>
+                                        {{ $loanRequest->customer->full_name }}
+                                    </span>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
 
                         {{-- مبلغ درخواستی --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <div class="loan-request-readonly-field">
 
-                            <label class="form-label">
-                                مبلغ درخواستی
-                            </label>
+                                <label class="form-label">
+                                    مبلغ درخواستی
+                                </label>
 
-                            <input type="text"
-                                   class="form-control"
-                                   value="{{ number_format($loanRequest->requested_amount) }} ریال"
-                                   disabled>
+                                <div class="loan-request-readonly-input">
+
+                                    <i class="bi bi-cash-stack"></i>
+
+                                    <span>
+                                        {{ number_format($loanRequest->requested_amount) }}
+                                        ریال
+                                    </span>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
 
                         {{-- توضیحات مشتری --}}
+                        <div class="col-12">
 
-                        <div class="col-md-12 mb-3">
+                            <div class="loan-request-readonly-field">
 
-                            <label class="form-label">
-                                توضیحات مشتری
-                            </label>
+                                <label class="form-label">
+                                    توضیحات مشتری
+                                </label>
 
-                            <textarea class="form-control"
-                                      rows="3"
-                                      disabled>{{ $loanRequest->description }}</textarea>
+                                <textarea class="form-control loan-request-readonly-textarea"
+                                          rows="3"
+                                          disabled>{{ $loanRequest->description }}</textarea>
+
+                            </div>
 
                         </div>
 
@@ -129,89 +146,116 @@
             </div>
 
 
-            {{-- وضعیت بررسی --}}
+            {{-- اطلاعات بررسی مدیر --}}
+            <div class="loan-request-edit-card">
 
-            <div class="card shadow-sm border-0 mb-4">
+                <div class="loan-request-edit-card-header">
 
-                <div class="card-header bg-light">
+                    <div class="loan-request-edit-section-icon loan-icon-blue">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
 
-                    <strong>
-                        اطلاعات بررسی مدیر
-                    </strong>
+                    <div>
+                        <h5>اطلاعات بررسی مدیر</h5>
+                        <p>وضعیت و اطلاعات تأیید درخواست را مدیریت کنید.</p>
+                    </div>
 
                 </div>
 
-                <div class="card-body">
 
-                    <div class="row">
+                <div class="loan-request-edit-card-body">
 
+                    <div class="row g-3">
 
                         {{-- وضعیت --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="status"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 وضعیت
+                                <span class="text-danger">*</span>
+
                             </label>
 
                             <select name="status"
                                     id="status"
-                                    class="form-select"
+                                    class="form-select @error('status') is-invalid @enderror"
                                     required>
 
                                 <option value="pending"
                                     {{ old('status', $loanRequest->status->value) === 'pending' ? 'selected' : '' }}>
-
                                     در حال بررسی
-
                                 </option>
 
                                 <option value="approved"
                                     {{ old('status', $loanRequest->status->value) === 'approved' ? 'selected' : '' }}>
-
                                     تایید شده
-
                                 </option>
 
                                 <option value="rejected"
                                     {{ old('status', $loanRequest->status->value) === 'rejected' ? 'selected' : '' }}>
-
                                     رد شده
-
                                 </option>
 
                             </select>
+
+                            @error('status')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
 
                         {{-- مبلغ تایید شده --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="approved_amount"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 مبلغ تایید شده
+
                             </label>
 
-                            <input type="number"
-                                   name="approved_amount"
-                                   class="form-control"
-                                   min="0"
-                                   value="{{ old('approved_amount', $loanRequest->approved_amount) }}">
+                            <div class="loan-request-money-input">
+
+                                <input type="number"
+                                       id="approved_amount"
+                                       name="approved_amount"
+                                       min="0"
+                                       inputmode="numeric"
+                                       class="form-control @error('approved_amount') is-invalid @enderror"
+                                       value="{{ old('approved_amount', $loanRequest->approved_amount) }}"
+                                       placeholder="مثلاً 10000000">
+
+                                <span>ریال</span>
+
+                            </div>
+
+                            @error('approved_amount')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
 
                         {{-- نوع وام --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="loan_type_id"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 نوع وام
+
                             </label>
 
                             <select name="loan_type_id"
-                                    class="form-select">
+                                    id="loan_type_id"
+                                    class="form-select @error('loan_type_id') is-invalid @enderror">
 
                                 <option value="">
                                     انتخاب کنید
@@ -233,39 +277,58 @@
 
                             </select>
 
+                            @error('loan_type_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+
                         </div>
 
 
                         {{-- تعداد اقساط --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="approved_installment_count"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 تعداد اقساط
+
                             </label>
 
                             <input type="number"
+                                   id="approved_installment_count"
                                    name="approved_installment_count"
-                                   class="form-control"
                                    min="1"
+                                   class="form-control @error('approved_installment_count') is-invalid @enderror"
                                    value="{{ old(
                                        'approved_installment_count',
                                        $loanRequest->approved_installment_count
-                                   ) }}">
+                                   ) }}"
+                                   placeholder="مثلاً 10">
+
+                            @error('approved_installment_count')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
 
                         {{-- دوره بازپرداخت --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="approved_installment_interval"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 دوره بازپرداخت
+
                             </label>
 
                             <select name="approved_installment_interval"
-                                    class="form-select">
+                                    id="approved_installment_interval"
+                                    class="form-select @error('approved_installment_interval') is-invalid @enderror">
 
                                 <option value="">
                                     انتخاب کنید
@@ -276,9 +339,7 @@
                                         'approved_installment_interval',
                                         $loanRequest->approved_installment_interval
                                     ) == 1 ? 'selected' : '' }}>
-
                                     ماهانه
-
                                 </option>
 
                                 <option value="2"
@@ -286,9 +347,7 @@
                                         'approved_installment_interval',
                                         $loanRequest->approved_installment_interval
                                     ) == 2 ? 'selected' : '' }}>
-
                                     هر دو ماه
-
                                 </option>
 
                                 <option value="3"
@@ -296,28 +355,35 @@
                                         'approved_installment_interval',
                                         $loanRequest->approved_installment_interval
                                     ) == 3 ? 'selected' : '' }}>
-
                                     هر سه ماه
-
                                 </option>
 
                             </select>
+
+                            @error('approved_installment_interval')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
 
                         {{-- تاریخ مراجعه مجدد --}}
+                        <div class="col-12 col-md-6">
 
-                        <div class="col-md-6 mb-3">
+                            <label for="next_review_date"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 تاریخ مراجعه مجدد
+
                             </label>
 
                             <input type="text"
+                                   id="next_review_date"
                                    name="next_review_date"
-                                   class="form-control"
-                                   placeholder="1405/10/12"
+                                   class="form-control @error('next_review_date') is-invalid @enderror"
+                                   placeholder="۱۴۰۵/۱۰/۱۲"
                                    value="{{ old(
                                        'next_review_date',
                                        $loanRequest->next_review_date
@@ -326,28 +392,42 @@
                                    ) }}">
 
                             <div class="form-text">
-
                                 تاریخ را به صورت شمسی وارد کنید.
-
                             </div>
+
+                            @error('next_review_date')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
 
                         {{-- پیام مدیر --}}
+                        <div class="col-12">
 
-                        <div class="col-md-12 mb-3">
+                            <label for="review_note"
+                                   class="form-label">
 
-                            <label class="form-label">
                                 پیام مدیر
+
                             </label>
 
                             <textarea name="review_note"
-                                      class="form-control"
-                                      rows="5">{{ old(
+                                      id="review_note"
+                                      rows="5"
+                                      class="form-control @error('review_note') is-invalid @enderror"
+                                      placeholder="پیام یا توضیحات مربوط به بررسی درخواست را وارد کنید...">{{ old(
                                           'review_note',
                                           $loanRequest->review_note
                                       ) }}</textarea>
+
+                            @error('review_note')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                            @enderror
 
                         </div>
 
@@ -359,36 +439,45 @@
 
 
             {{-- هشدار --}}
+            <div class="loan-request-edit-warning">
 
-            <div class="alert alert-warning">
+                <div class="loan-request-edit-warning-icon">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
 
-                <i class="bi bi-exclamation-triangle"></i>
+                <div>
 
-                توجه:
-                تغییر وضعیت یا اطلاعات تایید درخواست می‌تواند
-                روی روند ایجاد وام تأثیر بگذارد.
+                    <strong>توجه</strong>
+
+                    <p>
+                        تغییر وضعیت یا اطلاعات تأیید درخواست می‌تواند
+                        روی روند ایجاد وام تأثیر بگذارد.
+                    </p>
+
+                </div>
 
             </div>
 
 
-            {{-- دکمه‌ها --}}
-
-            <div class="d-flex justify-content-between">
+            {{-- Actions --}}
+            <div class="loan-request-edit-actions">
 
                 <a href="{{ route('loan-requests.show', $loanRequest) }}"
-                   class="btn btn-secondary">
+                   class="btn loan-request-edit-cancel-btn">
 
-                    انصراف
+                    <i class="bi bi-x-lg"></i>
+
+                    <span>انصراف</span>
 
                 </a>
 
 
                 <button type="submit"
-                        class="btn btn-primary">
+                        class="btn loan-request-edit-save-btn">
 
                     <i class="bi bi-check-lg"></i>
 
-                    ذخیره تغییرات
+                    <span>ذخیره تغییرات</span>
 
                 </button>
 

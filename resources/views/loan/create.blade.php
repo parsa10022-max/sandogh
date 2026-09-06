@@ -2,64 +2,93 @@
 
 @section('title', 'ثبت وام')
 
+@push('styles')
+    @vite('resources/css/pages/loan-create.css')
+@endpush
+
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid loan-create-page">
 
-        <div class="row justify-content-center">
+        {{-- Page Header --}}
+        <div class="loan-page-header">
 
-            <div class="col-12">
+            <div class="loan-page-header__content">
 
-                <div class="card shadow-sm border-0">
-
-                    <div class="card-header bg-white">
-
-                        <div class="d-flex justify-content-between align-items-center">
-
-                            <h5 class="mb-0">
-                                <i class="bi bi-cash-coin me-1"></i>
-                                ثبت وام جدید
-                            </h5>
-
-                            <a href="{{ route('loans.index') }}"
-                               class="btn btn-outline-secondary btn-sm">
-
-                                <i class="bi bi-arrow-right"></i>
-
-                                بازگشت
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <form
-                            id="loan-form"
-                            action="{{ route('loans.store') }}"
-                            method="POST"
-                            autocomplete="off"
-                            data-calculate-url="{{ route('loans.calculate') }}">
-
-                            @csrf
-
-                            @if(isset($loanRequest))
-
-                                <input type="hidden"
-                                       name="loan_request_id"
-                                       value="{{ $loanRequest->id }}">
-
-                            @endif
-
-                            @include('loan._form')
-
-                        </form>
-
-                    </div>
-
+                <div class="loan-page-header__icon">
+                    <i class="bi bi-cash-coin"></i>
                 </div>
+
+                <div>
+                    <h1 class="loan-page-header__title">
+                        ثبت وام جدید
+                    </h1>
+
+                    <p class="loan-page-header__subtitle mb-0">
+                        اطلاعات وام، اقساط و ضامن‌ها را وارد کنید.
+                    </p>
+                </div>
+
+            </div>
+
+            <a href="{{ route('loans.index') }}"
+               class="btn loan-back-btn">
+
+                <i class="bi bi-arrow-right"></i>
+
+                <span>بازگشت به لیست وام‌ها</span>
+
+            </a>
+
+        </div>
+
+
+        {{-- Main Card --}}
+        <div class="loan-form-card">
+
+            <div class="loan-form-card__header">
+
+                <div class="loan-form-card__header-icon">
+                    <i class="bi bi-file-earmark-plus"></i>
+                </div>
+
+                <div>
+                    <h2 class="loan-form-card__title">
+                        اطلاعات وام
+                    </h2>
+
+                    <p class="loan-form-card__subtitle mb-0">
+                        لطفاً اطلاعات را با دقت وارد کنید.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="loan-form-card__body">
+
+                <form
+                    id="loan-form"
+                    action="{{ route('loans.store') }}"
+                    method="POST"
+                    autocomplete="off"
+                    data-calculate-url="{{ route('loans.calculate') }}">
+
+                    @csrf
+
+                    @if(isset($loanRequest))
+
+                        <input
+                            type="hidden"
+                            name="loan_request_id"
+                            value="{{ $loanRequest->id }}"
+                        >
+
+                    @endif
+
+                    @include('loan._form')
+
+                </form>
 
             </div>
 
@@ -68,3 +97,4 @@
     </div>
 
 @endsection
+

@@ -1,0 +1,264 @@
+    /* =========================================================
+       LOAN DATES
+       Design System #1
+       Purple + Blue
+       RTL / Bootstrap 5.3
+       ========================================================= */
+
+.loan-dates-card {
+    width: 100%;
+
+    margin-bottom: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e1ec;
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 14px rgba(70, 50, 100, .05);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.loan-dates-card .loan-section-header {
+    display: flex;
+    align-items: center;
+
+    min-height: 70px;
+
+    padding: 14px 18px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #eeeaf3;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.loan-dates-card .loan-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.loan-dates-card .loan-section-title h6 {
+    color: #342c43;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.loan-dates-card .loan-section-title small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #938b9e;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.loan-dates-card .loan-section-icon {
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #6f42c1;
+
+    background: #f2edfa;
+
+    border: 1px solid #e4daf3;
+    border-radius: 10px;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.loan-dates-body {
+    padding: 18px;
+}
+
+
+/* =========================================================
+   DATE ITEM
+   ========================================================= */
+
+.loan-date-item {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 15px;
+
+    background: #ffffff;
+
+    border: 1px solid #e8e3ef;
+    border-radius: 11px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.loan-date-item:hover {
+    border-color: #d5c8e7;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .07);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DATE ICON
+   ========================================================= */
+
+.loan-date-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #6f42c1;
+
+    background: #f7f3fb;
+
+    border: 1px solid #e7def3;
+    border-radius: 9px;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.loan-date-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.loan-date-label {
+    color: #8b8493;
+
+    font-size: 10px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.loan-date-value {
+    color: #30283d;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    direction: rtl;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-dates-card .loan-section-header {
+        min-height: 64px;
+
+        padding: 12px 14px;
+    }
+
+    .loan-dates-body {
+        padding: 13px;
+    }
+
+    .loan-dates-card .loan-section-icon {
+        width: 36px;
+        height: 36px;
+
+        font-size: 15px;
+    }
+
+    .loan-date-item {
+        min-height: 68px;
+
+        padding: 11px 12px;
+    }
+
+    .loan-date-icon {
+        width: 35px;
+        height: 35px;
+
+        font-size: 14px;
+    }
+
+    .loan-date-value {
+        font-size: 12px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .loan-dates-card .loan-section-title small {
+        display: none;
+    }
+
+    .loan-date-item {
+        min-height: 64px;
+    }
+
+}
+

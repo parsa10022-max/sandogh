@@ -1,93 +1,138 @@
 @extends('layouts.app')
 
+@section('title', 'ثبت نوع وام')
+
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid loan-type-create-page">
 
-        <h4 class="mb-4">
-            ثبت نوع وام
-        </h4>
+        {{-- Page Header --}}
+        <x-page-header title="ثبت نوع وام">
 
-        <form action="{{ route('loan-types.store') }}" method="POST">
+            <a
+                href="{{ route('loan-types.index') }}"
+                class="btn loan-type-back-btn"
+            >
+                <i class="bi bi-arrow-right"></i>
+                <span>بازگشت به انواع وام</span>
+            </a>
+
+        </x-page-header>
+
+
+        <form
+            action="{{ route('loan-types.store') }}"
+            method="POST"
+        >
 
             @csrf
 
-            <div class="mb-3">
-                <label class="form-label">
-                    نام نوع وام
-                </label>
+            {{-- Form Card --}}
+            <div class="loan-type-form-card">
 
-                <input
-                    type="text"
-                    name="name"
-                    class="form-control"
-                    value="{{ old('name') }}"
-                >
+                <div class="loan-type-form-header">
 
-                @error('name')
-                <div class="text-danger">
-                    {{ $message }}
+                    <div class="loan-type-form-header-icon">
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+
+                    <div>
+                        <h5>اطلاعات نوع وام</h5>
+
+                        <p>
+                            مشخصات نوع وام جدید را وارد کنید.
+                        </p>
+                    </div>
+
                 </div>
-                @enderror
-            </div>
 
 
-            <div class="mb-3">
-                <label class="form-label">
-                    پیش‌شماره وام
-                </label>
+                <div class="loan-type-form-body">
 
-                <input
-                    type="text"
-                    name="prefix"
-                    class="form-control"
-                    value="{{ old('prefix') }}"
-                >
+                    <div class="row g-3">
 
-                @error('prefix')
-                <div class="text-danger">
-                    {{ $message }}
+                        {{-- Name --}}
+                        <div class="col-12 col-md-6">
+
+                            <x-inputs.text-input
+                                name="name"
+                                label="نام نوع وام"
+                                :value="old('name')"
+                                required
+                            />
+
+                        </div>
+
+
+                        {{-- Prefix --}}
+                        <div class="col-12 col-md-6">
+
+                            <x-inputs.text-input
+                                name="prefix"
+                                label="پیش‌شماره وام"
+                                :value="old('prefix')"
+                                required
+                            />
+
+                        </div>
+
+
+                        {{-- Description --}}
+                        <div class="col-12">
+
+                            <x-inputs.textarea-input
+                                name="description"
+                                label="توضیحات"
+                                :value="old('description')"
+                            />
+
+                        </div>
+
+
+                        {{-- Status --}}
+                        <div class="col-12 col-md-6">
+
+                            <x-inputs.select-input
+                                name="status"
+                                label="وضعیت"
+                                :options="\App\Enums\LoanTypeStatus::options()"
+                                :value="old(
+                                    'status',
+                                    \App\Enums\LoanTypeStatus::ACTIVE->value
+                                )"
+                                required
+                            />
+
+                        </div>
+
+                    </div>
+
                 </div>
-                @enderror
-            </div>
 
 
-            <div class="mb-3">
-                <label class="form-label">
-                    توضیحات
-                </label>
+                {{-- Actions --}}
+                <div class="loan-type-form-footer">
 
-                <textarea
-                    name="description"
-                    class="form-control"
-                >{{ old('description') }}</textarea>
-            </div>
+                    <button
+                        type="submit"
+                        class="btn btn-primary loan-type-submit-btn"
+                    >
+                        <i class="bi bi-check-lg"></i>
+                        <span>ثبت نوع وام</span>
+                    </button>
 
 
-            <div class="mb-3">
+                    <a
+                        href="{{ route('loan-types.index') }}"
+                        class="btn loan-type-cancel-btn"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        <span>انصراف</span>
+                    </a>
 
-                <label class="form-label">
-                    وضعیت
-                </label>
-
-                <select name="is_active" class="form-select">
-
-                    <option value="1">
-                        فعال
-                    </option>
-
-                    <option value="0">
-                        غیرفعال
-                    </option>
-
-                </select>
+                </div>
 
             </div>
-
-
-            <button class="btn btn-primary">
-                ذخیره
-            </button>
 
         </form>
 

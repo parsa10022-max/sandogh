@@ -4,277 +4,345 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid withdrawal-page">
 
-        <div class="card shadow-sm border-0">
+        {{-- سربرگ --}}
+        <div class="withdrawal-header">
 
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    درخواست برداشت از حساب پس‌انداز
-                </h5>
+            <div class="withdrawal-title-wrapper">
+
+                <div class="withdrawal-title-icon">
+                    <i class="bi bi-arrow-down-circle"></i>
+                </div>
+
+                <div>
+                    <h5 class="withdrawal-title">
+                        درخواست برداشت
+                    </h5>
+
+                    <p class="withdrawal-subtitle">
+                        ثبت درخواست برداشت از حساب پس‌انداز
+                    </p>
+                </div>
+
             </div>
 
+            <a
+                href="{{ route('accounts.show', $account) }}"
+                class="withdrawal-back-btn"
+            >
+                <i class="bi bi-arrow-right"></i>
+                <span>بازگشت به حساب</span>
+            </a>
 
-            <div class="card-body">
-
-
-                @if(session('success'))
-
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-
-                @endif
+        </div>
 
 
-                @if($errors->any())
+        {{-- پیام موفقیت --}}
+        @if(session('success'))
 
-                    <div class="alert alert-danger">
+            <div class="withdrawal-alert success">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ session('success') }}</span>
+            </div>
 
-                        <ul class="mb-0">
-
-                            @foreach($errors->all() as $error)
-
-                                <li>
-                                    {{ $error }}
-                                </li>
-
-                            @endforeach
-
-                        </ul>
-
-                    </div>
-
-                @endif
+        @endif
 
 
+        {{-- خطاها --}}
+        @if($errors->any())
 
-                {{-- اطلاعات حساب عضو --}}
+            <div class="withdrawal-alert danger">
 
-                <div class="card bg-light border-0 mb-4">
+                <div class="withdrawal-alert-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
 
-                    <div class="card-body py-3">
+                <div>
 
+                    <strong>
+                        لطفاً موارد زیر را بررسی کنید:
+                    </strong>
 
-                        <div class="row text-center">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
 
+                </div>
 
-                            <div class="col-md-3 border-end">
+            </div>
 
-                                <small class="text-muted">
-                                    عضو
-                                </small>
-
-                                <div class="fw-bold">
-
-                                    {{ $account->customer->first_name }}
-
-                                    {{ $account->customer->last_name }}
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="col-md-3 border-end">
-
-                                <small class="text-muted">
-                                    شماره حساب
-                                </small>
-
-                                <div class="fw-bold">
-
-                                    {{ $account->account_number }}
-
-                                </div>
-
-                            </div>
+        @endif
 
 
+        {{-- اطلاعات حساب --}}
+        <div class="card withdrawal-account-card">
 
-                            <div class="col-md-3 border-end">
+            <div class="withdrawal-section-header">
 
-                                <small class="text-muted">
-                                    بانک مقصد
-                                </small>
+                <div class="withdrawal-section-title">
 
-                                <div class="fw-bold">
+                <span class="withdrawal-section-icon">
+                    <i class="bi bi-wallet2"></i>
+                </span>
 
-                                    {{ \App\Support\Iban::bankName($account->customer->iban) }}
-
-                                </div>
-
-                            </div>
-
-
-
-
-
-
+                    <div>
+                        <h6>اطلاعات حساب</h6>
+                        <small>اطلاعات صاحب حساب و حساب مقصد</small>
                     </div>
 
                 </div>
 
+            </div>
 
 
+            <div class="card-body withdrawal-account-body">
 
-                    <form method="POST"
-                          action="{{ route('accounts.withdrawal.store', $account) }}">
+                <div class="withdrawal-account-grid">
 
-                        @csrf
+                    {{-- عضو --}}
+                    <div class="withdrawal-account-item">
 
-                        {{-- موجودی --}}
-                        <div class="alert alert-info">
+                    <span class="withdrawal-info-label">
+                        <i class="bi bi-person"></i>
+                        عضو
+                    </span>
 
-                            موجودی قابل برداشت:
+                        <strong>
+                            {{ $account->customer->first_name }}
+                            {{ $account->customer->last_name }}
+                        </strong>
 
-                            <strong>
-                                {{ number_format($account->balance) }}
-                                ریال
-                            </strong>
+                    </div>
 
-                        </div>
-                        <input
-                            type="hidden"
-                            id="availableBalance"
-                            value="{{ $account->balance }}">
 
-                        <div class="row">
+                    {{-- شماره حساب --}}
+                    <div class="withdrawal-account-item">
 
-                            <div class="col-md-12">
+                    <span class="withdrawal-info-label">
+                        <i class="bi bi-credit-card"></i>
+                        شماره حساب
+                    </span>
 
-                                <x-inputs.iban-input
-                                    name="iban"
-                                    label="شماره شبا مقصد"
-                                    :value="\App\Support\Iban::formatDigits($account->customer->iban)"
-                                    live
-                                    required
-                                />
+                        <strong dir="ltr">
+                            {{ $account->account_number }}
+                        </strong>
 
-                                <div class="alert alert-info py-2 px-3 mt-2 mb-3 small">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    شماره شبای فعلی شما نمایش داده شده است. در صورت تغییر، شماره شبای جدید را وارد کنید.
-                                </div>
+                    </div>
 
-                            </div>
 
-                        </div>
+                    {{-- بانک مقصد --}}
+                    <div class="withdrawal-account-item">
 
-                        {{-- مبلغ برداشت --}}
-                        <div class="mb-3">
+                    <span class="withdrawal-info-label">
+                        <i class="bi bi-bank"></i>
+                        بانک مقصد
+                    </span>
 
-                            <label class="form-label">
-                                مبلغ برداشت
-                            </label>
+                        <strong>
+                            {{ \App\Support\Iban::bankName($account->customer->iban) }}
+                        </strong>
 
-                            <input
-                                type="number"
-                                id="amount"
-                                name="amount"
-                                class="form-control @error('amount') is-invalid @enderror"
-                                value="{{ old('amount') }}"
-                                min="500000"
-                                required>
+                    </div>
 
-                            <div
-                                id="amountError"
-                                class="invalid-feedback d-block"
-                                style="display:none;">
-                            </div>
-
-                            @error('amount')
-                            <div class="invalid-feedback d-block">
-                                {{ $message }}
-                            </div>
-                            @enderror
-
-                        </div>
-
-                        {{-- توضیحات --}}
-                        <div class="mb-3">
-
-                            <label class="form-label">
-                                توضیحات
-                            </label>
-
-                            <textarea
-                                name="description"
-                                class="form-control"
-                                rows="3">{{ old('description') }}</textarea>
-
-                        </div>
-
-                        <div class="text-end">
-
-                            <button
-                                id="submitBtn"
-                                type="submit"
-                                class="btn btn-danger">
-                                ثبت درخواست برداشت
-                            </button>
-
-                        </div>
-
-                    </form>
-
+                </div>
 
             </div>
 
         </div>
 
 
+        {{-- فرم برداشت --}}
+        <div class="card withdrawal-form-card">
+
+            <div class="withdrawal-section-header">
+
+                <div class="withdrawal-section-title">
+
+                <span class="withdrawal-section-icon withdrawal-form-icon">
+                    <i class="bi bi-cash-stack"></i>
+                </span>
+
+                    <div>
+                        <h6>اطلاعات برداشت</h6>
+                        <small>مبلغ و حساب مقصد را وارد کنید</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body withdrawal-form-body">
+
+                <form
+                    method="POST"
+                    action="{{ route('accounts.withdrawal.store', $account) }}"
+                >
+
+                    @csrf
+
+
+                    {{-- موجودی قابل برداشت --}}
+                    <div class="withdrawal-balance-box">
+
+                        <div class="withdrawal-balance-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+
+                        <div class="withdrawal-balance-content">
+
+                        <span>
+                            موجودی قابل برداشت
+                        </span>
+
+                            <strong>
+                                {{ number_format($account->balance) }}
+                                <small>ریال</small>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        type="hidden"
+                        id="availableBalance"
+                        value="{{ $account->balance }}"
+                    >
+
+
+                    {{-- شماره شبا --}}
+                    <div class="withdrawal-field">
+
+                        <x-inputs.iban-input
+                            name="iban"
+                            label="شماره شبا مقصد"
+                            :value="\App\Support\Iban::formatDigits($account->customer->iban)"
+                            live
+                            required
+                        />
+
+                        <div class="withdrawal-info-alert">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <span>
+                            شماره شبای فعلی شما نمایش داده شده است.
+                            در صورت تغییر، شماره شبای جدید را وارد کنید.
+                        </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- مبلغ برداشت --}}
+                    <div class="withdrawal-field">
+
+                        <label
+                            for="amount"
+                            class="withdrawal-form-label"
+                        >
+                            مبلغ برداشت
+                        </label>
+
+                        <div class="withdrawal-input-wrapper">
+
+                            <input
+                                type="text"
+                                id="amount"
+                                name="amount"
+                                class="form-control withdrawal-amount-input money-input @error('amount') is-invalid @enderror"
+                                value="{{ old('amount') }}"
+                                data-min="500000"
+                                data-max="{{ $account->balance }}"
+                                data-live="true"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                required
+                            >
+
+                            <span class="withdrawal-input-unit">
+            ریال
+        </span>
+
+                        </div>
+
+                        <div
+                            id="amountError"
+                            class="withdrawal-amount-error"
+                        ></div>
+
+                        @error('amount')
+                        <div class="withdrawal-validation-error">
+                            <i class="bi bi-exclamation-circle"></i>
+                            {{ $message }}
+                        </div>
+                        @enderror
+
+                        <small class="withdrawal-field-hint">
+                            حداقل مبلغ برداشت ۵۰۰٬۰۰۰ ریال است.
+                        </small>
+
+                    </div>
+
+
+                    {{-- توضیحات --}}
+                    <div class="withdrawal-field">
+
+                        <label
+                            for="description"
+                            class="withdrawal-form-label"
+                        >
+                            توضیحات
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            class="form-control withdrawal-description"
+                            rows="3"
+                            placeholder="در صورت نیاز توضیحات درخواست را وارد کنید..."
+                        >{{ old('description') }}</textarea>
+
+                    </div>
+
+
+                    {{-- عملیات --}}
+                    <div class="withdrawal-actions">
+
+                        <a
+                            href="{{ route('accounts.show', $account) }}"
+                            class="withdrawal-cancel-btn"
+                        >
+                            <i class="bi bi-x-lg"></i>
+                            <span>انصراف</span>
+                        </a>
+
+                        <button
+                            id="submitBtn"
+                            type="submit"
+                            class="withdrawal-submit-btn"
+                        >
+                            <i class="bi bi-check2-circle"></i>
+                            <span>ثبت درخواست برداشت</span>
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
     </div>
 
-        @push('scripts')
 
-            <script>
 
-                document.addEventListener('DOMContentLoaded', function () {
-
-                    const amount = document.getElementById('amount');
-
-                    const available = Number(
-                        document.getElementById('availableBalance').value
-                    );
-
-                    const error = document.getElementById('amountError');
-
-                    const submit = document.getElementById('submitBtn');
-
-                    amount.addEventListener('input', function () {
-
-                        const value = Number(this.value);
-
-                        if (value > available) {
-
-                            error.style.display = 'block';
-
-                            error.innerHTML =
-                                'مبلغ وارد شده از موجودی قابل برداشت بیشتر است.';
-
-                            this.classList.add('is-invalid');
-
-                            submit.disabled = true;
-
-                        } else {
-
-                            error.style.display = 'none';
-
-                            error.innerHTML = '';
-
-                            this.classList.remove('is-invalid');
-
-                            submit.disabled = false;
-
-                        }
-
-                    });
-
-                });
-
-            </script>
-
-    @endpush
 
 @endsection

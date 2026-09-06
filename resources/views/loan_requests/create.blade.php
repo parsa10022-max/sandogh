@@ -4,123 +4,246 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid loan-request-create-page">
 
-        <h4 class="mb-4">ثبت درخواست وام</h4>
+        {{-- Header --}}
+        <x-page-header title="ثبت درخواست وام">
+            <a href="{{ route('loan-requests.index') }}"
+               class="btn loan-request-back-btn">
+                <i class="bi bi-arrow-right"></i>
+                <span>بازگشت به درخواست‌ها</span>
+            </a>
+        </x-page-header>
 
-        <div class="alert alert-info">
-            <strong>شرایط وام</strong>
 
-            <ul class="mb-0 mt-2">
-                <li>وام تا سقف ۴ میلیون تومان با بازپرداخت ۱۰ ماهه.</li>
-                <li>وام از ۵ تا ۲۰ میلیون تومان با بازپرداخت ۵ ماهه.</li>
-                <li>
-                    وام‌های بیشتر از ۱۰ میلیون تومان پس از بررسی وضعیت مالی، سابقه بازپرداخت و منابع صندوق، توسط مدیریت بررسی و تصمیم‌گیری خواهد شد.
-                </li>
-                <li>وام ازدواج ۱۰ میلیون تومان با بازپرداخت ۲۰ ماهه.</li>
-            </ul>
+        {{-- شرایط وام --}}
+        <div class="loan-request-conditions-card">
+
+            <div class="loan-request-conditions-header">
+                <div class="loan-request-conditions-icon loan-icon-purple">
+                    <i class="bi bi-info-circle"></i>
+                </div>
+
+                <div>
+                    <h5>شرایط وام</h5>
+                    <p>لطفاً قبل از ثبت درخواست، شرایط دریافت وام را مطالعه کنید.</p>
+                </div>
+            </div>
+
+            <div class="loan-request-conditions-body">
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>وام تا سقف <strong>۴ میلیون تومان</strong> با بازپرداخت ۱۰ ماهه.</span>
+                </div>
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>وام از <strong>۵ تا ۲۰ میلیون تومان</strong> با بازپرداخت ۵ ماهه.</span>
+                </div>
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>
+                        وام‌های بیشتر از ۱۰ میلیون تومان پس از بررسی وضعیت مالی،
+                        سابقه بازپرداخت و منابع صندوق، توسط مدیریت بررسی و تصمیم‌گیری خواهد شد.
+                    </span>
+                </div>
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>
+                        وام ازدواج <strong>۱۰ میلیون تومان</strong> با بازپرداخت ۲۰ ماهه.
+                    </span>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="alert alert-warning">
-            <strong>شرایط ضامن</strong>
 
-            <ul class="mb-0 mt-2">
-                <li>تمام وام‌ها نیازمند ارائه دو ضامن می‌باشند.</li>
-                <li>تا سقف ۱۰ میلیون: دو سفته، دو چک صیادی یا یک سفته و یک چک صیادی.</li>
-                <li>بالاتر از ۱۰ میلیون: ارائه حداقل یک چک صیادی معتبر الزامی است.</li>
-            </ul>
+        {{-- شرایط ضامن --}}
+        <div class="loan-request-conditions-card guarantor-card">
+
+            <div class="loan-request-conditions-header">
+                <div class="loan-request-conditions-icon loan-icon-orange">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+                    <h5>شرایط ضامن</h5>
+                    <p>مدارک و شرایط مورد نیاز برای ضمانت وام</p>
+                </div>
+            </div>
+
+            <div class="loan-request-conditions-body">
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>تمام وام‌ها نیازمند ارائه <strong>دو ضامن</strong> می‌باشند.</span>
+                </div>
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>
+                        تا سقف <strong>۱۰ میلیون تومان</strong>:
+                        دو سفته، دو چک صیادی یا یک سفته و یک چک صیادی.
+                    </span>
+                </div>
+
+                <div class="loan-condition-item">
+                    <span class="loan-condition-icon">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span>
+                        بالاتر از <strong>۱۰ میلیون تومان</strong>،
+                        ارائه حداقل یک چک صیادی معتبر الزامی است.
+                    </span>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="card shadow-sm border-0">
 
-            <div class="card-body">
+        {{-- فرم --}}
+        <div class="loan-request-form-card">
 
-                <form method="POST" action="{{ route('loan-requests.store') }}">
+            <div class="loan-request-form-header">
+
+                <div class="loan-request-form-header-icon">
+                    <i class="bi bi-file-earmark-plus"></i>
+                </div>
+
+                <div>
+                    <h5>اطلاعات درخواست</h5>
+                    <p>اطلاعات درخواست وام را وارد کنید.</p>
+                </div>
+
+            </div>
+
+
+            <div class="loan-request-form-body">
+
+                <form method="POST"
+                      action="{{ route('loan-requests.store') }}">
 
                     @csrf
 
-                    <div class="row">
+                    <div class="row g-3">
 
-                        <div class="col-md-12 mb-3">
+                        {{-- مشتری --}}
+                        <div class="col-12">
 
-                            <label class="form-label">مشتری</label>
-
-                            <select name="customer_id"
-                                    class="form-select @error('customer_id') is-invalid @enderror">
-
-                                <option value="">انتخاب کنید...</option>
-
-                                @foreach($customers as $customer)
-
-                                    <option value="{{ $customer->id }}"
-                                            @selected(old('customer_id') == $customer->id)>
-
-                                    {{ $customer->full_name }}
-
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            @error('customer_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-inputs.select-input
+                                name="customer_id"
+                                label="مشتری"
+                                :options="$customers->pluck('full_name', 'id')->toArray()"
+                                :value="old('customer_id')"
+                                required
+                            />
 
                         </div>
 
 
-                        <div class="col-md-6 mb-3">
+                        {{-- مبلغ --}}
+                        <div class="col-12 col-md-6">
 
-                            <label class="form-label">مبلغ درخواستی</label>
+                            <div class="loan-request-money-field">
 
-                            <input type="number"
-                                   name="requested_amount"
-                                   class="form-control @error('requested_amount') is-invalid @enderror"
-                                   value="{{ old('requested_amount') }}">
+                                <label for="requested_amount"
+                                       class="form-label">
+                                    مبلغ درخواستی
+                                    <span class="text-danger">*</span>
+                                </label>
 
-                            @error('requested_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                <div class="loan-request-money-input">
+
+                                    <input type="number"
+                                           id="requested_amount"
+                                           name="requested_amount"
+                                           min="0"
+                                           inputmode="numeric"
+                                           class="form-control @error('requested_amount') is-invalid @enderror"
+                                           value="{{ old('requested_amount') }}"
+                                           placeholder="مثلاً 10000000">
+
+                                    <span>تومان</span>
+
+                                </div>
+
+                                @error('requested_amount')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+
+                            </div>
 
                         </div>
 
 
-                        <div class="col-md-12 mb-3">
+                        {{-- توضیحات --}}
+                        <div class="col-12">
 
-                            <label class="form-label">توضیحات</label>
+                            <div class="loan-request-description-field">
 
-                            <textarea name="description"
-                                      rows="4"
-                                      class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                <label for="description"
+                                       class="form-label">
+                                    توضیحات
+                                </label>
 
-                            @error('description')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                <textarea id="description"
+                                          name="description"
+                                          rows="5"
+                                          class="form-control @error('description') is-invalid @enderror"
+                                          placeholder="در صورت نیاز توضیحات مربوط به درخواست وام را وارد کنید...">{{ old('description') }}</textarea>
+
+                                @error('description')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <div class="text-end">
+
+                    {{-- Actions --}}
+                    <div class="loan-request-form-actions">
 
                         <a href="{{ route('loan-requests.index') }}"
-                           class="btn btn-secondary">
+                           class="btn loan-request-cancel-btn">
 
-                            انصراف
+                            <i class="bi bi-x-lg"></i>
+                            <span>انصراف</span>
 
                         </a>
 
-                        <button class="btn btn-primary">
+                        <button type="submit"
+                                class="btn loan-request-submit-btn">
 
-                            ثبت درخواست
+                            <i class="bi bi-check-lg"></i>
+                            <span>ثبت درخواست</span>
 
                         </button>
 
                     </div>
-                    {{-- فیلد مبلغ --}}
-                    {{-- توضیحات --}}
-                    {{-- دکمه ثبت --}}
 
                 </form>
 

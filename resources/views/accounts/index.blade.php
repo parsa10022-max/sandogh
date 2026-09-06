@@ -1,256 +1,352 @@
 @extends('layouts.app')
 
-@section('title','حساب‌ها')
+@section('title', 'حساب‌ها')
 
 @section('content')
-    <div class="card shadow-sm border-2 mb-3">
 
-        <div class="card-body">
+    
+    <div class="container-fluid accounts-page">
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3"
-                 dir="rtl">
-
-
-                {{-- جستجو --}}
-                <div style="width:350px">
-
-                    <form method="GET">
-
-                        <label class="form-label small fw-bold mb-1">
-                            <i class="bi bi-search"></i>
-                            جستجوی حساب
-                        </label>
-
-
-                        <div class="input-group">
-
-                            <input
-                                type="text"
-                                name="search"
-                                class="form-control text-end"
-                                placeholder="شماره حساب، نام، کد ملی..."
-                                value="{{ request('search') }}"
-                                style="height:42px"
-                            >
-
-
-                            <button class="btn btn-primary">
-
-                                <i class="bi bi-search"></i>
-
-                            </button>
-
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-
-
-                {{-- آمار --}}
-                <div class="d-flex gap-3">
-
-
-                    <div class="border border-2 rounded p-3 bg-light text-center"
-                         style="min-width:150px">
-
-                        <div class="small text-muted">
-
-                            <i class="bi bi-wallet2"></i>
-                            تعداد حساب‌ها
-
-                        </div>
-
-
-                        <div class="fw-bold fs-5">
-
-                            {{ number_format($totalAccounts) }}
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="border border-2 rounded p-3 bg-light text-center"
-                         style="min-width:220px">
-
-                        <div class="small text-muted">
-
-                            <i class="bi bi-cash-stack"></i>
-                            موجودی کل
-
-                        </div>
-
-
-                        <div class="fw-bold fs-5">
-
-                            {{ number_format($totalBalance) }}
-                            ریال
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-    </div>
-    <div class="container">
-
-        <div class="card shadow-sm">
-
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    لیست حساب‌ها
-                </h5>
-            </div>
-
+        {{-- جستجو و آمار --}}
+        <div class="card accounts-toolbar-card mb-3">
 
             <div class="card-body">
 
-                <table class="table table-bordered table-hover align-middle">
+                <div class="accounts-toolbar" dir="rtl">
 
-                    <thead class="table-light">
-                    <tr>
-                        <th>شماره حساب</th>
-                        <th>کد مشتری</th>
-                        <th>نام حساب / صاحب حساب</th>
+                    {{-- جستجو --}}
+                    <div class="accounts-search-box">
 
-                        <th>موجودی</th>
-                        <th>وضعیت</th>
-                        <th width="90">عملیات</th>
-                    </tr>
-                    </thead>
+                        <form method="GET">
 
-                    <tbody>
+                            <label class="accounts-search-label">
+                                <i class="bi bi-search"></i>
+                                جستجوی حساب
+                            </label>
 
-                    @foreach($accounts as $account)
+                            <div class="input-group accounts-search-group">
 
-                        <tr class="{{ $account->customer ? '' : 'table-primary' }}">
+                                <input
+                                    type="text"
+                                    name="search"
+                                    class="form-control accounts-search-input"
+                                    placeholder="شماره حساب، نام، کد ملی..."
+                                    value="{{ request('search') }}"
+                                >
 
-                            {{-- شماره حساب --}}
-                            <td>
+                                <button
+                                    type="submit"
+                                    class="btn accounts-search-btn"
+                                    aria-label="جستجو"
+                                >
+                                    <i class="bi bi-search"></i>
+                                </button>
 
-                                @if($account->customer)
+                            </div>
 
-                                    <i class="bi bi-person-fill text-success me-1"></i>
+                        </form>
 
-                                @else
-
-                                    <i class="bi bi-bank2 text-primary me-1"></i>
-
-                                @endif
-
-                                <strong>{{ $account->account_number }}</strong>
-
-                            </td>
-
-
-                            {{-- کد مشتری --}}
-                            <td class="text-center">
-
-                                {{ $account->customer?->customer_code ?? '-' }}
-
-                            </td>
+                    </div>
 
 
-                            {{-- نام --}}
-                            <td>
+                    {{-- آمار --}}
+                    <div class="accounts-statistics">
 
-                                @if($account->customer)
-                                    <span class="badge bg-success ms-2">
-                                        مشتری
-                                      </span>
+                        <div class="accounts-stat-card accounts-stat-card-purple">
 
-                                    {{ $account->customer->first_name }}
-                                    {{ $account->customer->last_name }}
+                            <div class="accounts-stat-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
 
+                            <div class="accounts-stat-content">
 
+                            <span class="accounts-stat-label">
+                                تعداد حساب‌ها
+                            </span>
 
-                                @else
-                                    <span class="badge bg-primary ms-2">
-                                          سیستمی
-                                      </span>
-                                    <strong>{{ $account->name }}</strong>
-
-
-
-                                @endif
-
-                            </td>
-
-
-                            {{-- نوع حساب --}}
-
-
-
-                            {{-- موجودی --}}
-                            <td class="text-start">
-
-                                <strong>
-
-                                    {{ number_format($account->balance) }}
-
+                                <strong class="accounts-stat-value">
+                                    {{ number_format($totalAccounts) }}
                                 </strong>
 
-                                ریال
+                            </div>
 
-                            </td>
-
-
-                            {{-- وضعیت --}}
-                            <td>
-
-                                @if($account->status === \App\Enums\AccountStatus::ACTIVE)
-
-                                    <span class="badge bg-success">
-            <i class="bi bi-check-circle"></i>
-            فعال
-        </span>
-
-                                @else
-
-                                    <span class="badge bg-danger">
-            <i class="bi bi-x-circle"></i>
-            غیرفعال
-        </span>
-
-                                @endif
-
-                            </td>
+                        </div>
 
 
-                            {{-- عملیات --}}
-                            <td class="text-center">
+                        <div class="accounts-stat-card accounts-stat-card-blue">
 
-                                <a href="{{ route('accounts.show',$account) }}"
-                                   class="btn btn-outline-primary btn-sm">
+                            <div class="accounts-stat-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
 
-                                    <i class="bi bi-eye"></i>
+                            <div class="accounts-stat-content">
 
-                                </a>
+                            <span class="accounts-stat-label">
+                                موجودی کل
+                            </span>
 
-                            </td>
+                                <strong class="accounts-stat-value">
+                                    {{ number_format($totalBalance) }}
+                                    <small>ریال</small>
+                                </strong>
 
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- لیست حساب‌ها --}}
+        <div class="card accounts-list-card">
+
+            <div class="card-header accounts-list-header">
+
+                <div class="accounts-title-wrapper">
+
+                    <div class="accounts-title-icon">
+                        <i class="bi bi-bank"></i>
+                    </div>
+
+                    <div>
+
+                        <h5 class="accounts-title">
+                            لیست حساب‌ها
+                        </h5>
+
+                        <p class="accounts-subtitle">
+                            حساب‌های مشتریان و حساب‌های سیستمی صندوق
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span class="accounts-count">
+                {{ number_format($accounts->total()) }}
+                حساب
+            </span>
+
+            </div>
+
+
+            <div class="card-body accounts-list-body">
+
+                <div class="table-responsive accounts-table-wrapper">
+
+                    <table class="table align-middle accounts-table">
+
+                        <thead>
+
+                        <tr>
+                            <th>شماره حساب</th>
+                            <th>کد مشتری</th>
+                            <th>نام حساب / صاحب حساب</th>
+                            <th>موجودی</th>
+                            <th>وضعیت</th>
+                            <th class="text-center">عملیات</th>
                         </tr>
 
-                    @endforeach
-
-                    </tbody>
-
-                </table>
+                        </thead>
 
 
-                {{ $accounts->links() }}
+                        <tbody>
+
+                        @forelse($accounts as $account)
+
+                            <tr class="{{ $account->customer ? '' : 'accounts-system-row' }}">
+
+                                {{-- شماره حساب --}}
+                                <td>
+
+                                    <div class="accounts-number">
+
+                                    <span class="{{ $account->customer ? 'accounts-customer-icon' : 'accounts-system-icon' }}">
+
+                                        <i class="bi {{ $account->customer ? 'bi-person-fill' : 'bi-bank2' }}"></i>
+
+                                    </span>
+
+                                        <strong>
+                                            {{ $account->account_number }}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- کد مشتری --}}
+                                <td class="text-center">
+
+                                    @if($account->customer)
+
+                                        <span class="accounts-customer-code">
+                                        {{ $account->customer->customer_code }}
+                                    </span>
+
+                                    @else
+
+                                        <span class="accounts-muted">-</span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- نام حساب / صاحب حساب --}}
+                                <td>
+
+                                    <div class="accounts-owner">
+
+                                        @if($account->customer)
+
+                                            <span class="accounts-type-badge customer">
+                                            <i class="bi bi-person-fill"></i>
+                                            مشتری
+                                        </span>
+
+                                            <strong class="accounts-owner-name">
+                                                {{ $account->customer->first_name }}
+                                                {{ $account->customer->last_name }}
+                                            </strong>
+
+                                        @else
+
+                                            <span class="accounts-type-badge system">
+                                            <i class="bi bi-bank2"></i>
+                                            سیستمی
+                                        </span>
+
+                                            <strong class="accounts-owner-name">
+                                                {{ $account->name }}
+                                            </strong>
+
+                                        @endif
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- موجودی --}}
+                                <td>
+
+                                    <div class="accounts-balance">
+
+                                        <strong>
+                                            {{ number_format($account->balance) }}
+                                        </strong>
+
+                                        <span>ریال</span>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- وضعیت --}}
+                                <td>
+
+                                    @if($account->status === \App\Enums\AccountStatus::ACTIVE)
+
+                                        <span class="accounts-status active">
+
+                                        <span class="accounts-status-dot"></span>
+
+                                        <i class="bi bi-check-circle"></i>
+
+                                        فعال
+
+                                    </span>
+
+                                    @else
+
+                                        <span class="accounts-status inactive">
+
+                                        <span class="accounts-status-dot"></span>
+
+                                        <i class="bi bi-x-circle"></i>
+
+                                        غیرفعال
+
+                                    </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- عملیات --}}
+                                <td class="text-center">
+
+                                    <a
+                                        href="{{ route('accounts.show', $account) }}"
+                                        class="btn accounts-view-btn"
+                                        title="مشاهده حساب"
+                                    >
+
+                                        <i class="bi bi-eye"></i>
+
+                                        <span>مشاهده</span>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="6">
+
+                                    <div class="accounts-empty">
+
+                                        <div class="accounts-empty-icon">
+                                            <i class="bi bi-wallet2"></i>
+                                        </div>
+
+                                        <h6>
+                                            حسابی پیدا نشد
+                                        </h6>
+
+                                        <p>
+                                            برای عبارت جستجوی واردشده حسابی وجود ندارد.
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                {{-- صفحه‌بندی --}}
+                @if($accounts->hasPages())
+
+                    <div class="accounts-pagination">
+
+                        {{ $accounts->withQueryString()->links() }}
+
+                    </div>
+
+                @endif
 
             </div>
 

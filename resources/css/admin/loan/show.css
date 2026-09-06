@@ -1,0 +1,1607 @@
+/* =========================================================
+   LOAN SHOW PAGE
+   Design System #1
+   Purple + Blue
+   RTL / Bootstrap 5.3
+   Light / White Cards
+   Mobile First / PWA
+   ========================================================= */
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.loan-show-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.loan-show-page *,
+.loan-show-page *::before,
+.loan-show-page *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.loan-show-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e0ed;
+    border-radius: 16px;
+
+    box-shadow: 0 6px 20px rgba(70, 50, 100, .07);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.loan-show-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 20px 22px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #eeeaf4;
+}
+
+
+.loan-show-title {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    min-width: 0;
+}
+
+
+.loan-show-icon {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: #6f42c1;
+    background: #f1edfa;
+
+    font-size: 21px;
+}
+
+
+.loan-show-title h5 {
+    margin: 0;
+
+    color: #29243a;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+.loan-show-number {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 3px;
+
+    color: #777181;
+
+    font-size: 13px;
+}
+
+
+.loan-show-number strong {
+    color: #6f42c1;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.loan-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding: 5px 13px;
+
+    border-radius: 9px;
+
+    color: #198754;
+    background: #eaf7f0;
+
+    border: 1px solid #ccebd9;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.loan-show-body {
+    padding: 24px;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.loan-show-section {
+    width: 100%;
+
+    padding: 0;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   اگر Partialها از heading استفاده کنند
+   ========================================================= */
+
+.loan-show-section h5,
+.loan-show-section h6 {
+    color: #302a40;
+
+    font-weight: 700;
+}
+
+
+.loan-show-section .section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 18px;
+
+    color: #302a40;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+.loan-show-section .section-title i {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #6f42c1;
+    background: #f2eefb;
+}
+
+
+/* =========================================================
+   INFORMATION BOX
+   ========================================================= */
+
+.loan-show-section .info-box,
+.loan-show-section .loan-info-box {
+    height: 100%;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e8e4ef;
+    border-radius: 11px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.loan-show-section .info-box:hover,
+.loan-show-section .loan-info-box:hover {
+    border-color: #d5cbea;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .06);
+}
+
+
+/* =========================================================
+   LABEL / VALUE
+   ========================================================= */
+
+.loan-show-section .info-label,
+.loan-show-section .label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #85808d;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+.loan-show-section .info-value,
+.loan-show-section .value {
+    color: #302a40;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.loan-show-section .info-value strong,
+.loan-show-section .value strong {
+    color: #6f42c1;
+}
+
+
+/* =========================================================
+   BOOTSTRAP ROW SPACING
+   ========================================================= */
+
+.loan-show-section .row {
+    --bs-gutter-x: 16px;
+    --bs-gutter-y: 16px;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.loan-show-section .table-responsive {
+    border: 1px solid #e7e3ed;
+
+    border-radius: 12px;
+
+    overflow-x: auto;
+
+    background: #ffffff;
+}
+
+
+.loan-show-section .table {
+    margin-bottom: 0;
+
+    vertical-align: middle;
+
+    color: #393342;
+
+    font-size: 13px;
+}
+
+
+.loan-show-section .table thead th {
+    padding: 12px 10px;
+
+    color: #5d5668;
+
+    background: #f7f5fa;
+
+    border-bottom: 1px solid #e4dfeb;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.loan-show-section .table tbody td {
+    padding: 11px 10px;
+
+    border-color: #f0edf4;
+}
+
+
+.loan-show-section .table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+.loan-show-section .table tbody tr:hover {
+    background: #faf8fd;
+}
+
+
+/* =========================================================
+   INSTALLMENT STATUS
+   ========================================================= */
+
+.loan-show-section .badge {
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* پرداخت شده */
+
+.loan-show-section .badge.bg-success {
+    color: #198754 !important;
+
+    background: #eaf7f0 !important;
+
+    border: 1px solid #ccebd9;
+}
+
+
+/* در انتظار */
+
+.loan-show-section .badge.bg-warning {
+    color: #946c00 !important;
+
+    background: #fff7df !important;
+
+    border: 1px solid #f2df9e;
+}
+
+
+/* لغو شده */
+
+.loan-show-section .badge.bg-danger {
+    color: #b02a37 !important;
+
+    background: #fcebed !important;
+
+    border: 1px solid #f1c5ca;
+}
+
+
+/* =========================================================
+   MONEY VALUES
+   ========================================================= */
+
+.loan-show-section .money-value,
+.loan-show-section .amount,
+.loan-show-section .price {
+    color: #302a40;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.loan-show-section .money-value.text-success,
+.loan-show-section .amount.text-success,
+.loan-show-section .price.text-success {
+    color: #198754 !important;
+}
+
+
+/* =========================================================
+   GUARANTORS
+   ========================================================= */
+
+.loan-show-section .guarantor-card,
+.loan-show-section .guarantor-box {
+    height: 100%;
+
+    padding: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e6e2ed;
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(60, 40, 100, .035);
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.loan-show-section .guarantor-card:hover,
+.loan-show-section .guarantor-box:hover {
+    border-color: #d2c7e5;
+
+    box-shadow: 0 5px 14px rgba(111, 66, 193, .07);
+}
+
+
+.loan-show-section .guarantor-card h6,
+.loan-show-section .guarantor-box h6 {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    color: #302a40;
+
+    font-size: 14px;
+}
+
+
+.loan-show-section .guarantor-card h6 i,
+.loan-show-section .guarantor-box h6 i {
+    color: #6f42c1;
+}
+
+
+/* =========================================================
+   SYSTEM INFO
+   ========================================================= */
+
+.loan-show-section .system-info,
+.loan-show-section .system-info-box {
+    padding: 16px;
+
+    background: #f8f7fa;
+
+    border: 1px solid #e5e1eb;
+
+    border-radius: 11px;
+}
+
+
+.loan-show-section .system-info .label,
+.loan-show-section .system-info-box .label {
+    color: #85808d;
+}
+
+
+.loan-show-section .system-info .value,
+.loan-show-section .system-info-box .value {
+    color: #514b5c;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   HR / DIVIDER
+   ========================================================= */
+
+.loan-show-divider {
+    height: 1px;
+
+    margin: 28px 0;
+
+    background: #eeeaf4;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.loan-show-section .empty-state {
+    padding: 30px 20px;
+
+    text-align: center;
+
+    color: #88818f;
+
+    background: #faf9fc;
+
+    border: 1px dashed #dcd7e5;
+
+    border-radius: 12px;
+}
+
+
+.loan-show-section .empty-state i {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #9a8db0;
+
+    font-size: 28px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.loan-show-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 17px 22px;
+
+    background: #faf9fc;
+
+    border-top: 1px solid #eeeaf4;
+}
+
+
+.loan-show-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.loan-show-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 42px;
+
+    padding: 6px 15px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+
+.loan-show-action:hover {
+    transform: translateY(-1px);
+}
+
+
+.loan-show-action:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   ACTION ICON
+   ========================================================= */
+
+.loan-show-action-icon {
+    width: 27px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.loan-show-action-back {
+    color: #5f5b69;
+
+    background: #ffffff;
+
+    border: 1px solid #d9d5e5;
+}
+
+
+.loan-show-action-back .loan-show-action-icon {
+    color: #6f42c1;
+
+    background: #f2eefb;
+}
+
+
+.loan-show-action-back:hover {
+    color: #5f35ad;
+
+    background: #faf8ff;
+
+    border-color: #b9a9d9;
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .08);
+}
+
+
+/* =========================================================
+   EDIT
+   ========================================================= */
+
+.loan-show-action-edit {
+    color: #ffffff;
+
+    background: #6f42c1;
+
+    border: 1px solid #6f42c1;
+
+    box-shadow: 0 3px 10px rgba(111, 66, 193, .16);
+}
+
+
+.loan-show-action-edit .loan-show-action-icon {
+    background: rgba(255, 255, 255, .15);
+}
+
+
+.loan-show-action-edit:hover {
+    color: #ffffff;
+
+    background: #5f35ad;
+
+    border-color: #5f35ad;
+
+    box-shadow: 0 5px 14px rgba(111, 66, 193, .24);
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+.loan-show-action-print {
+    color: #ffffff;
+
+    background: #0d6efd;
+
+    border: 1px solid #0d6efd;
+
+    box-shadow: 0 3px 10px rgba(13, 110, 253, .15);
+}
+
+
+.loan-show-action-print .loan-show-action-icon {
+    background: rgba(255, 255, 255, .15);
+}
+
+
+.loan-show-action-print:hover {
+    color: #ffffff;
+
+    background: #0b5ed7;
+
+    border-color: #0b5ed7;
+
+    box-shadow: 0 5px 14px rgba(13, 110, 253, .22);
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.loan-show-section a {
+    color: #6f42c1;
+
+    text-decoration: none;
+}
+
+
+.loan-show-section a:hover {
+    color: #5f35ad;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .loan-show-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        padding: 17px;
+    }
+
+    .loan-status-badge {
+        align-self: flex-start;
+    }
+
+    .loan-show-body {
+        padding: 17px;
+    }
+
+    .loan-show-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+
+        padding: 15px 17px;
+    }
+
+    .loan-show-actions {
+        width: 100%;
+    }
+
+    .loan-show-action {
+        flex: 1;
+    }
+
+    .loan-show-action-back {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .loan-show-title {
+        align-items: flex-start;
+    }
+
+    .loan-show-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        font-size: 18px;
+    }
+
+    .loan-show-title h5 {
+        font-size: 15px;
+    }
+
+    .loan-show-number {
+        font-size: 12px;
+    }
+
+    .loan-show-body {
+        padding: 14px;
+    }
+
+    .loan-show-divider {
+        margin: 22px 0;
+    }
+
+    .loan-show-actions {
+        flex-direction: column;
+    }
+
+    .loan-show-action {
+        width: 100%;
+    }
+
+    .loan-show-section .table {
+        min-width: 600px;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+    .loan-show-page {
+        padding: 0 !important;
+    }
+
+    .loan-show-card {
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .loan-show-header {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .loan-show-footer {
+        display: none !important;
+    }
+
+    .loan-show-body {
+        padding: 15px 0;
+    }
+
+    .loan-show-divider {
+        margin: 18px 0;
+    }
+
+}
+/* =========================================================
+   LOAN INFO
+   Design System #1
+   ========================================================= */
+
+.loan-info-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e1ed;
+    border-radius: 13px;
+
+    overflow: hidden;
+
+    box-shadow: 0 3px 12px rgba(70, 50, 100, .045);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.loan-info-card-header {
+    display: flex;
+    align-items: center;
+
+    padding: 14px 17px;
+
+    background: #faf9fc;
+
+    border-bottom: 1px solid #ebe7f1;
+}
+
+
+.loan-info-card-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: #302a40;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.loan-info-card-icon {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #6f42c1;
+    background: #f0ebfa;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.loan-info-card-body {
+    padding: 17px;
+}
+
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+
+.loan-info-item {
+    min-height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 12px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e9e5ef;
+
+    border-radius: 10px;
+
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.loan-info-item:hover {
+    background: #fcfbfe;
+
+    border-color: #d9d0e8;
+
+    box-shadow: 0 3px 9px rgba(111, 66, 193, .05);
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.loan-info-title {
+    color: #817b89;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.loan-info-value {
+    color: #302a40;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-align: left;
+
+    word-break: break-word;
+}
+
+
+.loan-info-value.loan-number-display {
+    color: #6f42c1;
+}
+
+
+/* =========================================================
+   MONEY
+   ========================================================= */
+
+.loan-money-value {
+    color: #302a40;
+
+    direction: ltr;
+
+    white-space: nowrap;
+}
+
+
+.loan-money-value small {
+    margin-right: 4px;
+
+    color: #817b89;
+
+    font-size: 10px;
+    font-weight: 500;
+}
+
+
+.loan-installment-value {
+    color: #198754;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .loan-info-card-body {
+        padding: 13px;
+    }
+
+    .loan-info-item {
+        min-height: 58px;
+
+        padding: 10px 12px;
+
+        gap: 10px;
+    }
+
+    .loan-info-title {
+        font-size: 11px;
+    }
+
+    .loan-info-value {
+        font-size: 12px;
+    }
+
+}
+/* =========================================================
+   LOAN REQUEST
+   Design System #1
+   Purple + Blue / White / Soft Shadow
+   ========================================================= */
+
+.loan-request-card {
+    width: 100%;
+
+    margin-top: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e1ed;
+    border-radius: 13px;
+
+    overflow: hidden;
+
+    box-shadow: 0 3px 12px rgba(70, 50, 100, .045);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.loan-request-header {
+    display: flex;
+    align-items: center;
+
+    padding: 14px 17px;
+
+    background: #faf9fc;
+
+    border-bottom: 1px solid #ebe7f1;
+}
+
+
+.loan-request-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: #302a40;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.loan-request-icon {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #6f42c1;
+    background: #f0ebfa;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.loan-request-body {
+    padding: 17px;
+}
+
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+
+.loan-request-item {
+    min-height: 64px;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e9e5ef;
+
+    border-radius: 10px;
+
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.loan-request-item:hover {
+    background: #fcfbfe;
+
+    border-color: #d9d0e8;
+
+    box-shadow: 0 3px 9px rgba(111, 66, 193, .05);
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.loan-request-label {
+    color: #817b89;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.loan-request-value {
+    color: #302a40;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-align: left;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MONEY
+   ========================================================= */
+
+.loan-request-money {
+    direction: ltr;
+}
+
+
+.loan-request-money small,
+.loan-request-approved small {
+    margin-right: 4px;
+
+    color: #817b89;
+
+    font-size: 10px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   APPROVED
+   ========================================================= */
+
+.loan-request-approved {
+    color: #198754;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.loan-request-action {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.loan-request-view-btn {
+    width: 100%;
+    min-height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 7px 14px;
+
+    color: #6f42c1;
+
+    background: #ffffff;
+
+    border: 1px solid #cfc3e2;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+
+.loan-request-view-icon {
+    width: 27px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    color: #6f42c1;
+
+    background: #f2eefb;
+}
+
+
+.loan-request-view-btn:hover {
+    color: #5f35ad;
+
+    background: #faf8ff;
+
+    border-color: #b9a9d9;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .10);
+}
+
+
+.loan-request-view-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .loan-request-body {
+        padding: 13px;
+    }
+
+    .loan-request-item {
+        min-height: 58px;
+
+        padding: 10px 12px;
+    }
+
+    .loan-request-label {
+        font-size: 11px;
+    }
+
+    .loan-request-value {
+        font-size: 12px;
+    }
+
+    .loan-request-view-btn {
+        min-height: 46px;
+    }
+
+}
+css
+       /* =========================================================
+          LOAN INSTALLMENTS
+          Design System #1
+          ========================================================= */
+
+   .loan-installments-card {
+       overflow: hidden;
+       border: 1px solid #e8e3f2 !important;
+       border-radius: 14px;
+       background: #ffffff;
+   }
+
+.loan-installments-header {
+    padding: 16px 18px;
+    background: #faf9fd !important;
+    border-bottom: 1px solid #e8e3f2;
+}
+
+.loan-installments-header h6 {
+    color: #30264a;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.loan-installments-table {
+    min-width: 850px;
+    margin: 0;
+}
+
+.loan-installments-table thead th {
+    padding: 14px 12px;
+    background: #f7f5fb;
+    color: #5f5870;
+    border-bottom: 1px solid #e4dfed;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.loan-installments-table tbody td {
+    padding: 14px 12px;
+    color: #393342;
+    border-bottom: 1px solid #eeeaf4;
+    vertical-align: middle;
+}
+
+.loan-installments-table tbody tr {
+    transition: background-color .2s ease;
+}
+
+.loan-installments-table tbody tr:hover {
+    background: #faf9fd;
+}
+
+.loan-installment-amount {
+    color: #4f3b82;
+    white-space: nowrap;
+}
+
+.loan-installment-amount small,
+.loan-installments-table tfoot small {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.loan-installment-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.loan-installment-status-paid {
+    color: #23734d;
+    background: #edf8f2;
+    border: 1px solid #cfeadd;
+}
+
+.loan-installment-status-pending {
+    color: #80651d;
+    background: #fff9e8;
+    border: 1px solid #f1e2aa;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.loan-installment-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 38px;
+    padding: 6px 11px;
+
+    border-radius: 9px;
+    border: 1px solid transparent;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.loan-installment-action:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.loan-installment-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+
+/* پرداخت */
+
+.loan-installment-pay {
+    color: #ffffff;
+    background: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.loan-installment-pay:hover:not(:disabled) {
+    color: #ffffff;
+    background: #5f35ad;
+    border-color: #5f35ad;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, .18);
+}
+
+.loan-installment-pay .loan-installment-action-icon {
+    background: rgba(255, 255, 255, .16);
+}
+
+
+/* رسید */
+
+.loan-installment-receipt {
+    color: #2563a8;
+    background: #f2f7fc;
+    border-color: #cfe0f1;
+}
+
+.loan-installment-receipt:hover {
+    color: #1d568e;
+    background: #eaf3fb;
+    border-color: #bdd5eb;
+}
+
+.loan-installment-receipt .loan-installment-action-icon {
+    color: #2563a8;
+    background: #ffffff;
+}
+
+
+/* قفل */
+
+.loan-installment-locked {
+    color: #77727f;
+    background: #f6f5f7;
+    border-color: #e2dfe5;
+    cursor: not-allowed;
+    opacity: .85;
+}
+
+.loan-installment-locked .loan-installment-action-icon {
+    background: #e9e7eb;
+    color: #77727f;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.loan-installments-table tfoot th {
+    padding: 14px 12px;
+    background: #faf9fd;
+    color: #4a4358;
+    border-top: 1px solid #e4dfed;
+    border-bottom: 0;
+    font-size: 13px;
+}
+
+.loan-installments-table tfoot th.text-end {
+    color: #4f3b82;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-installments-header {
+        padding: 14px;
+    }
+
+    .loan-installments-table {
+        min-width: 780px;
+    }
+
+    .loan-installments-table thead th,
+    .loan-installments-table tbody td,
+    .loan-installments-table tfoot th {
+        padding: 11px 9px;
+    }
+
+    .loan-installment-action {
+        min-height: 36px;
+        padding: 5px 9px;
+        font-size: 11px;
+    }
+
+    .loan-installment-action-icon {
+        width: 25px;
+        height: 25px;
+        font-size: 13px;
+    }
+
+}
+
+

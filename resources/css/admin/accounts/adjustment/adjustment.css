@@ -1,0 +1,924 @@
+/* =========================================================
+   Account Adjustment Create
+   Design #1
+   RTL / Bootstrap 5.3 / Mobile First
+   ========================================================= */
+
+
+/* =========================================================
+   Page
+   ========================================================= */
+
+.adjustment-page {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    direction: rtl;
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.adjustment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.adjustment-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.adjustment-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #ddd8f5;
+    border-radius: 11px;
+    background: #f3f1fc;
+    color: #6658c7;
+    font-size: 1.05rem;
+}
+
+.adjustment-title {
+    margin: 0;
+    color: #292d32;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.adjustment-subtitle {
+    margin: 3px 0 0;
+    color: #7b8188;
+    font-size: .76rem;
+    line-height: 1.6;
+}
+
+.adjustment-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 8px 13px;
+    border: 1px solid #dfe2e6;
+    border-radius: 9px;
+    background: #fff;
+    color: #555b62;
+    font-size: .78rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+        background-color .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+.adjustment-back-btn:hover {
+    border-color: #cfcbe9;
+    background: #f8f7fd;
+    color: #5f52b7;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .04);
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Main Cards
+   ========================================================= */
+
+.adjustment-card {
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #e1e3e7;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .035);
+}
+
+.adjustment-account-card {
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #e1e3e7;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .035);
+}
+
+.adjustment-card-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 52px;
+    padding: 11px 15px;
+    border-bottom: 1px solid #eceef1;
+    background: #fff;
+}
+
+.adjustment-section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd8f5;
+    border-radius: 9px;
+    background: #f4f2fc;
+    color: #6658c7;
+    font-size: .85rem;
+}
+
+.adjustment-card-header h6 {
+    margin: 0;
+    color: #30343a;
+    font-size: .84rem;
+    font-weight: 700;
+}
+
+.adjustment-card-body {
+    padding: 16px;
+}
+
+
+/* =========================================================
+   Account Information
+   ========================================================= */
+
+.adjustment-account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.adjustment-account-item {
+    min-width: 0;
+    padding: 11px 13px;
+    border: 1px solid #e7e9ec;
+    border-radius: 10px;
+    background: #fafbfc;
+}
+
+.adjustment-account-item:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.adjustment-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #858b92;
+    font-size: .72rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.adjustment-account-item strong {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: #34383e;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1.6;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.adjustment-balance-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.adjustment-balance-item strong {
+    overflow: visible;
+    color: #5f52b7;
+    font-size: .9rem;
+    white-space: nowrap;
+}
+
+.adjustment-balance-unit {
+    margin-right: 4px;
+    color: #777d84;
+    font-size: .7rem;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   Form
+   ========================================================= */
+
+.adjustment-field {
+    margin-bottom: 16px;
+}
+
+.adjustment-field:last-child {
+    margin-bottom: 0;
+}
+
+.adjustment-form-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #4c5259;
+    font-size: .78rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.adjustment-input-wrapper {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    overflow: hidden;
+    border: 1px solid #dfe2e6;
+    border-radius: 10px;
+    background: #fff;
+    direction: rtl;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .025);
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Amount Input
+|--------------------------------------------------------------------------
+|
+| مهم:
+| input و واحد «ریال» کنار هم هستند و دیگر روی هم قرار نمی‌گیرند.
+|
+*/
+
+.adjustment-amount-input {
+    display: block;
+    flex: 1 1 0;
+    width: auto !important;
+    min-width: 0;
+    max-width: none;
+    height: 44px;
+    padding: 9px 12px !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0;
+
+    background: #fff;
+    color: #343a40;
+
+    direction: ltr;
+    text-align: left;
+
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    box-shadow: none !important;
+}
+
+
+/* Placeholder */
+
+.adjustment-amount-input::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+
+
+/* Focus */
+
+.adjustment-amount-input:focus {
+    border: 0 !important;
+    outline: 0;
+    background: #fff;
+    color: #343a40;
+    box-shadow: none !important;
+}
+
+
+/* Unit */
+
+.adjustment-input-unit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 62px;
+    width: 62px;
+    min-width: 62px;
+    max-width: 62px;
+
+    height: 44px;
+    padding: 0 8px;
+
+    border-right: 1px solid #e1e3e7;
+
+    background: #f7f8fb;
+    color: #6d737b;
+
+    font-family: inherit;
+    font-size: .72rem;
+    font-weight: 600;
+    line-height: 1;
+
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+
+/* Wrapper Focus */
+
+.adjustment-input-wrapper:focus-within {
+    border-color: #7567d1;
+    box-shadow:
+        0 0 0 3px rgba(117, 103, 209, .10),
+        0 3px 10px rgba(0, 0, 0, .035);
+}
+
+
+/* Invalid */
+
+.adjustment-input-wrapper:has(.adjustment-amount-input.is-invalid) {
+    border-color: #dc3545;
+}
+
+.adjustment-input-wrapper:has(.adjustment-amount-input.is-invalid):focus-within {
+    border-color: #dc3545;
+    box-shadow:
+        0 0 0 3px rgba(220, 53, 69, .08);
+}
+
+
+/* =========================================================
+   Validation
+   ========================================================= */
+
+.adjustment-error {
+    display: block;
+    margin-top: 6px;
+    color: #dc3545;
+    font-size: .73rem;
+    line-height: 1.6;
+}
+
+.adjustment-error ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.adjustment-error li {
+    margin: 0;
+}
+
+.adjustment-field-hint {
+    margin-top: 6px;
+    color: #858b92;
+    font-size: .71rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   Difference
+   ========================================================= */
+
+.adjustment-difference {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+    background: #fafbfc;
+}
+
+.adjustment-difference-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.adjustment-difference-item {
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid #e7e9ec;
+    border-radius: 9px;
+    background: #fff;
+}
+
+.adjustment-difference-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #858b92;
+    font-size: .7rem;
+    line-height: 1.5;
+}
+
+.adjustment-difference-value {
+    display: block;
+    overflow: hidden;
+    color: #34383e;
+    font-size: .79rem;
+    font-weight: 700;
+    line-height: 1.6;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.adjustment-difference-message {
+    margin-top: 10px;
+    padding: 9px 11px;
+    border-radius: 8px;
+    background: #f4f2fc;
+    color: #5f52b7;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.7;
+}
+
+.adjustment-difference-message.increase {
+    background: #edf8f1;
+    color: #23804b;
+}
+
+.adjustment-difference-message.decrease {
+    background: #fff1f1;
+    color: #c23636;
+}
+
+.adjustment-difference-message.no-change {
+    background: #f1f3f5;
+    color: #6c757d;
+}
+
+
+/* =========================================================
+   Warning
+   ========================================================= */
+
+.adjustment-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 11px 13px;
+    border: 1px solid #f0dfb2;
+    border-radius: 10px;
+    background: #fffaf0;
+    color: #765b20;
+    font-size: .74rem;
+    line-height: 1.8;
+}
+
+.adjustment-warning i {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: #c38b20;
+    font-size: .9rem;
+}
+
+
+/* =========================================================
+   Actions
+   ========================================================= */
+
+.adjustment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    margin-top: 18px;
+}
+
+.adjustment-submit-btn,
+.adjustment-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-height: 44px;
+    padding: 8px 16px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: .78rem;
+    font-weight: 600;
+    line-height: 1.4;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        background-color .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+
+/* Submit */
+
+.adjustment-submit-btn {
+    border: 1px solid #6658c7;
+    background: #6658c7;
+    color: #fff;
+}
+
+.adjustment-submit-btn:hover {
+    border-color: #594bb8;
+    background: #594bb8;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(102, 88, 199, .18);
+    transform: translateY(-1px);
+}
+
+.adjustment-submit-btn:focus {
+    outline: none;
+    border-color: #594bb8;
+    box-shadow:
+        0 0 0 3px rgba(102, 88, 199, .12);
+}
+
+.adjustment-submit-btn:active {
+    transform: translateY(0);
+}
+
+
+/* Cancel */
+
+.adjustment-cancel-btn {
+    border: 1px solid #dfe2e6;
+    background: #fff;
+    color: #5d636a;
+}
+
+.adjustment-cancel-btn:hover {
+    border-color: #cfd3d8;
+    background: #f7f8f9;
+    color: #343a40;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, .04);
+}
+
+.adjustment-cancel-btn:focus {
+    outline: none;
+    box-shadow:
+        0 0 0 3px rgba(108, 117, 125, .08);
+}
+
+
+/* =========================================================
+   Alerts
+   ========================================================= */
+
+.adjustment-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin-bottom: 16px;
+    padding: 11px 13px;
+
+    border-radius: 10px;
+
+    font-size: .76rem;
+    line-height: 1.8;
+}
+
+.adjustment-alert i {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.adjustment-alert.success {
+    border: 1px solid #ccebd8;
+    background: #f0faf4;
+    color: #27784b;
+}
+
+.adjustment-alert.danger {
+    border: 1px solid #f1cccc;
+    background: #fff3f3;
+    color: #b52d2d;
+}
+
+
+/* =========================================================
+   Disabled State
+   ========================================================= */
+
+.adjustment-submit-btn:disabled,
+.adjustment-submit-btn.disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .adjustment-header {
+        gap: 12px;
+    }
+
+    .adjustment-card-body {
+        padding: 14px;
+    }
+
+    .adjustment-account-grid {
+        gap: 10px;
+    }
+
+    .adjustment-difference-grid {
+        gap: 8px;
+    }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .adjustment-header {
+        align-items: flex-start;
+    }
+
+    .adjustment-title-wrapper {
+        gap: 9px;
+    }
+
+    .adjustment-title-icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: .95rem;
+    }
+
+    .adjustment-title {
+        font-size: .94rem;
+    }
+
+    .adjustment-subtitle {
+        font-size: .71rem;
+    }
+
+    .adjustment-back-btn {
+        min-height: 38px;
+        padding: 7px 10px;
+        font-size: .72rem;
+    }
+
+    .adjustment-back-btn span {
+        display: none;
+    }
+
+    .adjustment-card,
+    .adjustment-account-card {
+        border-radius: 11px;
+    }
+
+    .adjustment-card-header {
+        min-height: 49px;
+        padding: 9px 12px;
+    }
+
+    .adjustment-card-body {
+        padding: 12px;
+    }
+
+    /* Account */
+
+    .adjustment-account-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .adjustment-account-item:nth-child(3) {
+        grid-column: auto;
+    }
+
+    .adjustment-account-item {
+        padding: 10px 11px;
+    }
+
+    .adjustment-balance-item {
+        gap: 8px;
+    }
+
+    .adjustment-balance-item strong {
+        font-size: .84rem;
+    }
+
+    /* Input */
+
+    .adjustment-input-wrapper {
+        height: 44px;
+        border-radius: 9px;
+    }
+
+    .adjustment-amount-input {
+        flex: 1 1 0;
+        width: auto !important;
+        min-width: 0;
+        height: 42px;
+        padding: 8px 10px !important;
+        font-size: .82rem;
+    }
+
+    .adjustment-input-unit {
+        flex: 0 0 54px;
+        width: 54px;
+        min-width: 54px;
+        max-width: 54px;
+        height: 42px;
+        padding: 0 6px;
+        font-size: .7rem;
+    }
+
+    /* Difference */
+
+    .adjustment-difference {
+        padding: 11px;
+    }
+
+    .adjustment-difference-grid {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .adjustment-difference-item {
+        padding: 9px 10px;
+    }
+
+    .adjustment-difference-value {
+        font-size: .78rem;
+    }
+
+    /* Actions */
+
+    .adjustment-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .adjustment-submit-btn,
+    .adjustment-cancel-btn {
+        width: 100%;
+        min-height: 44px;
+    }
+}
+
+
+/* =========================================================
+   Small Mobile
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .adjustment-title {
+        font-size: .88rem;
+    }
+
+    .adjustment-subtitle {
+        display: none;
+    }
+
+    .adjustment-card-body {
+        padding: 10px;
+    }
+
+    .adjustment-card-header {
+        padding: 9px 10px;
+    }
+
+    .adjustment-section-icon {
+        flex-basis: 30px;
+        width: 30px;
+        height: 30px;
+        font-size: .78rem;
+    }
+
+    .adjustment-card-header h6 {
+        font-size: .79rem;
+    }
+
+    .adjustment-input-wrapper {
+        height: 43px;
+    }
+
+    .adjustment-amount-input {
+        height: 41px;
+        padding: 7px 7px !important;
+        font-size: .76rem;
+    }
+
+    .adjustment-input-unit {
+        flex: 0 0 48px;
+        width: 48px;
+        min-width: 48px;
+        max-width: 48px;
+        height: 41px;
+        padding: 0 5px;
+        font-size: .67rem;
+    }
+
+    .adjustment-label {
+        font-size: .68rem;
+    }
+
+    .adjustment-account-item strong {
+        font-size: .78rem;
+    }
+
+    .adjustment-warning {
+        padding: 9px 10px;
+        font-size: .7rem;
+    }
+}
+
+
+/* =========================================================
+   Desktop
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .adjustment-page {
+        max-width: 1100px;
+    }
+
+    .adjustment-card-body {
+        padding: 18px;
+    }
+
+    .adjustment-account-grid {
+        gap: 14px;
+    }
+
+    .adjustment-account-item {
+        padding: 12px 14px;
+    }
+
+    .adjustment-input-wrapper {
+        max-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   Accessibility
+   ========================================================= */
+
+.adjustment-submit-btn:focus-visible,
+.adjustment-cancel-btn:focus-visible,
+.adjustment-back-btn:focus-visible {
+    outline: 2px solid rgba(102, 88, 199, .35);
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   Reduced Motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .adjustment-back-btn,
+    .adjustment-submit-btn,
+    .adjustment-cancel-btn,
+    .adjustment-input-wrapper {
+        transition: none;
+    }
+}

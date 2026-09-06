@@ -1,57 +1,94 @@
 @extends('layouts.app')
 
+@section('title', 'گردش حساب')
+
 @section('content')
 
-    <div class="container py-4">
+
+    <div class="container-fluid account-transactions-page">
+
+        {{-- سربرگ صفحه --}}
+        <div class="account-transactions-header">
+
+            <div class="account-transactions-title-wrapper">
+
+                <div class="account-transactions-title-icon">
+                    <i class="bi bi-arrow-left-right"></i>
+                </div>
+
+                <div>
+                    <h5 class="account-transactions-title">
+                        گردش حساب
+                    </h5>
+
+                    <p class="account-transactions-subtitle">
+                        مشاهده سوابق تراکنش‌های حساب
+                    </p>
+                </div>
+
+            </div>
+
+            <a
+                href="{{ route('accounts.show', $account) }}"
+                class="account-transactions-back-btn"
+            >
+                <i class="bi bi-arrow-right"></i>
+                <span>بازگشت به حساب</span>
+            </a>
+
+        </div>
+
 
         {{-- خلاصه حساب --}}
-        <div class="card border border-2 shadow-sm mb-4">
+        <div class="card account-summary-card">
 
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="account-summary-header">
 
-                <div class="fw-bold">
+                <div class="account-summary-title">
 
-                    <i class="bi bi-wallet2 text-primary"></i>
+                <span class="account-summary-icon">
+                    <i class="bi bi-wallet2"></i>
+                </span>
 
-                    گردش حساب
+                    <span>خلاصه حساب</span>
 
                 </div>
 
-                <span class="badge bg-primary fs-6" dir="ltr">
-                    {{ $account->account_number }}
-                </span>
+                <span class="account-number-badge" dir="ltr">
+                {{ $account->account_number }}
+            </span>
 
             </div>
 
 
-            <div class="card-body">
+            <div class="card-body account-summary-body">
 
-                <div class="row text-center">
+                <div class="account-summary-grid">
 
                     {{-- عنوان حساب --}}
-                    <div class="col-md-4 mb-3">
+                    <div class="account-summary-item">
 
-                        <small class="text-muted">
-                            عنوان حساب
-                        </small>
+                    <span class="account-summary-label">
+                        <i class="bi bi-card-heading"></i>
+                        عنوان حساب
+                    </span>
 
-                        <div class="fw-bold">
-
+                        <strong>
                             {{ $account->name ?? 'حساب مشتری' }}
-
-                        </div>
+                        </strong>
 
                     </div>
 
 
                     {{-- مالک حساب --}}
-                    <div class="col-md-4 mb-3">
+                    <div class="account-summary-item">
 
-                        <small class="text-muted">
-                            مالک حساب
-                        </small>
+                    <span class="account-summary-label">
+                        <i class="bi bi-person"></i>
+                        مالک حساب
+                    </span>
 
-                        <div class="fw-bold">
+                        <strong>
 
                             @if($account->customer)
 
@@ -64,23 +101,26 @@
 
                             @endif
 
-                        </div>
+                        </strong>
 
                     </div>
 
 
-                    {{-- موجودی فعلی --}}
-                    <div class="col-md-4 mb-3">
+                    {{-- موجودی --}}
+                    <div class="account-summary-item account-current-balance">
 
-                        <small class="text-muted">
-                            موجودی فعلی
-                        </small>
+                    <span class="account-summary-label">
+                        <i class="bi bi-cash-stack"></i>
+                        موجودی فعلی
+                    </span>
 
-                        <div class="fw-bold text-success fs-5">
+                        <div class="account-balance-value">
 
-                            {{ number_format($account->balance) }}
+                            <strong>
+                                {{ number_format($account->balance) }}
+                            </strong>
 
-                            ریال
+                            <span>ریال</span>
 
                         </div>
 
@@ -94,52 +134,56 @@
 
 
         {{-- جدول تراکنش‌ها --}}
-        <div class="card border border-2 shadow-sm">
+        <div class="card account-transactions-card">
 
-            <div class="card-header fw-bold">
+            <div class="account-transactions-card-header">
 
-                تراکنش‌ها
+                <div class="account-transactions-card-title">
+
+                <span class="account-transactions-card-icon">
+                    <i class="bi bi-list-ul"></i>
+                </span>
+
+                    <div>
+
+                        <h6>
+                            تراکنش‌ها
+                        </h6>
+
+                        <small>
+                            فهرست کامل گردش حساب
+                        </small>
+
+                    </div>
+
+                </div>
 
             </div>
 
 
-            <div class="card-body">
+            <div class="card-body account-transactions-body">
 
-                <div class="table-responsive">
+                <div class="table-responsive account-transactions-table-wrapper">
 
-                    <table class="table table-bordered table-hover text-center align-middle">
+                    <table class="table align-middle account-transactions-table">
 
-                        <thead class="table-light">
+                        <thead>
 
                         <tr>
 
-                            <th>
-                                تاریخ
-                            </th>
+                            <th>تاریخ</th>
 
-                            <th>
-                                شماره تراکنش
-                            </th>
+                            <th>شماره تراکنش</th>
 
-                            <th>
-                                روش پرداخت
-                            </th>
+                            <th>روش پرداخت</th>
 
-                            <th>
-                                نوع تراکنش
-                            </th>
+                            <th>نوع تراکنش</th>
 
-                            <th>
-                                مبلغ
-                            </th>
+                            <th>مبلغ</th>
 
-                            <th>
-                                مانده
-                            </th>
+                            <th>مانده</th>
 
-                            <th>
-                                توضیح
-                            </th>
+                            <th>توضیح</th>
 
                         </tr>
 
@@ -155,16 +199,20 @@
                                 {{-- تاریخ --}}
                                 <td>
 
+                                <span class="transaction-date">
                                     {{ app(\App\Services\Date\JalaliDateService::class)
                                         ->toJalali($transaction->transaction_date) }}
+                                </span>
 
                                 </td>
 
 
                                 {{-- شماره تراکنش --}}
-                                <td dir="ltr">
+                                <td>
 
+                                <span class="transaction-number" dir="ltr">
                                     {{ $transaction->transaction_no }}
+                                </span>
 
                                 </td>
 
@@ -172,7 +220,9 @@
                                 {{-- روش پرداخت --}}
                                 <td>
 
+                                <span class="transaction-payment-method">
                                     {{ $transaction->payment_method?->label() ?? '-' }}
+                                </span>
 
                                 </td>
 
@@ -182,35 +232,35 @@
 
                                     @if($transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT)
 
-                                        <span class="badge bg-success">
-
-                                            {{ $transaction->transaction_type->label() }}
-
-                                        </span>
+                                        <span class="transaction-type deposit">
+                                        <span class="transaction-type-dot"></span>
+                                        <i class="bi bi-arrow-down-circle"></i>
+                                        {{ $transaction->transaction_type->label() }}
+                                    </span>
 
                                     @elseif($transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL)
 
-                                        <span class="badge bg-danger">
-
-                                            {{ $transaction->transaction_type->label() }}
-
-                                        </span>
+                                        <span class="transaction-type withdrawal">
+                                        <span class="transaction-type-dot"></span>
+                                        <i class="bi bi-arrow-up-circle"></i>
+                                        {{ $transaction->transaction_type->label() }}
+                                    </span>
 
                                     @elseif($transaction->transaction_type === \App\Enums\TransactionType::ADJUSTMENT)
 
-                                        <span class="badge bg-warning text-dark">
-
-                                            {{ $transaction->transaction_type->label() }}
-
-                                        </span>
+                                        <span class="transaction-type adjustment">
+                                        <span class="transaction-type-dot"></span>
+                                        <i class="bi bi-pencil-square"></i>
+                                        {{ $transaction->transaction_type->label() }}
+                                    </span>
 
                                     @else
 
-                                        <span class="badge bg-secondary">
-
-                                            {{ $transaction->transaction_type->label() }}
-
-                                        </span>
+                                        <span class="transaction-type other">
+                                        <span class="transaction-type-dot"></span>
+                                        <i class="bi bi-arrow-left-right"></i>
+                                        {{ $transaction->transaction_type->label() }}
+                                    </span>
 
                                     @endif
 
@@ -218,21 +268,33 @@
 
 
                                 {{-- مبلغ --}}
-                                <td class="fw-bold">
+                                <td>
 
-                                    {{ number_format($transaction->amount) }}
+                                    <div class="transaction-amount">
 
-                                    ریال
+                                        <strong>
+                                            {{ number_format($transaction->amount) }}
+                                        </strong>
+
+                                        <span>ریال</span>
+
+                                    </div>
 
                                 </td>
 
 
-                                {{-- مانده بعد از تراکنش --}}
-                                <td class="fw-bold">
+                                {{-- مانده --}}
+                                <td>
 
-                                    {{ number_format($transaction->balance_after) }}
+                                    <div class="transaction-balance">
 
-                                    ریال
+                                        <strong>
+                                            {{ number_format($transaction->balance_after) }}
+                                        </strong>
+
+                                        <span>ریال</span>
+
+                                    </div>
 
                                 </td>
 
@@ -240,7 +302,9 @@
                                 {{-- توضیح --}}
                                 <td>
 
+                                <span class="transaction-description">
                                     {{ $transaction->description ?? '-' }}
+                                </span>
 
                                 </td>
 
@@ -250,9 +314,23 @@
 
                             <tr>
 
-                                <td colspan="7" class="text-muted py-4">
+                                <td colspan="7">
 
-                                    تراکنشی ثبت نشده است.
+                                    <div class="transactions-empty">
+
+                                        <div class="transactions-empty-icon">
+                                            <i class="bi bi-receipt"></i>
+                                        </div>
+
+                                        <h6>
+                                            تراکنشی ثبت نشده است
+                                        </h6>
+
+                                        <p>
+                                            هنوز هیچ تراکنشی برای این حساب ثبت نشده است.
+                                        </p>
+
+                                    </div>
 
                                 </td>
 
@@ -268,16 +346,21 @@
 
 
                 {{-- صفحه‌بندی --}}
-                <div class="mt-3">
+                @if($transactions->hasPages())
 
-                    {{ $transactions->links() }}
+                    <div class="transactions-pagination">
 
-                </div>
+                        {{ $transactions->links() }}
+
+                    </div>
+
+                @endif
 
             </div>
 
         </div>
 
     </div>
+
 
 @endsection

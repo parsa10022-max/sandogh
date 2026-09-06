@@ -1,187 +1,226 @@
 @extends('layouts.app')
 
-@section('title', 'واریز به حساب')
+@section('title', 'اصلاح موجودی حساب')
 
 @section('content')
 
-    <div class="container py-4">
+    <div class="container py-4 adjustment-page">
 
-        <div class="card shadow-sm border-0">
+        {{-- Header --}}
+        <div class="adjustment-header">
+            <div class="adjustment-title-wrapper">
+                <div class="adjustment-title-icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
 
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="bi bi-arrow-up-circle text-success"></i>
-                    واریز به حساب
-                </h5>
+                <div>
+                    <h4 class="adjustment-title">اصلاح موجودی حساب</h4>
+                    <div class="adjustment-subtitle">
+                        فقط برای اصلاح اشتباهات حسابداری
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
+            <a href="{{ route('accounts.show', $account) }}"
+               class="adjustment-back-btn">
+                <i class="bi bi-arrow-right"></i>
+                بازگشت
+            </a>
+        </div>
 
-                {{-- اطلاعات حساب --}}
-                <div class="mb-4">
 
-                    <div class="mb-2">
-                        <strong>عضو:</strong>
+        {{-- اطلاعات حساب --}}
+        <div class="adjustment-card adjustment-account-card">
 
-                        {{ $account->customer->first_name }}
-                        {{ $account->customer->last_name }}
+            <div class="adjustment-card-header">
+                <div class="adjustment-section-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <span>اطلاعات حساب</span>
+            </div>
+
+            <div class="adjustment-card-body">
+
+                <div class="adjustment-account-grid">
+
+                    <div class="adjustment-account-item">
+                        <span class="adjustment-label">مالک حساب</span>
+
+                        <strong>
+                            @if($account->customer)
+                                {{ $account->customer->first_name }}
+                                {{ $account->customer->last_name }}
+                            @else
+                                حساب سیستمی
+                            @endif
+                        </strong>
                     </div>
 
-                    <div class="mb-2">
-                        <strong>شماره حساب:</strong>
+                    <div class="adjustment-account-item">
+                        <span class="adjustment-label">شماره حساب</span>
 
-                        <span dir="ltr">
+                        <strong dir="ltr">
                             {{ $account->account_number }}
-                        </span>
+                        </strong>
                     </div>
 
-                    <div>
-                        <strong>موجودی فعلی:</strong>
+                    <div class="adjustment-account-item adjustment-balance-item">
+                        <span class="adjustment-label">موجودی فعلی</span>
 
-                        <span class="fw-bold">
+                        <strong id="currentBalance"
+                                data-value="{{ $account->balance }}">
                             {{ number_format($account->balance) }}
-                            ریال
-                        </span>
+                            <small>ریال</small>
+                        </strong>
                     </div>
 
                 </div>
 
-                <hr>
+            </div>
+        </div>
+
+
+        {{-- فرم --}}
+        <div class="adjustment-card">
+
+            <div class="adjustment-card-header">
+                <div class="adjustment-section-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+
+                <span>ثبت اصلاح موجودی</span>
+            </div>
+
+            <div class="adjustment-card-body">
 
                 <form method="POST"
-                      action="{{ route('accounts.deposit') }}">
+                      action="{{ route('accounts.adjustment.store', $account) }}"
+                      id="adjustmentForm">
 
                     @csrf
 
-                    <input type="hidden"
-                           name="account_id"
-                           value="{{ $account->id }}">
+                    {{-- موجودی جدید --}}
+                    <div class="adjustment-field">
 
-                    {{-- مبلغ --}}
-                    <div class="mb-3">
-
-                        <label for="amount" class="form-label">
-                            مبلغ واریز
+                        <label for="new_balance"
+                               class="adjustment-form-label">
+                            موجودی صحیح جدید
                         </label>
 
-                        <div class="input-group">
+                        <div class="adjustment-input-wrapper">
 
                             <input
                                 type="text"
-                                name="amount"
-                                id="amount"
-                                value="{{ old('amount') }}"
-                                class="form-control money-input @error('amount') is-invalid @enderror"
+                                name="new_balance"
+                                id="new_balance"
+                                value="{{ old('new_balance') }}"
+                                class="form-control money-input adjustment-amount-input @error('new_balance') is-invalid @enderror"
                                 inputmode="numeric"
                                 autocomplete="off"
-                                data-min="50000"
+                                data-live="true"
+                                data-min="0"
                                 required
                             >
 
-                            <span class="input-group-text">
-                                ریال
-                            </span>
+                            <span class="adjustment-input-unit">
+                            ریال
+                        </span>
 
                         </div>
 
-                        @error('amount')
-                        <div class="invalid-feedback d-block">
-                            {{ $message }}
-                        </div>
-                        @enderror
-
-                        <div class="form-text">
-                            حداقل مبلغ واریز ۵۰,۰۰۰ ریال است.
-                        </div>
-
-                    </div>
-
-                    {{-- روش پرداخت --}}
-                    <div class="mb-3">
-
-                        <label for="payment_method" class="form-label">
-                            نوع واریز
-                        </label>
-
-                        <select
-                            name="payment_method"
-                            id="payment_method"
-                            class="form-select @error('payment_method') is-invalid @enderror"
-                            required
-                        >
-
-                            <option value="">
-                                انتخاب کنید
-                            </option>
-
-                            <option value="1"
-                                    @selected(old('payment_method') == 1)>
-                            نقدی
-                            </option>
-
-                            <option value="2"
-                                    @selected(old('payment_method') == 2)>
-                            دستگاه پوز
-                            </option>
-
-                            <option value="3"
-                                    @selected(old('payment_method') == 3)>
-                            درگاه آنلاین
-                            </option>
-
-                            <option value="4"
-                                    @selected(old('payment_method') == 4)>
-                            وام
-                            </option>
-
-                        </select>
-
-                        @error('payment_method')
-                        <div class="invalid-feedback">
+                        @error('new_balance')
+                        <div class="adjustment-error">
                             {{ $message }}
                         </div>
                         @enderror
 
                     </div>
+
+
+                    {{-- اختلاف --}}
+                    <div id="differenceBox"
+                         class="adjustment-difference d-none">
+
+                        <div class="adjustment-difference-grid">
+
+                            <div>
+                                <span>موجودی فعلی</span>
+                                <strong id="displayCurrent">-</strong>
+                                <small>ریال</small>
+                            </div>
+
+                            <div>
+                                <span>موجودی جدید</span>
+                                <strong id="displayNew">-</strong>
+                                <small>ریال</small>
+                            </div>
+
+                            <div>
+                                <span>اختلاف</span>
+                                <strong id="displayDifference">-</strong>
+                                <small>ریال</small>
+                            </div>
+
+                        </div>
+
+                        <div id="differenceMessage"
+                             class="adjustment-difference-message">
+                        </div>
+
+                    </div>
+
 
                     {{-- توضیحات --}}
-                    <div class="mb-4">
+                    <div class="adjustment-field">
 
-                        <label for="description" class="form-label">
-                            توضیحات
+                        <label for="description"
+                               class="adjustment-form-label">
+                            دلیل اصلاح
                         </label>
 
                         <textarea
                             name="description"
                             id="description"
-                            class="form-control @error('description') is-invalid @enderror"
                             rows="3"
+                            maxlength="255"
+                            class="form-control adjustment-description @error('description') is-invalid @enderror"
+                            placeholder="دلیل اصلاح موجودی را وارد کنید..."
                         >{{ old('description') }}</textarea>
 
                         @error('description')
-                        <div class="invalid-feedback">
+                        <div class="adjustment-error">
                             {{ $message }}
                         </div>
                         @enderror
 
                     </div>
 
+
+                    {{-- هشدار --}}
+                    <div class="adjustment-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+
+                        <span>
+                        موجودی جدید جایگزین موجودی فعلی می‌شود و
+                        عملیات در گردش حساب ثبت خواهد شد.
+                    </span>
+                    </div>
+
+
                     {{-- دکمه‌ها --}}
-                    <div class="d-flex gap-2">
+                    <div class="adjustment-actions">
 
                         <button type="submit"
-                                class="btn btn-success">
-
+                                class="adjustment-submit-btn"
+                                id="submitButton">
                             <i class="bi bi-check-circle"></i>
-                            ثبت واریز
-
+                            ثبت اصلاح
                         </button>
 
                         <a href="{{ route('accounts.show', $account) }}"
-                           class="btn btn-outline-secondary">
-
+                           class="adjustment-cancel-btn">
                             انصراف
-
                         </a>
 
                     </div>
@@ -189,7 +228,6 @@
                 </form>
 
             </div>
-
         </div>
 
     </div>

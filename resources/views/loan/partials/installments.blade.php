@@ -1,11 +1,10 @@
-<div class="card shadow-sm border-0 mt-4">
+<div class="card shadow-sm border-0 mt-4 loan-installments-card">
 
-    <div class="card-header bg-light">
+    <div class="card-header bg-light loan-installments-header">
 
         <h6 class="mb-0 fw-bold">
-
+            <i class="bi bi-calendar-check me-1"></i>
             برنامه اقساط
-
         </h6>
 
     </div>
@@ -28,7 +27,7 @@
 
                 <table class="table table-hover table-sm align-middle mb-0 loan-installments-table">
 
-                    <thead class="table-light">
+                    <thead>
 
                     <tr>
 
@@ -40,7 +39,7 @@
                             سررسید
                         </th>
 
-                        <th class="text-end">
+                        <th class="text-center" width="190">
                             مبلغ
                         </th>
 
@@ -51,15 +50,6 @@
                         <th class="text-center" width="160">
                             تاریخ پرداخت
                         </th>
-
-                        <th class="text-center">
-                            کد رهگیری
-                        </th>
-
-                        <th class="text-center" width="180">
-                            شماره مرجع
-                        </th>
-
 
                         <th class="text-center" width="180">
                             عملیات
@@ -75,31 +65,37 @@
 
                         <tr>
 
+                            {{-- شماره قسط --}}
                             <td class="text-center fw-bold">
 
                                 {{ $installment->installment_number }}
 
                             </td>
 
+                            {{-- تاریخ سررسید --}}
                             <td class="text-center">
 
                                 {{ $installment->due_date_jalali }}
 
                             </td>
 
-                            <td class="text-end fw-bold">
+                            {{-- مبلغ --}}
+                            <td class="text-center fw-bold loan-installment-amount">
 
                                 {{ number_format($installment->amount) }}
 
-                                ریال
+                                <small>ریال</small>
 
                             </td>
 
+                            {{-- وضعیت --}}
                             <td class="text-center">
 
                                 @if($installment->status->value === \App\Enums\InstallmentStatus::PAID->value)
 
-                                    <span class="badge bg-success">
+                                    <span class="loan-installment-status loan-installment-status-paid">
+
+                                        <i class="bi bi-check-circle"></i>
 
                                         پرداخت شده
 
@@ -107,7 +103,9 @@
 
                                 @else
 
-                                    <span class="badge bg-warning text-dark">
+                                    <span class="loan-installment-status loan-installment-status-pending">
+
+                                        <i class="bi bi-clock"></i>
 
                                         در انتظار پرداخت
 
@@ -117,6 +115,7 @@
 
                             </td>
 
+                            {{-- تاریخ پرداخت --}}
                             <td class="text-center">
 
                                 @if($installment->status->isPaid())
@@ -125,76 +124,54 @@
 
                                 @else
 
-                                    -
+                                    <span class="text-muted">-</span>
 
                                 @endif
 
                             </td>
 
-                            <td class="text-center">
-
-                                @if($installment->payment)
-
-                                    <span class="text-primary fw-bold">
-
-                                  {{ $installment->payment->tracking_code }}
-
-                                  </span>
-
-                                @else
-
-                                    -
-
-                                @endif
-
-                            </td>
-
-                            <td class="text-center">
-
-                                @if($installment->payment)
-
-                                    <span class="text-secondary">
-
-                               {{ $installment->payment->bank_reference_number }}
-
-                                  </span>
-                                @else
-
-                                    -
-
-                                @endif
-
-                            </td>
-
+                            {{-- عملیات --}}
                             <td class="text-center">
 
                                 @if($installment->status->isPaid())
 
                                     <a
                                         href="{{ route('payments.success', $installment->payment) }}"
-                                        class="btn btn-sm btn-outline-success">
+                                        class="loan-installment-action loan-installment-receipt">
 
-                                        <i class="bi bi-receipt"></i>
+                                        <span class="loan-installment-action-icon">
+                                            <i class="bi bi-receipt"></i>
+                                        </span>
 
-                                        مشاهده رسید
+                                        <span>
+                                            مشاهده رسید
+                                        </span>
 
                                     </a>
 
-                                @elseif($loop->first || $loan->installments[$loop->index - 1]->status->value === \App\Enums\InstallmentStatus::PAID->value)
+                                @elseif(
+                                    $loop->first ||
+                                    $loan->installments[$loop->index - 1]->status->value === \App\Enums\InstallmentStatus::PAID->value
+                                )
 
                                     <form
                                         action="{{ route('payments.pay', $installment) }}"
-                                        method="POST">
+                                        method="POST"
+                                        class="d-inline">
 
                                         @csrf
 
                                         <button
                                             type="submit"
-                                            class="btn btn-sm btn-primary">
+                                            class="loan-installment-action loan-installment-pay">
 
-                                            <i class="bi bi-credit-card"></i>
+                                            <span class="loan-installment-action-icon">
+                                                <i class="bi bi-credit-card"></i>
+                                            </span>
 
-                                            پرداخت
+                                            <span>
+                                                پرداخت
+                                            </span>
 
                                         </button>
 
@@ -203,12 +180,17 @@
                                 @else
 
                                     <button
-                                        class="btn btn-sm btn-secondary"
+                                        type="button"
+                                        class="loan-installment-action loan-installment-locked"
                                         disabled>
 
-                                        <i class="bi bi-lock"></i>
+                                        <span class="loan-installment-action-icon">
+                                            <i class="bi bi-lock"></i>
+                                        </span>
 
-                                        قسط قبلی پرداخت نشده
+                                        <span>
+                                            قسط قبلی پرداخت نشده
+                                        </span>
 
                                     </button>
 
@@ -222,27 +204,27 @@
 
                     </tbody>
 
-                    <tfoot class="table-light">
+                    <tfoot>
 
                     <tr>
 
-                        <th colspan="2">
+                        <th colspan="2" class="text-center">
 
                             تعداد اقساط :
-
                             {{ $loan->installments->count() }}
 
                         </th>
 
-                        <th class="text-end">
+                        {{-- جمع مبلغ --}}
+                        <th class="text-center loan-installment-amount">
 
                             {{ number_format($loan->installments->sum('amount')) }}
 
-                            ریال
+                            <small>ریال</small>
 
                         </th>
 
-                        <th colspan="2" class="text-center">
+                        <th colspan="3" class="text-center">
 
                             جمع مبلغ اقساط
 
@@ -261,3 +243,4 @@
     </div>
 
 </div>
+

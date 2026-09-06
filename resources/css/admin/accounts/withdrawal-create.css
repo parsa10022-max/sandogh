@@ -1,0 +1,561 @@
+/* =========================================================
+Account Withdrawal Create
+Design #1
+========================================================= */
+
+.withdrawal-page {
+    direction: rtl;
+    padding-bottom: 2rem;
+}
+
+/* =========================================================
+Header
+========================================================= */
+
+.withdrawal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.withdrawal-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.withdrawal-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    color: #dc2626;
+    background: #fee2e2;
+    font-size: 1.2rem;
+}
+
+.withdrawal-title {
+    margin: 0;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.withdrawal-subtitle {
+    margin: .2rem 0 0;
+    color: #6b7280;
+    font-size: .75rem;
+}
+
+/* =========================================================
+Back Button
+========================================================= */
+
+.withdrawal-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 42px;
+    padding: .5rem .85rem;
+    border: 1px solid #dbe1e8;
+    border-radius: 10px;
+    color: #475569;
+    background: #fff;
+    text-decoration: none;
+    font-size: .77rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(30, 41, 59, .05);
+    transition: all .2s ease;
+}
+
+.withdrawal-back-btn:hover {
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    background: #f8f9ff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+Alerts
+========================================================= */
+
+.withdrawal-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: .65rem;
+    margin-bottom: 1rem;
+    padding: .85rem 1rem;
+    border: 1px solid;
+    border-radius: 12px;
+    font-size: .78rem;
+}
+
+.withdrawal-alert.success {
+    color: #166534;
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.withdrawal-alert.danger {
+    color: #991b1b;
+    border-color: #fecaca;
+    background: #fff7f7;
+}
+
+.withdrawal-alert > i {
+    margin-top: .1rem;
+    font-size: 1rem;
+}
+
+.withdrawal-alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #fee2e2;
+}
+
+.withdrawal-alert strong {
+    display: block;
+    margin-bottom: .35rem;
+    font-weight: 800;
+}
+
+.withdrawal-alert ul {
+    margin: 0;
+    padding-right: 1rem;
+}
+
+.withdrawal-alert li {
+    margin-bottom: .15rem;
+}
+
+/* =========================================================
+Cards
+========================================================= */
+
+.withdrawal-account-card,
+.withdrawal-form-card {
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(30, 41, 59, .06);
+}
+
+.withdrawal-form-card {
+    margin-bottom: 0;
+}
+
+.withdrawal-section-header {
+    padding: .9rem 1.1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.withdrawal-section-title {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+}
+
+.withdrawal-section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #6d28d9;
+    background: #ede9fe;
+}
+
+.withdrawal-form-icon {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.withdrawal-section-title h6 {
+    margin: 0;
+    color: #1f2937;
+    font-size: .87rem;
+    font-weight: 800;
+}
+
+.withdrawal-section-title small {
+    display: block;
+    margin-top: .15rem;
+    color: #6b7280;
+    font-size: .7rem;
+}
+
+/* =========================================================
+Account Information
+========================================================= */
+
+.withdrawal-account-body {
+    padding: 1.1rem;
+}
+
+.withdrawal-account-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+
+.withdrawal-account-item {
+    min-height: 76px;
+    padding: .8rem;
+    border: 1px solid #edf0f4;
+    border-radius: 12px;
+    background: #fafbfc;
+}
+
+.withdrawal-info-label {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: .45rem;
+    color: #6b7280;
+    font-size: .73rem;
+    font-weight: 700;
+}
+
+.withdrawal-info-label i {
+    color: #6d28d9;
+}
+
+.withdrawal-account-item > strong {
+    display: block;
+    color: #1f2937;
+    font-size: .85rem;
+}
+
+/* =========================================================
+Form
+========================================================= */
+
+.withdrawal-form-body {
+    padding: 1.1rem;
+}
+
+.withdrawal-balance-box {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    border: 1px solid #ddd6fe;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #faf8ff, #f5f8ff);
+}
+
+.withdrawal-balance-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    color: #4f46e5;
+    background: #e0e7ff;
+    font-size: 1.15rem;
+}
+
+.withdrawal-balance-content {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+}
+
+.withdrawal-balance-content > span {
+    color: #6b7280;
+    font-size: .73rem;
+    font-weight: 700;
+}
+
+.withdrawal-balance-content strong {
+    color: #111827;
+    font-size: 1.1rem;
+    font-weight: 850;
+}
+
+.withdrawal-balance-content small {
+    color: #64748b;
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+/* =========================================================
+Fields
+========================================================= */
+
+.withdrawal-field {
+    margin-bottom: 1.15rem;
+}
+
+.withdrawal-form-label {
+    display: block;
+    margin-bottom: .45rem;
+    color: #374151;
+    font-size: .78rem;
+    font-weight: 750;
+}
+
+.withdrawal-input-wrapper {
+    position: relative;
+}
+
+.withdrawal-amount-input {
+    min-height: 45px;
+    padding-left: 4rem;
+    border: 1px solid #d9dee7;
+    border-radius: 10px;
+    font-size: .84rem;
+    box-shadow: none;
+}
+
+.withdrawal-amount-input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+}
+
+.withdrawal-input-unit {
+    position: absolute;
+    top: 50%;
+    left: .75rem;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: .7rem;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.withdrawal-description {
+    min-height: 90px;
+    border-color: #d9dee7;
+    border-radius: 10px;
+    resize: vertical;
+    font-size: .82rem;
+}
+
+.withdrawal-description:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+}
+
+/* =========================================================
+IBAN Information
+========================================================= */
+
+.withdrawal-info-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: .45rem;
+    margin-top: .55rem;
+    padding: .65rem .75rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+    color: #1e40af;
+    background: #eff6ff;
+    font-size: .7rem;
+    line-height: 1.8;
+}
+
+.withdrawal-info-alert i {
+    margin-top: .15rem;
+}
+
+/* =========================================================
+Amount Error
+========================================================= */
+
+.withdrawal-amount-error {
+    display: none;
+    align-items: center;
+    gap: .3rem;
+    margin-top: .4rem;
+    color: #dc2626;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.withdrawal-amount-error i {
+    font-size: .8rem;
+}
+
+.withdrawal-validation-error {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-top: .4rem;
+    color: #dc2626;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.withdrawal-field-hint {
+    display: block;
+    margin-top: .4rem;
+    color: #94a3b8;
+    font-size: .68rem;
+}
+
+/* =========================================================
+Buttons
+========================================================= */
+
+.withdrawal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .65rem;
+    padding-top: .35rem;
+    border-top: 1px solid #edf0f4;
+}
+
+.withdrawal-submit-btn,
+.withdrawal-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    min-height: 44px;
+    padding: .55rem .95rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: .78rem;
+    font-weight: 750;
+    transition: all .2s ease;
+}
+
+.withdrawal-submit-btn {
+    border: 1px solid #dc2626;
+    color: #fff;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, .18);
+}
+
+.withdrawal-submit-btn:hover:not(:disabled) {
+    color: #fff;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(220, 38, 38, .24);
+}
+
+.withdrawal-submit-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.withdrawal-cancel-btn {
+    border: 1px solid #dbe1e8;
+    color: #475569;
+    background: #fff;
+}
+
+.withdrawal-cancel-btn:hover {
+    color: #374151;
+    border-color: #cbd5e1;
+    background: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(30, 41, 59, .06);
+}
+
+.withdrawal-submit-btn i,
+.withdrawal-cancel-btn i {
+    font-size: .95rem;
+}
+
+/* =========================================================
+Tablet / Desktop
+========================================================= */
+
+@media (min-width: 768px) {
+
+
+    .withdrawal-account-body,
+    .withdrawal-form-body {
+        padding: 1.25rem;
+    }
+
+    .withdrawal-account-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .withdrawal-section-header {
+        padding: 1rem 1.25rem;
+    }
+
+
+}
+
+/* =========================================================
+Mobile
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+
+    .withdrawal-header {
+        align-items: center;
+    }
+
+    .withdrawal-title-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .withdrawal-title {
+        font-size: .92rem;
+    }
+
+    .withdrawal-subtitle {
+        font-size: .68rem;
+    }
+
+    .withdrawal-back-btn {
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+        padding: 0;
+    }
+
+    .withdrawal-back-btn span {
+        display: none;
+    }
+    .withdrawal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        width: 100%;
+    }
+
+    .withdrawal-submit-btn,
+    .withdrawal-cancel-btn {
+        width: 100%;
+        padding-inline: .5rem;
+    }
+
+    .withdrawal-submit-btn span,
+    .withdrawal-cancel-btn span {
+        font-size: .72rem;
+    }
+
+    .withdrawal-balance-box {
+        padding: .85rem;
+    }
+
+
+}

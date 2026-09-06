@@ -1,78 +1,120 @@
-{{-- درخواست وام --}}
+{{-- =========================================================
+     درخواست وام
+========================================================= --}}
+
 @if($loan->loanRequest)
 
-    <div class="card border-info shadow-sm mt-4">
+    <div class="loan-request-card">
 
-        <div class="card-header bg-info-subtle">
+        {{-- Header --}}
+        <div class="loan-request-header">
 
-            <h6 class="mb-0 fw-bold">
+            <div class="loan-request-title">
 
-                <i class="bi bi-file-earmark-text me-1"></i>
+                <span class="loan-request-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </span>
 
-                اطلاعات درخواست وام
+                <span>
+                    اطلاعات درخواست وام
+                </span>
 
-            </h6>
+            </div>
 
         </div>
 
-        <div class="card-body">
 
-            <div class="row">
+        {{-- Body --}}
+        <div class="loan-request-body">
 
-                <div class="col-md-3 mb-3">
+            <div class="row g-3">
 
-                    <small class="text-muted">
-                        شماره درخواست
-                    </small>
+                {{-- شماره درخواست --}}
+                <div class="col-12 col-lg-3">
 
-                    <div class="fw-bold">
+                    <div class="loan-request-item">
 
-                        {{ $loan->loanRequest->id }}
+                        <span class="loan-request-label">
+                            شماره درخواست
+                        </span>
 
-                    </div>
-
-                </div>
-
-                <div class="col-md-3 mb-3">
-
-                    <small class="text-muted">
-                        مبلغ درخواستی
-                    </small>
-
-                    <div class="fw-bold">
-
-                        {{ number_format($loan->loanRequest->requested_amount) }}
-                        ریال
+                        <span class="loan-request-value">
+                            {{ $loan->loanRequest->id }}
+                        </span>
 
                     </div>
 
                 </div>
 
-                <div class="col-md-3 mb-3">
 
-                    <small class="text-muted">
-                        مبلغ تایید شده
-                    </small>
+                {{-- مبلغ درخواستی --}}
+                <div class="col-12 col-lg-3">
 
-                    <div class="fw-bold">
+                    <div class="loan-request-item">
 
-                        {{ number_format($loan->loanRequest->approved_amount) }}
-                        ریال
+                        <span class="loan-request-label">
+                            مبلغ درخواستی
+                        </span>
+
+                        <span class="loan-request-value loan-request-money">
+
+                            {{ number_format($loan->loanRequest->requested_amount) }}
+
+                            <small>
+                                ریال
+                            </small>
+
+                        </span>
 
                     </div>
 
                 </div>
 
-                <div class="col-md-3 mb-3 d-flex align-items-end">
 
-                    <a href="{{ route('loan-requests.show',$loan->loanRequest) }}"
-                       class="btn btn-outline-primary">
+                {{-- مبلغ تایید شده --}}
+                <div class="col-12 col-lg-3">
 
-                        <i class="bi bi-eye"></i>
+                    <div class="loan-request-item">
 
-                        مشاهده درخواست
+                        <span class="loan-request-label">
+                            مبلغ تایید شده
+                        </span>
 
-                    </a>
+                        <span class="loan-request-value loan-request-approved">
+
+                            {{ number_format($loan->loanRequest->approved_amount) }}
+
+                            <small>
+                                ریال
+                            </small>
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                {{-- مشاهده درخواست --}}
+                <div class="col-12 col-lg-3">
+
+                    <div class="loan-request-action">
+
+                        <a
+                            href="{{ route('loan-requests.show', $loan->loanRequest) }}"
+                            class="loan-request-view-btn">
+
+                            <span class="loan-request-view-icon">
+                                <i class="bi bi-eye"></i>
+                            </span>
+
+                            <span>
+                                مشاهده درخواست
+                            </span>
+
+                        </a>
+
+                    </div>
 
                 </div>
 

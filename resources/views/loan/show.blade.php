@@ -4,97 +4,160 @@
 
 @section('content')
 
+    {{-- خلاصه وام --}}
     @include('loan.partials.summary', ['loan' => $loan])
 
+    <div class="container-fluid loan-show-page">
 
-    <div class="container-fluid">
+        <div class="loan-show-card">
 
-        <div class="card shadow-sm">
+            {{-- =========================================
+                 HEADER
+            ========================================== --}}
 
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="loan-show-header">
 
-                <div>
+                <div class="loan-show-title">
 
-                    <h5 class="mb-1">
+                    <div class="loan-show-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
 
-                        مشاهده اطلاعات وام
+                    <div>
 
-                    </h5>
+                        <h5 class="mb-1">
+                            مشاهده اطلاعات وام
+                        </h5>
 
-                    <small class="text-muted">
+                        <div class="loan-show-number">
 
-                        شماره وام :
+                            <span>
+                                شماره وام:
+                            </span>
 
-                        <strong class="loan-number-display">
+                            <strong class="loan-number-display">
+                                {{ $loan->full_loan_number }}
+                            </strong>
 
-                            {{ $loan->full_loan_number }}
+                        </div>
 
-                        </strong>
-
-                    </small>
+                    </div>
 
                 </div>
 
-                <span class="badge bg-success">
-
+                <span class="loan-status-badge">
                     {{ $loan->status->label() }}
-
                 </span>
 
             </div>
 
-            <div class="card-body">
+
+            {{-- =========================================
+                 BODY
+            ========================================== --}}
+
+            <div class="loan-show-body">
 
                 {{-- اطلاعات وام --}}
-                @include('loan.partials.loan-info')
-                @include('loan.partials.request-info')
-                @include('loan.partials.guarantors-show')
+                <section class="loan-show-section">
 
-                <hr class="my-4">
+                    @include('loan.partials.loan-info')
+
+                </section>
+
+
+                {{-- اطلاعات درخواست --}}
+                <section class="loan-show-section">
+
+                    @include('loan.partials.request-info')
+
+                </section>
+
+
+                {{-- ضامنین --}}
+                <section class="loan-show-section">
+
+                    @include('loan.partials.guarantors-show')
+
+                </section>
+
+
+                {{-- جداکننده --}}
+                <div class="loan-show-divider"></div>
+
 
                 {{-- برنامه اقساط --}}
-                @include('loan.partials.installments')
+                <section class="loan-show-section">
 
-                <hr class="my-4">
+                    @include('loan.partials.installments')
+
+                </section>
+
+
+                {{-- جداکننده --}}
+                <div class="loan-show-divider"></div>
+
 
                 {{-- اطلاعات سیستم --}}
-                @include('loan.partials.system-info')
+                <section class="loan-show-section">
 
+                    @include('loan.partials.system-info')
+
+                </section>
 
             </div>
 
-            <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+            {{-- =========================================
+                 FOOTER / ACTIONS
+            ========================================== --}}
+
+            <div class="loan-show-footer">
 
                 <a
                     href="{{ route('loans.index') }}"
-                    class="btn btn-outline-secondary">
+                    class="loan-show-action loan-show-action-back">
 
-                    <i class="bi bi-arrow-right"></i>
+                    <span class="loan-show-action-icon">
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
 
-                    بازگشت
+                    <span>
+                        بازگشت
+                    </span>
 
                 </a>
 
-                <div class="d-flex gap-2">
+
+                <div class="loan-show-actions">
 
                     <a
                         href="{{ route('loans.edit', $loan) }}"
-                        class="btn btn-warning">
+                        class="loan-show-action loan-show-action-edit">
 
-                        <i class="bi bi-pencil-square"></i>
+                        <span class="loan-show-action-icon">
+                            <i class="bi bi-pencil-square"></i>
+                        </span>
 
-                        ویرایش
+                        <span>
+                            ویرایش
+                        </span>
 
                     </a>
+
 
                     <button
                         type="button"
                         onclick="window.print()"
-                        class="btn btn-primary">
+                        class="loan-show-action loan-show-action-print">
 
-                        <i class="bi bi-printer"></i>
+                        <span class="loan-show-action-icon">
+                            <i class="bi bi-printer"></i>
+                        </span>
 
-                        چاپ
+                        <span>
+                            چاپ
+                        </span>
 
                     </button>
 

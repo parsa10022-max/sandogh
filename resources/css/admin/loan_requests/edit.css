@@ -1,0 +1,578 @@
+    /* =========================================================
+       Loan Request Edit
+       Design #1
+       ========================================================= */
+
+.loan-request-edit-page {
+    padding-bottom: 2rem;
+}
+
+
+/* ---------------------------------------------------------
+   Back Button
+   --------------------------------------------------------- */
+
+.loan-request-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+
+    min-height: 44px;
+    padding: .6rem 1rem;
+
+    border: 1px solid #e1e4eb;
+    border-radius: 11px;
+
+    background: #fff;
+    color: #596273;
+
+    font-size: .86rem;
+    font-weight: 800;
+
+    box-shadow: 0 3px 12px rgba(31, 41, 55, .06);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease;
+}
+
+.loan-request-back-btn:hover {
+    color: #4f46e5;
+    background: #faf9ff;
+    border-color: #d9d4f3;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 6px 16px rgba(79, 70, 229, .10);
+}
+
+
+/* ---------------------------------------------------------
+   Validation
+   --------------------------------------------------------- */
+
+.loan-request-validation-card {
+    display: flex;
+    align-items: flex-start;
+    gap: .8rem;
+
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+    border: 1px solid #f3c6cb;
+    border-radius: 14px;
+
+    background: #fff7f7;
+    color: #842029;
+}
+
+.loan-request-validation-icon {
+    flex: 0 0 40px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #fde2e4;
+
+    color: #dc3545;
+
+    font-size: 1.1rem;
+}
+
+.loan-request-validation-content {
+    min-width: 0;
+}
+
+.loan-request-validation-content strong {
+    display: block;
+
+    margin-bottom: .35rem;
+
+    font-size: .88rem;
+    font-weight: 800;
+}
+
+.loan-request-validation-content ul {
+    margin: 0;
+    padding-right: 1.15rem;
+
+    font-size: .8rem;
+    line-height: 1.9;
+}
+
+
+/* ---------------------------------------------------------
+   Main Cards
+   --------------------------------------------------------- */
+
+.loan-request-edit-card {
+    overflow: hidden;
+
+    margin-bottom: 1rem;
+
+    border: 1px solid #e6e8ee;
+    border-radius: 16px;
+
+    background: #fff;
+
+    box-shadow: 0 5px 18px rgba(31, 41, 55, .06);
+}
+
+
+/* ---------------------------------------------------------
+   Card Header
+   --------------------------------------------------------- */
+
+.loan-request-edit-card-header {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+.loan-request-edit-section-icon {
+    flex: 0 0 44px;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+}
+
+.loan-icon-purple {
+    color: #635bdb;
+    background: #f0edff;
+}
+
+.loan-icon-blue {
+    color: #3b82f6;
+    background: #eaf3ff;
+}
+
+.loan-request-edit-card-header h5 {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.loan-request-edit-card-header p {
+    margin: .2rem 0 0;
+
+    color: #7b8494;
+
+    font-size: .77rem;
+}
+
+
+/* ---------------------------------------------------------
+   Card Body
+   --------------------------------------------------------- */
+
+.loan-request-edit-card-body {
+    padding: 1.1rem;
+}
+
+.loan-request-edit-card-body .form-label {
+    margin-bottom: .45rem;
+
+    color: #374151;
+
+    font-size: .84rem;
+    font-weight: 700;
+}
+
+.loan-request-edit-card-body .form-control,
+.loan-request-edit-card-body .form-select {
+    min-height: 46px;
+
+    border: 1px solid #dfe3ea;
+    border-radius: 11px;
+
+    background: #fff;
+    color: #374151;
+
+    font-size: .87rem;
+
+    box-shadow: none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease;
+}
+
+.loan-request-edit-card-body .form-control:focus,
+.loan-request-edit-card-body .form-select:focus {
+    border-color: #8b83e6;
+
+    box-shadow: 0 0 0 3px rgba(99, 91, 219, .10);
+}
+
+.loan-request-edit-card-body textarea.form-control {
+    min-height: 125px;
+
+    resize: vertical;
+
+    line-height: 1.9;
+}
+
+.loan-request-edit-card-body .form-control::placeholder {
+    color: #a6adba;
+}
+
+
+/* ---------------------------------------------------------
+   Readonly Fields
+   --------------------------------------------------------- */
+
+.loan-request-readonly-field .form-label {
+    display: block;
+}
+
+.loan-request-readonly-input {
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+
+    padding: .65rem .8rem;
+
+    border: 1px solid #e4e7ed;
+    border-radius: 11px;
+
+    background: #f8f9fb;
+
+    color: #4b5563;
+
+    font-size: .87rem;
+    font-weight: 700;
+}
+
+.loan-request-readonly-input i {
+    flex: 0 0 30px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #635bdb;
+    background: #eeecff;
+
+    font-size: .9rem;
+}
+
+.loan-request-readonly-textarea {
+    background: #f8f9fb !important;
+    color: #6b7280 !important;
+
+    cursor: not-allowed;
+}
+
+
+/* ---------------------------------------------------------
+   Money Input
+   --------------------------------------------------------- */
+
+.loan-request-money-input {
+    position: relative;
+}
+
+.loan-request-money-input .form-control {
+    padding-left: 68px;
+}
+
+.loan-request-money-input > span {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    padding-right: 10px;
+
+    border-right: 1px solid #e5e7eb;
+
+    color: #7b8494;
+
+    font-size: .76rem;
+    font-weight: 800;
+
+    pointer-events: none;
+}
+
+
+/* ---------------------------------------------------------
+   Help Text
+   --------------------------------------------------------- */
+
+.loan-request-edit-card-body .form-text {
+    margin-top: .4rem;
+
+    color: #8992a2;
+
+    font-size: .74rem;
+}
+
+
+/* ---------------------------------------------------------
+   Validation
+   --------------------------------------------------------- */
+
+.loan-request-edit-card-body .is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.loan-request-edit-card-body .invalid-feedback {
+    margin-top: .4rem;
+
+    font-size: .75rem;
+}
+
+
+/* ---------------------------------------------------------
+   Warning
+   --------------------------------------------------------- */
+
+.loan-request-edit-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: .8rem;
+
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+    border: 1px solid #f3dfad;
+    border-radius: 14px;
+
+    background: #fffbf1;
+}
+
+.loan-request-edit-warning-icon {
+    flex: 0 0 40px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #fff0c7;
+    color: #c98a00;
+
+    font-size: 1rem;
+}
+
+.loan-request-edit-warning strong {
+    display: block;
+
+    margin-bottom: .15rem;
+
+    color: #8a6500;
+
+    font-size: .84rem;
+    font-weight: 800;
+}
+
+.loan-request-edit-warning p {
+    margin: 0;
+
+    color: #806b2d;
+
+    font-size: .78rem;
+    line-height: 1.8;
+}
+
+
+/* ---------------------------------------------------------
+   Actions
+   --------------------------------------------------------- */
+
+.loan-request-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .7rem;
+
+    padding-top: .25rem;
+}
+
+.loan-request-edit-cancel-btn,
+.loan-request-edit-save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+
+    min-height: 44px;
+    padding: .6rem 1rem;
+
+    border-radius: 11px;
+
+    font-size: .86rem;
+    font-weight: 800;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease,
+        border-color .2s ease;
+}
+
+
+/* Cancel */
+
+.loan-request-edit-cancel-btn {
+    border: 1px solid #e0e3e9;
+
+    background: #fff;
+    color: #596273;
+
+    box-shadow: 0 3px 10px rgba(31, 41, 55, .05);
+}
+
+.loan-request-edit-cancel-btn:hover {
+    background: #f8f9fb;
+    color: #374151;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 14px rgba(31, 41, 55, .08);
+}
+
+
+/* Save */
+
+.loan-request-edit-save-btn {
+    border: 1px solid #5148c9;
+
+    background: linear-gradient(
+        135deg,
+        #6258df 0%,
+        #4f46c9 100%
+    );
+
+    color: #fff;
+
+    box-shadow: 0 5px 14px rgba(79, 70, 201, .20);
+}
+
+.loan-request-edit-save-btn:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 8px 18px rgba(79, 70, 201, .27);
+}
+
+.loan-request-edit-save-btn i {
+    transition: transform .2s ease;
+}
+
+.loan-request-edit-save-btn:hover i {
+    transform: scale(1.08);
+}
+
+
+/* ---------------------------------------------------------
+   Desktop
+   --------------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+    .loan-request-edit-page {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .loan-request-edit-card {
+        border-radius: 18px;
+    }
+
+    .loan-request-edit-card-header {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .loan-request-edit-card-body {
+        padding: 1.25rem 1.35rem;
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 575.98px) {
+
+    .loan-request-edit-page {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+
+    .loan-request-back-btn {
+        width: 42px;
+        min-width: 42px;
+        padding: 0;
+    }
+
+    .loan-request-back-btn span {
+        display: none;
+    }
+
+    .loan-request-edit-card-header {
+        padding: .9rem;
+    }
+
+    .loan-request-edit-card-body {
+        padding: .9rem;
+    }
+
+    .loan-request-validation-card,
+    .loan-request-edit-warning {
+        padding: .85rem;
+    }
+
+    .loan-request-edit-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .loan-request-edit-cancel-btn,
+    .loan-request-edit-save-btn {
+        width: 100%;
+    }
+
+}

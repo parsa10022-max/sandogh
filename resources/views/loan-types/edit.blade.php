@@ -4,39 +4,59 @@
 
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid loan-type-edit-page">
 
+        {{-- Page Header --}}
         <x-page-header title="ویرایش نوع وام">
 
-            <a href="{{ route('loan-types.index') }}"
-               class="btn btn-secondary">
-
+            <a
+                href="{{ route('loan-types.index') }}"
+                class="btn loan-type-back-btn"
+            >
                 <i class="bi bi-arrow-right"></i>
-
-                بازگشت
-
+                <span>بازگشت به انواع وام</span>
             </a>
 
         </x-page-header>
 
-        <div class="card">
+        <form
+            action="{{ route('loan-types.update', $loanType) }}"
+            method="POST"
+        >
 
-            <div class="card-body">
+            @csrf
+            @method('PUT')
 
-                <form action="{{ route('loan-types.update', $loanType) }}"
-                      method="POST">
+            {{-- Form Card --}}
+            <div class="loan-type-form-card">
 
-                    @csrf
-                    @method('PUT')
+                <div class="loan-type-form-header">
+
+                    <div class="loan-type-form-header-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+
+                    <div>
+                        <h5>ویرایش نوع وام</h5>
+
+                        <p>
+                            اطلاعات نوع وام را ویرایش و ذخیره کنید.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="loan-type-form-body">
 
                     @include('loan-types._form')
 
-                </form>
+                </div>
 
             </div>
 
-        </div>
+        </form>
 
     </div>
 
 @endsection
+

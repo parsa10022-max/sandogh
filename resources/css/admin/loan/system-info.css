@@ -1,0 +1,228 @@
+    /* =========================================================
+       LOAN SYSTEM INFO
+       Design System #1
+       Purple + Blue
+       RTL / Bootstrap 5.3
+       ========================================================= */
+
+.loan-system-card {
+    width: 100%;
+
+    margin-top: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e1ec;
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 14px rgba(70, 50, 100, .05);
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.loan-system-body {
+    padding: 18px;
+}
+
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+
+.loan-system-item {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e8e3ef;
+    border-radius: 10px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.loan-system-item:hover {
+    border-color: #d6cbe5;
+
+    box-shadow: 0 3px 10px rgba(111, 66, 193, .06);
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.loan-system-label {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #817b89;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+.loan-system-label i {
+    width: 19px;
+
+    color: #8a78a2;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.loan-system-value {
+    color: #302a40;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-align: left;
+}
+
+.loan-system-date {
+    direction: rtl;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.loan-system-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* فعال */
+
+.loan-system-status-active {
+    color: #198754;
+
+    background: #edf8f2;
+
+    border: 1px solid #d7eddf;
+}
+
+
+/* پایان یافته */
+
+.loan-system-status-finished {
+    color: #5b4ca3;
+
+    background: #f0edfa;
+
+    border: 1px solid #e1dbf2;
+}
+
+
+/* لغو شده */
+
+.loan-system-status-cancelled {
+    color: #b54747;
+
+    background: #fff2f2;
+
+    border: 1px solid #f1dada;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-system-body {
+        padding: 13px;
+    }
+
+    .loan-system-item {
+        min-height: 58px;
+
+        padding: 10px 12px;
+
+        gap: 10px;
+    }
+
+    .loan-system-label {
+        font-size: 10px;
+    }
+
+    .loan-system-label i {
+        font-size: 13px;
+    }
+
+    .loan-system-value {
+        font-size: 11px;
+    }
+
+    .loan-system-status {
+        padding: 5px 8px;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .loan-system-item {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 6px;
+    }
+
+    .loan-system-value {
+        margin-right: 27px;
+
+        text-align: right;
+    }
+
+}
+

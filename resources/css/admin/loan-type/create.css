@@ -1,0 +1,343 @@
+    /* =========================================================
+       Loan Type Create
+       Design System #1
+       ========================================================= */
+
+.loan-type-create-page {
+    direction: rtl;
+}
+
+
+/* =========================================================
+   Back Button
+   ========================================================= */
+
+.loan-type-create-page .loan-type-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .5rem;
+
+    min-height: 42px;
+
+    padding: .6rem 1rem;
+
+    background: #fff;
+
+    border: 1px solid #e2e4eb;
+    border-radius: 11px;
+
+    color: #656a7a;
+
+    font-size: .8rem;
+    font-weight: 600;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+}
+
+.loan-type-create-page .loan-type-back-btn:hover {
+    background: #f7f8fb;
+
+    border-color: #d5d8e1;
+
+    color: #4d5160;
+}
+
+
+/* =========================================================
+   Main Form Card
+   ========================================================= */
+
+.loan-type-create-page .loan-type-form-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e8eaf3;
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 24px rgba(35, 40, 70, .06);
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.loan-type-create-page .loan-type-form-header {
+    display: flex;
+    align-items: center;
+
+    gap: .9rem;
+
+    padding: 1.25rem;
+
+    border-bottom: 1px solid #edf0f5;
+}
+
+
+.loan-type-create-page .loan-type-form-header-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 13px;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    color: #fff;
+
+    box-shadow:
+        0 6px 15px rgba(111, 66, 193, .18);
+
+    font-size: 1.1rem;
+}
+
+
+.loan-type-create-page .loan-type-form-header h5 {
+    margin: 0 0 .3rem;
+
+    color: #292c3e;
+
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+
+.loan-type-create-page .loan-type-form-header p {
+    margin: 0;
+
+    color: #9296a8;
+
+    font-size: .75rem;
+}
+
+
+/* =========================================================
+   Form Body
+   ========================================================= */
+
+.loan-type-create-page .loan-type-form-body {
+    padding: 1.5rem 1.25rem;
+}
+
+
+.loan-type-create-page .form-label {
+    color: #45495a;
+
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Input Focus
+   ========================================================= */
+
+.loan-type-create-page input:focus,
+.loan-type-create-page textarea:focus,
+.loan-type-create-page select:focus {
+    border-color: #7b61c9;
+
+    box-shadow:
+        0 0 0 .2rem rgba(111, 66, 193, .10);
+}
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.loan-type-create-page .loan-type-form-footer {
+    display: flex;
+    align-items: center;
+
+    gap: .65rem;
+
+    padding: 1rem 1.25rem;
+
+    background: #fafbfc;
+
+    border-top: 1px solid #edf0f5;
+}
+
+
+/* =========================================================
+   Submit
+   ========================================================= */
+
+.loan-type-create-page .loan-type-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .5rem;
+
+    min-height: 43px;
+
+    padding: .6rem 1.15rem;
+
+    border: 0;
+    border-radius: 11px;
+
+    font-size: .82rem;
+    font-weight: 600;
+
+    box-shadow:
+        0 5px 14px rgba(13, 110, 253, .16);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.loan-type-create-page .loan-type-submit-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(13, 110, 253, .22);
+}
+
+
+/* =========================================================
+   Cancel
+   ========================================================= */
+
+.loan-type-create-page .loan-type-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .5rem;
+
+    min-height: 43px;
+
+    padding: .6rem 1.15rem;
+
+    border: 1px solid #e0e2e9;
+    border-radius: 11px;
+
+    background: #fff;
+
+    color: #686d7d;
+
+    font-size: .82rem;
+    font-weight: 600;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+}
+
+
+.loan-type-create-page .loan-type-cancel-btn:hover {
+    background: #f2f3f6;
+
+    border-color: #d7d9e1;
+
+    color: #424656;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-type-create-page .loan-type-form-card {
+        border-radius: 14px;
+    }
+
+
+    .loan-type-create-page .loan-type-form-header {
+        padding: 1rem;
+    }
+
+
+    .loan-type-create-page .loan-type-form-header-icon {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 11px;
+
+        font-size: 1rem;
+    }
+
+
+    .loan-type-create-page .loan-type-form-header h5 {
+        font-size: .88rem;
+    }
+
+
+    .loan-type-create-page .loan-type-form-header p {
+        display: none;
+    }
+
+
+    .loan-type-create-page .loan-type-form-body {
+        padding: 1.15rem 1rem;
+    }
+
+
+    .loan-type-create-page .loan-type-form-footer {
+        padding: .85rem;
+
+        gap: .5rem;
+    }
+
+
+    .loan-type-create-page .loan-type-submit-btn,
+    .loan-type-create-page .loan-type-cancel-btn {
+        flex: 1;
+    }
+
+
+    .loan-type-create-page .loan-type-back-btn span {
+        display: none;
+    }
+
+
+    .loan-type-create-page .loan-type-back-btn {
+        width: 42px;
+        height: 42px;
+
+        padding: 0;
+    }
+
+}
+
+
+/* =========================================================
+   Very Small Screens
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .loan-type-create-page .loan-type-form-footer {
+        flex-direction: column;
+    }
+
+
+    .loan-type-create-page .loan-type-submit-btn,
+    .loan-type-create-page .loan-type-cancel-btn {
+        width: 100%;
+    }
+
+}

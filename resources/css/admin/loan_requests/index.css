@@ -1,0 +1,690 @@
+    /* =========================================================
+       Loan Requests
+       Design #1
+       ========================================================= */
+
+.loan-requests-page {
+    padding-bottom: 2rem;
+}
+
+
+/* =========================================================
+   Create Button
+   ========================================================= */
+
+.loan-request-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+
+    min-height: 42px;
+    padding: .55rem 1rem;
+
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    border: 0;
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    box-shadow: 0 4px 12px rgba(13, 110, 253, .16);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+}
+
+.loan-request-create-btn:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 6px 16px rgba(13, 110, 253, .24);
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.loan-requests-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e7eaf0;
+    border-radius: 16px;
+
+    box-shadow: 0 5px 20px rgba(31, 41, 55, .06);
+}
+
+
+/* =========================================================
+   Card Header
+   ========================================================= */
+
+.loan-requests-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding: 1rem 1.15rem;
+
+    background: #fff;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.loan-requests-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.loan-requests-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: 44px;
+    height: 44px;
+
+    color: #fff;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    border-radius: 12px;
+
+    font-size: 1.15rem;
+
+    box-shadow: 0 5px 12px rgba(111, 66, 193, .18);
+}
+
+.loan-requests-title {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.loan-requests-subtitle {
+    display: block;
+
+    margin-top: .25rem;
+
+    color: #8a94a6;
+
+    font-size: .78rem;
+}
+
+.loan-requests-count {
+    flex: 0 0 auto;
+
+    padding: .4rem .7rem;
+
+    color: #5b3ca4;
+
+    background: #f3effc;
+
+    border: 1px solid #e5dcf8;
+    border-radius: 8px;
+
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Table
+   ========================================================= */
+
+.loan-requests-table-wrapper {
+    width: 100%;
+}
+
+.loan-requests-table {
+    min-width: 1250px;
+}
+
+.loan-requests-table thead th {
+    padding: .9rem .85rem;
+
+    color: #596273;
+
+    background: #f8f9fb;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: .78rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.loan-requests-table tbody td {
+    padding: .9rem .85rem;
+
+    color: #374151;
+
+    border-bottom: 1px solid #f0f1f4;
+
+    font-size: .82rem;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+.loan-requests-table tbody tr {
+    transition: background-color .18s ease;
+}
+
+.loan-requests-table tbody tr:hover {
+    background-color: #fafbff;
+}
+
+.loan-requests-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   ID
+   ========================================================= */
+
+.loan-request-id {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 32px;
+    height: 28px;
+
+    padding: 0 .45rem;
+
+    color: #667085;
+
+    background: #f5f6f8;
+
+    border: 1px solid #e7e9ee;
+    border-radius: 7px;
+
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Customer
+   ========================================================= */
+
+.loan-request-customer {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+
+    font-weight: 600;
+    color: #293241;
+}
+
+.loan-request-customer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 auto;
+
+    color: #6841b6;
+
+    background: #f3effc;
+
+    border: 1px solid #e4daf7;
+    border-radius: 9px;
+
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   Amount
+   ========================================================= */
+
+.loan-request-amount {
+    color: #293241;
+
+    font-weight: 700;
+}
+
+.loan-request-amount.approved {
+    color: #198754;
+}
+
+.loan-request-currency {
+    margin-right: .2rem;
+
+    color: #8b95a5;
+
+    font-size: .7rem;
+}
+
+
+/* =========================================================
+   Status
+   ========================================================= */
+
+.loan-request-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+
+    padding: .38rem .65rem;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-size: .72rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.loan-request-status i {
+    font-size: .78rem;
+}
+
+.loan-request-status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* Pending */
+
+.loan-request-status.pending {
+    color: #946200;
+
+    background: #fff8e5;
+
+    border-color: #f7e7b5;
+}
+
+
+/* Approved */
+
+.loan-request-status.approved {
+    color: #13795b;
+
+    background: #eaf8f2;
+
+    border-color: #c9eadc;
+}
+
+
+/* Rejected */
+
+.loan-request-status.rejected {
+    color: #b02a37;
+
+    background: #fff0f1;
+
+    border-color: #f4cdd1;
+}
+
+
+/* Cancelled */
+
+.loan-request-status.cancelled {
+    color: #667085;
+
+    background: #f3f4f6;
+
+    border-color: #e1e3e7;
+}
+
+
+/* =========================================================
+   Date
+   ========================================================= */
+
+.loan-request-date {
+    color: #596273;
+
+    font-size: .78rem;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   Loan Number
+   ========================================================= */
+
+.loan-request-number {
+    display: inline-flex;
+    align-items: center;
+
+    padding: .35rem .55rem;
+
+    color: #4f3a87;
+
+    background: #f5f1fc;
+
+    border: 1px solid #e5dcf8;
+    border-radius: 7px;
+
+    font-size: .75rem;
+    font-weight: 700;
+
+    direction: ltr;
+}
+
+
+/* =========================================================
+   Empty Values
+   ========================================================= */
+
+.loan-request-empty {
+    color: #a0a7b3;
+
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   Loan Button
+   ========================================================= */
+
+.loan-request-loan-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+
+    color: #0d6efd;
+
+    background: #eef5ff;
+
+    border: 1px solid #d8e7ff;
+    border-radius: 8px;
+
+    font-size: .72rem;
+    font-weight: 600;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.loan-request-loan-btn:hover {
+    color: #fff;
+
+    background: #0d6efd;
+
+    border-color: #0d6efd;
+}
+
+
+/* =========================================================
+   Not Created
+   ========================================================= */
+
+.loan-request-not-created {
+    color: #98a1af;
+
+    font-size: .72rem;
+}
+
+
+/* =========================================================
+   View Button
+   ========================================================= */
+
+.loan-request-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+
+    min-width: 78px;
+
+    color: #6240a8;
+
+    background: #f7f3fd;
+
+    border: 1px solid #e3d9f5;
+    border-radius: 8px;
+
+    font-size: .72rem;
+    font-weight: 600;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.loan-request-view-btn:hover {
+    color: #fff;
+
+    background: #6f42c1;
+
+    border-color: #6f42c1;
+}
+
+
+/* =========================================================
+   Empty State
+   ========================================================= */
+
+.loan-requests-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 3.5rem 1rem;
+
+    text-align: center;
+}
+
+.loan-requests-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+
+    margin-bottom: 1rem;
+
+    color: #7653b7;
+
+    background: #f4f0fb;
+
+    border: 1px solid #e4daf7;
+    border-radius: 18px;
+
+    font-size: 1.8rem;
+}
+
+.loan-requests-empty h6 {
+    margin-bottom: .4rem;
+
+    color: #374151;
+
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+.loan-requests-empty p {
+    margin-bottom: 1.1rem;
+
+    color: #929aaa;
+
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   Pagination
+   ========================================================= */
+
+.loan-requests-pagination {
+    margin-top: 1rem;
+}
+
+.loan-requests-pagination .pagination {
+    gap: .3rem;
+    margin-bottom: 0;
+}
+
+.loan-requests-pagination .page-link {
+    min-width: 36px;
+    min-height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #596273;
+
+    background: #fff;
+
+    border: 1px solid #e3e6eb;
+    border-radius: 8px;
+
+    font-size: .78rem;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.loan-requests-pagination .page-link:hover {
+    color: #6f42c1;
+
+    background: #f7f3fd;
+
+    border-color: #ddd2f2;
+}
+
+.loan-requests-pagination .page-item.active .page-link {
+    color: #fff;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    border-color: transparent;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .loan-requests-page {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+
+    .loan-requests-card-header {
+        align-items: flex-start;
+
+        padding: .9rem;
+    }
+
+    .loan-requests-title-wrapper {
+        gap: .6rem;
+    }
+
+    .loan-requests-icon {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 10px;
+
+        font-size: 1rem;
+    }
+
+    .loan-requests-title {
+        font-size: .9rem;
+    }
+
+    .loan-requests-subtitle {
+        font-size: .7rem;
+    }
+
+    .loan-requests-count {
+        font-size: .7rem;
+        padding: .35rem .5rem;
+    }
+
+    .loan-request-create-btn {
+        min-height: 40px;
+
+        padding: .5rem .7rem;
+
+        font-size: .78rem;
+    }
+
+    .loan-request-create-btn span {
+        display: none;
+    }
+
+    .loan-request-create-btn i {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+}
+
+
+/* =========================================================
+   Very Small Screens
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .loan-requests-card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .loan-requests-count {
+        align-self: flex-start;
+    }
+
+    .loan-requests-empty {
+        padding: 2.5rem 1rem;
+    }
+
+}

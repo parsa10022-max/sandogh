@@ -46,6 +46,31 @@
 @import "admin/customers/customer-edit.css";
 @import "admin/customers/customer-archive.css";
 @import "admin/customers/pagination.css";
+@import "admin/loan/index.css";
+@import "admin/loan/creaet.css";
+@import "admin/loan/edit.css";
+@import "admin/loan/show.css";
+@import "admin/loan/summary.css";
+@import "admin/loan/guarantors.css";
+@import "admin/loan/system-info.css";
+@import "admin/loan/dates.css";
+@import "admin/loan/overdue.css";
+@import "admin/loan-type/index.css";
+@import "admin/loan-type/create.css";
+@import "admin/loan-type/edit.css";
+@import "admin/loan-type/form.css";
+@import "admin/loan_requests/index.css";
+@import "admin/loan_requests/create.css";
+@import "admin/loan_requests/edit.css";
+@import "admin/loan_requests/form.css";
+@import "admin/loan_requests/show.css";
+@import "admin/accounts/index.css";
+@import "admin/accounts/show.css";
+@import "admin/accounts/transactions.css";
+@import "admin/accounts/withdrawal-create.css";
+@import "admin/accounts/deposit/create.css";
+@import "admin/accounts/adjustment/adjustment.css";
+
 
 @import "./components/layout/admin-sidebar.css";
 @import "./admin/header.css";

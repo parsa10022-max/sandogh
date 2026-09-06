@@ -1,0 +1,464 @@
+    /* =========================================================
+       Loan Request Create
+       Design #1
+       ========================================================= */
+
+.loan-request-create-page {
+    padding-bottom: 2rem;
+}
+
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.loan-request-create-page .page-header {
+    margin-bottom: 1.25rem;
+}
+
+.loan-request-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+
+    min-height: 44px;
+    padding: .6rem 1rem;
+
+    border: 1px solid #e2e5eb;
+    border-radius: 11px;
+
+    background: #fff;
+    color: #4b5563;
+
+    font-size: .88rem;
+    font-weight: 700;
+
+    box-shadow: 0 3px 12px rgba(31, 41, 55, .06);
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.loan-request-back-btn:hover {
+    color: #4f46e5;
+    border-color: #d9d4f3;
+    background: #faf9ff;
+
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, .10);
+}
+
+.loan-request-back-btn i {
+    font-size: 1rem;
+}
+
+
+/* ---------------------------------------------------------
+   Conditions Cards
+   --------------------------------------------------------- */
+
+.loan-request-conditions-card,
+.loan-request-form-card {
+    overflow: hidden;
+
+    margin-bottom: 1rem;
+
+    background: #fff;
+
+    border: 1px solid #e7e9ef;
+    border-radius: 16px;
+
+    box-shadow: 0 5px 18px rgba(31, 41, 55, .06);
+}
+
+
+/* Header */
+
+.loan-request-conditions-header,
+.loan-request-form-header {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+.loan-request-conditions-icon,
+.loan-request-form-header-icon {
+    flex: 0 0 44px;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 1.2rem;
+}
+
+.loan-icon-purple {
+    color: #635bdb;
+    background: #f0edff;
+}
+
+.loan-icon-orange {
+    color: #d97706;
+    background: #fff5e6;
+}
+
+.loan-request-form-header-icon {
+    color: #4f46e5;
+    background: #eeecff;
+}
+
+.loan-request-conditions-header h5,
+.loan-request-form-header h5 {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.loan-request-conditions-header p,
+.loan-request-form-header p {
+    margin: .2rem 0 0;
+
+    color: #7b8494;
+
+    font-size: .78rem;
+}
+
+
+/* ---------------------------------------------------------
+   Conditions Body
+   --------------------------------------------------------- */
+
+.loan-request-conditions-body {
+    padding: .85rem 1.1rem;
+}
+
+.loan-condition-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .65rem;
+
+    padding: .65rem 0;
+
+    color: #4b5563;
+
+    font-size: .86rem;
+    line-height: 1.9;
+}
+
+.loan-condition-item + .loan-condition-item {
+    border-top: 1px dashed #edf0f4;
+}
+
+.loan-condition-item strong {
+    color: #374151;
+    font-weight: 800;
+}
+
+.loan-condition-icon {
+    flex: 0 0 25px;
+
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: .2rem;
+
+    border-radius: 50%;
+
+    color: #4f46e5;
+    background: #f0efff;
+
+    font-size: .78rem;
+}
+
+
+/* ---------------------------------------------------------
+   Form
+   --------------------------------------------------------- */
+
+.loan-request-form-body {
+    padding: 1.1rem;
+}
+
+.loan-request-form-body .form-label {
+    margin-bottom: .45rem;
+
+    color: #374151;
+
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.loan-request-form-body .form-control,
+.loan-request-form-body .form-select {
+    min-height: 46px;
+
+    border: 1px solid #dfe3ea;
+    border-radius: 11px;
+
+    color: #374151;
+    background-color: #fff;
+
+    font-size: .88rem;
+
+    box-shadow: none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease;
+}
+
+.loan-request-form-body .form-control:focus,
+.loan-request-form-body .form-select:focus {
+    border-color: #8b83e6;
+
+    background-color: #fff;
+
+    box-shadow: 0 0 0 3px rgba(99, 91, 219, .10);
+}
+
+.loan-request-form-body textarea.form-control {
+    min-height: 125px;
+    resize: vertical;
+    line-height: 1.9;
+}
+
+.loan-request-form-body .form-control::placeholder {
+    color: #a6adba;
+}
+
+
+/* ---------------------------------------------------------
+   Money Field
+   --------------------------------------------------------- */
+
+.loan-request-money-input {
+    position: relative;
+}
+
+.loan-request-money-input .form-control {
+    padding-left: 70px;
+}
+
+.loan-request-money-input > span {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    padding-right: 10px;
+
+    border-right: 1px solid #e5e7eb;
+
+    color: #7b8494;
+
+    font-size: .78rem;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+
+/* ---------------------------------------------------------
+   Validation
+   --------------------------------------------------------- */
+
+.loan-request-form-body .is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.loan-request-form-body .invalid-feedback {
+    margin-top: .4rem;
+
+    font-size: .76rem;
+}
+
+
+/* ---------------------------------------------------------
+   Form Actions
+   --------------------------------------------------------- */
+
+.loan-request-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .65rem;
+
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+
+    border-top: 1px solid #eef0f4;
+}
+
+.loan-request-cancel-btn,
+.loan-request-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+
+    min-height: 44px;
+    padding: .6rem 1rem;
+
+    border-radius: 11px;
+
+    font-size: .86rem;
+    font-weight: 800;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease,
+        border-color .2s ease;
+}
+
+.loan-request-cancel-btn {
+    border: 1px solid #e1e4ea;
+
+    color: #596273;
+    background: #fff;
+
+    box-shadow: 0 3px 10px rgba(31, 41, 55, .05);
+}
+
+.loan-request-cancel-btn:hover {
+    color: #374151;
+    background: #f8f9fb;
+
+    transform: translateY(-1px);
+}
+
+.loan-request-submit-btn {
+    border: 1px solid #5148c9;
+
+    color: #fff;
+
+    background: linear-gradient(
+        135deg,
+        #6258df 0%,
+        #4f46c9 100%
+    );
+
+    box-shadow: 0 5px 14px rgba(79, 70, 201, .20);
+}
+
+.loan-request-submit-btn:hover {
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 8px 18px rgba(79, 70, 201, .27);
+}
+
+.loan-request-submit-btn i,
+.loan-request-cancel-btn i,
+.loan-request-back-btn i {
+    transition: transform .2s ease;
+}
+
+.loan-request-submit-btn:hover i {
+    transform: scale(1.08);
+}
+
+
+/* ---------------------------------------------------------
+   Desktop
+   --------------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+    .loan-request-create-page {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .loan-request-conditions-card,
+    .loan-request-form-card {
+        border-radius: 18px;
+    }
+
+    .loan-request-conditions-header,
+    .loan-request-form-header {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .loan-request-conditions-body,
+    .loan-request-form-body {
+        padding: 1.25rem 1.35rem;
+    }
+
+    .loan-request-form-actions {
+        justify-content: flex-start;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 575.98px) {
+
+    .loan-request-create-page {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+
+    .loan-request-back-btn {
+        width: 42px;
+        min-width: 42px;
+        padding: 0;
+    }
+
+    .loan-request-back-btn span {
+        display: none;
+    }
+
+    .loan-request-conditions-header,
+    .loan-request-form-header {
+        padding: .9rem;
+    }
+
+    .loan-request-conditions-body,
+    .loan-request-form-body {
+        padding: .9rem;
+    }
+
+    .loan-condition-item {
+        font-size: .82rem;
+        line-height: 1.85;
+    }
+
+    .loan-request-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .loan-request-cancel-btn,
+    .loan-request-submit-btn {
+        width: 100%;
+    }
+}

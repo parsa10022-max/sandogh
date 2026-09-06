@@ -4,107 +4,237 @@
 
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid loan-types-page">
 
+        {{-- Page Header --}}
         <x-page-header title="مدیریت انواع وام">
 
             <a
                 href="{{ route('loan-types.create') }}"
-                class="btn btn-primary">
-
-                <i class="bi bi-plus-circle"></i>
-
-                نوع وام جدید
-
+                class="btn btn-primary loan-type-create-btn"
+            >
+                <i class="bi bi-plus-lg"></i>
+                <span>نوع وام جدید</span>
             </a>
 
         </x-page-header>
 
-        {{-- Search --}}
-        <x-search-box
-            :action="route('loan-types.index')"
-        />
 
-        {{-- Table --}}
+        {{-- Search --}}
+        <div class="loan-types-search mb-4">
+
+            <x-search-box
+                :action="route('loan-types.index')"
+            />
+
+        </div>
+
+
+        {{-- Main Card --}}
         <x-datatable.table>
 
-            <div class="card-body p-0">
+            <div class="loan-types-card">
 
-                <table class="table table-hover table-striped align-middle mb-0">
+                {{-- Card Header --}}
+                <div class="loan-types-card-header">
 
-                    <thead class="table-dark">
+                    <div class="loan-types-title">
 
-                    <tr>
+                        <div class="loan-types-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
 
-                        <th>نام نوع وام</th>
+                        <div>
 
-                        <th>پیش‌شماره</th>
+                            <h6 class="mb-1">
+                                انواع وام
+                            </h6>
 
-                        <th>وضعیت</th>
+                            <small>
+                                مدیریت و وضعیت انواع وام‌های صندوق
+                            </small>
 
-                        <th width="120">عملیات</th>
+                        </div>
 
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    @forelse($loanTypes as $loanType)
-
-                        <tr>
-
-                            <td>{{ $loanType->name }}</td>
-
-                            <td>{{ $loanType->prefix }}</td>
-
-                            <td>
-
-                                {{ $loanType->status->label() }}
-
-                            </td>
-
-                            <td class="text-center">
-
-                                <div class="d-flex justify-content-center gap-1">
-
-                                    <x-action-buttons
-                                        :edit-route="route('loan-types.edit', $loanType)"
-                                        :change-status-route="route('loan-types.change-status', $loanType)"
-                                    />
+                    </div>
 
 
-                                </div>
+                    <div class="loan-types-count">
 
-                            </td>
+                        <span>
+                            تعداد
+                        </span>
 
-                        </tr>
+                        <strong>
+                            {{ $loanTypes->total() }}
+                        </strong>
 
-                    @empty
+                    </div>
+
+                </div>
+
+
+                {{-- Table --}}
+                <div class="table-responsive">
+
+                    <table class="table loan-types-table align-middle mb-0">
+
+                        <thead>
 
                         <tr>
 
-                            <td colspan="4"
-                                class="text-center py-4">
+                            <th>
+                                نام نوع وام
+                            </th>
 
-                                نوع وامی ثبت نشده است.
+                            <th>
+                                پیش‌شماره
+                            </th>
 
-                            </td>
+                            <th>
+                                وضعیت
+                            </th>
+
+                            <th class="text-center actions-column">
+                                عملیات
+                            </th>
 
                         </tr>
 
-                    @endforelse
+                        </thead>
 
-                    </tbody>
 
-                </table>
+                        <tbody>
+
+                        @forelse($loanTypes as $loanType)
+
+                            <tr>
+
+                                {{-- Loan Name --}}
+                                <td>
+
+                                    <div class="loan-type-name">
+
+                                        <div class="loan-type-small-icon">
+                                            <i class="bi bi-credit-card-2-front"></i>
+                                        </div>
+
+                                        <div>
+
+                                            <div class="fw-bold">
+                                                {{ $loanType->name }}
+                                            </div>
+
+                                            @if($loanType->description)
+
+                                                <small>
+                                                    {{ $loanType->description }}
+                                                </small>
+
+                                            @endif
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- Prefix --}}
+                                <td>
+
+                                    <span class="loan-prefix">
+                                        {{ $loanType->prefix }}
+                                    </span>
+
+                                </td>
+
+
+                                {{-- Status --}}
+                                <td>
+
+                                    <span class="loan-status loan-status-{{ $loanType->status->value }}">
+
+                                        <span class="loan-status-dot"></span>
+
+                                        {{ $loanType->status->label() }}
+
+                                    </span>
+
+                                </td>
+
+
+                                {{-- Actions --}}
+                                <td class="text-center">
+
+                                    <div class="loan-type-actions">
+
+                                        <x-action-buttons
+                                            :edit-route="route('loan-types.edit', $loanType)"
+                                            :change-status-route="route('loan-types.change-status', $loanType)"
+                                        />
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="4">
+
+                                    <div class="loan-types-empty">
+
+                                        <div class="empty-icon">
+                                            <i class="bi bi-wallet2"></i>
+                                        </div>
+
+                                        <h6>
+                                            نوع وامی ثبت نشده است
+                                        </h6>
+
+                                        <p>
+                                            هنوز هیچ نوع وامی در صندوق ثبت نشده است.
+                                        </p>
+
+                                        <a
+                                            href="{{ route('loan-types.create') }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="bi bi-plus-lg"></i>
+                                            ثبت نوع وام
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
         </x-datatable.table>
 
-        <x-pagination :items="$loanTypes"/>
+
+        {{-- Pagination --}}
+        <div class="mt-4">
+
+            <x-pagination :items="$loanTypes"/>
+
+        </div>
 
     </div>
 
 @endsection
+
