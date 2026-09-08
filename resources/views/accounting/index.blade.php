@@ -2,204 +2,177 @@
 
 @section('title', 'حسابداری')
 
+@push('styles')
+    @vite('resources/css/admin/accounting/index.css')
+@endpush
+
 @section('content')
 
-    <div class="container-fluid accounting-page">
+    <div class="container-fluid accounting-dashboard-page">
 
         {{-- Header --}}
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div class="accounting-dashboard-header">
 
-            <div>
-                <h1 class="h4 fw-bold mb-1">
-                    <i class="bi bi-calculator me-1"></i>
-                    حسابداری
-                </h1>
+            <div class="accounting-dashboard-title-wrapper">
 
-                <div class="text-muted small">
-                    عملیات مالی در انتظار ثبت حسابداری
+                <div class="accounting-dashboard-title-icon">
+                    <i class="bi bi-calculator"></i>
                 </div>
+
+                <div>
+                    <h1 class="accounting-dashboard-title">
+                        حسابداری
+                    </h1>
+
+                    <div class="accounting-dashboard-subtitle">
+                        عملیات مالی در انتظار ثبت حسابداری
+                    </div>
+                </div>
+
             </div>
 
-            <div class="badge bg-warning-subtle text-warning-emphasis px-3 py-2 rounded-pill">
-                <i class="bi bi-hourglass-split me-1"></i>
-                {{ $totalCount }} عملیات در انتظار
+            <div class="accounting-dashboard-pending">
+
+                <i class="bi bi-hourglass-split"></i>
+
+                <span>{{ $totalCount }} عملیات در انتظار</span>
+
             </div>
 
         </div>
 
 
         {{-- Statistics --}}
-        <div class="row g-3 mb-4">
+        <div class="accounting-dashboard-statistics">
 
-            <div class="col-12 col-sm-6 col-xl-3">
 
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+            {{-- Savings deposits --}}
+            <div class="accounting-stat-card">
 
-                    <div class="card-body">
+                <div class="accounting-stat-main">
 
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="accounting-stat-icon accounting-stat-icon-primary">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
 
-                            <div class="rounded-3 p-3 bg-primary-subtle text-primary">
-                                <i class="bi bi-wallet2 fs-4"></i>
-                            </div>
+                    <div class="accounting-stat-content">
 
-                            <div>
-
-                                <div class="text-muted small">
-                                    واریز پس‌انداز
-                                </div>
-
-                                <div class="fs-4 fw-bold">
-                                    {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
-                                </div>
-
-                            </div>
-
+                        <div class="accounting-stat-label">
+                            واریز پس‌انداز
                         </div>
 
-
-                        <div class="mt-3">
-
-                            <a href="{{ route('admin.accounting.savings-transfers') }}"
-                               class="small text-decoration-none">
-
-                                مشاهده واریزها
-
-                                <i class="bi bi-arrow-left"></i>
-
-                            </a>
-
+                        <div class="accounting-stat-value">
+                            {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
                         </div>
 
                     </div>
 
                 </div>
 
+                <a href="{{ route('admin.accounting.savings-transfers') }}"
+                   class="accounting-stat-link">
+
+                    <span>مشاهده واریزها</span>
+                    <i class="bi bi-arrow-left"></i>
+
+                </a>
+
             </div>
 
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            {{-- Savings withdrawals --}}
+            <div class="accounting-stat-card">
 
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="accounting-stat-main">
 
-                    <div class="card-body">
+                    <div class="accounting-stat-icon accounting-stat-icon-danger">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
 
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="accounting-stat-content">
 
-                            <div class="rounded-3 p-3 bg-danger-subtle text-danger">
-                                <i class="bi bi-cash-stack fs-4"></i>
-                            </div>
-
-                            <div>
-
-                                <div class="text-muted small">
-                                    برداشت پس‌انداز
-                                </div>
-
-                                <div class="fs-4 fw-bold">
-                                    {{ $withdrawalsCount }}
-                                </div>
-
-                            </div>
-
+                        <div class="accounting-stat-label">
+                            برداشت پس‌انداز
                         </div>
 
-
-                        <div class="mt-3">
-
-                            <a href="{{ route('admin.accounting.withdrawals') }}"
-                               class="small text-decoration-none">
-
-                                مشاهده برداشت‌ها
-
-                                <i class="bi bi-arrow-left"></i>
-
-                            </a>
-
+                        <div class="accounting-stat-value">
+                            {{ $withdrawalsCount }}
                         </div>
 
                     </div>
 
                 </div>
 
+                <a href="{{ route('admin.accounting.withdrawals') }}"
+                   class="accounting-stat-link accounting-stat-link-danger">
+
+                    <span>مشاهده برداشت‌ها</span>
+                    <i class="bi bi-arrow-left"></i>
+
+                </a>
+
             </div>
 
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            {{-- Loan payments --}}
+            <div class="accounting-stat-card">
 
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="accounting-stat-main">
 
-                    <div class="card-body">
+                    <div class="accounting-stat-icon accounting-stat-icon-success">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
 
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="accounting-stat-content">
 
-                            <div class="rounded-3 p-3 bg-success-subtle text-success">
-                                <i class="bi bi-credit-card fs-4"></i>
-                            </div>
-
-                            <div>
-
-                                <div class="text-muted small">
-                                    پرداخت اقساط
-                                </div>
-
-                                <div class="fs-4 fw-bold">
-                                    {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
-                                </div>
-
-                            </div>
-
+                        <div class="accounting-stat-label">
+                            پرداخت اقساط
                         </div>
 
-
-                        <div class="mt-3">
-
-                            <a href="{{ route('admin.accounting.loan-payments') }}"
-                               class="small text-decoration-none">
-
-                                مشاهده اقساط
-
-                                <i class="bi bi-arrow-left"></i>
-
-                            </a>
-
+                        <div class="accounting-stat-value">
+                            {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
                         </div>
 
                     </div>
 
                 </div>
 
+                <a href="{{ route('admin.accounting.loan-payments') }}"
+                   class="accounting-stat-link accounting-stat-link-success">
+
+                    <span>مشاهده اقساط</span>
+                    <i class="bi bi-arrow-left"></i>
+
+                </a>
+
             </div>
 
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            {{-- Total --}}
+            <div class="accounting-stat-card accounting-stat-card-total">
 
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="accounting-stat-main">
 
-                    <div class="card-body">
+                    <div class="accounting-stat-icon accounting-stat-icon-warning">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
 
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="accounting-stat-content">
 
-                            <div class="rounded-3 p-3 bg-warning-subtle text-warning-emphasis">
-                                <i class="bi bi-clipboard-check fs-4"></i>
-                            </div>
+                        <div class="accounting-stat-label">
+                            مجموع عملیات
+                        </div>
 
-                            <div>
-
-                                <div class="text-muted small">
-                                    مجموع عملیات
-                                </div>
-
-                                <div class="fs-4 fw-bold">
-                                    {{ $totalCount }}
-                                </div>
-
-                            </div>
-
+                        <div class="accounting-stat-value">
+                            {{ $totalCount }}
                         </div>
 
                     </div>
 
+                </div>
+
+                <div class="accounting-stat-total-label">
+                    عملیات نیازمند ثبت حسابداری
                 </div>
 
             </div>
@@ -208,132 +181,121 @@
 
 
         {{-- Operation links --}}
-        <div class="card border-0 shadow-sm rounded-4">
+        <div class="accounting-operations-card">
 
-            <div class="card-body p-3 p-md-4">
+            <div class="accounting-operations-header">
 
-                <h2 class="h6 fw-bold mb-4">
+                <div class="accounting-operations-title-wrapper">
 
-                    <i class="bi bi-list-check me-1"></i>
-
-                    عملیات نیازمند بررسی
-
-                </h2>
-
-
-                <div class="row g-3">
-
-
-                    <div class="col-12 col-lg-4">
-
-                        <a href="{{ route('admin.accounting.savings-transfers') }}"
-                           class="text-decoration-none">
-
-                            <div class="border rounded-4 p-3 h-100">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-
-                                        <div class="fw-bold text-dark">
-                                            واریز به حساب پس‌انداز
-                                        </div>
-
-                                        <div class="text-muted small mt-1">
-                                            واریز خود و واریز به دیگر اعضا
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">
-
-                                        {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-
+                    <div class="accounting-operations-icon">
+                        <i class="bi bi-list-check"></i>
                     </div>
 
+                    <div>
+                        <h2 class="accounting-operations-title">
+                            عملیات نیازمند بررسی
+                        </h2>
 
-                    <div class="col-12 col-lg-4">
-
-                        <a href="{{ route('admin.accounting.withdrawals') }}"
-                           class="text-decoration-none">
-
-                            <div class="border rounded-4 p-3 h-100">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-
-                                        <div class="fw-bold text-dark">
-                                            برداشت از پس‌انداز
-                                        </div>
-
-                                        <div class="text-muted small mt-1">
-                                            برداشت‌های پرداخت‌شده
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">
-
-                                        {{ $withdrawalsCount }}
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-
+                        <div class="accounting-operations-subtitle">
+                            انتخاب عملیات برای بررسی و ثبت در حسابداری
+                        </div>
                     </div>
 
+                </div>
 
-                    <div class="col-12 col-lg-4">
-
-                        <a href="{{ route('admin.accounting.loan-payments') }}"
-                           class="text-decoration-none">
-
-                            <div class="border rounded-4 p-3 h-100">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-
-                                        <div class="fw-bold text-dark">
-                                            پرداخت اقساط
-                                        </div>
-
-                                        <div class="text-muted small mt-1">
-                                            اقساط خود و اقساط دیگران
-                                        </div>
-
-                                    </div>
+            </div>
 
 
-                                    <div class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
+            <div class="accounting-operations-body">
 
-                                        {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
+                <div class="accounting-operation-grid">
 
-                                    </div>
 
-                                </div>
+                    {{-- Savings transfers --}}
+                    <a href="{{ route('admin.accounting.savings-transfers') }}"
+                       class="accounting-operation-item">
 
+                        <div class="accounting-operation-icon accounting-operation-icon-primary">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+
+                        <div class="accounting-operation-content">
+
+                            <div class="accounting-operation-title">
+                                واریز به حساب پس‌انداز
                             </div>
 
-                        </a>
+                            <div class="accounting-operation-description">
+                                واریز خود و واریز به دیگر اعضا
+                            </div>
 
-                    </div>
+                        </div>
 
+                        <div class="accounting-operation-count accounting-operation-count-primary">
+                            {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
+                        </div>
+
+                        <i class="bi bi-chevron-left accounting-operation-arrow"></i>
+
+                    </a>
+
+
+                    {{-- Withdrawals --}}
+                    <a href="{{ route('admin.accounting.withdrawals') }}"
+                       class="accounting-operation-item">
+
+                        <div class="accounting-operation-icon accounting-operation-icon-danger">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+
+                        <div class="accounting-operation-content">
+
+                            <div class="accounting-operation-title">
+                                برداشت از پس‌انداز
+                            </div>
+
+                            <div class="accounting-operation-description">
+                                برداشت‌های پرداخت‌شده
+                            </div>
+
+                        </div>
+
+                        <div class="accounting-operation-count accounting-operation-count-danger">
+                            {{ $withdrawalsCount }}
+                        </div>
+
+                        <i class="bi bi-chevron-left accounting-operation-arrow"></i>
+
+                    </a>
+
+
+                    {{-- Loan payments --}}
+                    <a href="{{ route('admin.accounting.loan-payments') }}"
+                       class="accounting-operation-item">
+
+                        <div class="accounting-operation-icon accounting-operation-icon-success">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+
+                        <div class="accounting-operation-content">
+
+                            <div class="accounting-operation-title">
+                                پرداخت اقساط
+                            </div>
+
+                            <div class="accounting-operation-description">
+                                اقساط خود و اقساط دیگران
+                            </div>
+
+                        </div>
+
+                        <div class="accounting-operation-count accounting-operation-count-success">
+                            {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
+                        </div>
+
+                        <i class="bi bi-chevron-left accounting-operation-arrow"></i>
+
+                    </a>
 
                 </div>
 

@@ -1,0 +1,413 @@
+ /*
+ --------------------------------------------------------------------------
+ Donation Success
+ --------------------------------------------------------------------------
+ Design #1
+ Purple + Blue
+ RTL / Mobile First
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-page {
+    width: 100%;
+    max-width: 720px;
+
+
+    margin: 0 auto;
+
+    padding: 1rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+    padding: 2rem 1.1rem;
+
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+
+    box-shadow:
+        0 5px 22px rgba(31, 41, 55, 0.07);
+
+    text-align: center;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Success Icon
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-icon {
+    width: 76px;
+    height: 76px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1.15rem;
+
+    border-radius: 50%;
+
+    background: #f0fff5;
+
+    border: 1px solid #badbcc;
+
+    color: #198754;
+
+    font-size: 2rem;
+
+    box-shadow:
+        0 5px 18px rgba(25, 135, 84, 0.1);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Title
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+
+    line-height: 1.7;
+
+
+}
+
+.donation-success-subtitle {
+    max-width: 500px;
+
+
+    margin: 0.45rem 0 1.5rem;
+
+    color: #6c757d;
+
+    font-size: 0.82rem;
+
+    line-height: 1.8;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Details
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-details {
+    width: 100%;
+
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 0.75rem;
+
+    margin-bottom: 1.5rem;
+
+
+}
+
+.donation-success-detail {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.75rem;
+
+    padding: 0.9rem 1rem;
+
+    background: #f8f9fc;
+
+    border: 1px solid #e8ebf0;
+    border-radius: 13px;
+
+    text-align: right;
+
+
+}
+
+.donation-success-detail__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.11),
+        rgba(13, 110, 253, 0.11)
+    );
+
+    color: #6f42c1;
+
+    font-size: 1.05rem;
+
+
+}
+
+.donation-success-detail__content {
+    min-width: 0;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.2rem;
+
+
+}
+
+.donation-success-detail__label {
+    color: #6c757d;
+
+
+    font-size: 0.73rem;
+
+
+}
+
+.donation-success-detail__value {
+    color: #212529;
+
+
+    font-size: 0.95rem;
+    font-weight: 800;
+
+
+}
+
+.donation-success-detail__value small {
+    margin-right: 0.2rem;
+
+
+    color: #6c757d;
+
+    font-size: 0.7rem;
+    font-weight: 600;
+
+
+}
+
+.donation-success-detail__value--tracking {
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Actions
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-actions {
+    width: 100%;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.65rem;
+
+
+}
+
+.donation-success-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+    gap: 0.45rem;
+
+    width: 100%;
+    min-height: 46px;
+
+    padding: 0.65rem 1rem;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+
+
+}
+
+.donation-success-btn:hover {
+    transform: translateY(-1px);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Primary
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-btn--primary {
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+
+    color: #fff;
+
+    box-shadow:
+        0 4px 14px rgba(111, 66, 193, 0.18);
+
+
+}
+
+.donation-success-btn--primary:hover {
+    color: #fff;
+
+
+    box-shadow:
+        0 6px 18px rgba(111, 66, 193, 0.25);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Secondary
+ --------------------------------------------------------------------------
+ */
+
+.donation-success-btn--secondary {
+    background: #fff;
+
+
+    border: 1px solid #dee2e6;
+
+    color: #495057;
+
+
+}
+
+.donation-success-btn--secondary:hover {
+    background: #f8f9fa;
+
+
+    border-color: #adb5bd;
+
+    color: #212529;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Tablet / Desktop
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 768px) {
+
+
+    .donation-success-page {
+        padding: 1.5rem;
+    }
+
+    .donation-success-card {
+        padding: 2.5rem;
+    }
+
+    .donation-success-title {
+        font-size: 1.4rem;
+    }
+
+    .donation-success-details {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .donation-success-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .donation-success-btn {
+        width: auto;
+        min-width: 190px;
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Small Mobile
+ --------------------------------------------------------------------------
+ */
+
+@media (max-width: 575.98px) {
+
+
+    .donation-success-page {
+        padding: 0.85rem;
+    }
+
+    .donation-success-card {
+        padding: 1.75rem 1rem;
+        border-radius: 16px;
+    }
+
+    .donation-success-icon {
+        width: 68px;
+        height: 68px;
+
+        font-size: 1.8rem;
+    }
+
+    .donation-success-title {
+        font-size: 1.05rem;
+    }
+
+    .donation-success-subtitle {
+        font-size: 0.77rem;
+    }
+
+}

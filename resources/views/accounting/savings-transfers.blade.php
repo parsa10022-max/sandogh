@@ -4,45 +4,86 @@
 
 @section('content')
 
-    <div class="container-fluid accounting-page">
+    @push('styles')
+        @vite('resources/css/admin/accounting/savings-transfers.css')
+    @endpush
 
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div class="container-fluid savings-transfers-page">
 
-            <div>
-                <h1 class="h4 fw-bold mb-1">
-                    <i class="bi bi-wallet2 me-1"></i>
-                    واریزهای پس‌انداز
-                </h1>
+        {{-- Header --}}
+        <div class="savings-transfers-header">
 
-                <div class="text-muted small">
-                    واریزهای پرداخت‌شده در انتظار ثبت حسابداری
+            <div class="savings-transfers-title-wrapper">
+
+                <div class="savings-transfers-title-icon">
+                    <i class="bi bi-wallet2"></i>
                 </div>
+
+                <div>
+                    <h4 class="savings-transfers-title">
+                        واریزهای پس‌انداز
+                    </h4>
+
+                    <div class="savings-transfers-subtitle">
+                        واریزهای پرداخت‌شده در انتظار ثبت حسابداری
+                    </div>
+                </div>
+
             </div>
 
             <a href="{{ route('admin.accounting.index') }}"
-               class="btn btn-light border rounded-3">
+               class="savings-transfers-back-btn">
 
-                <i class="bi bi-arrow-right me-1"></i>
-                حسابداری
+                <i class="bi bi-arrow-right"></i>
+
+                <span>حسابداری</span>
 
             </a>
 
         </div>
 
 
-        <div class="card border-0 shadow-sm rounded-4">
+        {{-- Main Card --}}
+        <div class="savings-transfers-card">
 
-            <div class="card-body p-0">
+            <div class="savings-transfers-card-header">
 
-                <div class="table-responsive">
+                <div class="savings-transfers-card-title">
 
-                    <table class="table table-hover align-middle mb-0">
+                    <div class="savings-transfers-card-icon">
+                        <i class="bi bi-list-check"></i>
+                    </div>
 
-                        <thead class="table-light">
+                    <div>
+                        <div>
+                            واریزهای در انتظار ثبت
+                        </div>
+
+                        <small>
+                            بررسی و تأیید واریزهای پس‌انداز
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="savings-transfers-count">
+                    {{ $transfers->total() }} مورد
+                </div>
+
+            </div>
+
+
+            <div class="savings-transfers-card-body">
+
+                <div class="table-responsive savings-transfers-table-wrapper">
+
+                    <table class="table align-middle savings-transfers-table">
+
+                        <thead>
 
                         <tr>
 
-                            <th class="px-3">#</th>
+                            <th>#</th>
 
                             <th>پرداخت‌کننده</th>
 
@@ -52,7 +93,7 @@
 
                             <th>تاریخ پرداخت</th>
 
-                            <th class="text-end px-3">عملیات</th>
+                            <th>عملیات</th>
 
                         </tr>
 
@@ -65,71 +106,148 @@
 
                             <tr>
 
-                                <td class="px-3">
-                                    {{ $transfers->firstItem() + $loop->index }}
-                                </td>
-
-
+                                {{-- شماره --}}
                                 <td>
 
-                                    <div class="fw-semibold">
-                                        {{ $transfer->sender?->name ?? '---' }}
-                                    </div>
-
-                                </td>
-
-
-                                <td>
-
-                                    <div class="fw-semibold">
-                                        {{ $transfer->receiver?->name ?? '---' }}
-                                    </div>
-
-                                </td>
-
-
-                                <td>
-
-                                    <span class="fw-bold">
-                                        {{ $transfer->amount ?? 0 }}
-                                    </span>
-
-                                    <span class="text-muted small">
-                                        تومان
+                                    <span class="savings-transfer-row-number">
+                                        {{ $transfers->firstItem() + $loop->index }}
                                     </span>
 
                                 </td>
 
 
+                                {{-- پرداخت‌کننده --}}
                                 <td>
 
-                                    @if($transfer->paid_at)
+                                    @if($transfer->sender)
 
-                                        {{ $transfer->paid_at->format('Y/m/d H:i') }}
+                                        <div class="savings-transfer-person">
+
+                                            <div class="savings-transfer-person-icon">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+
+                                            <div class="savings-transfer-person-name">
+
+                                                {{ $transfer->sender->first_name }}
+                                                {{ $transfer->sender->last_name }}
+
+                                            </div>
+
+                                        </div>
 
                                     @else
 
-                                        ---
+                                        <span class="savings-transfer-muted">
+                                            ---
+                                        </span>
 
                                     @endif
 
                                 </td>
 
 
-                                <td class="text-end px-3">
+                                {{-- صاحب حساب --}}
+                                <td>
+
+                                    @if($transfer->receiver)
+
+                                        <div class="savings-transfer-person">
+
+                                            <div class="savings-transfer-person-icon">
+                                                <i class="bi bi-person-vcard"></i>
+                                            </div>
+
+                                            <div class="savings-transfer-person-name">
+
+                                                {{ $transfer->receiver->first_name }}
+                                                {{ $transfer->receiver->last_name }}
+
+                                            </div>
+
+                                        </div>
+
+                                    @else
+
+                                        <span class="savings-transfer-muted">
+                                            ---
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- مبلغ --}}
+                                <td>
+
+                                    <div class="savings-transfer-amount">
+
+                                        <strong>
+                                            {{ number_format($transfer->amount ?? 0) }}
+                                        </strong>
+
+                                        <small>
+                                            تومان
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- تاریخ --}}
+                                <td>
+
+                                    @if($transfer->paid_at)
+
+                                        <div class="savings-transfer-date">
+
+                                            <span>
+                                                {{ $transfer->paid_at->format('Y/m/d') }}
+                                            </span>
+
+                                            <small>
+                                                {{ $transfer->paid_at->format('H:i') }}
+                                            </small>
+
+                                        </div>
+
+                                    @else
+
+                                        <span class="savings-transfer-muted">
+                                            ---
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- عملیات --}}
+                                <td class="text-center">
 
                                     <form method="POST"
-                                          action="{{ route('admin.accounting.confirm', ['type' => 'savings-transfer', 'id' => $transfer->id]) }}"
-                                          class="d-inline"
+                                          action="{{ route(
+                                              'admin.accounting.confirm',
+                                              [
+                                                  'type' => 'savings-transfer',
+                                                  'id' => $transfer->id
+                                              ]
+                                          ) }}"
+                                          class="savings-transfer-confirm-form"
                                           onsubmit="return confirm('آیا این عملیات به عنوان ثبت‌شده در حسابداری تأیید شود؟')">
 
                                         @csrf
 
                                         <button type="submit"
-                                                class="btn btn-sm btn-success rounded-3">
+                                                class="savings-transfer-confirm-btn">
 
-                                            <i class="bi bi-check2-circle me-1"></i>
-                                            تأیید ثبت حسابداری
+                                            <i class="bi bi-check2-circle"></i>
+
+                                            <span>
+                                                تأیید ثبت
+                                            </span>
 
                                         </button>
 
@@ -139,18 +257,25 @@
 
                             </tr>
 
-
                         @empty
 
                             <tr>
 
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="6">
 
-                                    <div class="text-muted">
+                                    <div class="savings-transfers-empty">
 
-                                        <i class="bi bi-check-circle fs-2 d-block mb-2"></i>
+                                        <div class="savings-transfers-empty-icon">
+                                            <i class="bi bi-check-circle"></i>
+                                        </div>
 
-                                        عملیات واریز در انتظاری وجود ندارد.
+                                        <h6>
+                                            واریز در انتظاری وجود ندارد
+                                        </h6>
+
+                                        <p>
+                                            تمام واریزهای پس‌انداز در حسابداری ثبت شده‌اند.
+                                        </p>
 
                                     </div>
 
@@ -171,10 +296,13 @@
         </div>
 
 
+        {{-- Pagination --}}
         @if($transfers->hasPages())
 
-            <div class="mt-4">
+            <div class="savings-transfers-pagination">
+
                 {{ $transfers->links() }}
+
             </div>
 
         @endif

@@ -127,91 +127,276 @@ class LoanController extends Controller
     /**
      * فرم ثبت
      */
-    public function create(Request $request): View
-    {
-        $loanRequest = null;
+public function create(Request $request): View
+{
+    $loanRequest = null;
 
-        if ($request->filled('request')) {
+    if ($request->filled('request')) {
 
-            $loanRequest = LoanRequest::with('customer')
-                ->findOrFail($request->input('request'));
+        $loanRequest = LoanRequest::with('customer')
+            ->findOrFail($request->input('request'));
 
-            /*
-            |--------------------------------------------------------------------------
-            | فقط درخواست تایید شده می‌تواند وارد مرحله ایجاد وام شود
-            |--------------------------------------------------------------------------
-            */
+        /*
+        |--------------------------------------------------------------------------
+        | فقط درخواست تایید شده می‌تواند وارد مرحله ایجاد وام شود
+        |--------------------------------------------------------------------------
+        */
 
-            if ($loanRequest->status !== \App\Enums\LoanRequestStatus::APPROVED) {
+        if (
+            $loanRequest->status
+            !== \App\Enums\LoanRequestStatus::APPROVED
+        ) {
 
-                abort(
-                    403,
-                    'این درخواست تایید نشده است.'
-                );
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | جلوگیری از ایجاد وام تکراری
-            |--------------------------------------------------------------------------
-            */
-
-            if ($loanRequest->loan_id) {
-
-                abort(
-                    409,
-                    'برای این درخواست قبلاً وام ایجاد شده است.'
-                );
-            }
+            abort(
+                403,
+                'این درخواست تایید نشده است.'
+            );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | جلوگیری از ایجاد وام تکراری
+        |--------------------------------------------------------------------------
+        */
 
-        $loan = new Loan();
+        if ($loanRequest->loan_id) {
 
-
-        if ($loanRequest) {
-
-            $loan->customer_id =
-                $loanRequest->customer_id;
-
-            $loan->loan_amount =
-                $loanRequest->approved_amount;
-
-            $loan->loan_type_id =
-                $loanRequest->loan_type_id;
-
-            $loan->installment_count =
-                $loanRequest->approved_installment_count;
-
-            $loan->installment_interval =
-                $loanRequest->approved_installment_interval;
+            abort(
+                409,
+                'برای این درخواست قبلاً وام ایجاد شده است.'
+            );
         }
-
-
-        return view('loan.create', [
-
-            'loan' => $loan,
-
-            'customers' =>
-                $this->customerService->getActive(),
-
-            'loanTypes' =>
-                $this->loanTypeService->getActive(),
-
-            'loanRequest' =>
-                $loanRequest,
-
-        ]);
     }
 
 
+    $loan = new Loan();
+
+
+    if ($loanRequest) {
+
+        $loan->customer_id =
+            $loanRequest->customer_id;
+
+        $loan->loan_amount =
+            $loanRequest->approved_amount;
+
+        $loan->loan_type_id =
+            $loanRequest->loan_type_id;
+
+        $loan->installment_count =
+            $loanRequest->approved_installment_count;
+
+        $loan->installment_interval =
+            $loanRequest->approved_installment_interval;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ضامن‌های وام قبلی
+    |--------------------------------------------------------------------------
+    |
+    | اگر این مشتری قبلاً وام تسویه‌شده داشته باشد،
+    | ضامن‌های آخرین وام تسویه‌شده را برای فرم وام جدید
+    | به عنوان اطلاعات پیشنهادی دریافت می‌کنیم.
+    |
+    | این اطلاعات فقط برای نمایش در فرم است و هیچ رکورد
+    | جدیدی در این مرحله ایجاد نمی‌شود.
+    |
+    */
+
+    $previousLoanGuarantors = collect();
+
+
+    if ($loan->customer_id) {
+
+        $previousLoan = Loan::query()
+            ->where('customer_id', $loan->customer_id)
+            ->where('status', \App\Enums\LoanStatus::FINISHED)
+            ->with([
+                'guarantors.customer',
+            ])
+            ->latest('id')
+            ->first();
+
+
+        if ($previousLoan) {
+
+            $previousLoanGuarantors =
+                $previousLoan->guarantors
+                    ->sortBy('guarantor_order')
+                    ->values();
+        }
+    }
+
+
+    return view('loan.create', [
+
+        'loan' => $loan,
+
+        'customers' =>
+            $this->customerService->getActive(),
+
+        'loanTypes' =>
+            $this->loanTypeService->getActive(),
+
+        'loanRequest' =>
+            $loanRequest,
+
+        /*
+        |--------------------------------------------------------------------------
+        | ضامن‌های پیشنهادی از وام قبلی
+        |--------------------------------------------------------------------------
+        */
+
+        'previousLoanGuarantors' =>
+            $previousLoanGuarantors,
+
+    ]);
+}
+
+    /**
+     * دریافت ضامن‌های آخرین وام تسویه‌شده مشتری
+     */
+    public function previousGuarantors(
+        int $customer
+    ): JsonResponse {
+
+        $previousLoan = Loan::query()
+            ->where('customer_id', $customer)
+            ->where(
+                'status',
+                \App\Enums\LoanStatus::FINISHED
+            )
+            ->with([
+                'guarantors.customer',
+            ])
+            ->latest('id')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | مشتری وام تسویه‌شده ندارد
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$previousLoan) {
+
+            return response()->json([
+                'found' => false,
+                'loan_id' => null,
+                'guarantors' => [],
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | اطلاعات ضامن‌های آخرین وام تسویه‌شده
+        |--------------------------------------------------------------------------
+        */
+
+        $guarantors = $previousLoan->guarantors
+            ->sortBy('guarantor_order')
+            ->values()
+            ->map(function ($guarantor) {
+
+                return [
+
+                    'guarantor_order' =>
+                        $guarantor->guarantor_order,
+
+                    'guarantor_type' =>
+                        $guarantor->guarantor_type instanceof \App\Enums\GuarantorType
+                            ? $guarantor->guarantor_type->value
+                            : $guarantor->guarantor_type,
+
+                    'customer_id' =>
+                        $guarantor->customer_id,
+
+                    'first_name' =>
+                        $guarantor->first_name,
+
+                    'last_name' =>
+                        $guarantor->last_name,
+
+                    'national_code' =>
+                        $guarantor->national_code,
+
+                    'mobile' =>
+                        $guarantor->mobile,
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | اطلاعات ضمانت
+                    |--------------------------------------------------------------------------
+                    */
+
+                    'guarantee_type' =>
+                        $guarantor->guarantee_type instanceof \App\Enums\GuaranteeType
+                            ? $guarantor->guarantee_type->value
+                            : $guarantor->guarantee_type,
+
+                    'guarantee_number' =>
+                        $guarantor->guarantee_number,
+
+                    'guarantee_account_number' =>
+                        $guarantor->guarantee_account_number,
+
+                    'guarantee_amount' =>
+                        $guarantor->guarantee_amount,
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | اطلاعات مشتری ضامن
+                    |--------------------------------------------------------------------------
+                    */
+
+                    'customer' => $guarantor->customer
+                        ? [
+                            'id' =>
+                                $guarantor->customer->id,
+
+                            'name' =>
+                                $guarantor->customer->first_name
+                                . ' '
+                                . $guarantor->customer->last_name,
+
+                            'code' =>
+                                $guarantor->customer->customer_code,
+
+                            'mobile' =>
+                                $guarantor->customer->mobile,
+                        ]
+                        : null,
+                ];
+            });
+        /*
+        |--------------------------------------------------------------------------
+        | پاسخ
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+
+            'found' => true,
+
+            'loan_id' =>
+                $previousLoan->id,
+
+            'loan_number' =>
+                $previousLoan->loan_number,
+
+            'guarantors' =>
+                $guarantors,
+
+        ]);
+    }
     /**
      * ذخیره
      */
     public function store(
         StoreLoanRequest $request
     ): RedirectResponse {
-
         $loanRequest = null;
 
         if ($request->filled('loan_request_id')) {

@@ -90,6 +90,24 @@ class StoreLoanRequest extends FormRequest
                 'required',
                 new Enum(GuaranteeType::class),
             ],
+            'guarantor1_guarantee_amount' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
+
+            'guarantor1_guarantee_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'guarantor1_guarantee_account_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
 
             /*
             |--------------------------------------------------------------------------
@@ -133,7 +151,23 @@ class StoreLoanRequest extends FormRequest
                 'required',
                 new Enum(GuaranteeType::class),
             ],
+            'guarantor2_guarantee_amount' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
 
+            'guarantor2_guarantee_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'guarantor2_guarantee_account_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
         ];
     }
     public function withValidator($validator): void

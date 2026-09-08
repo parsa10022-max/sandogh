@@ -1,0 +1,620 @@
+ /*
+ --------------------------------------------------------------------------
+ System Account Edit
+ --------------------------------------------------------------------------
+ Design #1
+ Purple + Blue
+ RTL / Mobile First
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Header
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.system-account-edit-header__content {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+.system-account-edit-header__icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.12),
+        rgba(13, 110, 253, 0.12)
+    );
+
+    border: 1px solid rgba(111, 66, 193, 0.14);
+
+    color: #6f42c1;
+    font-size: 1.25rem;
+
+
+}
+
+.system-account-edit-header__title {
+    margin: 0;
+
+
+    font-size: 1.15rem;
+    font-weight: 800;
+
+    color: #212529;
+
+
+}
+
+.system-account-edit-header__subtitle {
+    margin: 0.25rem 0 0;
+
+
+    color: #6c757d;
+    font-size: 0.82rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Back Button
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+
+
+    min-height: 42px;
+    padding: 0.55rem 0.85rem;
+
+    border: 1px solid #dee2e6;
+    border-radius: 11px;
+
+    background: #fff;
+    color: #495057;
+
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+
+
+}
+
+.system-account-edit-back:hover {
+    background: #f8f9fa;
+    border-color: #6f42c1;
+    color: #6f42c1;
+    transform: translateX(2px);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-card {
+    overflow: hidden;
+
+
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 18px rgba(31, 41, 55, 0.06);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card Header
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+
+
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid #edf0f3;
+
+    background: #fff;
+
+
+}
+
+.system-account-edit-card__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.11),
+        rgba(13, 110, 253, 0.11)
+    );
+
+    color: #6f42c1;
+
+    font-size: 1.1rem;
+
+
+}
+
+.system-account-edit-card__title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 0.98rem;
+    font-weight: 800;
+
+
+}
+
+.system-account-edit-card__subtitle {
+    margin: 0.2rem 0 0;
+
+
+    color: #6c757d;
+
+    font-size: 0.78rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card Body
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-card__body {
+    padding: 1.1rem;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Form Field
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-field {
+    margin-bottom: 1.25rem;
+}
+
+.system-account-edit-label {
+    display: block;
+
+
+    margin-bottom: 0.5rem;
+
+    color: #343a40;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+
+}
+
+.system-account-edit-required {
+    margin-right: 0.15rem;
+
+
+    color: #dc3545;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Input
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-input-wrapper {
+    position: relative;
+}
+
+.system-account-edit-input-icon {
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    color: #6f42c1;
+
+    transform: translateY(-50%);
+    pointer-events: none;
+
+
+}
+
+.system-account-edit-input {
+    width: 100%;
+    min-height: 48px;
+
+
+    padding: 0.7rem 3rem 0.7rem 0.85rem;
+
+    border: 1px solid #dfe3e8;
+    border-radius: 12px;
+
+    background: #fff;
+    color: #212529;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+
+
+}
+
+.system-account-edit-input::placeholder {
+    color: #adb5bd;
+}
+
+.system-account-edit-input:focus {
+    border-color: #6f42c1;
+
+
+    box-shadow:
+        0 0 0 3px rgba(111, 66, 193, 0.1);
+
+
+}
+
+.system-account-edit-input.is-invalid {
+    border-color: #dc3545;
+}
+
+.system-account-edit-input.is-invalid:focus {
+    box-shadow:
+        0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Readonly
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-input--readonly {
+    background: #f8f9fa;
+    color: #6c757d;
+
+
+    cursor: not-allowed;
+
+
+}
+
+.system-account-edit-input--readonly:focus {
+    border-color: #dfe3e8;
+
+
+    box-shadow: none;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Error
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-error {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+
+    margin-top: 0.4rem;
+
+    color: #dc3545;
+
+    font-size: 0.78rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Hint
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+
+    margin-top: 0.4rem;
+
+    color: #6c757d;
+
+    font-size: 0.75rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Actions
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+
+    gap: 0.65rem;
+
+    padding-top: 0.35rem;
+
+
+}
+
+.system-account-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+
+
+    min-height: 45px;
+
+    padding: 0.65rem 1rem;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    border: 1px solid transparent;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+
+
+}
+
+.system-account-edit-btn:hover {
+    transform: translateY(-1px);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Primary
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-btn--primary {
+    min-width: 150px;
+
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    border-color: transparent;
+
+    color: #fff;
+
+    box-shadow:
+        0 4px 12px rgba(111, 66, 193, 0.18);
+
+
+}
+
+.system-account-edit-btn--primary:hover {
+    color: #fff;
+
+
+    box-shadow:
+        0 6px 16px rgba(111, 66, 193, 0.24);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Secondary
+ --------------------------------------------------------------------------
+ */
+
+.system-account-edit-btn--secondary {
+    min-width: 100px;
+
+
+    background: #fff;
+
+    border-color: #dee2e6;
+
+    color: #495057;
+
+
+}
+
+.system-account-edit-btn--secondary:hover {
+    background: #f8f9fa;
+
+
+    border-color: #adb5bd;
+
+    color: #212529;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Tablet / Desktop
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 768px) {
+
+
+    .system-account-edit-page {
+        padding: 1.5rem;
+    }
+
+    .system-account-edit-header__title {
+        font-size: 1.3rem;
+    }
+
+    .system-account-edit-card__body {
+        padding: 1.5rem;
+    }
+
+    .system-account-edit-card__header {
+        padding: 1.15rem 1.5rem;
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Mobile
+ --------------------------------------------------------------------------
+ */
+
+@media (max-width: 575.98px) {
+
+
+    .system-account-edit-header {
+        align-items: flex-start;
+    }
+
+    .system-account-edit-header__content {
+        align-items: flex-start;
+    }
+
+    .system-account-edit-header__icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .system-account-edit-header__title {
+        font-size: 1rem;
+    }
+
+    .system-account-edit-header__subtitle {
+        font-size: 0.75rem;
+    }
+
+    .system-account-edit-back {
+        width: 42px;
+        min-width: 42px;
+        padding: 0;
+    }
+
+    .system-account-edit-back span {
+        display: none;
+    }
+
+    .system-account-edit-card {
+        border-radius: 15px;
+    }
+
+    .system-account-edit-card__body {
+        padding: 1rem;
+    }
+
+    .system-account-edit-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .system-account-edit-btn {
+        width: 100%;
+    }
+
+    .system-account-edit-btn--primary,
+    .system-account-edit-btn--secondary {
+        min-width: 0;
+    }
+
+
+}

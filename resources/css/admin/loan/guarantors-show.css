@@ -1,0 +1,367 @@
+    /* =========================================================
+       LOAN GUARANTORS
+       Design System #1
+    ========================================================= */
+
+.loan-guarantors-card {
+    background: #fff;
+    border: 1px solid #e7eaf3;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(31, 41, 55, 0.06);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.loan-guarantors-card .loan-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.loan-guarantors-card .loan-section-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.loan-guarantors-card .loan-section-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+    background: #f0edff;
+    color: #6f42c1;
+    font-size: 18px;
+}
+
+.loan-guarantors-card .loan-section-title h6 {
+    color: #20253a;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.loan-guarantors-card .loan-section-title small {
+    display: block;
+    margin-top: 3px;
+    color: #8a91a5;
+    font-size: 11px;
+}
+
+.loan-guarantors-count {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #f4f6fb;
+    border: 1px solid #e5e8f0;
+    color: #626a7d;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.loan-guarantors-body {
+    padding: 14px;
+}
+
+
+/* =========================================================
+   GUARANTOR ITEM
+========================================================= */
+
+.loan-guarantor-item {
+    height: 100%;
+    background: #fff;
+    border: 1px solid #e5e8f0;
+    border-radius: 13px;
+    overflow: hidden;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.loan-guarantor-item:hover {
+    border-color: #d6d1f5;
+    box-shadow: 0 5px 16px rgba(31, 41, 55, 0.06);
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   GUARANTOR HEADER
+========================================================= */
+
+.loan-guarantor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    padding: 11px 12px;
+
+    background: #fafaff;
+    border-bottom: 1px solid #eceef5;
+}
+
+.loan-guarantor-person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.loan-guarantor-avatar {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    font-size: 17px;
+}
+
+.loan-guarantor-avatar-primary {
+    background: #f0edff;
+    color: #6f42c1;
+}
+
+.loan-guarantor-avatar-success {
+    background: #eaf8f1;
+    color: #198754;
+}
+
+.loan-guarantor-person-content {
+    min-width: 0;
+}
+
+.loan-guarantor-person-content strong {
+    display: block;
+    color: #252a3d;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.loan-guarantor-type {
+    display: block;
+    margin-top: 2px;
+    color: #8a91a5;
+    font-size: 10px;
+}
+
+.loan-guarantor-order {
+    flex-shrink: 0;
+    color: #9aa1b2;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.loan-guarantor-info {
+    padding: 5px 12px 8px;
+}
+
+.loan-guarantor-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    min-height: 39px;
+    padding: 7px 0;
+
+    border-bottom: 1px dashed #eceef3;
+}
+
+.loan-guarantor-row:last-child {
+    border-bottom: 0;
+}
+
+.loan-guarantor-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    flex-shrink: 0;
+
+    color: #858da0;
+    font-size: 11px;
+}
+
+.loan-guarantor-label i {
+    width: 17px;
+    text-align: center;
+    color: #7a72c9;
+    font-size: 13px;
+}
+
+.loan-guarantor-value {
+    min-width: 0;
+
+    color: #30364a;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+
+    overflow-wrap: anywhere;
+}
+
+.loan-guarantor-ltr {
+    direction: ltr;
+    unicode-bidi: plaintext;
+}
+
+.loan-guarantor-guarantee {
+    padding: 4px 8px;
+
+    border-radius: 7px;
+    background: #f0edff;
+    color: #6554b4;
+
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.loan-guarantor-amount {
+    color: #198754;
+}
+
+.loan-guarantor-amount small {
+    margin-right: 3px;
+    color: #7b8497;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.loan-guarantors-empty {
+    min-height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+
+    padding: 18px;
+
+    border: 1px dashed #dfe3ec;
+    border-radius: 12px;
+    background: #fafbfe;
+
+    color: #737b8f;
+}
+
+.loan-empty-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    background: #f0edff;
+    color: #6f42c1;
+    font-size: 17px;
+}
+
+.loan-guarantors-empty strong {
+    display: block;
+    color: #444b5f;
+    font-size: 12px;
+}
+
+.loan-guarantors-empty small {
+    display: block;
+    margin-top: 3px;
+    color: #969daf;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .loan-guarantors-card .loan-section-header {
+        padding: 12px;
+    }
+
+    .loan-guarantors-body {
+        padding: 10px;
+    }
+
+    .loan-guarantor-header {
+        padding: 10px;
+    }
+
+    .loan-guarantor-info {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .loan-guarantor-row {
+        gap: 8px;
+    }
+
+    .loan-guarantor-label {
+        font-size: 10px;
+    }
+
+    .loan-guarantor-value {
+        font-size: 11px;
+    }
+}
+
+
+@media (max-width: 390px) {
+
+    .loan-guarantors-count {
+        display: none;
+    }
+
+    .loan-guarantor-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .loan-guarantor-value,
+    .loan-guarantor-guarantee {
+        margin-right: 24px;
+        text-align: right;
+    }
+}
+

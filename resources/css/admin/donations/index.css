@@ -1,0 +1,842 @@
+ /*
+ --------------------------------------------------------------------------
+ Donation Index
+ --------------------------------------------------------------------------
+ Design #1
+ Purple + Blue
+ RTL / Mobile First
+ --------------------------------------------------------------------------
+ */
+
+.donation-list-page {
+    width: 100%;
+    max-width: 1250px;
+
+
+    margin: 0 auto;
+
+    padding: 1rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Page Header
+ --------------------------------------------------------------------------
+ */
+
+.donation-list-header {
+    margin-bottom: 1.25rem;
+}
+
+.donation-list-header__content {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.85rem;
+
+
+}
+
+.donation-list-header__icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.12),
+        rgba(13, 110, 253, 0.12)
+    );
+
+    border: 1px solid rgba(111, 66, 193, 0.14);
+
+    color: #6f42c1;
+
+    font-size: 1.2rem;
+
+
+}
+
+.donation-list-header__title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+
+
+}
+
+.donation-list-header__subtitle {
+    margin: 0.25rem 0 0;
+
+
+    color: #6c757d;
+
+    font-size: 0.8rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Main Cards
+ --------------------------------------------------------------------------
+ */
+
+.donation-accounts-card,
+.donation-transactions-card {
+    overflow: hidden;
+
+
+    margin-bottom: 1.25rem;
+
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 18px rgba(31, 41, 55, 0.06);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Section Header
+ --------------------------------------------------------------------------
+ */
+
+.donation-section-header {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.8rem;
+
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid #edf0f3;
+
+
+}
+
+.donation-section-header__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.11),
+        rgba(13, 110, 253, 0.11)
+    );
+
+    color: #6f42c1;
+
+    font-size: 1.05rem;
+
+
+}
+
+.donation-section-header__icon--transactions {
+    background: rgba(13, 110, 253, 0.09);
+
+
+    color: #0d6efd;
+
+
+}
+
+.donation-section-header__title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 0.98rem;
+    font-weight: 800;
+
+
+}
+
+.donation-section-header__subtitle {
+    margin: 0.2rem 0 0;
+
+
+    color: #6c757d;
+
+    font-size: 0.75rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Accounts
+ --------------------------------------------------------------------------
+ */
+
+.donation-accounts-body {
+    padding: 1rem;
+}
+
+.donation-accounts-grid {
+    display: grid;
+
+
+    grid-template-columns: 1fr;
+
+    gap: 0.85rem;
+
+
+}
+
+.donation-account-item {
+    min-width: 0;
+}
+
+.donation-account-card {
+    position: relative;
+
+
+    display: block;
+
+    min-height: 150px;
+
+    padding: 1rem;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e1e5ea;
+
+    border-radius: 14px;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+
+}
+
+.donation-account-card:hover {
+    border-color: #6f42c1;
+
+
+    color: inherit;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 20px rgba(111, 66, 193, 0.1);
+
+
+}
+
+.donation-account-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+
+    gap: 0.6rem;
+
+
+}
+
+.donation-account-card__name {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.55rem;
+
+    min-width: 0;
+
+    color: #212529;
+
+    font-size: 0.86rem;
+    font-weight: 800;
+
+
+}
+
+.donation-account-card__icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eef4ff;
+
+    color: #0d6efd;
+
+    font-size: 0.9rem;
+
+
+}
+
+.donation-account-card__number {
+    flex: 0 0 auto;
+
+
+    padding: 0.28rem 0.5rem;
+
+    border-radius: 7px;
+
+    background: #f0f4ff;
+
+    color: #0d6efd;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+
+
+}
+
+.donation-account-card__divider {
+    height: 1px;
+
+
+    margin: 1rem 0 0.8rem;
+
+    background: #edf0f3;
+
+
+}
+
+.donation-account-card__bottom {
+    display: flex;
+    flex-direction: column;
+
+
+    gap: 0.25rem;
+
+
+}
+
+.donation-account-card__balance-label {
+    color: #6c757d;
+
+
+    font-size: 0.72rem;
+
+
+}
+
+.donation-account-card__balance {
+    color: #198754;
+
+
+    font-size: 1rem;
+    font-weight: 800;
+
+
+}
+
+.donation-account-card__balance small {
+    color: #6c757d;
+
+
+    font-size: 0.68rem;
+    font-weight: 600;
+
+
+}
+
+.donation-account-card__arrow {
+    position: absolute;
+
+
+    left: 0.85rem;
+    bottom: 0.8rem;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f7f7f9;
+
+    color: #6f42c1;
+
+    font-size: 0.75rem;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+
+
+}
+
+.donation-account-card:hover .donation-account-card__arrow {
+    background: #6f42c1;
+
+
+    color: #fff;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Empty Accounts
+ --------------------------------------------------------------------------
+ */
+
+.donation-accounts-empty {
+    grid-column: 1 / -1;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    min-height: 100px;
+
+    color: #6c757d;
+
+    font-size: 0.8rem;
+
+
+}
+
+.donation-accounts-empty i {
+    font-size: 1.15rem;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Transactions
+ --------------------------------------------------------------------------
+ */
+
+.donation-transactions-body {
+    padding: 0;
+}
+
+.donation-table-wrapper {
+    width: 100%;
+
+
+    overflow-x: auto;
+
+
+}
+
+.donation-transactions-table {
+    width: 100%;
+
+
+    min-width: 950px;
+
+    margin: 0;
+
+    border-collapse: collapse;
+
+    font-size: 0.8rem;
+
+
+}
+
+.donation-transactions-table th {
+    padding: 0.85rem 0.75rem;
+
+
+    background: #f8f9fc;
+
+    border-bottom: 1px solid #e1e5ea;
+
+    color: #495057;
+
+    font-size: 0.75rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-transactions-table td {
+    padding: 0.8rem 0.75rem;
+
+
+    border-bottom: 1px solid #edf0f3;
+
+    color: #495057;
+
+    vertical-align: middle;
+
+
+}
+
+.donation-transactions-table tbody tr {
+    transition:
+        background-color 0.15s ease;
+}
+
+.donation-transactions-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.donation-transactions-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Transaction Data
+ --------------------------------------------------------------------------
+ */
+
+.donation-date {
+    display: inline-flex;
+    align-items: center;
+
+
+    gap: 0.35rem;
+
+    color: #6c757d;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-date i {
+    color: #6f42c1;
+}
+
+.donation-transaction-account {
+    display: inline-flex;
+    align-items: center;
+
+
+    gap: 0.45rem;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-transaction-account__icon {
+    width: 30px;
+    height: 30px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eef4ff;
+
+    color: #0d6efd;
+
+    font-size: 0.75rem;
+
+
+}
+
+.donation-transaction-account strong {
+    color: #343a40;
+
+
+    font-weight: 700;
+
+
+}
+
+.donation-transaction-number {
+    color: #0d6efd;
+
+
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-transaction-amount {
+    color: #198754;
+
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-transaction-amount small {
+    color: #6c757d;
+
+
+    font-size: 0.65rem;
+    font-weight: 600;
+
+
+}
+
+.donation-creator {
+    display: inline-flex;
+    align-items: center;
+
+
+    gap: 0.3rem;
+
+    color: #495057;
+
+    white-space: nowrap;
+
+
+}
+
+.donation-creator i {
+    color: #6f42c1;
+}
+
+.donation-description {
+    display: inline-block;
+
+
+    max-width: 220px;
+
+    color: #6c757d;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Empty Transactions
+ --------------------------------------------------------------------------
+ */
+
+.donation-transactions-empty {
+    min-height: 180px;
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.35rem;
+
+    color: #6c757d;
+
+    text-align: center;
+
+
+}
+
+.donation-transactions-empty__icon {
+    width: 50px;
+    height: 50px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 0.35rem;
+
+    border-radius: 13px;
+
+    background: #f4f5f8;
+
+    color: #adb5bd;
+
+    font-size: 1.2rem;
+
+
+}
+
+.donation-transactions-empty strong {
+    color: #495057;
+
+
+    font-size: 0.82rem;
+
+
+}
+
+.donation-transactions-empty span {
+    font-size: 0.72rem;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Pagination
+ --------------------------------------------------------------------------
+ */
+
+.donation-pagination {
+    padding: 1rem;
+
+
+    border-top: 1px solid #edf0f3;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Tablet
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 576px) {
+
+
+    .donation-accounts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Desktop
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 992px) {
+
+
+    .donation-list-page {
+        padding: 1.5rem;
+    }
+
+    .donation-list-header__title {
+        font-size: 1.3rem;
+    }
+
+    .donation-accounts-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .donation-accounts-body {
+        padding: 1.25rem;
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Large Desktop
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 1200px) {
+
+
+    .donation-accounts-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Mobile
+ --------------------------------------------------------------------------
+ */
+
+@media (max-width: 575.98px) {
+
+
+    .donation-list-page {
+        padding: 0.85rem;
+    }
+
+    .donation-list-header__icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .donation-list-header__title {
+        font-size: 1rem;
+    }
+
+    .donation-list-header__subtitle {
+        font-size: 0.72rem;
+    }
+
+    .donation-accounts-card,
+    .donation-transactions-card {
+        border-radius: 15px;
+    }
+
+    .donation-section-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .donation-accounts-body {
+        padding: 0.85rem;
+    }
+
+    .donation-account-card {
+        min-height: 145px;
+    }
+
+    .donation-account-card__number {
+        font-size: 0.6rem;
+    }
+
+
+}

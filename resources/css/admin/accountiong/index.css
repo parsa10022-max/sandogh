@@ -1,0 +1,629 @@
+    /* =========================================================
+       Accounting Dashboard
+       Design #1
+       ========================================================= */
+
+.accounting-dashboard-page {
+    direction: rtl;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 16px 32px;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.accounting-dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.accounting-dashboard-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.accounting-dashboard-title-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: linear-gradient(135deg, #6f42c1, #0d6efd);
+    color: #fff;
+
+    font-size: 20px;
+
+    box-shadow: 0 5px 14px rgba(13, 110, 253, 0.16);
+}
+
+.accounting-dashboard-title {
+    margin: 0;
+
+    color: #212529;
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.accounting-dashboard-subtitle {
+    margin-top: 2px;
+
+    color: #6c757d;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.accounting-dashboard-pending {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border: 1px solid #ffe69c;
+    border-radius: 20px;
+
+    background: #fff3cd;
+    color: #664d03;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.accounting-dashboard-pending i {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   Statistics
+   ========================================================= */
+
+.accounting-dashboard-statistics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.accounting-stat-card {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 145px;
+    padding: 16px;
+
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+
+    box-shadow: 0 5px 18px rgba(33, 37, 41, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.accounting-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+}
+
+.accounting-stat-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.accounting-stat-icon {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 20px;
+}
+
+.accounting-stat-icon-primary {
+    background: #eef4ff;
+    color: #0d6efd;
+}
+
+.accounting-stat-icon-danger {
+    background: #fff0f1;
+    color: #dc3545;
+}
+
+.accounting-stat-icon-success {
+    background: #eaf7f0;
+    color: #198754;
+}
+
+.accounting-stat-icon-warning {
+    background: #fff7df;
+    color: #b58105;
+}
+
+.accounting-stat-content {
+    min-width: 0;
+}
+
+.accounting-stat-label {
+    margin-bottom: 3px;
+
+    color: #6c757d;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.accounting-stat-value {
+    color: #212529;
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.accounting-stat-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 13px;
+    padding-top: 10px;
+
+    border-top: 1px solid #f0f1f3;
+
+    color: #0d6efd;
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.accounting-stat-link:hover {
+    color: #084298;
+}
+
+.accounting-stat-link-danger {
+    color: #dc3545;
+}
+
+.accounting-stat-link-danger:hover {
+    color: #b02a37;
+}
+
+.accounting-stat-link-success {
+    color: #198754;
+}
+
+.accounting-stat-link-success:hover {
+    color: #146c43;
+}
+
+.accounting-stat-link i {
+    font-size: 13px;
+}
+
+.accounting-stat-total-label {
+    margin-top: 13px;
+    padding-top: 10px;
+
+    border-top: 1px solid #f0f1f3;
+
+    color: #868e96;
+    font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   Operations Card
+   ========================================================= */
+
+.accounting-operations-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+
+    box-shadow: 0 5px 18px rgba(33, 37, 41, 0.06);
+
+    overflow: hidden;
+}
+
+.accounting-operations-header {
+    min-height: 62px;
+    padding: 10px 16px;
+
+    display: flex;
+    align-items: center;
+
+    border-bottom: 1px solid #edf0f2;
+}
+
+.accounting-operations-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.accounting-operations-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f1ecfb;
+    color: #6f42c1;
+
+    font-size: 15px;
+}
+
+.accounting-operations-title {
+    margin: 0;
+
+    color: #343a40;
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.accounting-operations-subtitle {
+    margin-top: 1px;
+
+    color: #868e96;
+    font-size: 0.68rem;
+}
+
+.accounting-operations-body {
+    padding: 14px 16px 16px;
+}
+
+.accounting-operation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.accounting-operation-item {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 13px;
+
+    border: 1px solid #e9ecef;
+    border-radius: 13px;
+
+    background: #fff;
+
+    text-decoration: none;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.accounting-operation-item:hover {
+    border-color: #d7dbe0;
+    background: #fafbff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(33, 37, 41, 0.05);
+}
+
+.accounting-operation-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+}
+
+.accounting-operation-icon-primary {
+    background: #eef4ff;
+    color: #0d6efd;
+}
+
+.accounting-operation-icon-danger {
+    background: #fff0f1;
+    color: #dc3545;
+}
+
+.accounting-operation-icon-success {
+    background: #eaf7f0;
+    color: #198754;
+}
+
+.accounting-operation-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.accounting-operation-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #343a40;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.accounting-operation-description {
+    margin-top: 2px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #868e96;
+    font-size: 0.67rem;
+}
+
+.accounting-operation-count {
+    min-width: 31px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 3px 7px;
+
+    border-radius: 20px;
+
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.accounting-operation-count-primary {
+    background: #eef4ff;
+    color: #0d6efd;
+}
+
+.accounting-operation-count-danger {
+    background: #fff0f1;
+    color: #dc3545;
+}
+
+.accounting-operation-count-success {
+    background: #eaf7f0;
+    color: #198754;
+}
+
+.accounting-operation-arrow {
+    flex: 0 0 auto;
+
+    color: #adb5bd;
+    font-size: 13px;
+
+    transition: transform 0.2s ease;
+}
+
+.accounting-operation-item:hover .accounting-operation-arrow {
+    transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .accounting-dashboard-statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .accounting-operation-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .accounting-dashboard-page {
+        padding: 14px 10px 24px;
+    }
+
+    .accounting-dashboard-header {
+        align-items: flex-start;
+        margin-bottom: 14px;
+    }
+
+    .accounting-dashboard-title-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+
+        border-radius: 11px;
+        font-size: 17px;
+    }
+
+    .accounting-dashboard-title {
+        font-size: 1rem;
+    }
+
+    .accounting-dashboard-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .accounting-dashboard-pending {
+        padding: 6px 9px;
+        font-size: 0.68rem;
+    }
+
+    .accounting-dashboard-statistics {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .accounting-stat-card {
+        min-height: 125px;
+        padding: 12px;
+        border-radius: 13px;
+    }
+
+    .accounting-stat-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+
+        border-radius: 10px;
+        font-size: 17px;
+    }
+
+    .accounting-stat-main {
+        gap: 9px;
+    }
+
+    .accounting-stat-label {
+        font-size: 0.68rem;
+    }
+
+    .accounting-stat-value {
+        font-size: 1.2rem;
+    }
+
+    .accounting-stat-link {
+        margin-top: 9px;
+        padding-top: 8px;
+        font-size: 0.65rem;
+    }
+
+    .accounting-stat-total-label {
+        margin-top: 9px;
+        padding-top: 8px;
+        font-size: 0.61rem;
+    }
+
+    .accounting-operations-card {
+        border-radius: 13px;
+    }
+
+    .accounting-operations-header {
+        min-height: 52px;
+        padding: 8px 10px;
+    }
+
+    .accounting-operations-icon {
+        width: 29px;
+        height: 29px;
+        flex-basis: 29px;
+
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
+    .accounting-operations-title {
+        font-size: 0.78rem;
+    }
+
+    .accounting-operations-subtitle {
+        font-size: 0.62rem;
+    }
+
+    .accounting-operations-body {
+        padding: 10px;
+    }
+
+    .accounting-operation-item {
+        padding: 10px;
+        gap: 8px;
+        border-radius: 11px;
+    }
+
+    .accounting-operation-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .accounting-operation-title {
+        font-size: 0.72rem;
+    }
+
+    .accounting-operation-description {
+        font-size: 0.62rem;
+    }
+
+    .accounting-operation-count {
+        min-width: 27px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+}
+
+
+/* =========================================================
+   Very Small Mobile
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .accounting-dashboard-header {
+        flex-direction: column;
+    }
+
+    .accounting-dashboard-pending {
+        align-self: stretch;
+    }
+
+    .accounting-dashboard-title-wrapper {
+        width: 100%;
+    }
+
+    .accounting-dashboard-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .accounting-stat-card {
+        min-height: 112px;
+    }
+}

@@ -1,0 +1,579 @@
+    /* =========================================================
+       Savings Withdrawals - Design #1
+       ========================================================= */
+
+.savings-withdrawals-page {
+    direction: rtl;
+    padding: 20px 16px 32px;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.savings-withdrawals-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.savings-withdrawals-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.savings-withdrawals-title-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+    background: linear-gradient(135deg, #6f42c1, #0d6efd);
+    color: #fff;
+
+    font-size: 20px;
+    box-shadow: 0 5px 14px rgba(13, 110, 253, 0.16);
+}
+
+.savings-withdrawals-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #212529;
+    line-height: 1.5;
+}
+
+.savings-withdrawals-subtitle {
+    margin-top: 2px;
+    color: #6c757d;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.savings-withdrawals-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-height: 38px;
+    padding: 7px 13px;
+
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #495057;
+
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.savings-withdrawals-back-btn:hover {
+    background: #f8f9fa;
+    border-color: #cfd4da;
+    color: #343a40;
+    transform: translateY(-1px);
+}
+
+
+/* ---------------------------------------------------------
+   Main Card
+   --------------------------------------------------------- */
+
+.savings-withdrawals-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(33, 37, 41, 0.06);
+    overflow: hidden;
+}
+
+.savings-withdrawals-card-header {
+    min-height: 58px;
+    padding: 10px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    border-bottom: 1px solid #edf0f2;
+}
+
+.savings-withdrawals-card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    min-width: 0;
+
+    color: #343a40;
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.savings-withdrawals-card-icon {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+    background: #f1ecfb;
+    color: #6f42c1;
+
+    font-size: 15px;
+}
+
+.savings-withdrawals-count {
+    flex: 0 0 auto;
+
+    padding: 4px 9px;
+
+    border-radius: 20px;
+    background: #f1f3f5;
+    color: #6c757d;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   Table
+   --------------------------------------------------------- */
+
+.savings-withdrawals-card-body {
+    padding: 0;
+}
+
+.savings-withdrawals-table-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.savings-withdrawals-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0;
+}
+
+.savings-withdrawals-table thead th {
+    padding: 11px 10px;
+
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+
+    color: #6c757d;
+    font-size: 0.74rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.savings-withdrawals-table tbody td {
+    padding: 11px 10px;
+
+    border-bottom: 1px solid #f0f1f3;
+
+    color: #343a40;
+    font-size: 0.78rem;
+
+    vertical-align: middle;
+}
+
+.savings-withdrawals-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.savings-withdrawals-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.savings-withdrawals-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+/* Column widths */
+
+.savings-withdrawals-table .col-number {
+    width: 5%;
+    text-align: center;
+}
+
+.savings-withdrawals-table .col-member {
+    width: 22%;
+}
+
+.savings-withdrawals-table .col-amount {
+    width: 15%;
+}
+
+.savings-withdrawals-table .col-payer {
+    width: 20%;
+}
+
+.savings-withdrawals-table .col-date {
+    width: 16%;
+}
+
+.savings-withdrawals-table .col-action {
+    width: 22%;
+    text-align: center;
+}
+
+
+/* ---------------------------------------------------------
+   Number
+   --------------------------------------------------------- */
+
+.savings-withdrawal-row-number {
+    text-align: center;
+    color: #868e96;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   Person
+   --------------------------------------------------------- */
+
+.savings-withdrawal-person {
+    min-width: 0;
+}
+
+.savings-withdrawal-person-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.savings-withdrawal-person-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+    background: #eef4ff;
+    color: #0d6efd;
+
+    font-size: 14px;
+}
+
+.savings-withdrawal-person-name {
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #343a40;
+    font-weight: 700;
+    font-size: 0.79rem;
+}
+
+
+/* ---------------------------------------------------------
+   Amount
+   --------------------------------------------------------- */
+
+.savings-withdrawal-amount {
+    white-space: nowrap;
+}
+
+.savings-withdrawal-amount-value {
+    color: #198754;
+    font-weight: 800;
+    font-size: 0.82rem;
+}
+
+.savings-withdrawal-amount-unit {
+    margin-right: 3px;
+    color: #868e96;
+    font-size: 0.68rem;
+}
+
+
+/* ---------------------------------------------------------
+   Date
+   --------------------------------------------------------- */
+
+.savings-withdrawal-date {
+    white-space: nowrap;
+}
+
+.savings-withdrawal-date span {
+    display: inline-block;
+    font-weight: 600;
+    color: #495057;
+}
+
+.savings-withdrawal-date small {
+    margin-right: 4px;
+    color: #868e96;
+    font-size: 0.68rem;
+}
+
+.savings-withdrawal-muted {
+    color: #adb5bd !important;
+}
+
+
+/* ---------------------------------------------------------
+   Action
+   --------------------------------------------------------- */
+
+.savings-withdrawal-action {
+    text-align: center;
+}
+
+.savings-withdrawal-confirm-form {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.savings-withdrawal-confirm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    max-width: 100%;
+    min-height: 34px;
+    padding: 6px 10px;
+
+    border: 1px solid #198754;
+    border-radius: 9px;
+
+    background: #198754;
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.savings-withdrawal-confirm-btn:hover {
+    background: #157347;
+    border-color: #146c43;
+    transform: translateY(-1px);
+}
+
+.savings-withdrawal-confirm-btn i {
+    font-size: 14px;
+}
+
+
+/* ---------------------------------------------------------
+   Empty
+   --------------------------------------------------------- */
+
+.savings-withdrawals-empty {
+    padding: 48px 20px !important;
+    text-align: center;
+}
+
+.savings-withdrawals-empty-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+    background: #eaf7f0;
+    color: #198754;
+
+    font-size: 25px;
+}
+
+.savings-withdrawals-empty-title {
+    margin-bottom: 3px;
+
+    color: #495057;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.savings-withdrawals-empty-text {
+    color: #868e96;
+    font-size: 0.73rem;
+}
+
+
+/* ---------------------------------------------------------
+   Pagination
+   --------------------------------------------------------- */
+
+.savings-withdrawals-pagination {
+    margin-top: 16px;
+}
+
+.savings-withdrawals-pagination .pagination {
+    margin-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   Tablet
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+
+    .savings-withdrawals-page {
+        padding-inline: 12px;
+    }
+
+    .savings-withdrawals-table thead th,
+    .savings-withdrawals-table tbody td {
+        padding-inline: 7px;
+    }
+
+    .savings-withdrawals-table .col-member {
+        width: 21%;
+    }
+
+    .savings-withdrawals-table .col-payer {
+        width: 19%;
+    }
+
+    .savings-withdrawals-table .col-action {
+        width: 23%;
+    }
+
+    .savings-withdrawal-confirm-btn span {
+        font-size: 0.68rem;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+    .savings-withdrawals-page {
+        padding: 14px 10px 24px;
+    }
+
+    .savings-withdrawals-header {
+        align-items: flex-start;
+        margin-bottom: 14px;
+    }
+
+    .savings-withdrawals-title-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+
+        border-radius: 11px;
+        font-size: 17px;
+    }
+
+    .savings-withdrawals-title {
+        font-size: 1rem;
+    }
+
+    .savings-withdrawals-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .savings-withdrawals-back-btn {
+        min-height: 34px;
+        padding: 6px 9px;
+        font-size: 0.72rem;
+    }
+
+    .savings-withdrawals-card {
+        border-radius: 13px;
+    }
+
+    .savings-withdrawals-card-header {
+        min-height: 50px;
+        padding: 8px 10px;
+    }
+
+    .savings-withdrawals-card-title {
+        font-size: 0.78rem;
+    }
+
+    .savings-withdrawals-card-icon {
+        width: 28px;
+        height: 28px;
+        flex-basis: 28px;
+        font-size: 13px;
+    }
+
+    .savings-withdrawals-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .savings-withdrawals-table {
+        min-width: 760px;
+    }
+
+    .savings-withdrawals-table thead th,
+    .savings-withdrawals-table tbody td {
+        padding: 9px 7px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   Very Small Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 430px) {
+
+    .savings-withdrawals-header {
+        flex-direction: column;
+    }
+
+    .savings-withdrawals-back-btn {
+        align-self: stretch;
+    }
+
+    .savings-withdrawals-title-wrapper {
+        width: 100%;
+    }
+}

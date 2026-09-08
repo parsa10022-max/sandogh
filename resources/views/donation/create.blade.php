@@ -1,63 +1,109 @@
 @extends('layouts.app')
 
-@section('title','کمک به صندوق')
+@section('title', 'کمک به صندوق')
+
+
 
 @section('content')
 
-    <div class="container py-4">
+    <div class="donation-page">
 
-        <div class="card shadow-sm border">
+        {{-- Header --}}
+        <div class="donation-header">
 
+            <div class="donation-header__content">
 
-            <div class="card-header bg-primary text-white">
-
-                <h5 class="mb-0">
-
+                <div class="donation-header__icon">
                     <i class="bi bi-heart-fill"></i>
+                </div>
 
-                    کمک به صندوق
+                <div>
+                    <h1 class="donation-header__title">
+                        کمک به صندوق
+                    </h1>
 
-                </h5>
+                    <p class="donation-header__subtitle">
+                        با انتخاب حساب و وارد کردن مبلغ، کمک خود را ثبت کنید.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- Main Card --}}
+        <div class="donation-card">
+
+            <div class="donation-card__header">
+
+                <div class="donation-card__icon">
+                    <i class="bi bi-heart-fill"></i>
+                </div>
+
+                <div>
+                    <h2 class="donation-card__title">
+                        ثبت کمک
+                    </h2>
+
+                    <p class="donation-card__subtitle">
+                        اطلاعات پرداخت را وارد کنید.
+                    </p>
+                </div>
 
             </div>
 
 
+            <div class="donation-card__body">
 
-            <div class="card-body">
-
-
+                {{-- Success --}}
                 @if(session('success'))
 
-                    <div class="alert alert-success">
+                    <div class="donation-alert donation-alert--success">
 
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
                         {{ session('success') }}
+                    </span>
 
                     </div>
 
                 @endif
 
 
-
+                {{-- Errors --}}
                 @if($errors->any())
 
-                    <div class="alert alert-danger">
+                    <div class="donation-alert donation-alert--danger">
 
-                        <ul class="mb-0">
+                        <div class="donation-alert__icon">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
 
-                            @foreach($errors->all() as $error)
+                        <div>
 
-                                <li>
-                                    {{ $error }}
-                                </li>
+                            <div class="donation-alert__title">
+                                لطفاً موارد زیر را بررسی کنید:
+                            </div>
 
-                            @endforeach
+                            <ul class="donation-alert__list">
 
-                        </ul>
+                                @foreach($errors->all() as $error)
+
+                                    <li>
+                                        {{ $error }}
+                                    </li>
+
+                                @endforeach
+
+                            </ul>
+
+                        </div>
 
                     </div>
 
                 @endif
-
 
 
                 <form method="POST"
@@ -66,267 +112,283 @@
                     @csrf
 
 
+                    {{-- Account --}}
+                    <div class="donation-field donation-account-field">
 
-                    <div class="mb-4">
-
-
-                        <label class="form-label fw-bold">
+                        <label class="donation-label">
 
                             انتخاب حساب صندوق
 
+                            <span class="donation-required">*</span>
+
                         </label>
 
-
-
-                        <div class="row g-3">
-
+                        <div class="donation-account-grid">
 
                             @foreach($accounts as $account)
 
+                                <div class="donation-account-option">
 
-                                <div class="col-md-6">
+                                    <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="account_id"
+                                        id="account{{ $account->id }}"
+                                        value="{{ $account->id }}"
+                                        @checked(old('account_id') == $account->id)
+                                    required
+                                    >
 
+                                    <label
+                                        class="donation-account-card"
+                                        for="account{{ $account->id }}"
+                                    >
 
-                                    <input type="radio"
-                                           class="btn-check"
-                                           name="account_id"
-                                           id="account{{ $account->id }}"
-                                           value="{{ $account->id }}"
-                                           required>
+                                        <div class="donation-account-card__top">
 
+                                            <div class="donation-account-card__icon">
 
+                                                <i class="bi bi-bank"></i>
 
-                                    <label class="card account-card h-100"
-                                           for="account{{ $account->id }}">
+                                            </div>
 
+                                            <div class="donation-account-card__content">
 
-                                        <div class="card-body">
+                                                <h3 class="donation-account-card__name">
+                                                    {{ $account->name }}
+                                                </h3>
 
+                                                <div class="donation-account-card__number">
 
-                                            <div class="d-flex align-items-center">
+                                                <span>
+                                                    شماره حساب:
+                                                </span>
 
-
-                                                <div class="icon-box me-3">
-
-                                                    <i class="bi bi-bank fs-3 text-primary"></i>
-
-                                                </div>
-
-
-
-                                                <div>
-
-
-                                                    <h6 class="mb-1 fw-bold">
-
-                                                        {{ $account->name }}
-
-                                                    </h6>
-
-
-
-                                                    <small class="text-muted">
-
-                                                        شماره حساب:
-
+                                                    <strong dir="ltr">
                                                         {{ $account->account_number }}
-
-                                                    </small>
-
+                                                    </strong>
 
                                                 </div>
 
-
                                             </div>
-
-
-
-                                            <div class="mt-3">
-
-
-                                            <span class="badge bg-success">
-
-                                                <i class="bi bi-check-circle"></i>
-
-                                                فعال
-
-                                            </span>
-
-
-                                                <span class="selected-badge badge bg-primary d-none">
-
-                                                انتخاب شد
-
-                                            </span>
-
-
-                                            </div>
-
-
 
                                         </div>
 
 
-                                    </label>
+                                        <div class="donation-account-card__status">
 
+                                        <span class="donation-status donation-status--active">
+
+                                            <span class="donation-status__dot"></span>
+
+                                            فعال
+
+                                        </span>
+
+                                            <span class="donation-selected-badge">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            انتخاب شد
+
+                                        </span>
+
+                                        </div>
+
+                                    </label>
 
                                 </div>
 
-
                             @endforeach
-
 
                         </div>
 
+                        @error('account_id')
+
+                        <div class="donation-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Donor Name --}}
+                    <div class="donation-field">
 
-
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
+                        <label for="donor_name"
+                               class="donation-label">
 
                             نام پرداخت کننده
 
                         </label>
 
+                        <div class="donation-input-wrapper">
 
-                        <input type="text"
-                               name="donor_name"
-                               class="form-control">
+                        <span class="donation-input-icon">
+                            <i class="bi bi-person"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="donor_name"
+                                name="donor_name"
+                                class="donation-input
+                                @error('donor_name') is-invalid @enderror"
+                                value="{{ old('donor_name') }}"
+                                placeholder="نام و نام خانوادگی"
+                                autocomplete="name"
+                            >
+
+                        </div>
+
+                        @error('donor_name')
+
+                        <div class="donation-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Mobile --}}
+                    <div class="donation-field">
 
-
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
+                        <label for="donor_mobile"
+                               class="donation-label">
 
                             شماره موبایل
 
                         </label>
 
+                        <div class="donation-input-wrapper">
 
-                        <input type="text"
-                               name="donor_mobile"
-                               class="form-control">
+                        <span class="donation-input-icon">
+                            <i class="bi bi-phone"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="donor_mobile"
+                                name="donor_mobile"
+                                class="donation-input
+                                @error('donor_mobile') is-invalid @enderror"
+                                value="{{ old('donor_mobile') }}"
+                                placeholder="مثلاً ۰۹۱۲۱۲۳۴۵۶۷"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                dir="ltr"
+                            >
+
+                        </div>
+
+                        @error('donor_mobile')
+
+                        <div class="donation-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Amount --}}
+                    <div class="donation-field">
 
+                        <label for="amount"
+                               class="donation-label">
 
+                            مبلغ
 
-                    <div class="mb-3">
-
-                        <label class="form-label">
-
-                            مبلغ (ریال)
+                            <span class="donation-required">*</span>
 
                         </label>
 
+                        <div class="donation-input-wrapper donation-input-wrapper--amount">
 
-                        <input type="number"
-                               name="amount"
-                               class="form-control"
-                               min="10000"
-                               required>
+                        <span class="donation-input-icon">
+                            <i class="bi bi-cash-stack"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="amount"
+                                name="amount"
+                                class="donation-input money-input
+                                @error('amount') is-invalid @enderror"
+                                value="{{ old('amount') }}"
+                                placeholder="مبلغ را وارد کنید"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                data-min="10000"
+                                required
+                            >
+
+                            <span class="donation-input-unit">
+                            ریال
+                        </span>
+
+                        </div>
+
+                        <div class="donation-field-hint">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            حداقل مبلغ کمک ۱۰٬۰۰۰ ریال است.
+
+                        </div>
+
+                        @error('amount')
+
+                        <div class="donation-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Submit --}}
+                    <div class="donation-actions">
 
+                        <button type="submit"
+                                class="donation-submit-btn">
 
+                            <i class="bi bi-credit-card"></i>
 
-                    <button class="btn btn-success w-100">
+                            ادامه پرداخت
 
-                        <i class="bi bi-credit-card"></i>
+                        </button>
 
-                        ادامه پرداخت
-
-                    </button>
-
-
+                    </div>
 
                 </form>
-
 
             </div>
 
         </div>
 
     </div>
-
-
-
-
-
-    <style>
-
-        .account-card {
-
-            cursor:pointer;
-
-            transition:.2s;
-
-            border:2px solid #dee2e6;
-
-        }
-
-
-
-        .account-card:hover {
-
-            border-color:#0d6efd;
-
-        }
-
-
-
-        .btn-check:checked + .account-card {
-
-            border-color:#198754;
-
-            background:#f0fff5;
-
-        }
-
-
-
-        .btn-check:checked + .account-card .selected-badge {
-
-            display:inline-block !important;
-
-        }
-
-
-
-        .icon-box {
-
-            width:50px;
-
-            height:50px;
-
-            display:flex;
-
-            align-items:center;
-
-            justify-content:center;
-
-            background:#eef6ff;
-
-            border-radius:12px;
-
-        }
-
-
-    </style>
-
 
 @endsection

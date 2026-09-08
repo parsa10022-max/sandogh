@@ -7,46 +7,32 @@ use App\Enums\GuarantorType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class LoanGuarantor extends Model
 {
     protected $fillable = [
-
         'loan_id',
-
         'guarantor_order',
-
         'guarantor_type',
-
         'customer_id',
-
         'first_name',
-
         'last_name',
-
         'national_code',
-
         'mobile',
 
+        // نوع ضمانت
         'guarantee_type',
 
+        // اطلاعات مدرک ضمانت
+        'guarantee_amount',
+        'guarantee_number',
+        'guarantee_account_number',
     ];
 
     protected $casts = [
-
         'guarantor_type' => GuarantorType::class,
-
         'guarantee_type' => GuaranteeType::class,
-
+        'guarantee_amount' => 'integer',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'guarantor_type' => GuarantorType::class,
-            'guarantee_type' => GuaranteeType::class,
-        ];
-    }
 
     /**
      * وام مربوطه

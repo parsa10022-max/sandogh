@@ -86,34 +86,38 @@ class AccountController extends Controller
         return view('accounts.show', compact('account'));
     }
 
-    public function transactions(Account $account)
-    {
-        $transactions = $account->transactions()
-            ->with('creator')
-            ->latest('transaction_date')
-            ->paginate(15);
+
+public function transactions(Account $account)
+{
+    $transactions = $account->transactions()
+        ->with('creator')
+        ->orderByDesc('transaction_date')
+        ->orderByDesc('id')
+        ->paginate(15);
 
 
-        $summary = [
-            'balance' => $account->balance,
+    $summary = [
+        'balance' => $account->balance,
 
-            'count' => $account->transactions()
-                ->count(),
+        'count' => $account->transactions()
+            ->count(),
 
-            'last' => $account->transactions()
-                ->latest('transaction_date')
-                ->first(),
-        ];
+        'last' => $account->transactions()
+            ->orderByDesc('transaction_date')
+            ->orderByDesc('id')
+            ->first(),
+    ];
 
 
-        return view(
-            'accounts.transactions',
-            compact(
-                'account',
-                'transactions',
-                'summary'
-            )
-        );
-    }
+    return view(
+        'accounts.transactions',
+        compact(
+            'account',
+            'transactions',
+            'summary'
+        )
+    );
+}
+
 }
 

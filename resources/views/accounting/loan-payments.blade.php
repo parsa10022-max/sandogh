@@ -4,51 +4,92 @@
 
 @section('content')
 
-    <div class="container-fluid accounting-page">
+    @push('styles')
+        @vite('resources/css/admin/accounting/loan-payments.css')
+    @endpush
 
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div class="container-fluid loan-payments-page">
 
-            <div>
-                <h1 class="h4 fw-bold mb-1">
-                    <i class="bi bi-credit-card me-1"></i>
-                    پرداخت اقساط
-                </h1>
+        {{-- Header --}}
+        <div class="loan-payments-header">
 
-                <div class="text-muted small">
-                    پرداخت‌های انجام‌شده در انتظار ثبت حسابداری
+            <div class="loan-payments-title-wrapper">
+
+                <div class="loan-payments-title-icon">
+                    <i class="bi bi-credit-card"></i>
                 </div>
+
+                <div>
+                    <h4 class="loan-payments-title">
+                        پرداخت اقساط
+                    </h4>
+
+                    <div class="loan-payments-subtitle">
+                        پرداخت‌های انجام‌شده در انتظار ثبت حسابداری
+                    </div>
+                </div>
+
             </div>
 
             <a href="{{ route('admin.accounting.index') }}"
-               class="btn btn-light border rounded-3">
+               class="loan-payments-back-btn">
 
-                <i class="bi bi-arrow-right me-1"></i>
-                حسابداری
+                <i class="bi bi-arrow-right"></i>
+
+                <span>حسابداری</span>
 
             </a>
 
         </div>
 
 
-        <div class="card border-0 shadow-sm rounded-4">
+        {{-- Table Card --}}
+        <div class="loan-payments-card">
 
-            <div class="card-body p-0">
+            <div class="loan-payments-card-header">
 
-                <div class="table-responsive">
+                <div class="loan-payments-card-title">
 
-                    <table class="table table-hover align-middle mb-0">
+                    <div class="loan-payments-card-icon">
+                        <i class="bi bi-list-check"></i>
+                    </div>
 
-                        <thead class="table-light">
+                    <div>
+                        <div>
+                            پرداخت‌های در انتظار ثبت
+                        </div>
+
+                        <small>
+                            بررسی و تأیید پرداخت‌های اقساط
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="loan-payments-count">
+                    {{ $payments->total() }} مورد
+                </div>
+
+            </div>
+
+
+            <div class="loan-payments-card-body">
+
+                <div class="table-responsive loan-payments-table-wrapper">
+
+                    <table class="table align-middle loan-payments-table">
+
+                        <thead>
 
                         <tr>
 
-                            <th class="px-3">#</th>
+                            <th>#</th>
 
                             <th>شماره وام</th>
 
                             <th>عضو</th>
 
-                            <th>شماره قسط</th>
+                            <th>قسط</th>
 
                             <th>مبلغ</th>
 
@@ -56,7 +97,7 @@
 
                             <th>تاریخ پرداخت</th>
 
-                            <th class="text-end px-3">عملیات</th>
+                            <th class="text-center">عملیات</th>
 
                         </tr>
 
@@ -69,93 +110,172 @@
 
                             <tr>
 
-                                <td class="px-3">
-                                    {{ $payments->firstItem() + $loop->index }}
+                                {{-- شماره --}}
+                                <td>
+
+                                    <span class="loan-payment-row-number">
+                                        {{ $payments->firstItem() + $loop->index }}
+                                    </span>
+
                                 </td>
 
 
+                                {{-- شماره وام --}}
                                 <td>
 
-                                    <span class="fw-semibold">
+                                    <span class="loan-payment-loan-number" dir="ltr">
                                         {{ $payment->loan?->loan_number ?? '---' }}
                                     </span>
 
                                 </td>
 
 
+                                {{-- عضو --}}
                                 <td>
 
-                                    <div class="fw-semibold">
-                                        {{ $payment->loan?->customer?->name ?? '---' }}
-                                    </div>
+                                    @if($payment->loan?->customer)
+
+                                        <div class="loan-payment-customer">
+
+                                            <div class="loan-payment-customer-icon">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+
+                                            <div class="loan-payment-customer-name">
+
+                                                {{ $payment->loan->customer->first_name }}
+                                                {{ $payment->loan->customer->last_name }}
+
+                                            </div>
+
+                                        </div>
+
+                                    @else
+
+                                        <span class="loan-payment-muted">
+                                            ---
+                                        </span>
+
+                                    @endif
 
                                 </td>
 
 
+                                {{-- شماره قسط --}}
                                 <td>
 
                                     @if($payment->installment)
 
-                                        <span class="badge bg-primary-subtle text-primary rounded-pill">
+                                        <span class="loan-payment-installment">
 
-                                            {{ $payment->installment->installment_number ?? $payment->installment->number ?? 0 }}
+                                            {{ $payment->installment->installment_number
+                                                ?? $payment->installment->number
+                                                ?? 0 }}
 
                                         </span>
 
                                     @else
 
-                                        ---
+                                        <span class="loan-payment-muted">
+                                            ---
+                                        </span>
 
                                     @endif
 
                                 </td>
 
 
+                                {{-- مبلغ --}}
                                 <td>
 
-                                    <span class="fw-bold">
-                                        {{ $payment->amount ?? 0 }}
-                                    </span>
+                                    <div class="loan-payment-amount">
 
-                                    <span class="text-muted small">
-                                        تومان
-                                    </span>
+                                        <strong>
+                                            {{ number_format($payment->amount ?? 0) }}
+                                        </strong>
+
+                                        <small>
+                                            تومان
+                                        </small>
+
+                                    </div>
 
                                 </td>
 
 
+                                {{-- پرداخت‌کننده --}}
                                 <td>
 
-                                    {{ $payment->user?->name ?? '---' }}
+                                    @if($payment->user)
+
+                                        <span class="loan-payment-user">
+                                            <i class="bi bi-person-check"></i>
+                                            {{ $payment->user->name }}
+                                        </span>
+
+                                    @else
+
+                                        <span class="loan-payment-muted">
+                                            ---
+                                        </span>
+
+                                    @endif
 
                                 </td>
 
 
+                                {{-- تاریخ --}}
                                 <td>
 
                                     @if($payment->paid_at)
-                                        {{ $payment->paid_at->format('Y/m/d H:i') }}
+
+                                        <div class="loan-payment-date">
+
+                                            <span>
+                                                {{ $payment->paid_at->format('Y/m/d') }}
+                                            </span>
+
+                                            <small>
+                                                {{ $payment->paid_at->format('H:i') }}
+                                            </small>
+
+                                        </div>
+
                                     @else
-                                        ---
+
+                                        <span class="loan-payment-muted">
+                                            ---
+                                        </span>
+
                                     @endif
 
                                 </td>
 
 
-                                <td class="text-end px-3">
+                                {{-- عملیات --}}
+                                <td class="text-center">
 
                                     <form method="POST"
-                                          action="{{ route('admin.accounting.confirm', ['type' => 'loan-payment', 'id' => $payment->id]) }}"
-                                          class="d-inline"
+                                          action="{{ route(
+                                              'admin.accounting.confirm',
+                                              [
+                                                  'type' => 'loan-payment',
+                                                  'id' => $payment->id
+                                              ]
+                                          ) }}"
+                                          class="loan-payment-confirm-form"
                                           onsubmit="return confirm('آیا این پرداخت قسط به عنوان ثبت‌شده در حسابداری تأیید شود؟')">
 
                                         @csrf
 
                                         <button type="submit"
-                                                class="btn btn-sm btn-success rounded-3">
+                                                class="loan-payment-confirm-btn">
 
-                                            <i class="bi bi-check2-circle me-1"></i>
-                                            تأیید ثبت حسابداری
+                                            <i class="bi bi-check2-circle"></i>
+
+                                            <span>
+                                                تأیید ثبت
+                                            </span>
 
                                         </button>
 
@@ -169,13 +289,21 @@
 
                             <tr>
 
-                                <td colspan="8" class="text-center py-5">
+                                <td colspan="8">
 
-                                    <div class="text-muted">
+                                    <div class="loan-payments-empty">
 
-                                        <i class="bi bi-check-circle fs-2 d-block mb-2"></i>
+                                        <div class="loan-payments-empty-icon">
+                                            <i class="bi bi-check-circle"></i>
+                                        </div>
 
-                                        پرداخت قسط در انتظاری وجود ندارد.
+                                        <h6>
+                                            پرداخت قسطی در انتظار ثبت وجود ندارد
+                                        </h6>
+
+                                        <p>
+                                            تمام پرداخت‌های اقساط در حسابداری ثبت شده‌اند.
+                                        </p>
 
                                     </div>
 
@@ -196,10 +324,13 @@
         </div>
 
 
+        {{-- Pagination --}}
         @if($payments->hasPages())
 
-            <div class="mt-4">
+            <div class="loan-payments-pagination">
+
                 {{ $payments->links() }}
+
             </div>
 
         @endif

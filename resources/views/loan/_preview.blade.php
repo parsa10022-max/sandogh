@@ -1,95 +1,191 @@
+{{-- =========================================================
+     LOAN CALCULATION PREVIEW
+========================================================= --}}
+
 <div id="loan-preview-card"
-     class="card border-success mt-4 d-none">
+     class="loan-preview-card d-none">
 
-    <div class="card-header bg-success text-white">
+    {{-- Header --}}
+    <div class="loan-preview-card__header">
 
-        <i class="bi bi-calculator me-1"></i>
+        <div class="loan-preview-card__title">
 
-        نتیجه محاسبه وام
+            <span class="loan-preview-card__icon">
+                <i class="bi bi-calculator"></i>
+            </span>
+
+            <div>
+                <h6>
+                    نتیجه محاسبه وام
+                </h6>
+
+                <small>
+                    اطلاعات محاسبه‌شده وام
+                </small>
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body">
+
+    {{-- Body --}}
+    <div class="loan-preview-card__body">
 
         <div class="row g-3">
 
-            <div class="col-md-4">
 
-                <small class="text-muted">
-                    تاریخ ثبت وام
-                </small>
+            {{-- تاریخ ثبت --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                <div id="preview-start-date"
-                     class="fw-bold">
-                    -
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </span>
+
+                    <div class="loan-preview-item__content">
+
+                        <span class="loan-preview-item__label">
+                            تاریخ ثبت وام
+                        </span>
+
+                        <strong id="preview-start-date">
+                            -
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-4">
 
-                <small class="text-muted">
-                    اولین سررسید
-                </small>
+            {{-- اولین سررسید --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                <div id="preview-first-date"
-                     class="fw-bold">
-                    -
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </span>
+
+                    <div class="loan-preview-item__content">
+
+                        <span class="loan-preview-item__label">
+                            اولین سررسید
+                        </span>
+
+                        <strong id="preview-first-date">
+                            -
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-4">
 
-                <small class="text-muted">
-                    آخرین سررسید
-                </small>
+            {{-- آخرین سررسید --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                <div id="preview-last-date"
-                     class="fw-bold">
-                    -
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__icon">
+                        <i class="bi bi-calendar-range"></i>
+                    </span>
+
+                    <div class="loan-preview-item__content">
+
+                        <span class="loan-preview-item__label">
+                            آخرین سررسید
+                        </span>
+
+                        <strong id="preview-last-date">
+                            -
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-4">
 
-                <small class="text-muted">
-                    تعداد اقساط
-                </small>
+            {{-- تعداد اقساط --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                <div id="preview-count"
-                     class="fw-bold">
-                    -
+                <div class="loan-preview-item">
+
+                    <span class="loan-preview-item__icon">
+                        <i class="bi bi-list-ol"></i>
+                    </span>
+
+                    <div class="loan-preview-item__content">
+
+                        <span class="loan-preview-item__label">
+                            تعداد اقساط
+                        </span>
+
+                        <strong id="preview-count">
+                            -
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-4">
 
-                <small class="text-muted">
-                    مبلغ هر قسط
-                </small>
+            {{-- مبلغ هر قسط --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                <div id="preview-installment"
-                     class="fw-bold text-success">
-                    -
+                <div class="loan-preview-item loan-preview-item--amount">
+
+                    <span class="loan-preview-item__icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </span>
+
+                    <div class="loan-preview-item__content">
+
+                        <span class="loan-preview-item__label">
+                            مبلغ هر قسط
+                        </span>
+
+                        <strong id="preview-installment">
+                            -
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-4 d-flex align-items-end">
 
-                <button
-                    type="button"
-                    class="btn btn-outline-primary w-100"
-                    id="show-schedule">
+            {{-- برنامه اقساط --}}
+            <div class="col-12 col-sm-6 col-lg-4">
 
-                    <i class="bi bi-list-ul"></i>
+                <div class="loan-preview-schedule">
 
-                    مشاهده برنامه اقساط
+                    <button
+                        type="button"
+                        class="btn loan-preview-schedule__button w-100"
+                        id="show-schedule">
 
-                </button>
+                        <i class="bi bi-list-ul"></i>
+
+                        <span>
+                            مشاهده برنامه اقساط
+                        </span>
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </button>
+
+                </div>
 
             </div>
 
@@ -98,3 +194,4 @@
     </div>
 
 </div>
+

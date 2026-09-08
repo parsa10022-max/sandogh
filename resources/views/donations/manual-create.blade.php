@@ -1,52 +1,114 @@
 @extends('layouts.app')
 
-@section('title','ثبت کمک دستی')
+@section('title', 'ثبت کمک دستی')
+
+
 
 @section('content')
 
-    <div class="container py-4">
 
-        <div class="card shadow">
+    <div class="donation-manual-page">
 
-            <div class="card-header">
-                <h5 class="mb-0">
-                    ثبت کمک دستی
-                </h5>
+        {{-- Header --}}
+        <div class="donation-manual-header">
+
+            <div class="donation-manual-header__content">
+
+                <div class="donation-manual-header__icon">
+                    <i class="bi bi-hand-heart-fill"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="donation-manual-header__title">
+                        ثبت کمک دستی
+                    </h1>
+
+                    <p class="donation-manual-header__subtitle">
+                        ثبت کمک‌هایی که خارج از درگاه پرداخت دریافت شده‌اند.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- Card --}}
+        <div class="donation-manual-card">
+
+            <div class="donation-manual-card__header">
+
+                <div class="donation-manual-card__icon">
+                    <i class="bi bi-plus-circle"></i>
+                </div>
+
+                <div>
+
+                    <h2 class="donation-manual-card__title">
+                        اطلاعات کمک
+                    </h2>
+
+                    <p class="donation-manual-card__subtitle">
+                        حساب مقصد و مبلغ کمک را مشخص کنید.
+                    </p>
+
+                </div>
+
             </div>
 
 
-            <div class="card-body">
+            <div class="donation-manual-card__body">
 
-
+                {{-- Success --}}
                 @if(session('success'))
 
-                    <div class="alert alert-success">
+                    <div class="donation-manual-alert donation-manual-alert--success">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
                         {{ session('success') }}
+                    </span>
+
                     </div>
 
                 @endif
 
 
+                {{-- Errors --}}
                 @if($errors->any())
 
-                    <div class="alert alert-danger">
+                    <div class="donation-manual-alert donation-manual-alert--danger">
 
-                        <ul class="mb-0">
+                        <div class="donation-manual-alert__icon">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
 
-                            @foreach($errors->all() as $error)
+                        <div>
 
-                                <li>
-                                    {{ $error }}
-                                </li>
+                            <div class="donation-manual-alert__title">
+                                لطفاً موارد زیر را بررسی کنید:
+                            </div>
 
-                            @endforeach
+                            <ul class="donation-manual-alert__list">
 
-                        </ul>
+                                @foreach($errors->all() as $error)
+
+                                    <li>
+                                        {{ $error }}
+                                    </li>
+
+                                @endforeach
+
+                            </ul>
+
+                        </div>
 
                     </div>
 
                 @endif
-
 
 
                 <form method="POST"
@@ -55,66 +117,160 @@
                     @csrf
 
 
-                    <div class="mb-3">
+                    {{-- Account --}}
+                    <div class="donation-manual-field">
 
-                        <label class="form-label">
-                            نوع کمک
+                        <label for="account_id"
+                               class="donation-manual-label">
+
+                            حساب مقصد
+
+                            <span class="donation-manual-required">
+                            *
+                        </span>
+
                         </label>
 
+                        <div class="donation-manual-input-wrapper">
 
-                        <select name="account_id"
-                                class="form-select"
-                                required>
+                        <span class="donation-manual-input-icon">
+                            <i class="bi bi-bank"></i>
+                        </span>
 
-                            <option value="">
-                                انتخاب حساب
-                            </option>
+                            <select
+                                id="account_id"
+                                name="account_id"
+                                class="donation-manual-select
+                                @error('account_id') is-invalid @enderror"
+                                required
+                            >
 
+                                <option value="">
+                                    انتخاب حساب
+                                </option>
 
-                            @foreach($accounts as $account)
+                                @foreach($accounts as $account)
 
-                                <option value="{{ $account->id }}">
-
+                                    <option
+                                        value="{{ $account->id }}"
+                                        @selected(old('account_id') == $account->id)
+                                    >
                                     {{ $account->name }}
                                     -
                                     {{ $account->account_number }}
+                                    </option>
 
-                                </option>
+                                @endforeach
 
-                            @endforeach
+                            </select>
 
-                        </select>
+                        </div>
+
+                        @error('account_id')
+
+                        <div class="donation-manual-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Amount --}}
+                    <div class="donation-manual-field">
 
-                    <div class="mb-3">
+                        <label for="amount"
+                               class="donation-manual-label">
 
-                        <label class="form-label">
-                            مبلغ (ریال)
+                            مبلغ
+
+                            <span class="donation-manual-required">
+                            *
+                        </span>
+
                         </label>
 
+                        <div class="donation-manual-input-wrapper
+                                donation-manual-input-wrapper--amount">
 
-                        <input type="number"
-                               name="amount"
-                               class="form-control"
-                               min="1000"
-                               required>
+                        <span class="donation-manual-input-icon">
+                            <i class="bi bi-cash-stack"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="amount"
+                                name="amount"
+                                class="donation-manual-input money-input
+                                @error('amount') is-invalid @enderror"
+                                value="{{ old('amount') }}"
+                                placeholder="مبلغ کمک را وارد کنید"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                data-min="1000"
+                                required
+                            >
+
+                            <span class="donation-manual-input-unit">
+                            ریال
+                        </span>
+
+                        </div>
+
+                        <div class="donation-manual-hint">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            حداقل مبلغ کمک ۱٬۰۰۰ ریال است.
+
+                        </div>
+
+                        @error('amount')
+
+                        <div class="donation-manual-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            {{ $message }}
+
+                        </div>
+
+                        @enderror
 
                     </div>
 
 
+                    {{-- Actions --}}
+                    <div class="donation-manual-actions">
 
-                    <button class="btn btn-success">
+                        <a href="{{ route('donations.index') }}"
+                           class="donation-manual-btn
+                              donation-manual-btn--secondary">
 
-                        ثبت کمک
+                            <i class="bi bi-arrow-right"></i>
 
-                    </button>
+                            بازگشت
 
+                        </a>
+
+                        <button type="submit"
+                                class="donation-manual-btn
+                                   donation-manual-btn--primary">
+
+                            <i class="bi bi-check2-circle"></i>
+
+                            ثبت کمک
+
+                        </button>
+
+                    </div>
 
                 </form>
-
 
             </div>
 

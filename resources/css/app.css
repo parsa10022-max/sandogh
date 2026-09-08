@@ -70,6 +70,21 @@
 @import "admin/accounts/withdrawal-create.css";
 @import "admin/accounts/deposit/create.css";
 @import "admin/accounts/adjustment/adjustment.css";
+@import "admin/system-accounts/index.css";
+@import "admin/system-accounts/create.css";
+@import "admin/system-accounts/edit.css";
+@import "admin/donations/index.css";
+@import "admin/donations/manual.css";
+@import "admin/donation/create.css";
+@import "admin/withdrawals/index.css";
+@import "admin/withdrawals/show.css";
+@import "admin/accountiong/loan-payments.css";
+@import "admin/accountiong/savings.css";
+@import "admin/accountiong/savings.css";
+@import "admin/accountiong/withdarawals.css";
+@import "admin/accountiong/index.css";
+@import "admin/loan/guarantors-show.css";
+@import "admin/loan/preview.css";
 
 
 @import "./components/layout/admin-sidebar.css";

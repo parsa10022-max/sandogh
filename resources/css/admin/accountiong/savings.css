@@ -1,0 +1,774 @@
+    /* =========================================================
+       Savings Transfers - Accounting
+       Design #1
+       RTL / Bootstrap 5.3
+       Compact / No Desktop Horizontal Scroll
+       ========================================================= */
+
+
+    /* =========================================================
+       Page
+       ========================================================= */
+
+.savings-transfers-page {
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding-top: 10px;
+    padding-bottom: 12px;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.savings-transfers-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.savings-transfers-title-wrapper {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+.savings-transfers-title-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(99, 102, 241, .18);
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, .12),
+        rgba(59, 130, 246, .08)
+    );
+
+    color: #6366f1;
+
+    font-size: 17px;
+}
+
+.savings-transfers-title {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    line-height: 1.4;
+}
+
+.savings-transfers-subtitle {
+    margin-top: 1px;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.savings-transfers-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 34px;
+
+    padding: 5px 10px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+
+    background: #fff;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: all .18s ease;
+}
+
+.savings-transfers-back-btn:hover {
+    border-color: #c7d2fe;
+
+    background: #f8faff;
+
+    color: #4f46e5;
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.savings-transfers-card {
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+
+    background: #fff;
+
+    box-shadow:
+        0 3px 14px rgba(15, 23, 42, .045);
+}
+
+
+/* =========================================================
+   Card Header
+   ========================================================= */
+
+.savings-transfers-card-header {
+    min-height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 6px 10px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    background: #fff;
+}
+
+.savings-transfers-card-title {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+
+    color: #1e293b;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.savings-transfers-card-title small {
+    display: block;
+
+    margin-top: 1px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.savings-transfers-card-icon {
+    width: 29px;
+    height: 29px;
+    flex: 0 0 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: rgba(99, 102, 241, .09);
+
+    color: #6366f1;
+
+    font-size: 13px;
+}
+
+.savings-transfers-count {
+    flex: 0 0 auto;
+
+    padding: 4px 8px;
+
+    border: 1px solid #e0e7ff;
+    border-radius: 20px;
+
+    background: #f5f7ff;
+
+    color: #4f46e5;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Table
+   ========================================================= */
+
+.savings-transfers-card-body {
+    padding: 0;
+}
+
+.savings-transfers-table-wrapper {
+    width: 100%;
+
+    overflow-x: hidden;
+}
+
+.savings-transfers-table {
+    width: 100%;
+
+    margin: 0;
+
+    table-layout: fixed;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: #334155;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   Column Widths
+   ========================================================= */
+
+.savings-transfers-table th:nth-child(1),
+.savings-transfers-table td:nth-child(1) {
+    width: 5%;
+}
+
+.savings-transfers-table th:nth-child(2),
+.savings-transfers-table td:nth-child(2) {
+    width: 22%;
+}
+
+.savings-transfers-table th:nth-child(3),
+.savings-transfers-table td:nth-child(3) {
+    width: 22%;
+}
+
+.savings-transfers-table th:nth-child(4),
+.savings-transfers-table td:nth-child(4) {
+    width: 16%;
+}
+
+.savings-transfers-table th:nth-child(5),
+.savings-transfers-table td:nth-child(5) {
+    width: 15%;
+}
+
+.savings-transfers-table th:nth-child(6),
+.savings-transfers-table td:nth-child(6) {
+    width: 20%;
+}
+
+
+/* =========================================================
+   Table Head
+   ========================================================= */
+
+.savings-transfers-table thead th {
+    height: 37px;
+
+    padding: 6px 8px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   Table Body
+   ========================================================= */
+
+.savings-transfers-table tbody tr {
+    transition: background-color .15s ease;
+}
+
+.savings-transfers-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.savings-transfers-table tbody td {
+    height: 53px;
+
+    padding: 6px 8px;
+
+    border-bottom: 1px solid #f0f2f5;
+
+    vertical-align: middle;
+
+    overflow: hidden;
+}
+
+.savings-transfers-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   Row Number
+   ========================================================= */
+
+.savings-transfer-row-number {
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   Person
+   ========================================================= */
+
+.savings-transfer-person {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.savings-transfer-person-icon {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+.savings-transfer-person-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Amount
+   ========================================================= */
+
+.savings-transfer-amount {
+    display: flex;
+    align-items: baseline;
+
+    gap: 3px;
+
+    white-space: nowrap;
+}
+
+.savings-transfer-amount strong {
+    color: #1e293b;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.savings-transfer-amount small {
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Date
+   ========================================================= */
+
+.savings-transfer-date {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1px;
+
+    white-space: nowrap;
+}
+
+.savings-transfer-date span {
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.savings-transfer-date small {
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   Muted
+   ========================================================= */
+
+.savings-transfer-muted {
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   Confirm Button
+   ========================================================= */
+
+.savings-transfer-confirm-form {
+    display: inline-block;
+
+    margin: 0;
+}
+
+.savings-transfer-confirm-btn {
+    min-height: 31px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 4px 8px;
+
+    border: 1px solid #16a34a;
+    border-radius: 7px;
+
+    background: #16a34a;
+
+    color: #fff;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: all .18s ease;
+}
+
+.savings-transfer-confirm-btn:hover {
+    border-color: #15803d;
+
+    background: #15803d;
+
+    box-shadow:
+        0 3px 8px rgba(22, 163, 74, .15);
+}
+
+.savings-transfer-confirm-btn i {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Empty
+   ========================================================= */
+
+.savings-transfers-empty {
+    padding: 34px 15px;
+
+    text-align: center;
+}
+
+.savings-transfers-empty-icon {
+    width: 48px;
+    height: 48px;
+
+    margin: 0 auto 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f0fdf4;
+
+    color: #16a34a;
+
+    font-size: 22px;
+}
+
+.savings-transfers-empty h6 {
+    margin: 0 0 3px;
+
+    color: #334155;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.savings-transfers-empty p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   Pagination
+   ========================================================= */
+
+.savings-transfers-pagination {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 9px;
+}
+
+.savings-transfers-pagination .pagination {
+    margin: 0;
+
+    gap: 3px;
+}
+
+.savings-transfers-pagination .page-link {
+    min-width: 29px;
+    height: 29px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 3px 7px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 7px !important;
+
+    color: #475569;
+
+    font-size: 9px;
+}
+
+.savings-transfers-pagination .page-item.active .page-link {
+    border-color: #4f46e5;
+
+    background: #4f46e5;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .savings-transfers-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .savings-transfers-table thead th {
+        padding: 5px 6px;
+
+        font-size: 8px;
+    }
+
+    .savings-transfers-table tbody td {
+        padding: 5px 6px;
+    }
+
+    .savings-transfer-confirm-btn {
+        padding: 4px 6px;
+
+        font-size: 8px;
+    }
+
+    .savings-transfer-person-icon {
+        width: 23px;
+        height: 23px;
+        flex-basis: 23px;
+    }
+}
+
+
+/* =========================================================
+   Small Tablet
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .savings-transfers-table {
+        font-size: 9px;
+    }
+
+    .savings-transfer-person-icon {
+        display: none;
+    }
+
+    .savings-transfer-person-name {
+        font-size: 9px;
+    }
+
+    .savings-transfer-amount strong {
+        font-size: 9px;
+    }
+
+    .savings-transfers-table th:nth-child(2),
+    .savings-transfers-table td:nth-child(2) {
+        width: 23%;
+    }
+
+    .savings-transfers-table th:nth-child(3),
+    .savings-transfers-table td:nth-child(3) {
+        width: 23%;
+    }
+
+    .savings-transfers-table th:nth-child(6),
+    .savings-transfers-table td:nth-child(6) {
+        width: 21%;
+    }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .savings-transfers-page {
+        padding-top: 7px;
+        padding-bottom: 8px;
+    }
+
+    .savings-transfers-header {
+        margin-bottom: 8px;
+    }
+
+    .savings-transfers-title-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .savings-transfers-title {
+        font-size: 14px;
+    }
+
+    .savings-transfers-subtitle {
+        font-size: 9px;
+    }
+
+    .savings-transfers-back-btn {
+        width: 34px;
+        height: 34px;
+
+        min-height: 34px;
+
+        padding: 0;
+    }
+
+    .savings-transfers-back-btn span {
+        display: none;
+    }
+
+    /*
+     * فقط در موبایل خیلی باریک
+     * اسکرول افقی برای خوانایی جدول مجاز است.
+     */
+    .savings-transfers-table-wrapper {
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .savings-transfers-table {
+        min-width: 760px;
+    }
+
+    .savings-transfers-card-header {
+        min-height: 41px;
+    }
+}
+
+
+/* =========================================================
+   Very Small
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .savings-transfers-card-title small {
+        display: none;
+    }
+
+    .savings-transfers-card-icon {
+        width: 27px;
+        height: 27px;
+
+        flex-basis: 27px;
+    }
+
+    .savings-transfers-empty {
+        padding: 25px 10px;
+    }
+}
+

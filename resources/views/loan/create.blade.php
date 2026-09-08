@@ -2,10 +2,6 @@
 
 @section('title', 'ثبت وام')
 
-@push('styles')
-    @vite('resources/css/pages/loan-create.css')
-@endpush
-
 @section('content')
 
     <div class="container-fluid loan-create-page">
@@ -41,7 +37,6 @@
             </a>
 
         </div>
-
 
         {{-- Main Card --}}
         <div class="loan-form-card">
@@ -85,7 +80,6 @@
                         >
 
                     @endif
-
                     @include('loan._form')
 
                 </form>
@@ -95,6 +89,5 @@
         </div>
 
     </div>
-
 @endsection
 

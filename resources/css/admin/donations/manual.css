@@ -1,0 +1,706 @@
+ /*
+ --------------------------------------------------------------------------
+ Donation Manual Create
+ --------------------------------------------------------------------------
+ Design #1
+ Purple + Blue
+ RTL / Mobile First
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-page {
+    width: 100%;
+    max-width: 850px;
+
+
+    margin: 0 auto;
+
+    padding: 1rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Header
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-header {
+    margin-bottom: 1.25rem;
+}
+
+.donation-manual-header__content {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.85rem;
+
+
+}
+
+.donation-manual-header__icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.12),
+        rgba(13, 110, 253, 0.12)
+    );
+
+    border: 1px solid rgba(111, 66, 193, 0.14);
+
+    color: #6f42c1;
+
+    font-size: 1.2rem;
+
+
+}
+
+.donation-manual-header__title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+
+
+}
+
+.donation-manual-header__subtitle {
+    margin: 0.25rem 0 0;
+
+
+    color: #6c757d;
+
+    font-size: 0.8rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-card {
+    overflow: hidden;
+
+
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 18px rgba(31, 41, 55, 0.06);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Card Header
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-card__header {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.85rem;
+
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid #edf0f3;
+
+
+}
+
+.donation-manual-card__icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(111, 66, 193, 0.11),
+        rgba(13, 110, 253, 0.11)
+    );
+
+    color: #6f42c1;
+
+    font-size: 1.1rem;
+
+
+}
+
+.donation-manual-card__title {
+    margin: 0;
+
+
+    color: #212529;
+
+    font-size: 0.98rem;
+    font-weight: 800;
+
+
+}
+
+.donation-manual-card__subtitle {
+    margin: 0.2rem 0 0;
+
+
+    color: #6c757d;
+
+    font-size: 0.75rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Body
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-card__body {
+    padding: 1.1rem;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Alerts
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-alert {
+    display: flex;
+    align-items: flex-start;
+
+
+    gap: 0.65rem;
+
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1rem;
+
+    border-radius: 12px;
+
+    font-size: 0.82rem;
+
+
+}
+
+.donation-manual-alert--success {
+    border: 1px solid #badbcc;
+
+
+    background: #f0fff5;
+
+    color: #146c43;
+
+
+}
+
+.donation-manual-alert--danger {
+    border: 1px solid #f1b0b7;
+
+
+    background: #fff5f5;
+
+    color: #b02a37;
+
+
+}
+
+.donation-manual-alert__icon {
+    flex: 0 0 auto;
+}
+
+.donation-manual-alert__title {
+    margin-bottom: 0.35rem;
+
+
+    font-weight: 700;
+
+
+}
+
+.donation-manual-alert__list {
+    margin: 0;
+
+
+    padding-right: 1rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Fields
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-field {
+    margin-bottom: 1.25rem;
+}
+
+.donation-manual-label {
+    display: block;
+
+
+    margin-bottom: 0.5rem;
+
+    color: #343a40;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+
+}
+
+.donation-manual-required {
+    margin-right: 0.15rem;
+
+
+    color: #dc3545;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Input Wrapper
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-input-wrapper {
+    position: relative;
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Input Icon
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-input-icon {
+    position: absolute;
+
+
+    top: 50%;
+    right: 0.8rem;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6f42c1;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+
+    z-index: 2;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Select
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-select {
+    width: 100%;
+    min-height: 48px;
+
+
+    padding: 0.7rem 3rem 0.7rem 2.5rem;
+
+    border: 1px solid #dfe3e8;
+    border-radius: 12px;
+
+    background-color: #fff;
+
+    color: #212529;
+
+    font-family: inherit;
+    font-size: 0.88rem;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+
+}
+
+.donation-manual-select:focus {
+    border-color: #6f42c1;
+
+
+    box-shadow:
+        0 0 0 3px rgba(111, 66, 193, 0.1);
+
+
+}
+
+.donation-manual-select.is-invalid {
+    border-color: #dc3545;
+}
+
+.donation-manual-select.is-invalid:focus {
+    box-shadow:
+        0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Text Input
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-input {
+    width: 100%;
+    min-height: 48px;
+
+
+    padding: 0.7rem 3rem 0.7rem 0.85rem;
+
+    border: 1px solid #dfe3e8;
+    border-radius: 12px;
+
+    background: #fff;
+
+    color: #212529;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+
+}
+
+.donation-manual-input::placeholder {
+    color: #adb5bd;
+}
+
+.donation-manual-input:focus {
+    border-color: #6f42c1;
+
+
+    box-shadow:
+        0 0 0 3px rgba(111, 66, 193, 0.1);
+
+
+}
+
+.donation-manual-input.is-invalid {
+    border-color: #dc3545;
+}
+
+.donation-manual-input.is-invalid:focus {
+    box-shadow:
+        0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Amount
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-input-wrapper--amount
+.donation-manual-input {
+    padding-left: 4.5rem;
+}
+
+.donation-manual-input-unit {
+    position: absolute;
+
+
+    top: 50%;
+    left: 0.85rem;
+
+    color: #6c757d;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+
+
+}
+
+.donation-manual-hint {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.35rem;
+
+    margin-top: 0.4rem;
+
+    color: #6c757d;
+
+    font-size: 0.73rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Error
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-error {
+    display: flex;
+    align-items: center;
+
+
+    gap: 0.35rem;
+
+    margin-top: 0.4rem;
+
+    color: #dc3545;
+
+    font-size: 0.76rem;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Actions
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+
+    gap: 0.65rem;
+
+    padding-top: 0.2rem;
+
+
+}
+
+.donation-manual-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+
+    gap: 0.45rem;
+
+    min-height: 46px;
+
+    padding: 0.65rem 1rem;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+
+
+}
+
+.donation-manual-btn:hover {
+    transform: translateY(-1px);
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Primary
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-btn--primary {
+    min-width: 145px;
+
+
+    border: 1px solid transparent;
+
+    background: linear-gradient(
+        135deg,
+        #6f42c1,
+        #0d6efd
+    );
+
+    color: #fff;
+
+    box-shadow:
+        0 4px 14px rgba(111, 66, 193, 0.18);
+
+
+}
+
+.donation-manual-btn--primary:hover {
+    color: #fff;
+
+
+    box-shadow:
+        0 6px 18px rgba(111, 66, 193, 0.25);
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Secondary
+ --------------------------------------------------------------------------
+ */
+
+.donation-manual-btn--secondary {
+    min-width: 100px;
+
+
+    border: 1px solid #dee2e6;
+
+    background: #fff;
+
+    color: #495057;
+
+
+}
+
+.donation-manual-btn--secondary:hover {
+    border-color: #adb5bd;
+
+
+    background: #f8f9fa;
+
+    color: #212529;
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Tablet / Desktop
+ --------------------------------------------------------------------------
+ */
+
+@media (min-width: 768px) {
+
+
+    .donation-manual-page {
+        padding: 1.5rem;
+    }
+
+    .donation-manual-header__title {
+        font-size: 1.3rem;
+    }
+
+    .donation-manual-card__header {
+        padding: 1.15rem 1.5rem;
+    }
+
+    .donation-manual-card__body {
+        padding: 1.5rem;
+    }
+
+
+}
+
+ /*
+ --------------------------------------------------------------------------
+ Mobile
+ --------------------------------------------------------------------------
+ */
+
+@media (max-width: 575.98px) {
+
+
+    .donation-manual-page {
+        padding: 0.85rem;
+    }
+
+    .donation-manual-header__icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .donation-manual-header__title {
+        font-size: 1rem;
+    }
+
+    .donation-manual-header__subtitle {
+        font-size: 0.72rem;
+    }
+
+    .donation-manual-card {
+        border-radius: 15px;
+    }
+
+    .donation-manual-card__body {
+        padding: 1rem;
+    }
+
+    .donation-manual-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .donation-manual-btn {
+        width: 100%;
+    }
+
+    .donation-manual-btn--primary,
+    .donation-manual-btn--secondary {
+        min-width: 0;
+    }
+
+
+}

@@ -449,6 +449,12 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     )
         ->name('loans.calculate');
 
+    Route::get(
+        'loans/previous-guarantors/{customer}',
+        [LoanController::class, 'previousGuarantors']
+    )
+        ->name('loans.previous-guarantors');
+
 
     Route::resource('loans', LoanController::class)
         ->only([

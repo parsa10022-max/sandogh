@@ -1,76 +1,117 @@
-
 @extends('layouts.app')
 
 @section('title', 'درخواست‌های برداشت')
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid withdrawals-page">
 
-        <div class="card shadow-sm border-0">
+        {{-- سربرگ صفحه --}}
+        <div class="withdrawals-header">
 
-            {{-- Header --}}
-            <div class="card-header bg-light">
+            <div class="withdrawals-title-wrapper">
 
-                <h5 class="mb-0">
-                    درخواست‌های برداشت
-                </h5>
+                <div class="withdrawals-title-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+                    <h5 class="withdrawals-title">
+                        درخواست‌های برداشت
+                    </h5>
+
+                    <p class="withdrawals-subtitle">
+                        مدیریت و بررسی درخواست‌های برداشت مشتریان
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- پیام موفقیت --}}
+        @if(session('success'))
+
+            <div class="withdrawals-alert withdrawals-alert-success">
+
+                <div class="withdrawals-alert-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+
+                <div>
+                    {{ session('success') }}
+                </div>
+
+            </div>
+
+        @endif
+
+
+        {{-- کارت اصلی --}}
+        <div class="card withdrawals-card">
+
+            <div class="withdrawals-card-header">
+
+                <div class="withdrawals-card-title">
+
+                    <span class="withdrawals-card-icon">
+                        <i class="bi bi-list-ul"></i>
+                    </span>
+
+                    <div>
+
+                        <h6>
+                            فهرست درخواست‌ها
+                        </h6>
+
+                        <small>
+                            درخواست‌های برداشت ثبت‌شده
+                        </small>
+
+                    </div>
+
+                </div>
+
+                @if($withdrawals->count())
+
+                    <span class="withdrawals-count">
+                        {{ $withdrawals->total() }}
+                        درخواست
+                    </span>
+
+                @endif
 
             </div>
 
 
-            <div class="card-body">
-
-                @if(session('success'))
-
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-
-                @endif
-
+            <div class="card-body withdrawals-card-body">
 
                 @if($withdrawals->count())
 
-                    <div class="table-responsive">
+                    <div class="table-responsive withdrawals-table-wrapper">
 
-                        <table class="table table-bordered table-hover align-middle">
+                        <table class="table align-middle withdrawals-table">
 
-                            <thead class="table-light">
+                            <thead>
 
                             <tr>
 
-                                <th>
-                                    مشتری
-                                </th>
+                                <th>مشتری</th>
 
-                                <th>
-                                    شماره حساب
-                                </th>
+                                <th>شماره حساب</th>
 
-                                <th>
-                                    مبلغ
-                                </th>
+                                <th>مبلغ</th>
 
-                                <th>
-                                    بانک مقصد
-                                </th>
+                                <th>بانک مقصد</th>
 
-                                <th>
-                                    شماره شبا
-                                </th>
+                                <th>شماره شبا</th>
 
-                                <th>
-                                    وضعیت
-                                </th>
+                                <th>وضعیت</th>
 
-                                <th>
-                                    تاریخ درخواست
-                                </th>
+                                <th>تاریخ درخواست</th>
 
-                                <th>
-                                    عملیات
-                                </th>
+                                <th class="text-center">عملیات</th>
 
                             </tr>
 
@@ -86,10 +127,26 @@
                                     {{-- مشتری --}}
                                     <td>
 
-                                        <strong>
-                                            {{ $withdrawal->account->customer->first_name }}
-                                            {{ $withdrawal->account->customer->last_name }}
-                                        </strong>
+                                        <div class="withdrawal-customer">
+
+                                            <div class="withdrawal-customer-icon">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+
+                                            <div class="withdrawal-customer-info">
+
+                                                <strong>
+                                                    {{ $withdrawal->account->customer->first_name }}
+                                                    {{ $withdrawal->account->customer->last_name }}
+                                                </strong>
+
+                                                <small>
+                                                    مشتری صندوق
+                                                </small>
+
+                                            </div>
+
+                                        </div>
 
                                     </td>
 
@@ -97,7 +154,12 @@
                                     {{-- شماره حساب --}}
                                     <td>
 
-                                        {{ $withdrawal->account->account_number }}
+                                        <span
+                                            class="withdrawal-account-number"
+                                            dir="ltr"
+                                        >
+                                            {{ $withdrawal->account->account_number }}
+                                        </span>
 
                                     </td>
 
@@ -105,13 +167,17 @@
                                     {{-- مبلغ --}}
                                     <td>
 
-                                        <strong>
-                                            {{ number_format($withdrawal->amount) }}
-                                        </strong>
+                                        <div class="withdrawal-amount">
 
-                                        <small>
-                                            ریال
-                                        </small>
+                                            <strong>
+                                                {{ number_format($withdrawal->amount) }}
+                                            </strong>
+
+                                            <span>
+                                                ریال
+                                            </span>
+
+                                        </div>
 
                                     </td>
 
@@ -119,19 +185,30 @@
                                     {{-- بانک مقصد --}}
                                     <td>
 
-                                        {{ \App\Support\Iban::bankName(
-                                            $withdrawal->iban
-                                        ) }}
+                                        <div class="withdrawal-bank">
+
+                                            <span class="withdrawal-bank-icon">
+                                                <i class="bi bi-bank"></i>
+                                            </span>
+
+                                            <span>
+                                                {{ \App\Support\Iban::bankName($withdrawal->iban) }}
+                                            </span>
+
+                                        </div>
 
                                     </td>
 
 
                                     {{-- شماره شبا --}}
-                                    <td dir="ltr">
+                                    <td>
 
-                                        {{ \App\Support\Iban::format(
-                                            $withdrawal->iban
-                                        ) }}
+                                        <span
+                                            class="withdrawal-iban"
+                                            dir="ltr"
+                                        >
+                                            {{ \App\Support\Iban::format($withdrawal->iban) }}
+                                        </span>
 
                                     </td>
 
@@ -142,15 +219,23 @@
                                         @if($withdrawal->status instanceof \App\Enums\WithdrawalStatus)
 
                                             <span
-                                                class="badge bg-{{ $withdrawal->status->badge() }}"
+                                                class="withdrawal-status withdrawal-status-{{ $withdrawal->status->value }}"
                                             >
+
+                                                <span class="withdrawal-status-dot"></span>
+
                                                 {{ $withdrawal->status->label() }}
+
                                             </span>
 
                                         @else
 
-                                            <span class="badge bg-secondary">
+                                            <span class="withdrawal-status withdrawal-status-unknown">
+
+                                                <span class="withdrawal-status-dot"></span>
+
                                                 نامشخص
+
                                             </span>
 
                                         @endif
@@ -161,27 +246,37 @@
                                     {{-- تاریخ --}}
                                     <td>
 
-                                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                            $withdrawal->created_at
-                                        )->format('Y/m/d H:i') }}
+                                        <div class="withdrawal-date">
+
+                                            <span class="withdrawal-date-icon">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+
+                                            <span>
+                                                {{ \Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('Y/m/d') }}
+                                                <small>
+                                                    {{ \Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('H:i') }}
+                                                </small>
+                                            </span>
+
+                                        </div>
 
                                     </td>
 
 
                                     {{-- عملیات --}}
-                                    <td>
+                                    <td class="text-center">
 
                                         <a
-                                            href="{{ route(
-                                                'withdrawals.show',
-                                                $withdrawal
-                                            ) }}"
-                                            class="btn btn-sm btn-primary"
+                                            href="{{ route('withdrawals.show', $withdrawal) }}"
+                                            class="withdrawal-view-btn"
                                         >
 
                                             <i class="bi bi-eye"></i>
 
-                                            مشاهده
+                                            <span>
+                                                مشاهده
+                                            </span>
 
                                         </a>
 
@@ -198,21 +293,33 @@
                     </div>
 
 
-                    {{-- Pagination --}}
-                    <div class="mt-3">
+                    {{-- صفحه‌بندی --}}
+                    @if($withdrawals->hasPages())
 
-                        {{ $withdrawals->links() }}
+                        <div class="withdrawals-pagination">
 
-                    </div>
+                            {{ $withdrawals->links() }}
+
+                        </div>
+
+                    @endif
 
 
                 @else
 
-                    <div class="alert alert-info mb-0">
+                    <div class="withdrawals-empty">
 
-                        <i class="bi bi-info-circle"></i>
+                        <div class="withdrawals-empty-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
 
-                        درخواست برداشتی وجود ندارد.
+                        <h6>
+                            درخواست برداشتی وجود ندارد
+                        </h6>
+
+                        <p>
+                            هنوز هیچ درخواست برداشتی برای بررسی ثبت نشده است.
+                        </p>
 
                     </div>
 

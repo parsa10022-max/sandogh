@@ -1,0 +1,701 @@
+
+    /* =========================================================
+       Withdrawal Show
+       Design #1 - Ultra Compact
+    ========================================================= */
+
+.withdrawal-show-page {
+    width: 100%;
+    max-width: 100%;
+    padding: .5rem .75rem 1rem;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.withdrawal-show-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: .55rem;
+}
+
+.withdrawal-show-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    min-width: 0;
+}
+
+.withdrawal-show-title-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f0ebff;
+    color: #6f42c1;
+
+    border: 1px solid #ddd3f7;
+    border-radius: 8px;
+
+    font-size: .9rem;
+}
+
+.withdrawal-show-title {
+    margin: 0;
+    font-size: .88rem;
+    font-weight: 800;
+}
+
+.withdrawal-show-subtitle {
+    margin: .08rem 0 0;
+    color: #858c94;
+    font-size: .62rem;
+}
+
+.withdrawal-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+
+    padding: .35rem .55rem;
+
+    color: #555;
+    background: #fff;
+
+    border: 1px solid #dee2e6;
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: .65rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.withdrawal-alert {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+
+    padding: .4rem .55rem;
+    margin-bottom: .5rem;
+
+    border-radius: 7px;
+
+    font-size: .66rem;
+    line-height: 1.5;
+}
+
+.withdrawal-alert-icon {
+    font-size: .8rem;
+}
+
+.withdrawal-error-list {
+    margin: .15rem 0 0;
+    padding-right: .9rem;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.withdrawal-info-card,
+.withdrawal-paid-card,
+.withdrawal-actions-card {
+    width: 100%;
+    max-width: 100%;
+
+    margin-bottom: .5rem;
+
+    background: #fff;
+
+    border: 1px solid #e1e4e8;
+    border-radius: 9px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .035);
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.withdrawal-card-header,
+.withdrawal-paid-header,
+.withdrawal-actions-header {
+    min-height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: .5rem;
+
+    padding: .4rem .6rem;
+
+    border-bottom: 1px solid #edf0f2;
+}
+
+.withdrawal-card-title {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+
+    min-width: 0;
+}
+
+.withdrawal-card-title h6 {
+    margin: 0;
+
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.withdrawal-card-title small {
+    display: block;
+
+    margin-top: 0;
+
+    color: #90979e;
+    font-size: .55rem;
+}
+
+.withdrawal-card-icon,
+.withdrawal-paid-icon,
+.withdrawal-actions-icon {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: .75rem;
+}
+
+.withdrawal-card-icon {
+    color: #6f42c1;
+    background: #f0ebff;
+    border: 1px solid #ddd3f7;
+}
+
+.withdrawal-paid-icon {
+    color: #198754;
+    background: #edf9f3;
+    border: 1px solid #ccebd9;
+}
+
+.withdrawal-actions-icon {
+    color: #0d6efd;
+    background: #edf5ff;
+    border: 1px solid #cfe2ff;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.withdrawal-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .22rem;
+
+    padding: .2rem .4rem;
+
+    color: #6841b5;
+    background: #f4f1ff;
+
+    border: 1px solid #ded6f5;
+    border-radius: 999px;
+
+    font-size: .56rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.withdrawal-status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* =========================================================
+   INFO BODY
+========================================================= */
+
+.withdrawal-info-body {
+    padding: .5rem .6rem !important;
+}
+
+/* 5 ستون برای مانیتورهای بزرگ */
+.withdrawal-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: .4rem;
+}
+
+/* =========================================================
+   INFO ITEM
+========================================================= */
+
+.withdrawal-info-item {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: .15rem;
+
+    min-height: 48px;
+
+    padding: .35rem .45rem;
+
+    background: #fafbfc;
+
+    border: 1px solid #edf0f2;
+    border-radius: 6px;
+}
+
+.withdrawal-info-label {
+    display: flex;
+    align-items: center;
+    gap: .22rem;
+
+    color: #858d95;
+
+    font-size: .57rem;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+.withdrawal-info-label i {
+    color: #6f42c1;
+    font-size: .62rem;
+}
+
+.withdrawal-info-item strong {
+    display: block;
+
+    min-width: 0;
+    max-width: 100%;
+
+    color: #25292d;
+
+    font-size: .67rem;
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* شبا فضای کامل عرض */
+.withdrawal-info-item-wide {
+    grid-column: span 2;
+}
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.withdrawal-amount-item {
+    background: #f7f4ff;
+    border-color: #e2d9f6;
+}
+
+.withdrawal-amount-value {
+    display: flex;
+    align-items: baseline;
+    gap: .2rem;
+
+    min-width: 0;
+}
+
+.withdrawal-amount-value strong {
+    color: #6f42c1;
+    font-size: .78rem;
+    font-weight: 900;
+}
+
+.withdrawal-amount-value span {
+    color: #7d6c9d;
+    font-size: .55rem;
+}
+
+/* =========================================================
+   IBAN
+========================================================= */
+
+.withdrawal-copy-value {
+    width: 100%;
+    max-width: 100%;
+
+    color: #25292d;
+
+    font-size: .62rem;
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+    word-break: break-all;
+}
+
+.withdrawal-ltr-value {
+    direction: ltr;
+    text-align: right;
+
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+    word-break: break-all;
+}
+
+/* =========================================================
+   PAID
+========================================================= */
+
+.withdrawal-paid-label {
+    display: inline-flex;
+    align-items: center;
+
+    padding: .18rem .35rem;
+
+    color: #198754;
+    background: #edf9f3;
+
+    border: 1px solid #ccebd9;
+    border-radius: 999px;
+
+    font-size: .53rem;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.withdrawal-actions-body {
+    padding: .5rem .6rem !important;
+}
+
+.withdrawal-action-section {
+    padding-bottom: .55rem;
+    margin-bottom: .55rem;
+
+    border-bottom: 1px solid #edf0f2;
+}
+
+.withdrawal-action-heading {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+
+    margin-bottom: .45rem;
+}
+
+.withdrawal-action-heading-icon {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #198754;
+    background: #edf9f3;
+
+    border: 1px solid #ccebd9;
+    border-radius: 6px;
+
+    font-size: .68rem;
+}
+
+.withdrawal-reject-icon {
+    color: #dc3545;
+    background: #fff1f2;
+    border-color: #f1c8cd;
+}
+
+.withdrawal-action-heading > div {
+    min-width: 0;
+}
+
+.withdrawal-action-heading strong {
+    display: block;
+
+    font-size: .67rem;
+    font-weight: 800;
+}
+
+.withdrawal-action-heading small {
+    display: block;
+
+    color: #8b9299;
+    font-size: .57rem;
+
+    line-height: 1.4;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.withdrawal-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: .45rem;
+
+    min-width: 0;
+}
+
+.withdrawal-form-group {
+    min-width: 0;
+}
+
+.withdrawal-form-label {
+    display: block;
+
+    margin-bottom: .18rem;
+
+    color: #5e666e;
+
+    font-size: .58rem;
+    font-weight: 700;
+}
+
+.withdrawal-form-label span {
+    color: #dc3545;
+}
+
+.withdrawal-form-control {
+    width: 100%;
+    min-width: 0;
+
+    min-height: 32px;
+
+    padding: .25rem .45rem;
+
+    border-color: #dfe3e7;
+    border-radius: 6px;
+
+    font-size: .64rem;
+}
+
+.withdrawal-form-control:focus {
+    border-color: #9b7ed8;
+    box-shadow: 0 0 0 .12rem rgba(111, 66, 193, .1);
+}
+
+.invalid-feedback {
+    font-size: .55rem;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.withdrawal-form-actions {
+    display: flex;
+    justify-content: flex-start;
+
+    margin-top: .45rem;
+}
+
+.withdrawal-action-btn {
+    min-height: 31px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .25rem;
+
+    padding: .3rem .6rem;
+
+    border-radius: 6px;
+
+    font-size: .62rem;
+    font-weight: 800;
+
+    transition: .15s ease;
+}
+
+.withdrawal-action-btn-success {
+    color: #fff;
+    background: #198754;
+    border: 1px solid #198754;
+}
+
+.withdrawal-action-btn-success:hover {
+    color: #fff;
+    background: #157347;
+}
+
+.withdrawal-action-btn-danger {
+    color: #dc3545;
+    background: #fff;
+    border: 1px solid #e2b8bd;
+}
+
+.withdrawal-action-btn-danger:hover {
+    color: #fff;
+    background: #dc3545;
+}
+
+/* =========================================================
+   NO OVERFLOW
+========================================================= */
+
+.withdrawal-show-page,
+.withdrawal-show-page *,
+.withdrawal-info-card,
+.withdrawal-paid-card,
+.withdrawal-actions-card {
+    box-sizing: border-box;
+}
+
+.withdrawal-show-page {
+    overflow-x: hidden;
+}
+
+.withdrawal-info-card,
+.withdrawal-paid-card,
+.withdrawal-actions-card {
+    overflow: hidden;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1199.98px) {
+
+    .withdrawal-info-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .withdrawal-info-item-wide {
+        grid-column: span 2;
+    }
+}
+
+/* =========================================================
+   TABLET SMALL
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .withdrawal-info-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .withdrawal-info-item-wide {
+        grid-column: span 2;
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .withdrawal-show-page {
+        padding: .45rem .4rem .75rem;
+    }
+
+    .withdrawal-show-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: .4rem;
+    }
+
+    .withdrawal-back-btn {
+        width: 100%;
+        min-height: 32px;
+    }
+
+    .withdrawal-info-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .withdrawal-info-item-wide {
+        grid-column: span 2;
+    }
+
+    .withdrawal-form-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .withdrawal-form-actions {
+        width: 100%;
+    }
+
+    .withdrawal-action-btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .withdrawal-info-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .withdrawal-info-item-wide {
+        grid-column: auto;
+    }
+
+    .withdrawal-card-header,
+    .withdrawal-paid-header,
+    .withdrawal-actions-header {
+        padding: .35rem .45rem;
+    }
+
+    .withdrawal-info-body,
+    .withdrawal-actions-body {
+        padding: .4rem .45rem !important;
+    }
+}

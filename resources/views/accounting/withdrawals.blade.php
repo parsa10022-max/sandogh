@@ -2,60 +2,100 @@
 
 @section('title', 'برداشت‌های پس‌انداز')
 
+
+
 @section('content')
 
-    <div class="container-fluid accounting-page">
+    <div class="container-fluid savings-withdrawals-page">
 
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        {{-- Header --}}
+        <div class="savings-withdrawals-header">
 
-            <div>
-                <h1 class="h4 fw-bold mb-1">
-                    <i class="bi bi-cash-stack me-1"></i>
-                    برداشت‌های پس‌انداز
-                </h1>
+            <div class="savings-withdrawals-title-wrapper">
 
-                <div class="text-muted small">
-                    برداشت‌های پرداخت‌شده در انتظار ثبت حسابداری
+                <div class="savings-withdrawals-title-icon">
+                    <i class="bi bi-cash-stack"></i>
                 </div>
+
+                <div>
+                    <h1 class="savings-withdrawals-title">
+                        برداشت‌های پس‌انداز
+                    </h1>
+
+                    <div class="savings-withdrawals-subtitle">
+                        برداشت‌های پرداخت‌شده در انتظار ثبت حسابداری
+                    </div>
+                </div>
+
             </div>
 
             <a href="{{ route('admin.accounting.index') }}"
-               class="btn btn-light border rounded-3">
+               class="savings-withdrawals-back-btn">
 
-                <i class="bi bi-arrow-right me-1"></i>
-                حسابداری
+                <i class="bi bi-arrow-right"></i>
+                <span>حسابداری</span>
 
             </a>
 
         </div>
 
 
-        <div class="card border-0 shadow-sm rounded-4">
+        {{-- Main Card --}}
+        <div class="savings-withdrawals-card">
 
-            <div class="card-body p-0">
+            <div class="savings-withdrawals-card-header">
 
-                <div class="table-responsive">
+                <div class="savings-withdrawals-card-title">
 
-                    <table class="table table-hover align-middle mb-0">
+                    <div class="savings-withdrawals-card-icon">
+                        <i class="bi bi-list-ul"></i>
+                    </div>
 
-                        <thead class="table-light">
+                    <span>برداشت‌های در انتظار ثبت</span>
 
+                </div>
+
+                <div class="savings-withdrawals-count">
+                    {{ $withdrawals->total() }} مورد
+                </div>
+
+            </div>
+
+
+            <div class="savings-withdrawals-card-body">
+
+                <div class="savings-withdrawals-table-wrapper">
+
+                    <table class="savings-withdrawals-table">
+
+                        <thead>
                         <tr>
 
-                            <th class="px-3">#</th>
+                            <th class="col-number">
+                                #
+                            </th>
 
-                            <th>عضو</th>
+                            <th class="col-member">
+                                عضو
+                            </th>
 
-                            <th>مبلغ</th>
+                            <th class="col-amount">
+                                مبلغ
+                            </th>
 
-                            <th>پرداخت‌کننده</th>
+                            <th class="col-payer">
+                                پرداخت‌کننده
+                            </th>
 
-                            <th>تاریخ پرداخت</th>
+                            <th class="col-date">
+                                تاریخ پرداخت
+                            </th>
 
-                            <th class="text-end px-3">عملیات</th>
+                            <th class="col-action">
+                                عملیات
+                            </th>
 
                         </tr>
-
                         </thead>
 
 
@@ -65,67 +105,129 @@
 
                             <tr>
 
-                                <td class="px-3">
+                                {{-- Number --}}
+                                <td class="savings-withdrawal-row-number">
+
                                     {{ $withdrawals->firstItem() + $loop->index }}
+
                                 </td>
 
 
-                                <td>
+                                {{-- Member --}}
+                                <td class="savings-withdrawal-person">
 
-                                    <div class="fw-semibold">
-                                        {{ $withdrawal->account?->customer?->name ?? '---' }}
+                                    <div class="savings-withdrawal-person-wrapper">
+
+                                        <div class="savings-withdrawal-person-icon">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+
+                                        <div class="savings-withdrawal-person-name">
+
+                                            {{ $withdrawal->account?->customer?->first_name }}
+                                            {{ $withdrawal->account?->customer?->last_name }}
+
+                                            @if(
+                                                !$withdrawal->account?->customer?->first_name &&
+                                                !$withdrawal->account?->customer?->last_name
+                                            )
+                                                ---
+                                            @endif
+
+                                        </div>
+
                                     </div>
 
                                 </td>
 
 
-                                <td>
+                                {{-- Amount --}}
+                                <td class="savings-withdrawal-amount">
 
-                                    <span class="fw-bold">
-                                        {{ $withdrawal->amount ?? 0 }}
+                                    <span class="savings-withdrawal-amount-value">
+                                        {{ number_format($withdrawal->amount ?? 0) }}
                                     </span>
 
-                                    <span class="text-muted small">
+                                    <span class="savings-withdrawal-amount-unit">
                                         تومان
                                     </span>
 
                                 </td>
 
 
-                                <td>
-                                    {{ $withdrawal->paidBy?->name ?? '---' }}
+                                {{-- Payer --}}
+                                <td class="savings-withdrawal-person">
+
+                                    <div class="savings-withdrawal-person-wrapper">
+
+                                        <div class="savings-withdrawal-person-icon">
+                                            <i class="bi bi-person-check"></i>
+                                        </div>
+
+                                        <div class="savings-withdrawal-person-name">
+
+                                            {{ $withdrawal->paidBy?->first_name }}
+                                            {{ $withdrawal->paidBy?->last_name }}
+
+                                            @if(
+                                                !$withdrawal->paidBy?->first_name &&
+                                                !$withdrawal->paidBy?->last_name
+                                            )
+                                                ---
+                                            @endif
+
+                                        </div>
+
+                                    </div>
+
                                 </td>
 
 
-                                <td>
+                                {{-- Paid date --}}
+                                <td class="savings-withdrawal-date">
 
                                     @if($withdrawal->paid_at)
 
-                                        {{ $withdrawal->paid_at->format('Y/m/d H:i') }}
+                                        <span>
+                                            {{ $withdrawal->paid_at->format('Y/m/d') }}
+                                        </span>
+
+                                        <small>
+                                            {{ $withdrawal->paid_at->format('H:i') }}
+                                        </small>
 
                                     @else
 
-                                        ---
+                                        <span class="savings-withdrawal-muted">
+                                            ---
+                                        </span>
 
                                     @endif
 
                                 </td>
 
 
-                                <td class="text-end px-3">
+                                {{-- Action --}}
+                                <td class="savings-withdrawal-action">
 
                                     <form method="POST"
-                                          action="{{ route('admin.accounting.confirm', ['type' => 'withdrawal', 'id' => $withdrawal->id]) }}"
-                                          class="d-inline"
+                                          action="{{ route('admin.accounting.confirm', [
+                                              'type' => 'withdrawal',
+                                              'id' => $withdrawal->id
+                                          ]) }}"
+                                          class="savings-withdrawal-confirm-form"
                                           onsubmit="return confirm('آیا این برداشت به عنوان ثبت‌شده در حسابداری تأیید شود؟')">
 
                                         @csrf
 
                                         <button type="submit"
-                                                class="btn btn-sm btn-success rounded-3">
+                                                class="savings-withdrawal-confirm-btn">
 
-                                            <i class="bi bi-check2-circle me-1"></i>
-                                            تأیید ثبت حسابداری
+                                            <i class="bi bi-check2-circle"></i>
+
+                                            <span>
+                                                تأیید ثبت
+                                            </span>
 
                                         </button>
 
@@ -135,19 +237,23 @@
 
                             </tr>
 
-
                         @empty
 
                             <tr>
 
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="6"
+                                    class="savings-withdrawals-empty">
 
-                                    <div class="text-muted">
+                                    <div class="savings-withdrawals-empty-icon">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
 
-                                        <i class="bi bi-check-circle fs-2 d-block mb-2"></i>
+                                    <div class="savings-withdrawals-empty-title">
+                                        برداشت در انتظاری وجود ندارد
+                                    </div>
 
-                                        برداشت در انتظاری وجود ندارد.
-
+                                    <div class="savings-withdrawals-empty-text">
+                                        تمام برداشت‌های پرداخت‌شده در حسابداری ثبت شده‌اند.
                                     </div>
 
                                 </td>
@@ -167,9 +273,10 @@
         </div>
 
 
+        {{-- Pagination --}}
         @if($withdrawals->hasPages())
 
-            <div class="mt-4">
+            <div class="savings-withdrawals-pagination">
                 {{ $withdrawals->links() }}
             </div>
 
@@ -178,3 +285,4 @@
     </div>
 
 @endsection
+

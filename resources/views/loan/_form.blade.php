@@ -217,9 +217,12 @@
 
     <div class="loan-form-section__content">
 
-        @include('loan._guarantors')
+        @include('loan._guarantors', [
+            'previousLoanGuarantors' => $previousLoanGuarantors ?? collect(),
+        ])
 
     </div>
+
 
 </div>
 
@@ -387,6 +390,11 @@
     </div>
 
 </div>
+
+{{-- =========================================================
+     LOAN INSTALLMENT SCHEDULE
+========================================================= --}}
+
 
 
 {{-- ========================================================================= --}}

@@ -1,19 +1,73 @@
 @extends('layouts.app')
 
+@section('title', 'ویرایش حساب سیستمی')
+
+@push('styles')
+    @vite('resources/css/admin/system-accounts/edit.css')
+@endpush
 
 @section('content')
 
-    <div class="container">
+    <div class="system-account-edit-page">
 
-        <div class="card">
+        {{-- Header --}}
+        <div class="system-account-edit-header">
 
-            <div class="card-header">
-                ویرایش حساب سیستمی
+            <div class="system-account-edit-header__content">
+
+                <div class="system-account-edit-header__icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+
+                <div>
+                    <h1 class="system-account-edit-header__title">
+                        ویرایش حساب سیستمی
+                    </h1>
+
+                    <p class="system-account-edit-header__subtitle">
+                        اطلاعات حساب سیستمی را ویرایش کنید.
+                    </p>
+                </div>
+
+            </div>
+
+            <a href="{{ route('system-accounts.index') }}"
+               class="system-account-edit-back">
+
+                <i class="bi bi-arrow-right"></i>
+
+                <span>بازگشت</span>
+
+            </a>
+
+        </div>
+
+
+        {{-- Form Card --}}
+        <div class="system-account-edit-card">
+
+            <div class="system-account-edit-card__header">
+
+                <div class="system-account-edit-card__icon">
+                    <i class="bi bi-bank"></i>
+                </div>
+
+                <div>
+
+                    <h2 class="system-account-edit-card__title">
+                        اطلاعات حساب
+                    </h2>
+
+                    <p class="system-account-edit-card__subtitle">
+                        نام حساب را می‌توانید تغییر دهید.
+                    </p>
+
+                </div>
+
             </div>
 
 
-            <div class="card-body">
-
+            <div class="system-account-edit-card__body">
 
                 <form method="POST"
                       action="{{ route(
@@ -25,64 +79,124 @@
                     @method('PUT')
 
 
-                    <div class="mb-3">
+                    {{-- نام حساب --}}
+                    <div class="system-account-edit-field">
 
-                        <label class="form-label">
+                        <label for="name"
+                               class="system-account-edit-label">
+
                             نام حساب
+
+                            <span class="system-account-edit-required">
+                            *
+                        </span>
+
                         </label>
 
-                        <input
-                            type="text"
-                            name="name"
-                            class="form-control"
-                            value="{{ old(
-                            'name',
-                            $systemAccount->name
-                        ) }}"
-                        >
+                        <div class="system-account-edit-input-wrapper">
+
+                        <span class="system-account-edit-input-icon">
+                            <i class="bi bi-card-text"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="system-account-edit-input
+                                @error('name') is-invalid @enderror"
+                                value="{{ old(
+                                'name',
+                                $systemAccount->name
+                            ) }}"
+                                placeholder="مثلاً کمک‌های مردمی"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+                        @error('name')
+                        <div class="system-account-edit-error">
+                            <i class="bi bi-exclamation-circle"></i>
+                            {{ $message }}
+                        </div>
+                        @enderror
 
                     </div>
 
 
-                    <div class="mb-3">
+                    {{-- شماره حساب --}}
+                    <div class="system-account-edit-field">
 
-                        <label class="form-label">
+                        <label for="account_number"
+                               class="system-account-edit-label">
+
                             شماره حساب
+
                         </label>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="{{ $systemAccount->account_number }}"
-                            readonly
-                        >
+                        <div class="system-account-edit-input-wrapper">
+
+                        <span class="system-account-edit-input-icon">
+                            <i class="bi bi-hash"></i>
+                        </span>
+
+                            <input
+                                type="text"
+                                id="account_number"
+                                class="system-account-edit-input
+                                system-account-edit-input--readonly"
+                                value="{{ $systemAccount->account_number }}"
+                                readonly
+                                dir="ltr"
+                            >
+
+                        </div>
+
+                        <div class="system-account-edit-hint">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            شماره حساب قابل ویرایش نیست.
+
+                        </div>
 
                     </div>
 
 
-                    <button class="btn btn-primary">
+                    {{-- Actions --}}
+                    <div class="system-account-edit-actions">
 
-                        ذخیره تغییرات
+                        <a href="{{ route('system-accounts.index') }}"
+                           class="system-account-edit-btn
+                              system-account-edit-btn--secondary">
 
-                    </button>
+                            <i class="bi bi-x-lg"></i>
+
+                            انصراف
+
+                        </a>
 
 
-                    <a href="{{ route('system-accounts.index') }}"
-                       class="btn btn-secondary">
+                        <button type="submit"
+                                class="system-account-edit-btn
+                                   system-account-edit-btn--primary">
 
-                        بازگشت
+                            <i class="bi bi-check2-circle"></i>
 
-                    </a>
+                            ذخیره تغییرات
 
+                        </button>
+
+                    </div>
 
                 </form>
-
 
             </div>
 
         </div>
 
     </div>
-
 
 @endsection

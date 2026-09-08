@@ -1,0 +1,887 @@
+    /* =========================================================
+       Loan Payments - Accounting
+       Design #1
+       RTL / Bootstrap 5.3
+       Compact / Desktop Friendly
+       ========================================================= */
+
+
+    /* =========================================================
+       Page
+       ========================================================= */
+
+.loan-payments-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    padding-top: 10px;
+    padding-bottom: 12px;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.loan-payments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.loan-payments-title-wrapper {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+    min-width: 0;
+}
+
+.loan-payments-title-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(99, 102, 241, .18);
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, .12),
+        rgba(59, 130, 246, .08)
+    );
+
+    color: #6366f1;
+    font-size: 17px;
+}
+
+.loan-payments-title {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    line-height: 1.4;
+}
+
+.loan-payments-subtitle {
+    margin-top: 1px;
+
+    color: #64748b;
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.loan-payments-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 34px;
+
+    padding: 5px 10px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: all .18s ease;
+}
+
+.loan-payments-back-btn:hover {
+    border-color: #c7d2fe;
+
+    background: #f8faff;
+
+    color: #4f46e5;
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.loan-payments-card {
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+
+    background: #fff;
+
+    box-shadow:
+        0 3px 14px rgba(15, 23, 42, .045);
+}
+
+
+/* =========================================================
+   Card Header
+   ========================================================= */
+
+.loan-payments-card-header {
+    min-height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 6px 10px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    background: #fff;
+}
+
+.loan-payments-card-title {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+
+    color: #1e293b;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.loan-payments-card-title small {
+    display: block;
+
+    margin-top: 1px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.loan-payments-card-icon {
+    width: 29px;
+    height: 29px;
+    flex: 0 0 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: rgba(99, 102, 241, .09);
+
+    color: #6366f1;
+
+    font-size: 13px;
+}
+
+.loan-payments-count {
+    flex: 0 0 auto;
+
+    padding: 4px 8px;
+
+    border: 1px solid #e0e7ff;
+    border-radius: 20px;
+
+    background: #f5f7ff;
+
+    color: #4f46e5;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Card Body
+   ========================================================= */
+
+.loan-payments-card-body {
+    padding: 0;
+}
+
+
+/* =========================================================
+   Table Wrapper
+   ========================================================= */
+
+.loan-payments-table-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   Table
+   ========================================================= */
+
+.loan-payments-table {
+    width: 100%;
+
+    margin: 0;
+
+    table-layout: fixed;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: #334155;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   Column Widths
+   ========================================================= */
+
+.loan-payments-table th:nth-child(1),
+.loan-payments-table td:nth-child(1) {
+    width: 4%;
+}
+
+.loan-payments-table th:nth-child(2),
+.loan-payments-table td:nth-child(2) {
+    width: 12%;
+}
+
+.loan-payments-table th:nth-child(3),
+.loan-payments-table td:nth-child(3) {
+    width: 17%;
+}
+
+.loan-payments-table th:nth-child(4),
+.loan-payments-table td:nth-child(4) {
+    width: 8%;
+}
+
+.loan-payments-table th:nth-child(5),
+.loan-payments-table td:nth-child(5) {
+    width: 14%;
+}
+
+.loan-payments-table th:nth-child(6),
+.loan-payments-table td:nth-child(6) {
+    width: 14%;
+}
+
+.loan-payments-table th:nth-child(7),
+.loan-payments-table td:nth-child(7) {
+    width: 13%;
+}
+
+.loan-payments-table th:nth-child(8),
+.loan-payments-table td:nth-child(8) {
+    width: 18%;
+}
+
+
+/* =========================================================
+   Table Head
+   ========================================================= */
+
+.loan-payments-table thead th {
+    height: 37px;
+
+    padding: 6px 7px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+.loan-payments-table thead th:first-child {
+    padding-right: 10px;
+}
+
+
+/* =========================================================
+   Table Rows
+   ========================================================= */
+
+.loan-payments-table tbody tr {
+    transition: background-color .15s ease;
+}
+
+.loan-payments-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.loan-payments-table tbody td {
+    height: 52px;
+
+    padding: 6px 7px;
+
+    border-bottom: 1px solid #f0f2f5;
+
+    vertical-align: middle;
+
+    overflow: hidden;
+}
+
+.loan-payments-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   Row Number
+   ========================================================= */
+
+.loan-payment-row-number {
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   Loan Number
+   ========================================================= */
+
+.loan-payment-loan-number {
+    display: inline-block;
+
+    max-width: 100%;
+
+    padding: 4px 6px;
+
+    border: 1px solid #e0e7ff;
+    border-radius: 6px;
+
+    background: #f8faff;
+
+    color: #4f46e5;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Customer
+   ========================================================= */
+
+.loan-payment-customer {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.loan-payment-customer-icon {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+.loan-payment-customer-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Installment
+   ========================================================= */
+
+.loan-payment-installment {
+    min-width: 27px;
+    height: 25px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 3px 7px;
+
+    border: 1px solid #dbeafe;
+    border-radius: 20px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Amount
+   ========================================================= */
+
+.loan-payment-amount {
+    display: flex;
+    align-items: baseline;
+
+    gap: 3px;
+
+    white-space: nowrap;
+}
+
+.loan-payment-amount strong {
+    color: #1e293b;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.loan-payment-amount small {
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   User
+   ========================================================= */
+
+.loan-payment-user {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 4px;
+
+    max-width: 100%;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.loan-payment-user i {
+    flex: 0 0 auto;
+
+    color: #6366f1;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Date
+   ========================================================= */
+
+.loan-payment-date {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1px;
+
+    white-space: nowrap;
+}
+
+.loan-payment-date span {
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.loan-payment-date small {
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   Muted
+   ========================================================= */
+
+.loan-payment-muted {
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   Confirm Button
+   ========================================================= */
+
+.loan-payment-confirm-form {
+    display: inline-block;
+
+    margin: 0;
+}
+
+.loan-payment-confirm-btn {
+    min-height: 31px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 4px 8px;
+
+    border: 1px solid #16a34a;
+    border-radius: 7px;
+
+    background: #16a34a;
+    color: #fff;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: all .18s ease;
+}
+
+.loan-payment-confirm-btn:hover {
+    border-color: #15803d;
+
+    background: #15803d;
+
+    box-shadow:
+        0 3px 8px rgba(22, 163, 74, .15);
+}
+
+.loan-payment-confirm-btn i {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Empty
+   ========================================================= */
+
+.loan-payments-empty {
+    padding: 35px 15px;
+
+    text-align: center;
+}
+
+.loan-payments-empty-icon {
+    width: 48px;
+    height: 48px;
+
+    margin: 0 auto 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f0fdf4;
+
+    color: #16a34a;
+
+    font-size: 22px;
+}
+
+.loan-payments-empty h6 {
+    margin: 0 0 3px;
+
+    color: #334155;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.loan-payments-empty p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   Pagination
+   ========================================================= */
+
+.loan-payments-pagination {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 9px;
+}
+
+.loan-payments-pagination .pagination {
+    margin: 0;
+
+    gap: 3px;
+}
+
+.loan-payments-pagination .page-link {
+    min-width: 29px;
+    height: 29px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 3px 7px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 7px !important;
+
+    color: #475569;
+
+    font-size: 9px;
+}
+
+.loan-payments-pagination .page-item.active .page-link {
+    border-color: #4f46e5;
+
+    background: #4f46e5;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .loan-payments-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .loan-payments-table {
+        font-size: 9px;
+    }
+
+    .loan-payments-table thead th {
+        padding: 5px;
+        font-size: 8px;
+    }
+
+    .loan-payments-table tbody td {
+        padding: 5px;
+    }
+
+    .loan-payment-confirm-btn {
+        padding: 4px 6px;
+        font-size: 8px;
+    }
+
+    .loan-payment-confirm-btn i {
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================================
+   Small Tablet
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .loan-payments-table th:nth-child(1),
+    .loan-payments-table td:nth-child(1) {
+        width: 4%;
+    }
+
+    .loan-payments-table th:nth-child(2),
+    .loan-payments-table td:nth-child(2) {
+        width: 11%;
+    }
+
+    .loan-payments-table th:nth-child(3),
+    .loan-payments-table td:nth-child(3) {
+        width: 18%;
+    }
+
+    .loan-payments-table th:nth-child(4),
+    .loan-payments-table td:nth-child(4) {
+        width: 7%;
+    }
+
+    .loan-payments-table th:nth-child(5),
+    .loan-payments-table td:nth-child(5) {
+        width: 14%;
+    }
+
+    .loan-payments-table th:nth-child(6),
+    .loan-payments-table td:nth-child(6) {
+        width: 14%;
+    }
+
+    .loan-payments-table th:nth-child(7),
+    .loan-payments-table td:nth-child(7) {
+        width: 13%;
+    }
+
+    .loan-payments-table th:nth-child(8),
+    .loan-payments-table td:nth-child(8) {
+        width: 19%;
+    }
+
+    .loan-payment-customer-icon {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .loan-payments-page {
+        padding-top: 7px;
+        padding-bottom: 8px;
+    }
+
+    .loan-payments-header {
+        margin-bottom: 8px;
+    }
+
+    .loan-payments-title-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .loan-payments-title {
+        font-size: 14px;
+    }
+
+    .loan-payments-subtitle {
+        font-size: 9px;
+    }
+
+    .loan-payments-back-btn {
+        width: 34px;
+        height: 34px;
+
+        min-height: 34px;
+
+        padding: 0;
+    }
+
+    .loan-payments-back-btn span {
+        display: none;
+    }
+
+    .loan-payments-table-wrapper {
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .loan-payments-table {
+        min-width: 850px;
+    }
+
+    .loan-payments-card-header {
+        min-height: 41px;
+    }
+
+    .loan-payments-count {
+        padding: 3px 7px;
+    }
+}
+
+
+/* =========================================================
+   Very Small
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .loan-payments-card-title small {
+        display: none;
+    }
+
+    .loan-payments-card-icon {
+        width: 27px;
+        height: 27px;
+        flex-basis: 27px;
+    }
+
+    .loan-payments-empty {
+        padding: 25px 10px;
+    }
+}

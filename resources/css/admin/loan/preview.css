@@ -1,0 +1,276 @@
+    /* ==========================================================================
+       LOAN PREVIEW CARD
+       ========================================================================== */
+
+.loan-preview-card {
+    margin-top: 1.5rem;
+    background: #ffffff;
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.07);
+}
+
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.loan-preview-card__header {
+    padding: 1rem 1.15rem;
+    background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, 0.07),
+        rgba(59, 130, 246, 0.05)
+    );
+    border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+.loan-preview-card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.loan-preview-card__icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+
+    font-size: 1.25rem;
+}
+
+.loan-preview-card__title h6 {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.loan-preview-card__title small {
+    display: block;
+    margin-top: 0.2rem;
+    color: #6b7280;
+    font-size: 0.78rem;
+}
+
+
+/* ==========================================================================
+   BODY
+   ========================================================================== */
+
+.loan-preview-card__body {
+    padding: 1.15rem;
+}
+
+
+/* ==========================================================================
+   PREVIEW ITEM
+   ========================================================================== */
+
+.loan-preview-item {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding: 0.9rem;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.loan-preview-item:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 5px 16px rgba(31, 41, 55, 0.06);
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================================================
+   ITEM ICON
+   ========================================================================== */
+
+.loan-preview-item__icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: rgba(59, 130, 246, 0.09);
+    color: #3b82f6;
+
+    font-size: 1.05rem;
+}
+
+
+/* ==========================================================================
+   ITEM CONTENT
+   ========================================================================== */
+
+.loan-preview-item__content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.loan-preview-item__label {
+    color: #6b7280;
+    font-size: 0.76rem;
+    font-weight: 500;
+}
+
+.loan-preview-item__content strong {
+    color: #1f2937;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================================
+   INSTALLMENT AMOUNT
+   ========================================================================== */
+
+.loan-preview-item--amount {
+    border-color: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.025);
+}
+
+.loan-preview-item--amount .loan-preview-item__icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.loan-preview-item--amount .loan-preview-item__content strong {
+    color: #059669;
+}
+
+
+/* ==========================================================================
+   SCHEDULE BUTTON
+   ========================================================================== */
+
+.loan-preview-schedule {
+    height: 100%;
+
+    display: flex;
+    align-items: stretch;
+}
+
+.loan-preview-schedule__button {
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 14px;
+
+    background: rgba(99, 102, 241, 0.045);
+    color: #4f46e5;
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.loan-preview-schedule__button i:first-child {
+    font-size: 1.05rem;
+}
+
+.loan-preview-schedule__button i:last-child {
+    margin-right: auto;
+    font-size: 0.9rem;
+}
+
+.loan-preview-schedule__button:hover {
+    background: rgba(99, 102, 241, 0.09);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #4338ca;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 16px rgba(79, 70, 229, 0.1);
+}
+
+.loan-preview-schedule__button:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 575.98px) {
+
+    .loan-preview-card {
+        border-radius: 15px;
+    }
+
+    .loan-preview-card__header {
+        padding: 0.9rem;
+    }
+
+    .loan-preview-card__body {
+        padding: 0.9rem;
+    }
+
+    .loan-preview-card__icon {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .loan-preview-item {
+        padding: 0.8rem;
+    }
+
+    .loan-preview-item__icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .loan-preview-item__content strong {
+        font-size: 0.88rem;
+    }
+
+    .loan-preview-schedule__button {
+        min-height: 54px;
+    }
+
+}

@@ -1,51 +1,117 @@
 @extends('layouts.app')
 
-@section('title', 'اصلاح موجودی حساب')
+@section('title', 'واریز به حساب پس‌انداز')
+
+
 
 @section('content')
 
-    <div class="container py-4 adjustment-page">
+
+    <div class="container py-4 account-deposit-page">
 
         {{-- Header --}}
-        <div class="adjustment-header">
-            <div class="adjustment-title-wrapper">
-                <div class="adjustment-title-icon">
-                    <i class="bi bi-pencil-square"></i>
-                </div>
+        <div class="account-deposit-header">
 
-                <div>
-                    <h4 class="adjustment-title">اصلاح موجودی حساب</h4>
-                    <div class="adjustment-subtitle">
-                        فقط برای اصلاح اشتباهات حسابداری
-                    </div>
-                </div>
-            </div>
+            <div class="account-deposit-title-wrapper">
 
-            <a href="{{ route('accounts.show', $account) }}"
-               class="adjustment-back-btn">
-                <i class="bi bi-arrow-right"></i>
-                بازگشت
-            </a>
-        </div>
-
-
-        {{-- اطلاعات حساب --}}
-        <div class="adjustment-card adjustment-account-card">
-
-            <div class="adjustment-card-header">
-                <div class="adjustment-section-icon">
+                <div class="account-deposit-title-icon">
                     <i class="bi bi-wallet2"></i>
                 </div>
 
-                <span>اطلاعات حساب</span>
+                <div>
+                    <h4 class="account-deposit-title">
+                        واریز به حساب پس‌انداز
+                    </h4>
+
+                    <div class="account-deposit-subtitle">
+                        ثبت واریز جدید به حساب
+                    </div>
+                </div>
+
             </div>
 
-            <div class="adjustment-card-body">
+            <a href="{{ route('accounts.show', $account) }}"
+               class="account-deposit-back-btn">
 
-                <div class="adjustment-account-grid">
+                <i class="bi bi-arrow-right"></i>
 
-                    <div class="adjustment-account-item">
-                        <span class="adjustment-label">مالک حساب</span>
+                بازگشت
+
+            </a>
+
+        </div>
+
+
+        {{-- پیام موفقیت --}}
+        @if(session('success'))
+            <div class="account-deposit-alert account-deposit-alert--success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                {{ session('success') }}
+            </span>
+
+            </div>
+        @endif
+
+
+        {{-- خطاهای عمومی --}}
+        @if($errors->any())
+            <div class="account-deposit-alert account-deposit-alert--danger">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                <div>
+
+                    <strong>
+                        اطلاعات وارد شده صحیح نیست.
+                    </strong>
+
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+
+                </div>
+
+            </div>
+        @endif
+
+
+        {{-- اطلاعات حساب --}}
+        <div class="account-deposit-card account-deposit-account-card">
+
+            <div class="account-deposit-card-header">
+
+                <div class="account-deposit-section-icon">
+                    <i class="bi bi-person-vcard"></i>
+                </div>
+
+                <div>
+                    <div class="account-deposit-card-title">
+                        اطلاعات حساب
+                    </div>
+
+                    <div class="account-deposit-card-subtitle">
+                        حساب مقصد واریز
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="account-deposit-card-body">
+
+                <div class="account-deposit-account-grid">
+
+                    {{-- مالک حساب --}}
+                    <div class="account-deposit-account-item">
+
+                    <span class="account-deposit-label">
+                        مالک حساب
+                    </span>
 
                         <strong>
                             @if($account->customer)
@@ -55,82 +121,114 @@
                                 حساب سیستمی
                             @endif
                         </strong>
+
                     </div>
 
-                    <div class="adjustment-account-item">
-                        <span class="adjustment-label">شماره حساب</span>
+
+                    {{-- شماره حساب --}}
+                    <div class="account-deposit-account-item">
+
+                    <span class="account-deposit-label">
+                        شماره حساب
+                    </span>
 
                         <strong dir="ltr">
                             {{ $account->account_number }}
                         </strong>
+
                     </div>
 
-                    <div class="adjustment-account-item adjustment-balance-item">
-                        <span class="adjustment-label">موجودی فعلی</span>
 
-                        <strong id="currentBalance"
-                                data-value="{{ $account->balance }}">
+                    {{-- موجودی --}}
+                    <div class="account-deposit-account-item account-deposit-balance-item">
+
+                    <span class="account-deposit-label">
+                        موجودی فعلی
+                    </span>
+
+                        <strong>
                             {{ number_format($account->balance) }}
-                            <small>ریال</small>
+
+                            <small>
+                                ریال
+                            </small>
                         </strong>
+
                     </div>
 
                 </div>
 
             </div>
+
         </div>
 
 
-        {{-- فرم --}}
-        <div class="adjustment-card">
+        {{-- فرم واریز --}}
+        <div class="account-deposit-card">
 
-            <div class="adjustment-card-header">
-                <div class="adjustment-section-icon">
-                    <i class="bi bi-arrow-repeat"></i>
+            <div class="account-deposit-card-header">
+
+                <div class="account-deposit-section-icon">
+                    <i class="bi bi-arrow-down-circle"></i>
                 </div>
 
-                <span>ثبت اصلاح موجودی</span>
+                <div>
+                    <div class="account-deposit-card-title">
+                        ثبت واریز
+                    </div>
+
+                    <div class="account-deposit-card-subtitle">
+                        مبلغ و روش واریز را مشخص کنید
+                    </div>
+                </div>
+
             </div>
 
-            <div class="adjustment-card-body">
+
+            <div class="account-deposit-card-body">
 
                 <form method="POST"
-                      action="{{ route('accounts.adjustment.store', $account) }}"
-                      id="adjustmentForm">
+                      action="{{ route('accounts.deposit') }}"
+                      id="depositForm">
 
                     @csrf
 
-                    {{-- موجودی جدید --}}
-                    <div class="adjustment-field">
 
-                        <label for="new_balance"
-                               class="adjustment-form-label">
-                            موجودی صحیح جدید
+                    {{-- حساب مقصد --}}
+                    <div class="account-deposit-field">
+
+                        <label for="account_id"
+                               class="account-deposit-form-label">
+
+                            حساب مقصد
+
+                            <span>*</span>
+
                         </label>
 
-                        <div class="adjustment-input-wrapper">
+                        <div class="account-deposit-input-wrapper">
 
-                            <input
-                                type="text"
-                                name="new_balance"
-                                id="new_balance"
-                                value="{{ old('new_balance') }}"
-                                class="form-control money-input adjustment-amount-input @error('new_balance') is-invalid @enderror"
-                                inputmode="numeric"
-                                autocomplete="off"
-                                data-live="true"
-                                data-min="0"
-                                required
-                            >
+                            <div class="account-deposit-input-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
 
-                            <span class="adjustment-input-unit">
-                            ریال
-                        </span>
+                            <select name="account_id"
+                                    id="account_id"
+                                    class="form-select account-deposit-select @error('account_id') is-invalid @enderror"
+                                    required>
+
+                                <option value="{{ $account->id }}">
+                                    {{ $account->name ?? 'حساب' }}
+                                    -
+                                    {{ $account->account_number }}
+                                </option>
+
+                            </select>
 
                         </div>
 
-                        @error('new_balance')
-                        <div class="adjustment-error">
+                        @error('account_id')
+                        <div class="account-deposit-error">
                             {{ $message }}
                         </div>
                         @enderror
@@ -138,58 +236,153 @@
                     </div>
 
 
-                    {{-- اختلاف --}}
-                    <div id="differenceBox"
-                         class="adjustment-difference d-none">
+                    {{-- مبلغ --}}
+                    <div class="account-deposit-field">
 
-                        <div class="adjustment-difference-grid">
+                        <label for="amount"
+                               class="account-deposit-form-label">
 
-                            <div>
-                                <span>موجودی فعلی</span>
-                                <strong id="displayCurrent">-</strong>
-                                <small>ریال</small>
-                            </div>
+                            مبلغ واریز
 
-                            <div>
-                                <span>موجودی جدید</span>
-                                <strong id="displayNew">-</strong>
-                                <small>ریال</small>
-                            </div>
+                            <span>*</span>
 
-                            <div>
-                                <span>اختلاف</span>
-                                <strong id="displayDifference">-</strong>
-                                <small>ریال</small>
-                            </div>
+                        </label>
+
+                        <div class="account-deposit-amount-wrapper">
+
+                            <input
+                                type="text"
+                                name="amount"
+                                id="amount"
+                                value="{{ old('amount') }}"
+                                class="form-control money-input account-deposit-amount-input @error('amount') is-invalid @enderror"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                data-live="true"
+                                data-min="50000"
+                                placeholder="مثلاً ۵۰۰٬۰۰۰"
+                                required
+                            >
+
+                            <span class="account-deposit-input-unit">
+                            ریال
+                        </span>
 
                         </div>
 
-                        <div id="differenceMessage"
-                             class="adjustment-difference-message">
+                        <div class="account-deposit-help">
+                            حداقل مبلغ واریز ۵۰٬۰۰۰ ریال است.
                         </div>
+
+                        @error('amount')
+                        <div class="account-deposit-error">
+                            {{ $message }}
+                        </div>
+                        @enderror
 
                     </div>
 
 
+                    {{-- روش واریز --}}
+                    <div class="account-deposit-field">
+
+                        <label class="account-deposit-form-label">
+                            روش واریز
+                            <span>*</span>
+                        </label>
+
+                        <div class="account-deposit-payment-grid">
+
+                            @foreach(\App\Enums\PaymentMethod::cases() as $method)
+
+                                @php
+                                    $paymentIcon = match ($method) {
+                                        \App\Enums\PaymentMethod::CASH =>
+                                            'bi-cash-stack',
+
+                                        \App\Enums\PaymentMethod::POS =>
+                                            'bi-credit-card-2-front',
+
+                                        \App\Enums\PaymentMethod::GATEWAY =>
+                                            'bi-globe2',
+
+                                        \App\Enums\PaymentMethod::LOAN_DISBURSEMENT =>
+                                            'bi-bank',
+
+                                        \App\Enums\PaymentMethod::BANK_TRANSFER =>
+                                            'bi-arrow-left-right',
+
+                                        default =>
+                                            'bi-credit-card',
+                                    };
+                                @endphp
+
+                                <label class="account-deposit-payment-option">
+
+                                    <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value="{{ $method->value }}"
+                                        class="account-deposit-payment-radio"
+                                        @checked(old('payment_method') == $method->value)
+                                    required
+                                    >
+
+                                    <span class="account-deposit-payment-content">
+
+                    <span class="account-deposit-payment-icon">
+                        <i class="bi {{ $paymentIcon }}"></i>
+                    </span>
+
+                    <span class="account-deposit-payment-text">
+                        {{ $method->label() }}
+                    </span>
+
+                    <span class="account-deposit-payment-check">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </span>
+
+                </span>
+
+                                </label>
+
+                            @endforeach
+
+                        </div>
+
+                        @error('payment_method')
+                        <div class="account-deposit-error">
+                            {{ $message }}
+                        </div>
+                        @enderror
+
+                    </div>
+
+
+
+
+
                     {{-- توضیحات --}}
-                    <div class="adjustment-field">
+                    <div class="account-deposit-field">
 
                         <label for="description"
-                               class="adjustment-form-label">
-                            دلیل اصلاح
+                               class="account-deposit-form-label">
+
+                            توضیحات
+
                         </label>
 
                         <textarea
                             name="description"
                             id="description"
-                            rows="3"
+                            rows="4"
                             maxlength="255"
-                            class="form-control adjustment-description @error('description') is-invalid @enderror"
-                            placeholder="دلیل اصلاح موجودی را وارد کنید..."
+                            class="form-control account-deposit-description @error('description') is-invalid @enderror"
+                            placeholder="توضیحات مربوط به این واریز را وارد کنید..."
                         >{{ old('description') }}</textarea>
 
                         @error('description')
-                        <div class="adjustment-error">
+                        <div class="account-deposit-error">
                             {{ $message }}
                         </div>
                         @enderror
@@ -198,36 +391,45 @@
 
 
                     {{-- هشدار --}}
-                    <div class="adjustment-warning">
-                        <i class="bi bi-exclamation-triangle"></i>
+                    <div class="account-deposit-info">
+
+                        <i class="bi bi-info-circle-fill"></i>
 
                         <span>
-                        موجودی جدید جایگزین موجودی فعلی می‌شود و
-                        عملیات در گردش حساب ثبت خواهد شد.
+                        پس از ثبت، مبلغ به موجودی حساب اضافه شده و
+                        تراکنش در گردش حساب ثبت می‌شود.
                     </span>
+
                     </div>
 
 
                     {{-- دکمه‌ها --}}
-                    <div class="adjustment-actions">
-
-                        <button type="submit"
-                                class="adjustment-submit-btn"
-                                id="submitButton">
-                            <i class="bi bi-check-circle"></i>
-                            ثبت اصلاح
-                        </button>
+                    <div class="account-deposit-actions">
 
                         <a href="{{ route('accounts.show', $account) }}"
-                           class="adjustment-cancel-btn">
+                           class="account-deposit-cancel-btn">
+
+                            <i class="bi bi-x-circle"></i>
+
                             انصراف
+
                         </a>
+
+                        <button type="submit"
+                                class="account-deposit-submit-btn">
+
+                            <i class="bi bi-check-circle"></i>
+
+                            ثبت واریز
+
+                        </button>
 
                     </div>
 
                 </form>
 
             </div>
+
         </div>
 
     </div>
