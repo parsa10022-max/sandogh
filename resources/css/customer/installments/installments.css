@@ -1,15 +1,14 @@
+/* =========================================================
+   CUSTOMER INSTALLMENTS
+   Design System #1
+   Purple + Blue / RTL / Bootstrap 5.3
+   Mobile First / PWA
+   ========================================================= */
 
-    /* =========================================================
-       CUSTOMER INSTALLMENTS
-       Design System #1
-       Purple + Blue / RTL / Bootstrap 5.3
-       Mobile First / PWA
-       ========================================================= */
 
-
-    /* =========================================================
-       PAGE
-       ========================================================= */
+/* =========================================================
+   PAGE
+   ========================================================= */
 
 .customer-installments-page {
     width: 100%;
@@ -221,11 +220,11 @@
 
 
 /*
- * ردیف‌بندی اصلی حفظ شده است.
+ * ردیف‌بندی اصلی
  *
  * موبایل  → ۲ ستون
  * تبلت    → ۳ ستون
- * دسکتاپ  → ۵ ستون
+ * دسکتاپ  → ۴ ستون
  */
 
 .customer-installments-row {
@@ -234,7 +233,7 @@
     display: grid;
 
     grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
     gap: 14px;
 }
@@ -421,10 +420,10 @@
     width: 100%;
 
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
 
-    gap: 7px;
+    gap: 9px;
 
     margin-top: 13px;
 
@@ -437,8 +436,9 @@
    ========================================================= */
 
 .customer-installment-amount {
+    width: 100%;
     min-width: 0;
-    flex: 1;
+    flex: 0 0 auto;
 }
 
 .customer-installment-amount strong {
@@ -493,10 +493,48 @@
    ========================================================= */
 
 .customer-installment-action {
+    width: 100%;
+
     flex: 0 0 auto;
 
     margin: 0;
 }
+
+
+/* =========================================================
+   PAYMENT OPTIONS
+   دو روش پرداخت کنار هم
+   ========================================================= */
+
+.customer-installment-payment-options {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    gap: 6px;
+}
+
+.customer-installment-payment-options
+.customer-installment-form {
+    flex: 1 1 0;
+
+    min-width: 0;
+
+    margin: 0;
+}
+
+.customer-installment-payment-options
+.customer-installment-pay {
+    width: 100%;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
 
 .customer-installment-form {
     width: auto;
@@ -537,6 +575,8 @@
     font-weight: 900;
 
     cursor: pointer;
+
+    white-space: nowrap;
 
     transition:
         transform .18s ease,
@@ -767,7 +807,7 @@
     /* Installment card */
 
     .customer-installment-card {
-        min-height: 112px;
+        min-height: 125px;
 
         padding: 12px;
 
@@ -806,6 +846,8 @@
     }
 
     .customer-installment-bottom {
+        gap: 8px;
+
         margin-top: 12px;
     }
 
@@ -872,15 +914,34 @@
             repeat(4, minmax(0, 1fr));
     }
 
+    /*
+     * چهار قسط در هر ردیف
+     * برای جا گرفتن دو دکمه پرداخت کنار هم
+     */
+
     .customer-installments-row {
         grid-template-columns:
-            repeat(5, minmax(0, 1fr));
+            repeat(4, minmax(0, 1fr));
 
         gap: 14px;
     }
 
     .customer-installment-card {
-        min-height: 108px;
+        min-height: 120px;
+    }
+
+    .customer-installment-bottom {
+        gap: 9px;
+    }
+
+    .customer-installment-payment-options {
+        gap: 7px;
+    }
+
+    .customer-installment-pay {
+        min-height: 32px;
+
+        font-size: .61rem;
     }
 }
 
@@ -964,7 +1025,7 @@
     /* Compact card */
 
     .customer-installment-card {
-        min-height: 96px;
+        min-height: 112px;
 
         padding: 9px;
 
@@ -1005,7 +1066,7 @@
     }
 
     .customer-installment-bottom {
-        gap: 5px;
+        gap: 7px;
 
         margin-top: 10px;
     }
@@ -1018,16 +1079,25 @@
         font-size: .53rem;
     }
 
+    .customer-installment-payment-options {
+        gap: 4px;
+    }
+
     .customer-installment-pay,
     .customer-installment-receipt {
-        min-width: 50px;
+        min-width: 0;
         min-height: 27px;
 
-        padding: 0 6px;
+        padding: 0 4px;
 
         border-radius: 6px;
 
-        font-size: .52rem;
+        font-size: .50rem;
+    }
+
+    .customer-installment-pay i,
+    .customer-installment-receipt i {
+        font-size: .55rem;
     }
 
     .customer-installment-status {
@@ -1132,7 +1202,7 @@
     }
 
     .customer-installment-card {
-        min-height: 92px;
+        min-height: 108px;
 
         padding: 8px;
     }
@@ -1163,6 +1233,8 @@
     }
 
     .customer-installment-bottom {
+        gap: 6px;
+
         margin-top: 8px;
     }
 
@@ -1174,14 +1246,23 @@
         font-size: .49rem;
     }
 
+    .customer-installment-payment-options {
+        gap: 3px;
+    }
+
     .customer-installment-pay,
     .customer-installment-receipt {
-        min-width: 46px;
+        min-width: 0;
         min-height: 25px;
 
-        padding: 0 5px;
+        padding: 0 3px;
 
-        font-size: .49rem;
+        font-size: .46rem;
+    }
+
+    .customer-installment-pay i,
+    .customer-installment-receipt i {
+        font-size: .50rem;
     }
 
     .customer-installment-status {
@@ -1197,126 +1278,327 @@
     }
 }
 
-    /* =========================================================
-    SEARCH ERROR BOX
-    ========================================================= */
 
-    .customer-other-installment-search-error-box {
-        display: flex;
-        align-items: center;
-        gap: 13px;
+/* =========================================================
+   SEARCH ERROR BOX
+   ========================================================= */
 
+.customer-other-installment-search-error-box {
+    display: flex;
+    align-items: center;
 
-        margin-bottom: 16px;
-        padding: 13px 15px;
+    gap: 13px;
 
-        border: 1px solid rgba(220, 53, 69, 0.18);
-        border-radius: 15px;
+    margin-bottom: 16px;
+    padding: 13px 15px;
 
-        background: linear-gradient(
+    border: 1px solid rgba(220, 53, 69, 0.18);
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
             135deg,
             rgba(220, 53, 69, 0.07),
             rgba(255, 235, 238, 0.55)
         );
 
-        box-shadow:
-            0 4px 14px rgba(220, 53, 69, 0.06);
+    box-shadow:
+        0 4px 14px rgba(220, 53, 69, 0.06);
+}
 
 
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.customer-other-installment-search-error-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(220, 53, 69, 0.11);
+
+    color: #dc3545;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.customer-other-installment-search-error-content {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.customer-other-installment-search-error-label {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #8a3a43;
+
+    font-size: 0.72rem;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.customer-other-installment-search-error-content strong {
+    display: block;
+
+    color: #6f2934;
+
+    font-size: 0.83rem;
+    font-weight: 750;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MOBILE SEARCH ERROR
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .customer-other-installment-search-error-box {
+        padding: 12px 13px;
+
+        gap: 11px;
     }
-
-    /* =========================================================
-    ICON
-    ========================================================= */
 
     .customer-other-installment-search-error-icon {
-        width: 42px;
-        height: 42px;
-        flex: 0 0 42px;
+        width: 39px;
+        height: 39px;
 
+        flex-basis: 39px;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 12px;
-
-        background: rgba(220, 53, 69, 0.11);
-
-        color: #dc3545;
-
-        font-size: 18px;
-
-
+        font-size: 16px;
     }
-
-    /* =========================================================
-    CONTENT
-    ========================================================= */
-
-    .customer-other-installment-search-error-content {
-        min-width: 0;
-    }
-
-    /* =========================================================
-    LABEL
-    ========================================================= */
-
-    .customer-other-installment-search-error-label {
-        display: block;
-
-
-        margin-bottom: 3px;
-
-        color: #8a3a43;
-
-        font-size: 0.72rem;
-        font-weight: 650;
-
-
-    }
-
-    /* =========================================================
-    MESSAGE
-    ========================================================= */
 
     .customer-other-installment-search-error-content strong {
-        display: block;
+        font-size: 0.78rem;
+    }
+}
+/* =========================================================
+   INSTALLMENT PAYMENT ERROR
+   ========================================================= */
+
+.customer-installments-error-box {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 16px;
+    padding: 13px 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(220, 53, 69, .07),
+            rgba(255, 235, 238, .55)
+        );
+
+    border: 1px solid rgba(220, 53, 69, .18);
+    border-radius: 15px;
+
+    box-shadow:
+        0 4px 14px rgba(220, 53, 69, .06);
+
+    box-sizing: border-box;
+}
 
 
-        color: #6f2934;
+/* =========================================================
+   ICON
+   ========================================================= */
 
-        font-size: 0.83rem;
-        font-weight: 750;
+.customer-installments-error-icon {
+    width: 42px;
+    height: 42px;
 
-        line-height: 1.7;
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #dc3545;
+
+    background: rgba(220, 53, 69, .11);
+
+    border: 1px solid rgba(220, 53, 69, .12);
+    border-radius: 12px;
+
+    font-size: 18px;
+}
 
 
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.customer-installments-error-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.customer-installments-error-content span {
+    color: #8a3a43;
+
+    font-size: .72rem;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.customer-installments-error-content strong {
+    color: #6f2934;
+
+    font-size: .83rem;
+    font-weight: 750;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .customer-installments-error-box {
+        padding: 12px 13px;
+
+        gap: 11px;
+
+        border-radius: 13px;
     }
 
-    /* =========================================================
-    MOBILE
-    ========================================================= */
+    .customer-installments-error-icon {
+        width: 39px;
+        height: 39px;
 
-    @media (max-width: 575.98px) {
+        flex-basis: 39px;
 
+        border-radius: 11px;
 
-        .customer-other-installment-search-error-box {
-            padding: 12px 13px;
-            gap: 11px;
-        }
-
-        .customer-other-installment-search-error-icon {
-            width: 39px;
-            height: 39px;
-            flex-basis: 39px;
-
-            font-size: 16px;
-        }
-
-        .customer-other-installment-search-error-content strong {
-            font-size: 0.78rem;
-        }
-
-
+        font-size: 16px;
     }
+
+    .customer-installments-error-content span {
+        font-size: .66rem;
+    }
+
+    .customer-installments-error-content strong {
+        font-size: .78rem;
+    }
+}
+/* =========================================================
+   SAVINGS BALANCE
+   ========================================================= */
+
+.customer-installment-balance {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 6px 8px;
+
+    color: #666b7c;
+
+    background: #f7f6fc;
+
+    border: 1px solid #e6e2f2;
+    border-radius: 7px;
+
+    font-size: .58rem;
+    font-weight: 700;
+
+    box-sizing: border-box;
+}
+
+.customer-installment-balance i {
+    color: #6040e8;
+
+    font-size: .68rem;
+}
+
+.customer-installment-balance strong {
+    color: #303342;
+
+    font-size: .63rem;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.customer-installment-balance small {
+    color: #666b7c;
+
+    font-size: .50rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .customer-installment-balance {
+        padding: 5px 6px;
+
+        font-size: .51rem;
+    }
+
+    .customer-installment-balance strong {
+        font-size: .56rem;
+    }
+
+    .customer-installment-balance small {
+        font-size: .46rem;
+    }
+
+    .customer-installment-balance i {
+        font-size: .60rem;
+    }
+}

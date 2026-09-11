@@ -1,0 +1,83 @@
+/* =========================================
+   Daily Operations Report
+   ========================================= */
+
+.daily-operations-report .report-header {
+    background: #fff;
+}
+
+.daily-operations-report .summary-card {
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.daily-operations-report .summary-label {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.daily-operations-report .summary-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.daily-operations-report .operations-table th {
+    white-space: nowrap;
+}
+
+.daily-operations-report .operations-table td {
+    vertical-align: middle;
+}
+
+
+/* =========================================
+   Print - A4
+   ========================================= */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 12mm;
+    }
+
+    body {
+        background: #fff !important;
+    }
+
+    .sidebar,
+    .navbar,
+    header,
+    footer,
+    form,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+
+    .daily-operations-report {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .daily-operations-report .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .daily-operations-report .container-fluid {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .daily-operations-report table {
+        font-size: 11px;
+    }
+
+    .daily-operations-report .card {
+        page-break-inside: avoid;
+    }
+
+}

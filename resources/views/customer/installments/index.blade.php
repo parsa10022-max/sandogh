@@ -1,4 +1,3 @@
-
 @extends('customer.layouts.app')
 
 @section('title', 'اقساط وام من')
@@ -6,6 +5,27 @@
 @section('header_subtitle', 'مشاهده و پرداخت اقساط وام')
 
 @section('content')
+
+    @if(session('error'))
+        <div class="customer-installments-error-box">
+
+            <div class="customer-installments-error-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+
+            <div class="customer-installments-error-content">
+
+                <span>عدم امکان پرداخت</span>
+
+                <strong>
+                    {{ session('error') }}
+                </strong>
+
+            </div>
+
+        </div>
+    @endif
+
 
     <div class="container-fluid customer-installments-page">
 
@@ -113,7 +133,6 @@
 
             <section class="customer-installments-section">
 
-                {{-- عنوان بخش --}}
                 <div class="customer-installments-section-title">
 
                     <div class="customer-installments-section-icon">
@@ -127,17 +146,6 @@
 
                 </div>
 
-
-                {{-- =================================================
-                     اقساط
-
-                     ساختار ردیف‌ها حفظ شده است.
-                     CSS تعداد ستون‌ها را کنترل می‌کند:
-
-                     موبایل  → ۲ ستون
-                     تبلت    → ۳ ستون
-                     دسکتاپ  → ۵ ستون
-                ================================================== --}}
 
                 <div class="customer-installments-columns">
 
@@ -165,7 +173,6 @@
 
                                 {{-- =================================================
                                      ردیف بالای کارت
-                                     شماره + عنوان + تاریخ سررسید
                                 ================================================== --}}
 
                                 <div class="customer-installment-header">
@@ -197,8 +204,7 @@
 
 
                                 {{-- =================================================
-                                     ردیف پایین کارت
-                                     مبلغ + وضعیت / عملیات
+                                     مبلغ قسط
                                 ================================================== --}}
 
                                 <div class="customer-installment-bottom">
@@ -213,6 +219,10 @@
                                     </div>
 
 
+                                    {{-- =================================================
+                                         عملیات
+                                    ================================================== --}}
+
                                     <div class="customer-installment-action">
 
                                         {{-- پرداخت شده --}}
@@ -224,11 +234,8 @@
                                                     href="{{ route('customer.installments.payment.success', $item->payment) }}"
                                                     class="customer-installment-receipt"
                                                 >
-
                                                     <i class="bi bi-receipt"></i>
-
                                                     رسید
-
                                                 </a>
 
                                             @else
@@ -247,26 +254,76 @@
                                             {{-- قسط قابل پرداخت --}}
                                         @elseif($isPayable)
 
-                                            <form
-                                                method="POST"
-                                                action="{{ route('payments.pay', $item) }}"
-                                                class="customer-installment-form"
-                                            >
+                                            {{-- =================================================
+                                                 موجودی حساب فقط برای قسط قابل پرداخت
+                                            ================================================== --}}
 
-                                                @csrf
+                                            <div class="customer-installment-balance">
 
-                                                <button
-                                                    type="submit"
-                                                    class="customer-installment-pay"
+                                                <i class="bi bi-wallet2"></i>
+
+                                                <span>موجودی:</span>
+
+                                                <strong>
+                                                    {{ number_format($savingsAccount?->balance ?? 0) }}
+                                                    <small>ریال</small>
+                                                </strong>
+
+                                            </div>
+
+
+                                            {{-- =================================================
+                                                 روش‌های پرداخت
+                                            ================================================== --}}
+
+                                            <div class="customer-installment-payment-options">
+
+                                                {{-- پرداخت از درگاه بانکی --}}
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('payments.pay', $item) }}"
+                                                    class="customer-installment-form"
                                                 >
 
-                                                    <i class="bi bi-credit-card"></i>
+                                                    @csrf
 
-                                                    پرداخت
+                                                    <button
+                                                        type="submit"
+                                                        class="customer-installment-pay"
+                                                    >
 
-                                                </button>
+                                                        <i class="bi bi-credit-card"></i>
 
-                                            </form>
+                                                        پرداخت از درگاه بانکی
+
+                                                    </button>
+
+                                                </form>
+
+
+                                                {{-- پرداخت از موجودی حساب --}}
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('customer.installments.pay-from-savings', $item) }}"
+                                                    class="customer-installment-form"
+                                                >
+
+                                                    @csrf
+
+                                                    <button
+                                                        type="submit"
+                                                        class="customer-installment-pay"
+                                                    >
+
+                                                        <i class="bi bi-wallet2"></i>
+
+                                                        پرداخت از موجودی حساب
+
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
 
 
                                             {{-- منتظر قسط قبلی --}}
@@ -289,7 +346,6 @@
 
                                 {{-- =================================================
                                      تاریخ پرداخت
-                                     فقط برای اقساط پرداخت‌شده
                                 ================================================== --}}
 
                                 @if($item->paid_at)

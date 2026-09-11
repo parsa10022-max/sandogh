@@ -26,7 +26,7 @@ class SystemSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['username' => 'admin'],
+            ['username' => 'reports'],
             [
                 'customer_id' => $customer->id,
                 'mobile' => '09120000000',

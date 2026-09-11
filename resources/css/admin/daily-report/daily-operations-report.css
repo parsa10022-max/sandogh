@@ -1,0 +1,361 @@
+css
+    /* =========================================
+       Daily Operations Report
+       ========================================= */
+
+.daily-operations-report {
+    font-family: "Vazirmatn", sans-serif;
+}
+
+
+/* =========================================
+   Header
+   ========================================= */
+
+.daily-operations-report .report-header {
+    background: #fff;
+    border: 1px solid rgba(108, 99, 255, 0.08) !important;
+}
+
+.daily-operations-report .report-header h4 {
+    color: #343a40;
+    font-size: 1.15rem;
+}
+
+
+/* =========================================
+   Summary Cards
+   ========================================= */
+
+.daily-operations-report .summary-card {
+    background: #fff;
+    border: 1px solid rgba(108, 99, 255, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.daily-operations-report .summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
+}
+
+.daily-operations-report .summary-card .card-body {
+    padding: 1rem;
+}
+
+.daily-operations-report .summary-label {
+    color: #6c757d;
+    font-size: 0.78rem;
+    margin-bottom: 0.35rem;
+}
+
+.daily-operations-report .summary-value {
+    color: #343a40;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   Filter Card
+   ========================================= */
+
+.daily-operations-report .card {
+    border-radius: 14px;
+}
+
+.daily-operations-report .form-label {
+    color: #495057;
+    font-size: 0.82rem;
+}
+
+.daily-operations-report .form-control,
+.daily-operations-report .form-select {
+    min-height: 42px;
+    border-radius: 9px;
+    border-color: #dee2e6;
+    font-size: 0.85rem;
+}
+
+.daily-operations-report .form-control:focus,
+.daily-operations-report .form-select:focus {
+    border-color: #8b7cf6;
+    box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.12);
+}
+
+.daily-operations-report .form-check-label {
+    color: #495057;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================
+   Buttons
+   ========================================= */
+
+.daily-operations-report .btn {
+    border-radius: 9px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.daily-operations-report .btn-primary {
+    box-shadow: 0 3px 8px rgba(13, 110, 253, 0.15);
+}
+
+
+/* =========================================
+   Overall Status
+   ========================================= */
+
+.daily-operations-report .card > .card-body {
+    background: #fff;
+}
+
+.daily-operations-report .summary-card + .summary-card {
+    min-height: 100%;
+}
+
+
+/* =========================================
+   Operations Table
+   ========================================= */
+
+.daily-operations-report .operations-table {
+    margin-bottom: 0;
+    font-size: 0.82rem;
+}
+
+.daily-operations-report .operations-table thead th {
+    background: #f8f9fc;
+    color: #495057;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.85rem 0.75rem;
+    white-space: nowrap;
+}
+
+.daily-operations-report .operations-table tbody td {
+    color: #495057;
+    border-color: #f0f1f3;
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.daily-operations-report .operations-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.daily-operations-report .operations-table tbody tr:hover {
+    background: #fafaff;
+}
+
+
+/* =========================================
+   Member / Account Number
+   ========================================= */
+
+.daily-operations-report .operations-table td:nth-child(4) {
+    font-family: "Vazirmatn", sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   Amount
+   ========================================= */
+
+.daily-operations-report .operations-table td:nth-child(5) {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   Badges
+   ========================================= */
+
+.daily-operations-report .operations-table .badge {
+    border-radius: 7px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.45rem 0.6rem;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   Card Header
+   ========================================= */
+
+.daily-operations-report .card-header {
+    background: #fff !important;
+}
+
+.daily-operations-report .card-header h5 {
+    color: #343a40;
+    font-size: 0.98rem;
+}
+
+
+/* =========================================
+   Mobile
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    .daily-operations-report {
+        padding-left: 0.65rem;
+        padding-right: 0.65rem;
+    }
+
+    .daily-operations-report .report-header .card-body {
+        padding: 1rem;
+    }
+
+    .daily-operations-report .report-header h4 {
+        font-size: 1rem;
+    }
+
+    .daily-operations-report .summary-card .card-body {
+        padding: 0.8rem;
+    }
+
+    .daily-operations-report .summary-label {
+        font-size: 0.72rem;
+    }
+
+    .daily-operations-report .summary-value {
+        font-size: 0.88rem;
+    }
+
+    .daily-operations-report .operations-table {
+        min-width: 850px;
+        font-size: 0.76rem;
+    }
+
+    .daily-operations-report .operations-table thead th,
+    .daily-operations-report .operations-table tbody td {
+        padding: 0.6rem 0.55rem;
+    }
+
+    .daily-operations-report .card-header {
+        padding: 0.9rem 1rem !important;
+    }
+}
+
+
+/* =========================================
+   Print
+   ========================================= */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
+    html,
+    body {
+        background: #fff !important;
+    }
+
+    body {
+        font-family: "Vazirmatn", sans-serif !important;
+        font-size: 10px;
+    }
+
+    .sidebar,
+    .navbar,
+    header,
+    footer,
+    form,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+
+    .daily-operations-report {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .daily-operations-report .report-header {
+        border: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 8px !important;
+    }
+
+    .daily-operations-report .report-header .card-body {
+        padding: 0 0 8px !important;
+    }
+
+    .daily-operations-report .report-header h4 {
+        font-size: 15px;
+    }
+
+    .daily-operations-report .summary-card,
+    .daily-operations-report .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        border-radius: 5px !important;
+    }
+
+    .daily-operations-report .summary-card {
+        break-inside: avoid;
+    }
+
+    .daily-operations-report .summary-card .card-body {
+        padding: 6px;
+    }
+
+    .daily-operations-report .summary-label {
+        font-size: 8px;
+    }
+
+    .daily-operations-report .summary-value {
+        font-size: 9px;
+    }
+
+    .daily-operations-report .operations-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 8px !important;
+    }
+
+    .daily-operations-report .operations-table thead th {
+        background: #f2f2f2 !important;
+        font-size: 8px;
+        padding: 5px;
+    }
+
+    .daily-operations-report .operations-table tbody td {
+        padding: 5px;
+    }
+
+    .daily-operations-report .operations-table tr {
+        break-inside: avoid;
+    }
+
+    .daily-operations-report .badge {
+        border: 0 !important;
+        font-size: 7px !important;
+        padding: 2px 4px !important;
+    }
+
+    .daily-operations-report .table-responsive {
+        overflow: visible !important;
+    }
+
+    .daily-operations-report .card-header {
+        padding: 7px 10px !important;
+    }
+}
+

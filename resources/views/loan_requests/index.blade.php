@@ -55,6 +55,147 @@
             </div>
 
 
+            {{-- Filters --}}
+            <div class="card-body loan-request-filter">
+
+                <form
+                    method="GET"
+                    action="{{ route('loan-requests.index') }}"
+                >
+
+                    <div class="row g-3 align-items-end">
+
+                        {{-- Status --}}
+                        <div class="col-12 col-md-3">
+
+                            <label
+                                for="status"
+                                class="form-label"
+                            >
+                                وضعیت
+                            </label>
+
+                            <select
+                                name="status"
+                                id="status"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    همه
+                                </option>
+
+                                <option
+                                    value="pending"
+                                    @selected(request('status') === 'pending')
+                                >
+                                در حال بررسی
+                                </option>
+
+                                <option
+                                    value="approved"
+                                    @selected(request('status') === 'approved')
+                                >
+                                تأیید شده
+                                </option>
+
+                                <option
+                                    value="rejected"
+                                    @selected(request('status') === 'rejected')
+                                >
+                                رد شده
+                                </option>
+
+                                <option
+                                    value="cancelled"
+                                    @selected(request('status') === 'cancelled')
+                                >
+                                لغو شده
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- From Date --}}
+                        <div class="col-12 col-md-3">
+
+                            <label
+                                for="from_date"
+                                class="form-label"
+                            >
+                                از تاریخ
+                            </label>
+
+                            <input
+                                type="text"
+                                name="from_date"
+                                id="from_date"
+                                value="{{ request('from_date') }}"
+                                class="form-control"
+                                placeholder="۱۴۰۵/۰۱/۰۱"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        {{-- To Date --}}
+                        <div class="col-12 col-md-3">
+
+                            <label
+                                for="to_date"
+                                class="form-label"
+                            >
+                                تا تاریخ
+                            </label>
+
+                            <input
+                                type="text"
+                                name="to_date"
+                                id="to_date"
+                                value="{{ request('to_date') }}"
+                                class="form-control"
+                                placeholder="۱۴۰۵/۱۲/۲۹"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        {{-- Filter Buttons --}}
+                        <div class="col-12 col-md-3">
+
+                            <div class="d-flex gap-2">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary flex-grow-1"
+                                >
+                                    <i class="bi bi-search me-1"></i>
+                                    جستجو
+                                </button>
+
+                                <a
+                                    href="{{ route('loan-requests.index') }}"
+                                    class="btn btn-outline-secondary"
+                                    title="حذف فیلتر"
+                                >
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
             {{-- Table --}}
             <div class="table-responsive loan-requests-table-wrapper">
 
@@ -365,7 +506,9 @@
         @if($loanRequests->hasPages())
 
             <div class="loan-requests-pagination">
-                {{ $loanRequests->links() }}
+
+                {{ $loanRequests->withQueryString()->links() }}
+
             </div>
 
         @endif
@@ -373,3 +516,4 @@
     </div>
 
 @endsection
+

@@ -533,3 +533,97 @@
     }
 
 }
+    css
+           /* =========================================================
+              Loan Requests - Filter
+              ========================================================= */
+
+       .loan-request-filter {
+           background: #fff;
+           border-bottom: 1px solid #e9ecef;
+           padding: 1rem 1.25rem;
+       }
+
+    .loan-request-filter .form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.45rem;
+    }
+
+    .loan-request-filter .form-control,
+    .loan-request-filter .form-select {
+        min-height: 42px;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        background-color: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .loan-request-filter .form-control:focus,
+    .loan-request-filter .form-select:focus {
+        border-color: #6f42c1;
+        box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.1);
+    }
+
+    .loan-request-filter .form-control::placeholder {
+        color: #adb5bd;
+        font-size: 0.85rem;
+    }
+
+    /* دکمه جستجو */
+    .loan-request-filter .btn-primary {
+        min-height: 42px;
+        border: 0;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #6f42c1, #0d6efd);
+        transition: all 0.2s ease;
+    }
+
+    .loan-request-filter .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(111, 66, 193, 0.2);
+    }
+
+    /* دکمه حذف فیلتر */
+    .loan-request-filter .btn-outline-secondary {
+        min-width: 42px;
+        min-height: 42px;
+        border-radius: 10px;
+        border-color: #dee2e6;
+        color: #6c757d;
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .loan-request-filter .btn-outline-secondary:hover {
+        background: #f8f9fa;
+        border-color: #adb5bd;
+        color: #495057;
+    }
+
+    /* فاصله داخلی ردیف */
+    .loan-request-filter .row {
+        margin-bottom: 0;
+    }
+
+    /* موبایل */
+    @media (max-width: 767.98px) {
+
+        .loan-request-filter {
+            padding: 1rem;
+        }
+
+        .loan-request-filter .btn-primary {
+            flex: 1;
+        }
+
+        .loan-request-filter .form-control,
+        .loan-request-filter .form-select {
+            min-height: 44px;
+        }
+    }
+

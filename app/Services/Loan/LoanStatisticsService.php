@@ -70,9 +70,13 @@ class LoanStatisticsService
     /**
      * آخرین پرداخت‌ها
      */
+    /**
+     * آخرین پرداخت‌ها
+     */
     public function latestPayments(int $limit = 5)
     {
         return \App\Models\LoanPayment::query()
+            ->whereHas('loan')
             ->with([
                 'loan.customer',
                 'loan.loanType',

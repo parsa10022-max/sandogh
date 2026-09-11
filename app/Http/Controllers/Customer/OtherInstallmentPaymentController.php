@@ -26,26 +26,91 @@ class OtherInstallmentPaymentController extends Controller
         $loan = null;
         $installment = null;
 
-        /*
-        |--------------------------------------------------------------------------
-        | جستجوی وام
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->filled('loan_number')) {
 
-            $input = preg_replace(
-                '/\D/',
-                '',
-                $request->loan_number
-            );
+            /*
+            |--------------------------------------------------------------------------
+            | دریافت شماره وام
+            |--------------------------------------------------------------------------
+            */
 
-            $loan = Loan::with([
-                'customer',
-                'loanType',
-                'installments',
-            ])
-                ->where('loan_number', $input)
+            $input = trim($request->loan_number);
+
+            /*
+            |--------------------------------------------------------------------------
+            | تبدیل اعداد فارسی و عربی به انگلیسی
+            |--------------------------------------------------------------------------
+            */
+
+            $input = strtr($input, [
+                '۰' => '0',
+                '۱' => '1',
+                '۲' => '2',
+                '۳' => '3',
+                '۴' => '4',
+                '۵' => '5',
+                '۶' => '6',
+                '۷' => '7',
+                '۸' => '8',
+                '۹' => '9',
+
+                '٠' => '0',
+                '١' => '1',
+                '٢' => '2',
+                '٣' => '3',
+                '٤' => '4',
+                '٥' => '5',
+                '٦' => '6',
+                '٧' => '7',
+                '٨' => '8',
+                '٩' => '9',
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف فاصله و خط تیره
+            |--------------------------------------------------------------------------
+            */
+
+            $input = preg_replace('/[\s\-]/', '', $input);
+
+            /*
+            |--------------------------------------------------------------------------
+            | جستجوی وام
+            |
+            | مثال:
+            |
+            | 2911-61110006
+            | 291161110006
+            | 61110006
+            |--------------------------------------------------------------------------
+            */
+
+            $loan = Loan::query()
+                ->with([
+                    'customer',
+                    'loanType',
+                    'installments',
+                ])
+                ->join(
+                    'loan_types',
+                    'loan_types.id',
+                    '=',
+                    'loans.loan_type_id'
+                )
+                ->where(function ($query) use ($input) {
+
+                    $query
+                        ->whereRaw(
+                            "CONCAT(loan_types.prefix, loans.loan_number) = ?",
+                            [$input]
+                        )
+                        ->orWhere(
+                            'loans.loan_number',
+                            $input
+                        );
+                })
+                ->select('loans.*')
                 ->first();
 
             /*
@@ -55,21 +120,19 @@ class OtherInstallmentPaymentController extends Controller
             */
 
             if (! $loan) {
-
                 return view(
                     'customer.installments.others.create',
                     [
                         'loan' => null,
                         'installment' => null,
-                        'searchError' =>
-                            'وامی با این شماره پیدا نشد.',
+                        'searchError' => 'وامی با این شماره پیدا نشد.',
                     ]
                 );
             }
 
             /*
             |--------------------------------------------------------------------------
-            | اولین قسط قابل پرداخت
+            | پیدا کردن اولین قسط پرداخت‌نشده
             |--------------------------------------------------------------------------
             */
 
@@ -83,23 +146,27 @@ class OtherInstallmentPaymentController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | تمام اقساط پرداخت شده
+            | قسط پرداخت‌نشده وجود ندارد
             |--------------------------------------------------------------------------
             */
 
             if (! $installment) {
-
                 return view(
                     'customer.installments.others.create',
                     [
                         'loan' => $loan,
                         'installment' => null,
-                        'searchError' =>
-                            'تمام اقساط این وام پرداخت شده است.',
+                        'searchError' => 'تمام اقساط این وام پرداخت شده است.',
                     ]
                 );
             }
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | نمایش صفحه
+        |--------------------------------------------------------------------------
+        */
 
         return view(
             'customer.installments.others.create',
@@ -139,7 +206,6 @@ class OtherInstallmentPaymentController extends Controller
             $customer &&
             $installment->loan->customer_id === $customer->id
         ) {
-
             return back()->with(
                 'error',
                 'برای پرداخت قسط خودتان از بخش پرداخت اقساط خود استفاده کنید.'
@@ -159,7 +225,6 @@ class OtherInstallmentPaymentController extends Controller
             );
 
         if (! ($result['success'] ?? false)) {
-
             return back()->with(
                 'error',
                 $result['message']

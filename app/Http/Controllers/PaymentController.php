@@ -8,6 +8,7 @@ use App\Models\LoanPayment;
 use App\Models\SavingsTransfer;
 use App\Services\Payment\PaymentResolverService;
 use App\Services\Payment\PaymentService;
+use App\Services\Payment\SavingsInstallmentPaymentService;
 use App\Services\Savings\SavingsTransferService;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,12 @@ class PaymentController extends Controller
         private readonly PaymentService $paymentService,
         private readonly PaymentResolverService $paymentResolver,
         private readonly SavingsTransferService $savingsTransferService,
+        private readonly SavingsInstallmentPaymentService $savingsInstallmentPaymentService,
     ) {
     }
 
     /**
-     * شروع فرآیند پرداخت قسط خود مشتری
+     * شروع فرآیند پرداخت قسط خود مشتری از طریق درگاه
      */
     public function pay(Installment $installment)
     {
@@ -31,7 +33,7 @@ class PaymentController extends Controller
                 $installment
             );
 
-            if (! $response['success']) {
+            if (!$response['success']) {
 
                 return back()->with(
                     'error',
@@ -43,6 +45,33 @@ class PaymentController extends Controller
             return redirect()->away(
                 $response['redirect_url']
             );
+
+        } catch (\Throwable $e) {
+
+            return back()->with(
+                'error',
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * پرداخت قسط خود مشتری از موجودی حساب پس‌انداز
+     */
+    public function payFromSavings(Installment $installment)
+    {
+        try {
+            $payment = $this->savingsInstallmentPaymentService->pay($installment);
+
+            return redirect()
+                ->route(
+                    'customer.installments.payment.success',
+                    $payment
+                )
+                ->with(
+                    'success',
+                    'قسط با موفقیت از حساب پس‌انداز پرداخت شد.'
+                );
 
         } catch (\Throwable $e) {
 
@@ -253,7 +282,7 @@ class PaymentController extends Controller
         $customer = auth()->user()->customer;
 
         if (
-            ! $customer ||
+            !$customer ||
             $payment->loan->customer_id !== $customer->id
         ) {
             abort(403);
@@ -414,24 +443,5 @@ class PaymentController extends Controller
     /**
      * رسید موفقیت واریز پس‌انداز
      */
-    public function savingsTransferSuccess(
-        SavingsTransfer $transfer
-    ) {
-        return view(
-            'receipts.savings-transfer',
-            [
-                'transfer' => $transfer,
-            ]
-        );
-    }
 
-    /**
-     * صفحه خطای واریز پس‌انداز
-     */
-    public function savingsTransferFailed()
-    {
-        return view(
-            'customer.savings-transfer.failed'
-        );
-    }
 }

@@ -2,87 +2,85 @@
 
 @section('receipt-content')
 
-    <div class="card border-0">
+    <div class="receipt-payment">
 
-        <div class="card-body">
+        <div class="receipt-payment-title">
+            <i class="bi bi-receipt"></i>
+            <span>اطلاعات پرداخت قسط</span>
+        </div>
 
-            <h5 class="text-primary fw-bold mb-4">
+        <div class="receipt-payment-grid">
 
-                اطلاعات پرداخت قسط
+            <div class="receipt-payment-item">
+                <span>نام مشتری</span>
+                <strong>
+                    {{ $payment->loan->customer->full_name }}
+                </strong>
+            </div>
 
-            </h5>
+            <div class="receipt-payment-item">
+                <span>شماره وام</span>
+                <strong dir="ltr">
+                    {{ $payment->loan->full_loan_number }}
+                </strong>
+            </div>
 
-            <table class="table table-bordered align-middle">
+            <div class="receipt-payment-item">
+                <span>شماره قسط</span>
+                <strong>
+                    {{ $payment->installment->installment_number }}
+                </strong>
+            </div>
 
-                <tbody>
+            <div class="receipt-payment-item receipt-payment-amount">
+                <span>مبلغ پرداخت</span>
+                <strong>
+                    {{ number_format($payment->amount) }}
+                    <small>ریال</small>
+                </strong>
+            </div>
 
-                <tr>
-                    <th width="220">نام مشتری</th>
-                    <td>{{ $payment->loan->customer->full_name }}</td>
-                </tr>
+            <div class="receipt-payment-item">
+                <span>تاریخ پرداخت</span>
+                <strong>
+                    {{ $payment->paid_at_jalali }}
+                </strong>
+            </div>
 
-                <tr>
-                    <th>شماره وام</th>
-                    <td>{{ $payment->loan->full_loan_number }}</td>
-                </tr>
+            <div class="receipt-payment-item">
+                <span>کد رهگیری</span>
+                <strong dir="ltr">
+                    {{ $payment->tracking_code }}
+                </strong>
+            </div>
 
-                <tr>
-                    <th>شماره قسط</th>
-                    <td>{{ $payment->installment->installment_number }}</td>
-                </tr>
+            <div class="receipt-payment-item">
+                <span>شماره مرجع بانک</span>
+                <strong dir="ltr">
+                    {{ $payment->bank_reference_number ?? '-' }}
+                </strong>
+            </div>
 
-                <tr>
-                    <th>مبلغ پرداخت</th>
-                    <td class="fw-bold text-success">
-                        {{ number_format($payment->amount) }} ریال
-                    </td>
-                </tr>
+            <div class="receipt-payment-item">
+                <span>شناسه تراکنش بانک</span>
+                <strong dir="ltr">
+                    {{ $payment->bank_transaction_id ?? '-' }}
+                </strong>
+            </div>
 
-                <tr>
-                    <th>تاریخ پرداخت</th>
-                    <td>{{ $payment->paid_at_jalali }}</td>
-                </tr>
+            <div class="receipt-payment-item">
+                <span>درگاه پرداخت</span>
+                <strong>
+                    {{ $payment->gateway }}
+                </strong>
+            </div>
 
-                <tr>
-                    <th>کد رهگیری</th>
-                    <td>
-                    <span class="font-monospace fw-bold">
-                        {{ $payment->tracking_code }}
-                    </span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>شماره مرجع بانک</th>
-                    <td>
-                        {{ $payment->bank_reference_number ?? '-' }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>شناسه تراکنش بانک</th>
-                    <td>
-                        {{ $payment->bank_transaction_id ?? '-' }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>درگاه پرداخت</th>
-                    <td>
-                        {{ $payment->gateway }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>اپراتور</th>
-                    <td>
-                        {{ $payment->user->name }}
-                    </td>
-                </tr>
-
-                </tbody>
-
-            </table>
+            <div class="receipt-payment-item">
+                <span>اپراتور</span>
+                <strong>
+                    {{ $payment->user->name }}
+                </strong>
+            </div>
 
         </div>
 

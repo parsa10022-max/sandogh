@@ -8,6 +8,8 @@
 
 
         @include('dashboard.partials.statistics')
+        {{-- دسترسی سریع --}}
+        @include('dashboard.partials.quick-links')
         @include('dashboard.partials.action-needed')
 
 
@@ -27,8 +29,7 @@
         @include('dashboard.partials.latest-payments')
 
 
-        {{-- دسترسی سریع --}}
-        @include('dashboard.partials.quick-links')
+
 
     </div>
 

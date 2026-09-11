@@ -5,11 +5,19 @@
     <title>ورود</title>
 </head>
 <body>
+
 @error('username')
 <div style="color:red">
     {{ $message }}
 </div>
 @enderror
+
+@if (session('success'))
+    <div style="color:green">
+        {{ session('success') }}
+    </div>
+@endif
+
 <h2>ورود به سامانه</h2>
 
 <form method="POST" action="{{ route('login.store') }}">
@@ -43,6 +51,12 @@
     </button>
 
 </form>
+
+<br>
+
+<a href="{{ route('password.request') }}">
+    فراموشی رمز عبور
+</a>
 
 </body>
 </html>

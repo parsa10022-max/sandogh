@@ -1,8 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'مشاهده درخواست برداشت')
-
-
 
 @section('content')
 
@@ -446,6 +443,29 @@
 
                     </div>
 
+
+                    {{-- =================================================
+                         RECEIPT ACTION
+                    ================================================== --}}
+
+                    <div class="withdrawal-paid-actions">
+
+                        <a
+                            href="{{ route('withdrawals.receipt', $withdrawal) }}"
+                            class="withdrawal-action-btn withdrawal-action-btn-success"
+                            target="_blank"
+                        >
+
+                            <i class="bi bi-receipt"></i>
+
+                            <span>
+                                مشاهده و چاپ رسید
+                            </span>
+
+                        </a>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -675,3 +695,4 @@
     </div>
 
 @endsection
+

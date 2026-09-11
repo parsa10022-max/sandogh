@@ -24,22 +24,148 @@ class LoanRequestController extends Controller
         $this->loanTypeService = $loanTypeService;
     }
 
+
     /**
      * لیست درخواست‌ها
      */
-    public function index()
+    public function index(Request $request)
     {
-        $loanRequests = LoanRequest::query()
+        $search = trim($request->input('search', ''));
+
+        $status = $request->input('status');
+
+        $fromDate = $request->input('from_date');
+
+        $toDate = $request->input('to_date');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Query
+        |--------------------------------------------------------------------------
+        */
+
+        $query = LoanRequest::query()
             ->with([
                 'customer',
                 'loan',
-            ])
+            ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | جستجو
+        |--------------------------------------------------------------------------
+        |
+        | نام، نام خانوادگی، کد ملی و شماره درخواست
+        |
+        */
+
+        if ($search !== '') {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('id', $search)
+
+                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
+
+                        $customerQuery
+                            ->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhereRaw(
+                                "CONCAT(first_name, ' ', last_name) LIKE ?",
+                                ["%{$search}%"]
+                            )
+                            ->orWhere(
+                                'national_code',
+                                'like',
+                                "%{$search}%"
+                            );
+                    });
+            });
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | فیلتر وضعیت
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $status &&
+            in_array(
+                $status,
+                array_column(
+                    LoanRequestStatus::cases(),
+                    'value'
+                ),
+                true
+            )
+        ) {
+
+            $query->where(
+                'status',
+                $status
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | فیلتر تاریخ درخواست
+        |--------------------------------------------------------------------------
+        */
+
+        if ($fromDate) {
+
+            $fromDateGregorian =
+                app(JalaliDateService::class)
+                    ->toGregorian($fromDate);
+
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $fromDateGregorian
+            );
+        }
+
+
+        if ($toDate) {
+
+            $toDateGregorian =
+                app(JalaliDateService::class)
+                    ->toGregorian($toDate);
+
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $toDateGregorian
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | دریافت درخواست‌ها
+        |--------------------------------------------------------------------------
+        */
+
+        $loanRequests = $query
             ->latest()
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
 
         return view(
             'loan_requests.index',
-            compact('loanRequests')
+            compact(
+                'loanRequests',
+                'search',
+                'status',
+                'fromDate',
+                'toDate'
+            )
         );
     }
 

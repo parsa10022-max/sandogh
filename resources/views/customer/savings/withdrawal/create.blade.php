@@ -55,7 +55,7 @@
                     </span>
 
                     <strong>
-                        {{ $account->customer->full_name }}
+                        {{ $account?->customer?->full_name ?? '-' }}
                     </strong>
 
                 </div>
@@ -69,7 +69,7 @@
                     </span>
 
                     <strong dir="ltr">
-                        {{ $account->account_number }}
+                        {{ $account?->account_number ?? '-' }}
                     </strong>
 
                 </div>
@@ -83,7 +83,7 @@
                     </span>
 
                     <strong>
-                        {{ number_format($account->balance) }}
+                        {{ number_format($account?->balance ?? 0) }}
 
                         <small>
                             ریال

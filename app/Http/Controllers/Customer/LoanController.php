@@ -21,6 +21,7 @@ class LoanController extends Controller
             ->with([
                 'loanType',
                 'installments',
+                'guarantors.customer',
             ])
             ->latest('id')
             ->paginate(10);
@@ -53,7 +54,7 @@ class LoanController extends Controller
         $loan->load([
             'loanType',
             'installments',
-            'guarantors',
+            'guarantors.customer',
         ]);
 
         return view('customer.loans.show', compact(

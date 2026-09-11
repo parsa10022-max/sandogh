@@ -1,299 +1,185 @@
-@extends('customer.layouts.app')
+@extends('receipts.layout')
 
-@section('title', 'واریز موفق')
+@section('receipt-content')
 
-@section('header_title', 'واریز موفق')
+    <div class="receipt-payment">
 
-@section('header_subtitle', 'واریز به حساب پس‌انداز با موفقیت انجام شد')
+        <div class="receipt-payment-title">
+            <i class="bi bi-arrow-left-right"></i>
+            <span>اطلاعات انتقال از حساب پس‌انداز</span>
+        </div>
 
-@section('content')
+        <div class="receipt-payment-grid">
 
-    <div class="customer-savings-success-page">
+            {{-- کد رهگیری صندوق --}}
+            <div class="receipt-payment-item">
 
-        <div class="customer-savings-success-card">
-
-
-            {{-- =====================================================
-                 SUCCESS HEADER
-            ====================================================== --}}
-
-            <div class="customer-savings-success-header">
-
-                <div class="customer-savings-success-header-icon">
-
-                    <i class="bi bi-check-lg"></i>
-
-                </div>
-
-
-                <div class="customer-savings-success-header-content">
-
-                    <h1>
-                        واریز موفق
-                    </h1>
-
-                    <span>
-                    واریز به حساب پس‌انداز با موفقیت انجام شد
+                <span>
+                    کد رهگیری پرداخت
                 </span>
 
-                </div>
+                <strong dir="ltr">
+                    {{ $receipt_number ?? $transfer->tracking_code ?? '-' }}
+                </strong>
 
             </div>
 
 
-            {{-- =====================================================
-                 SUCCESS MESSAGE
-            ====================================================== --}}
+            {{-- مبلغ انتقال --}}
+            <div class="receipt-payment-item receipt-payment-amount">
 
-            <div class="customer-savings-success-message">
-
-                <i class="bi bi-check-circle-fill"></i>
-
-                <div>
-
-                    <strong>
-                        واریز با موفقیت انجام شد.
-                    </strong>
-
-                    <span>
-                    مبلغ با موفقیت به حساب پس‌انداز شما اضافه شد.
+                <span>
+                    مبلغ انتقال
                 </span>
 
-                </div>
+                <strong>
+
+                    {{ number_format($transfer->amount) }}
+
+                    <small>
+                        ریال
+                    </small>
+
+                </strong>
 
             </div>
 
 
-            {{-- =====================================================
-                 PAYMENT INFORMATION
-            ====================================================== --}}
+            {{-- تاریخ انتقال --}}
+            <div class="receipt-payment-item">
 
-            <div class="customer-savings-success-info">
-
-
-                {{-- -------------------------------------------------
-                     کد رهگیری صندوق
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-receipt"></i>
-
-                    کد رهگیری صندوق
-
+                <span>
+                    تاریخ انتقال
                 </span>
 
-                    <strong
-                        dir="ltr"
-                        class="customer-savings-success-tracking"
-                    >
-                        {{ $transfer->tracking_code }}
-                    </strong>
+                <strong>
 
-                </div>
+                    @if($transfer->paid_at)
 
-
-                {{-- -------------------------------------------------
-                     مبلغ واریز
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-cash-stack"></i>
-
-                    مبلغ واریز
-
-                </span>
-
-                    <strong class="customer-savings-success-amount">
-
-                        {{ number_format($transfer->amount) }}
-
-                        <small>
-                            ریال
-                        </small>
-
-                    </strong>
-
-                </div>
-
-
-                {{-- -------------------------------------------------
-                     تاریخ پرداخت
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-calendar3"></i>
-
-                    تاریخ پرداخت
-
-                </span>
-
-                    <strong dir="ltr">
-
-                        @if($transfer->paid_at)
-
-                            {{ \Morilog\Jalali\Jalalian::fromDateTime($transfer->paid_at)->format('Y/m/d H:i') }}
-
-                        @else
-
-                            -
-
-                        @endif
-
-                    </strong>
-
-                </div>
-
-
-                {{-- -------------------------------------------------
-                     شناسه تراکنش بانکی
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-credit-card-2-front"></i>
-
-                    شناسه تراکنش بانکی
-
-                </span>
-
-                    <strong dir="ltr">
-
-                        {{ $transfer->bank_transaction_id ?? '-' }}
-
-                    </strong>
-
-                </div>
-
-
-                {{-- -------------------------------------------------
-                     شماره مرجع بانکی
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-upc-scan"></i>
-
-                    شماره مرجع بانکی
-
-                </span>
-
-                    <strong dir="ltr">
-
-                        {{ $transfer->bank_reference_number ?? '-' }}
-
-                    </strong>
-
-                </div>
-
-
-                {{-- -------------------------------------------------
-                     وضعیت
-                -------------------------------------------------- --}}
-
-                <div class="customer-savings-success-info-item">
-
-                <span class="customer-savings-success-label">
-
-                    <i class="bi bi-info-circle"></i>
-
-                    وضعیت پرداخت
-
-                </span>
-
-
-                    @if($transfer->status === 'paid')
-
-                        <strong class="customer-savings-success-status paid">
-
-                            <i class="bi bi-check-circle-fill"></i>
-
-                            پرداخت موفق
-
-                        </strong>
-
-                    @elseif($transfer->status === 'pending')
-
-                        <strong class="customer-savings-success-status pending">
-
-                            <i class="bi bi-clock-fill"></i>
-
-                            در انتظار پرداخت
-
-                        </strong>
+                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
+                            $transfer->paid_at
+                        )->format('Y/m/d H:i') }}
 
                     @else
 
-                        <strong class="customer-savings-success-status failed">
-
-                            <i class="bi bi-x-circle-fill"></i>
-
-                            پرداخت ناموفق
-
-                        </strong>
+                        -
 
                     @endif
 
-                </div>
-
+                </strong>
 
             </div>
 
 
-            {{-- =====================================================
-                 SECURITY NOTE
-            ====================================================== --}}
-
-            <div class="customer-savings-success-note">
-
-                <i class="bi bi-shield-check"></i>
+            {{-- وضعیت انتقال --}}
+            <div class="receipt-payment-item">
 
                 <span>
-                این پرداخت با موفقیت ثبت و در سوابق حساب شما ذخیره شد.
-            </span>
-
-            </div>
-
-
-            {{-- =====================================================
-                 ACTION
-            ====================================================== --}}
-
-            <div class="customer-savings-success-actions">
-
-                <a
-                    href="{{ route('customer.dashboard') }}"
-                    class="customer-savings-success-submit"
-                >
-
-                    <i class="bi bi-house"></i>
-
-                    <span>
-                    بازگشت به پنل
+                    وضعیت انتقال
                 </span>
 
-                    <i class="bi bi-arrow-left"></i>
+                <strong>
 
-                </a>
+                    <span class="text-success">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        انتقال موفق
+
+                    </span>
+
+                </strong>
 
             </div>
 
+
+            {{-- حساب مبدا --}}
+            <div class="receipt-payment-item">
+
+                <span>
+                    حساب پس‌انداز مبدا
+                </span>
+
+                <strong dir="ltr">
+
+                    {{ $transfer->account?->account_number ?? '-' }}
+
+                </strong>
+
+            </div>
+
+
+            {{-- انتقال‌دهنده --}}
+            <div class="receipt-payment-item">
+
+                <span>
+                    انتقال‌دهنده
+                </span>
+
+                <strong>
+
+                    @if($transfer->sender)
+
+                        {{ $transfer->sender->first_name }}
+                        {{ $transfer->sender->last_name }}
+
+                    @else
+
+                        -
+
+                    @endif
+
+                </strong>
+
+            </div>
+
+
+            {{-- حساب مقصد --}}
+            <div class="receipt-payment-item">
+
+                <span>
+                    حساب پس‌انداز مقصد
+                </span>
+
+                <strong dir="ltr">
+
+                    {{ $transfer->receiver?->accounts?->first()?->account_number ?? '-' }}
+
+                </strong>
+
+            </div>
+
+
+            {{-- دریافت‌کننده --}}
+            <div class="receipt-payment-item">
+
+                <span>
+                    دریافت‌کننده
+                </span>
+
+                <strong>
+
+                    @if($transfer->receiver)
+
+                        {{ $transfer->receiver->first_name }}
+                        {{ $transfer->receiver->last_name }}
+
+                    @else
+
+                        -
+
+                    @endif
+
+                </strong>
+
+            </div>
 
         </div>
 
-    </div>
 
+
+
+
+    </div>
 
 @endsection

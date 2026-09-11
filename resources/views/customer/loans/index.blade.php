@@ -9,7 +9,7 @@
 
         {{-- =====================================================
              PAGE HEADER
-             ===================================================== --}}
+        ===================================================== --}}
         <section class="customer-loans-header">
 
             <div class="customer-loans-header-main">
@@ -48,7 +48,7 @@
 
         {{-- =====================================================
              SUMMARY
-             ===================================================== --}}
+        ===================================================== --}}
         @php
 
             $totalLoans = $loans->total();
@@ -70,7 +70,6 @@
 
         <section class="customer-loans-summary">
 
-            {{-- مجموع --}}
             <div class="customer-loans-summary-card">
 
                 <div class="customer-loans-summary-icon total">
@@ -92,7 +91,6 @@
             </div>
 
 
-            {{-- فعال --}}
             <div class="customer-loans-summary-card">
 
                 <div class="customer-loans-summary-icon active">
@@ -114,7 +112,6 @@
             </div>
 
 
-            {{-- تسویه --}}
             <div class="customer-loans-summary-card">
 
                 <div class="customer-loans-summary-icon finished">
@@ -136,7 +133,6 @@
             </div>
 
 
-            {{-- تعداد نمایش داده شده --}}
             <div class="customer-loans-summary-card">
 
                 <div class="customer-loans-summary-icon remaining">
@@ -162,10 +158,11 @@
 
         {{-- =====================================================
              LOANS SECTION
-             ===================================================== --}}
+        ===================================================== --}}
         <section class="customer-loans-list-section">
 
-            {{-- عنوان لیست --}}
+
+            {{-- HEADER --}}
             <div class="customer-loans-list-header">
 
                 <div class="customer-loans-list-title">
@@ -188,7 +185,9 @@
 
                 </div>
 
+
                 <div class="customer-loans-count">
+
                     <strong>
                         {{ number_format($loans->total()) }}
                     </strong>
@@ -196,6 +195,7 @@
                     <span>
                     وام
                 </span>
+
                 </div>
 
             </div>
@@ -203,7 +203,7 @@
 
             {{-- =================================================
                  EMPTY STATE
-                 ================================================= --}}
+            ================================================== --}}
             @if($loans->isEmpty())
 
                 <div class="customer-loans-empty">
@@ -224,9 +224,10 @@
 
             @else
 
+
                 {{-- =================================================
                      LOANS
-                     ================================================= --}}
+                ================================================== --}}
                 <div class="customer-loans-grid">
 
                     @foreach($loans as $loan)
@@ -263,11 +264,13 @@
 
                         {{-- =================================================
                              LOAN CARD
-                             ================================================= --}}
+                        ================================================== --}}
                         <article class="customer-loan-card">
 
 
-                            {{-- HEADER --}}
+                            {{-- =================================================
+                                 CARD HEADER
+                            ================================================== --}}
                             <div class="customer-loan-card-header">
 
                                 <div class="customer-loan-card-title">
@@ -291,69 +294,85 @@
                                 </div>
 
 
-                                @if($isActive)
+                                <div class="customer-loan-card-header-left">
 
-                                    <span class="customer-loan-status active">
-                                    <i class="bi bi-circle-fill"></i>
-                                    فعال
-                                </span>
+                                    <div class="customer-loan-type">
 
-                                @elseif($isFinished)
+                                        <i class="bi bi-tag-fill"></i>
 
-                                    <span class="customer-loan-status finished">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                    تسویه‌شده
-                                </span>
+                                        <span>
+                                        {{ $loan->loanType?->name ?? 'وام' }}
+                                    </span>
 
-                                @else
-
-                                    <span class="customer-loan-status cancelled">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                    لغوشده
-                                </span>
-
-                                @endif
-
-                            </div>
+                                    </div>
 
 
-                            {{-- LOAN TYPE --}}
-                            <div class="customer-loan-type">
+                                    @if($isActive)
 
-                                <i class="bi bi-tag-fill"></i>
+                                        <span class="customer-loan-status active">
 
-                                <span>
-                                {{ $loan->loanType?->name ?? 'وام' }}
-                            </span>
+                                        <i class="bi bi-circle-fill"></i>
 
-                            </div>
+                                        فعال
 
+                                    </span>
 
-                            {{-- MAIN AMOUNT --}}
-                            <div class="customer-loan-main">
+                                    @elseif($isFinished)
 
-                                <div class="customer-loan-main-label">
-                                    مبلغ وام
-                                </div>
+                                        <span class="customer-loan-status finished">
 
-                                <div class="customer-loan-main-value">
+                                        <i class="bi bi-check-circle-fill"></i>
 
-                                    <strong>
-                                        {{ number_format($loan->loan_amount) }}
-                                    </strong>
+                                        تسویه‌شده
 
-                                    <small>
-                                        ریال
-                                    </small>
+                                    </span>
+
+                                    @else
+
+                                        <span class="customer-loan-status cancelled">
+
+                                        <i class="bi bi-x-circle-fill"></i>
+
+                                        لغوشده
+
+                                    </span>
+
+                                    @endif
 
                                 </div>
 
                             </div>
 
 
-                            {{-- DATA --}}
-                            <div class="customer-loan-data-grid">
+                            {{-- =================================================
+                                 MAIN LOAN INFO
+                            ================================================== --}}
+                            <div class="customer-loan-main-row">
 
+
+                                {{-- مبلغ وام --}}
+                                <div class="customer-loan-main">
+
+                                    <div class="customer-loan-main-label">
+                                        مبلغ وام
+                                    </div>
+
+                                    <div class="customer-loan-main-value">
+
+                                        <strong>
+                                            {{ number_format($loan->loan_amount) }}
+                                        </strong>
+
+                                        <small>
+                                            ریال
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                {{-- مبلغ قسط --}}
                                 <div class="customer-loan-data">
 
                                 <span>
@@ -371,6 +390,7 @@
                                 </div>
 
 
+                                {{-- تعداد اقساط --}}
                                 <div class="customer-loan-data">
 
                                 <span>
@@ -388,6 +408,7 @@
                                 </div>
 
 
+                                {{-- پرداخت شده --}}
                                 <div class="customer-loan-data success">
 
                                 <span>
@@ -405,6 +426,7 @@
                                 </div>
 
 
+                                {{-- باقی مانده --}}
                                 <div class="customer-loan-data danger">
 
                                 <span>
@@ -424,7 +446,180 @@
                             </div>
 
 
-                            {{-- PROGRESS --}}
+                            {{-- =================================================
+                                 GUARANTORS
+                            ================================================== --}}
+                            @if($loan->guarantors->isNotEmpty())
+
+                                <div class="customer-loan-guarantors">
+
+                                    <div class="customer-loan-guarantors-header">
+
+                                        <div class="customer-loan-guarantors-title">
+
+                                            <i class="bi bi-people-fill"></i>
+
+                                            <span>
+                                            ضامنین وام
+                                        </span>
+
+                                        </div>
+
+                                        <span class="customer-loan-guarantors-count">
+
+                                        {{ number_format($loan->guarantors->count()) }}
+
+                                        ضامن
+
+                                    </span>
+
+                                    </div>
+
+
+                                    <div class="customer-loan-guarantors-list">
+
+                                        @foreach(
+                                            $loan->guarantors->sortBy('guarantor_order')
+                                            as $guarantor
+                                        )
+
+                                            @php
+
+                                                $guarantorMobile =
+                                                    $guarantor->mobile
+                                                    ?? $guarantor->customer?->mobile;
+
+                                            @endphp
+
+
+                                            <div class="customer-loan-guarantor">
+
+
+                                                {{-- نام --}}
+                                                <div class="customer-loan-guarantor-main">
+
+                                                    <div class="customer-loan-guarantor-icon">
+
+                                                        <i class="bi bi-person-check-fill"></i>
+
+                                                    </div>
+
+                                                    <div class="customer-loan-guarantor-name">
+
+                                                    <span>
+                                                        ضامن {{ $guarantor->guarantor_order }}
+                                                    </span>
+
+                                                        <strong>
+                                                            {{ $guarantor->full_name }}
+                                                        </strong>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                {{-- اطلاعات --}}
+                                                <div class="customer-loan-guarantor-details">
+
+
+                                                    @if($guarantorMobile)
+
+                                                        <div class="customer-loan-guarantor-detail mobile">
+
+                                                            <i class="bi bi-phone"></i>
+
+                                                            <span>
+                                                            موبایل
+                                                        </span>
+
+                                                            <strong dir="ltr">
+                                                                {{ $guarantorMobile }}
+                                                            </strong>
+
+                                                        </div>
+
+                                                    @endif
+
+
+                                                    @if($guarantor->guarantee_type)
+
+                                                        <div class="customer-loan-guarantor-detail">
+
+                                                            <i class="bi bi-file-earmark-text"></i>
+
+                                                            <span>
+                                                            نوع مدرک
+                                                        </span>
+
+                                                            <strong>
+                                                                {{ $guarantor->guarantee_type->label() }}
+                                                            </strong>
+
+                                                        </div>
+
+                                                    @endif
+
+
+                                                    @if($guarantor->guarantee_number)
+
+                                                        <div class="customer-loan-guarantor-detail">
+
+                                                            <i class="bi bi-hash"></i>
+
+                                                            <span>
+                                                            شماره مدرک
+                                                        </span>
+
+                                                            <strong dir="ltr">
+                                                                {{ $guarantor->guarantee_number }}
+                                                            </strong>
+
+                                                        </div>
+
+                                                    @endif
+
+
+                                                    @if($guarantor->guarantee_amount)
+
+                                                        <div class="customer-loan-guarantor-detail">
+
+                                                            <i class="bi bi-cash-stack"></i>
+
+                                                            <span>
+                                                            مبلغ ضمانت
+                                                        </span>
+
+                                                            <strong>
+
+                                                                {{ number_format($guarantor->guarantee_amount) }}
+
+                                                                <small>
+                                                                    ریال
+                                                                </small>
+
+                                                            </strong>
+
+                                                        </div>
+
+                                                    @endif
+
+                                                </div>
+
+                                            </div>
+
+                                        @endforeach
+
+                                    </div>
+
+                                </div>
+
+                            @endif
+
+
+                            {{-- =================================================
+                                 PROGRESS
+                            ================================================== --}}
                             <div class="customer-loan-progress-section">
 
                                 <div class="customer-loan-progress-header">
@@ -439,6 +634,7 @@
 
                                 </div>
 
+
                                 <div class="customer-loan-progress-track">
 
                                     <div
@@ -448,14 +644,17 @@
 
                                 </div>
 
+
                                 <div class="customer-loan-progress-footer">
 
                                 <span>
-                                    {{ number_format($paidCount) }} قسط پرداخت شده
+                                    {{ number_format($paidCount) }}
+                                    قسط پرداخت شده
                                 </span>
 
                                     <span>
-                                    {{ number_format($remainingCount) }} قسط باقی‌مانده
+                                    {{ number_format($remainingCount) }}
+                                    قسط باقی‌مانده
                                 </span>
 
                                 </div>
@@ -463,7 +662,9 @@
                             </div>
 
 
-                            {{-- FOOTER --}}
+                            {{-- =================================================
+                                 FOOTER
+                            ================================================== --}}
                             <div class="customer-loan-card-footer">
 
                                 <div class="customer-loan-start-date">
@@ -509,7 +710,9 @@
                 </div>
 
 
-                {{-- PAGINATION --}}
+                {{-- =================================================
+                     PAGINATION
+                ================================================== --}}
                 @if($loans->hasPages())
 
                     <div class="customer-loans-pagination">

@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'admin.access' => \App\Http\Middleware\AdminAccess::class,
+            'reports.access' => \App\Http\Middleware\AdminAccess::class,
             'customer.access' => \App\Http\Middleware\CustomerAccess::class,
         ]);
     })

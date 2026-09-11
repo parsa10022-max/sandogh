@@ -48,20 +48,6 @@
 
             @auth
 
-                {{-- Notifications --}}
-                <a
-                    href="#"
-                    class="admin-header-action notification-action"
-                    aria-label="اعلان‌ها"
-                >
-                    <i class="bi bi-bell"></i>
-
-                    @if(isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
-                        <span class="notification-badge">
-                            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
-                        </span>
-                    @endif
-                </a>
 
 
                 {{-- User --}}
@@ -113,7 +99,7 @@
 
                         <li>
                             <a
-                                href="#"
+                                href="{{ route('admin.profile.index') }}"
                                 class="dropdown-item"
                             >
                                 <i class="bi bi-person"></i>
@@ -123,7 +109,7 @@
 
                         <li>
                             <a
-                                href="#"
+                                href="{{ route('admin.password.edit') }}"
                                 class="dropdown-item"
                             >
                                 <i class="bi bi-key"></i>

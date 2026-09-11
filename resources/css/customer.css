@@ -70,7 +70,8 @@
 
     transition:
         transform .18s ease,
-        box-shadow .18s ease;
+        box-shadow .18s ease,
+        background .18s ease;
 }
 
 .customer-primary-button:hover {
@@ -80,6 +81,164 @@
 
     box-shadow:
         0 6px 14px rgba(75,60,190,.12);
+}
+
+
+/* =========================================================
+   COMMON BUTTON ACTIONS
+   ========================================================= */
+
+.customer-action-buttons {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+.customer-action-buttons > a,
+.customer-action-buttons > button {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 9px 12px;
+
+    border-radius: 10px;
+
+    font-size: .76rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    text-decoration: none;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+}
+
+
+/* =========================================================
+   PRIMARY ACTION
+   ========================================================= */
+
+.customer-action-primary {
+    color: #fff !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6040e8,
+            #4168e9
+        );
+
+    border: 1px solid transparent;
+}
+
+.customer-action-primary:hover {
+    color: #fff !important;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 14px rgba(75,60,190,.14);
+}
+
+
+/* =========================================================
+   RECEIPT / PRINT ACTION
+   ========================================================= */
+
+.customer-action-receipt {
+    color: #fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6f42c1,
+            #0d6efd
+        );
+
+    border: 1px solid transparent;
+
+    box-shadow:
+        0 4px 12px rgba(111,66,193,.10);
+}
+
+.customer-action-receipt:hover {
+    color: #fff !important;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 18px rgba(111,66,193,.18);
+}
+
+
+/* =========================================================
+   SECONDARY ACTION
+   ========================================================= */
+
+.customer-action-secondary {
+    color: #495057 !important;
+
+    background: #f8f9fa;
+
+    border: 1px solid #e1e5ea;
+}
+
+.customer-action-secondary:hover {
+    color: #343a40 !important;
+
+    background: #eef0f3;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   HOME ACTION
+   ========================================================= */
+
+.customer-action-home {
+    color: #0d6efd !important;
+
+    background: rgba(13,110,253,.07);
+
+    border: 1px solid rgba(13,110,253,.12);
+}
+
+.customer-action-home:hover {
+    color: #0b5ed7 !important;
+
+    background: rgba(13,110,253,.12);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BUTTON ICON
+   ========================================================= */
+
+.customer-action-buttons i {
+    flex: 0 0 auto;
+
+    font-size: 15px;
 }
 
 
@@ -239,5 +398,47 @@
     .customer-content {
         padding-top: 6px;
         padding-bottom: 6px;
+    }
+
+    .customer-action-buttons {
+        gap: 7px;
+    }
+
+    .customer-action-buttons > a,
+    .customer-action-buttons > button {
+        min-height: 40px;
+
+        padding: 8px 7px;
+
+        font-size: .68rem;
+    }
+
+    .customer-action-buttons i {
+        font-size: 14px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .customer-action-buttons {
+        gap: 5px;
+    }
+
+    .customer-action-buttons > a,
+    .customer-action-buttons > button {
+        min-height: 38px;
+
+        padding: 7px 5px;
+
+        font-size: .62rem;
+    }
+
+    .customer-action-buttons i {
+        font-size: 13px;
     }
 }

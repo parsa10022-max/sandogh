@@ -11,6 +11,10 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Enums\UserRole;
+use App\Models\Notification;
+use App\Models\User;
+
 
 class LoanRequestController extends Controller
 {
@@ -68,7 +72,7 @@ class LoanRequestController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        LoanRequest::create([
+        $loanRequest = LoanRequest::create([
 
             'customer_id' =>
                 $customer->id,
@@ -82,6 +86,63 @@ class LoanRequestController extends Controller
             'status' =>
                 LoanRequestStatus::PENDING,
         ]);
+
+        /*
+|--------------------------------------------------------------------------
+| اعلان درخواست وام برای کاربران مدیریتی
+|--------------------------------------------------------------------------
+*/
+
+        $managerUsers = User::query()
+            ->whereIn('role', [
+                UserRole::ADMIN->value,
+                UserRole::CEO->value,
+                UserRole::BOARD_MEMBER->value,
+                UserRole::OPERATOR->value,
+            ])
+            ->get();
+
+        foreach ($managerUsers as $managerUser) {
+
+            Notification::create([
+
+                'user_id' =>
+                    $managerUser->id,
+
+                'type' =>
+                    'loan_request_created',
+
+                'title' =>
+                    'درخواست وام جدید',
+
+                'message' =>
+                    'عضو «' .
+                    $customer->full_name .
+                    '» درخواست وامی به مبلغ ' .
+                    number_format($loanRequest->requested_amount) .
+                    ' ریال ثبت کرده است.',
+
+                'data' => [
+
+                    'loan_request_id' =>
+                        $loanRequest->id,
+
+                    'customer_id' =>
+                        $customer->id,
+
+                    'customer_name' =>
+                        $customer->full_name,
+
+                    'requested_amount' =>
+                        $loanRequest->requested_amount,
+
+                ],
+
+                'read_at' =>
+                    null,
+
+            ]);
+        }
 
 
         /*

@@ -1,48 +1,75 @@
-@extends('layouts.app')
+<!DOCTYPE html>
 
-@section('content')
+<html lang="fa" dir="rtl">
 
-    <div class="container py-4">
+<head>
 
-        <div class="receipt shadow rounded bg-white">
+    <meta charset="UTF-8">
 
-            {{-- Header --}}
-            @include('receipts.partials.header')
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-            <hr>
+    <title>
+        {{ $title ?? 'رسید صندوق' }}
+    </title>
 
-            {{-- محتوای رسید --}}
-            @yield('receipt-content')
+    @vite([
+    'resources/css/app.css',
+    'resources/css/receipts.css',
+    'resources/js/app.js',
+    ])
+    ```
 
-            <hr>
+</head>
 
-            {{-- Footer --}}
-            @include('receipts.partials.footer')
+<body class="receipt-body">
 
-        </div>
+```
+<main class="receipt-page">
 
-        <div class="text-center mt-3 d-print-none">
+    <div class="receipt">
 
-            <button
-                class="btn btn-success"
-                onclick="window.print()">
+        {{-- Header --}}
+        @include('receipts.partials.header')
 
-                <i class="bi bi-printer"></i>
+        <hr>
 
-                چاپ رسید
+        {{-- محتوای رسید --}}
+        @yield('receipt-content')
 
-            </button>
+        <hr>
 
-            <a
-                href="{{ url()->previous() }}"
-                class="btn btn-secondary">
-
-                بازگشت
-
-            </a>
-
-        </div>
+        {{-- Footer --}}
+        @include('receipts.partials.footer')
 
     </div>
 
-@endsection
+    <div class="receipt-actions d-print-none">
+
+        <button
+            type="button"
+            class="btn btn-success"
+            onclick="window.print()"
+        >
+            <i class="bi bi-printer"></i>
+            چاپ رسید
+        </button>
+
+        <a
+            href="{{ url('/customer/dashboard') }}"
+            class="btn btn-secondary"
+        >
+            <i class="bi bi-arrow-right"></i>
+            بازگشت
+        </a>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

@@ -188,7 +188,7 @@
                                         </strong>
 
                                         <small>
-                                            تومان
+                                            ریال
                                         </small>
 
                                     </div>

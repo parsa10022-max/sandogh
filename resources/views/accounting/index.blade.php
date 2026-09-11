@@ -69,7 +69,7 @@
 
                 </div>
 
-                <a href="{{ route('admin.accounting.savings-transfers') }}"
+                <a href="{{ route('reports.accounting.savings-transfers') }}"
                    class="accounting-stat-link">
 
                     <span>مشاهده واریزها</span>
@@ -103,7 +103,7 @@
 
                 </div>
 
-                <a href="{{ route('admin.accounting.withdrawals') }}"
+                <a href="{{ route('reports.accounting.withdrawals') }}"
                    class="accounting-stat-link accounting-stat-link-danger">
 
                     <span>مشاهده برداشت‌ها</span>
@@ -137,7 +137,7 @@
 
                 </div>
 
-                <a href="{{ route('admin.accounting.loan-payments') }}"
+                <a href="{{ route('reports.accounting.loan-payments') }}"
                    class="accounting-stat-link accounting-stat-link-success">
 
                     <span>مشاهده اقساط</span>
@@ -212,7 +212,7 @@
 
 
                     {{-- Savings transfers --}}
-                    <a href="{{ route('admin.accounting.savings-transfers') }}"
+                    <a href="{{ route('reports.accounting.savings-transfers') }}"
                        class="accounting-operation-item">
 
                         <div class="accounting-operation-icon accounting-operation-icon-primary">
@@ -241,7 +241,7 @@
 
 
                     {{-- Withdrawals --}}
-                    <a href="{{ route('admin.accounting.withdrawals') }}"
+                    <a href="{{ route('reports.accounting.withdrawals') }}"
                        class="accounting-operation-item">
 
                         <div class="accounting-operation-icon accounting-operation-icon-danger">
@@ -270,7 +270,7 @@
 
 
                     {{-- Loan payments --}}
-                    <a href="{{ route('admin.accounting.loan-payments') }}"
+                    <a href="{{ route('reports.accounting.loan-payments') }}"
                        class="accounting-operation-item">
 
                         <div class="accounting-operation-icon accounting-operation-icon-success">

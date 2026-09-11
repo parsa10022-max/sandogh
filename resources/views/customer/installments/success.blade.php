@@ -1,119 +1,239 @@
 @extends('customer.layouts.app')
 
 @section('title', 'رسید پرداخت قسط')
+
 @section('header_title', 'رسید پرداخت')
+
 @section('header_subtitle', 'رسید موفق پرداخت قسط')
 
 @section('content')
 
-    <div class="container-fluid customer-payment-success">
+    <div class="container-fluid customer-other-installment-success">
 
-        <div class="customer-payment-receipt">
+        {{-- =====================================================
+             HEADER
+             ===================================================== --}}
 
-            {{-- هدر رسید --}}
-            <div class="customer-payment-receipt-header">
+        <div class="customer-other-installment-success-header">
 
-                <div class="customer-payment-success-icon">
-                    <i class="bi bi-check-lg"></i>
-                </div>
+            <div class="customer-other-installment-success-header-icon">
 
-                <div>
-                    <h5>پرداخت با موفقیت انجام شد</h5>
-                    <span>رسید پرداخت قسط وام</span>
-                </div>
+                <i class="bi bi-check-lg"></i>
 
             </div>
 
+            <div class="customer-other-installment-success-header-content">
 
-            {{-- مبلغ --}}
-            <div class="customer-payment-amount">
+                <h2>
+                    پرداخت با موفقیت انجام شد
+                </h2>
 
-                <span>مبلغ پرداخت</span>
+                <p>
+                    پرداخت قسط برای عضو صندوق با موفقیت ثبت شد.
+                </p>
 
-                <strong>
-                    {{ number_format($payment->amount) }}
-                    <small>ریال</small>
-                </strong>
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+             CARD
+             ===================================================== --}}
+
+        <div class="customer-other-installment-success-card">
+
+            {{-- عنوان --}}
+
+            <div class="customer-other-installment-success-card-title">
+
+                <div class="customer-other-installment-success-card-title-icon">
+
+                    <i class="bi bi-receipt"></i>
+
+                </div>
+
+                <span>
+                اطلاعات پرداخت
+            </span>
 
             </div>
 
 
             {{-- اطلاعات --}}
-            <div class="customer-payment-info">
 
-                <div class="customer-payment-info-row">
-                    <span>شماره وام</span>
+            <div class="customer-other-installment-success-info-grid">
+
+                <div class="customer-other-installment-success-info-item">
+
+                <span>
+                    شماره وام
+                </span>
+
                     <strong dir="ltr">
                         {{ $payment->loan->full_loan_number }}
                     </strong>
+
                 </div>
 
-                <div class="customer-payment-info-row">
-                    <span>شماره قسط</span>
+
+                <div class="customer-other-installment-success-info-item">
+
+                <span>
+                    شماره قسط
+                </span>
+
                     <strong>
                         {{ $payment->installment->installment_number }}
                     </strong>
+
                 </div>
 
-                <div class="customer-payment-info-row">
-                    <span>تاریخ پرداخت</span>
+
+                <div class="customer-other-installment-success-info-item">
+
+                <span>
+                    نام صاحب وام
+                </span>
+
                     <strong>
-                        {{ $payment->paid_at_jalali }}
+                        {{ $payment->loan->customer->full_name }}
                     </strong>
+
                 </div>
 
-                <div class="customer-payment-info-row">
-                    <span>کد رهگیری</span>
+
+                <div class="customer-other-installment-success-info-item">
+
+                <span>
+                    کد رهگیری
+                </span>
+
                     <strong dir="ltr">
                         {{ $payment->tracking_code }}
                     </strong>
+
                 </div>
 
-                @if($payment->bank_reference_number)
 
-                    <div class="customer-payment-info-row">
+                <div class="customer-other-installment-success-info-item">
 
-                        <span>شماره مرجع بانک</span>
+                <span>
+                    تاریخ پرداخت
+                </span>
 
-                        <strong dir="ltr">
-                            {{ $payment->bank_reference_number }}
-                        </strong>
+                    <strong>
+                        {{ $payment->paid_at_jalali }}
+                    </strong>
 
-                    </div>
-
-                @endif
-
-            </div>
-
-
-            {{-- وضعیت --}}
-            <div class="customer-payment-success-status">
-
-                <i class="bi bi-shield-check"></i>
-
-                پرداخت شما با موفقیت ثبت شد.
+                </div>
 
             </div>
 
 
-            {{-- دکمه --}}
-            {{-- دکمه‌ها --}}
-            <div class="customer-payment-actions">
+            {{-- =================================================
+                 AMOUNT
+                 ================================================= --}}
+
+            <div class="customer-other-installment-success-amount">
+
+                <div class="customer-other-installment-success-amount-icon">
+
+                    <i class="bi bi-cash-coin"></i>
+
+                </div>
+
+                <div class="customer-other-installment-success-amount-content">
+
+                <span>
+                    مبلغ پرداخت
+                </span>
+
+                    <strong>
+                        {{ number_format($payment->amount) }}
+
+                        <small>
+                            ریال
+                        </small>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+                 SUCCESS NOTICE
+                 ================================================= --}}
+
+            <div class="customer-other-installment-success-notice">
+
+                <div class="customer-other-installment-success-notice-icon">
+
+                    <i class="bi bi-shield-check"></i>
+
+                </div>
+
+                <div class="customer-other-installment-success-notice-content">
+
+                    <strong>
+                        پرداخت با موفقیت ثبت شد
+                    </strong>
+
+                    <p>
+                        مبلغ قسط با موفقیت پرداخت و تراکنش در سامانه ثبت شد.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+                 ACTION BUTTONS
+                 ================================================= --}}
+
+            <div class="customer-other-installment-success-actions">
+
+                <a
+                    href="{{ route('payments.success', $payment) }}"
+                    class="customer-other-installment-success-print"
+                >
+
+                    <i class="bi bi-receipt"></i>
+
+                    <span>
+                    مشاهده و چاپ رسید
+                </span>
+
+                </a>
+
 
                 <a
                     href="{{ route('customer.installments.index') }}"
-                    class="customer-payment-back"
+                    class="customer-other-installment-success-back"
                 >
+
                     <i class="bi bi-arrow-right"></i>
+
+                    <span>
                     بازگشت به اقساط
+                </span>
+
                 </a>
+
 
                 <a
                     href="{{ route('customer.dashboard') }}"
-                    class="customer-payment-home"
+                    class="customer-other-installment-success-home"
                 >
+
                     <i class="bi bi-house"></i>
+
+                    <span>
                     بازگشت به خانه
+                </span>
+
                 </a>
 
             </div>

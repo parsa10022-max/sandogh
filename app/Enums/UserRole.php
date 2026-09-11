@@ -18,10 +18,10 @@ enum UserRole: string
     {
         return match ($this) {
             self::ADMIN        => 'مدیر سیستم',
-            self::CEO          => 'مدیرعامل',
+            self::CEO         => 'مدیرعامل',
             self::BOARD_MEMBER => 'عضو هیئت مدیره',
-            self::OPERATOR     => 'اپراتور',
-            self::CUSTOMER => 'عضو صندوق',
+            self::OPERATOR    => 'اپراتور',
+            self::CUSTOMER    => 'عضو صندوق',
         };
     }
 }

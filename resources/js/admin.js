@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (window.innerWidth <= 991) {
 
-            document.body.classList.toggle('admin-sidebar-open');
+            document.body.classList.toggle('reports-sidebar-open');
 
         } else {
 
-            document.body.classList.toggle('admin-sidebar-collapsed');
+            document.body.classList.toggle('reports-sidebar-collapsed');
 
         }
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         overlay.addEventListener('click', () => {
 
-            document.body.classList.remove('admin-sidebar-open');
+            document.body.classList.remove('reports-sidebar-open');
 
         });
 
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (event.key === 'Escape') {
 
-            document.body.classList.remove('admin-sidebar-open');
+            document.body.classList.remove('reports-sidebar-open');
 
         }
 
@@ -70,13 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
     |--------------------------------------------------------------------------
     */
 
-    sidebar.querySelectorAll('.admin-sidebar-link').forEach((link) => {
+    sidebar.querySelectorAll('.reports-sidebar-link').forEach((link) => {
 
         link.addEventListener('click', () => {
 
             if (window.innerWidth <= 991) {
 
-                document.body.classList.remove('admin-sidebar-open');
+                document.body.classList.remove('reports-sidebar-open');
 
             }
 
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (window.innerWidth > 991) {
 
-            document.body.classList.remove('admin-sidebar-open');
+            document.body.classList.remove('reports-sidebar-open');
 
         }
 

@@ -149,7 +149,7 @@
                                     </span>
 
                                     <span class="savings-withdrawal-amount-unit">
-                                        تومان
+                                        ریال
                                     </span>
 
                                 </td>

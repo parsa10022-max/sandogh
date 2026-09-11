@@ -1,7 +1,7 @@
 /* =========================================================
-OTHER INSTALLMENT - SUCCESS
-Purple + Blue / White
-========================================================= */
+   OTHER INSTALLMENT - SUCCESS
+   Purple + Blue / White
+   ========================================================= */
 
 .customer-other-installment-success {
     width: 100%;
@@ -10,25 +10,20 @@ Purple + Blue / White
 }
 
 /* =========================================================
-HEADER
-========================================================= */
+   HEADER
+   ========================================================= */
 
 .customer-other-installment-success-header {
     display: flex;
     align-items: center;
     gap: 12px;
-
-
     margin-bottom: 14px;
-
-
 }
 
 .customer-other-installment-success-header-icon {
     width: 46px;
     height: 46px;
     flex: 0 0 46px;
-
 
     display: flex;
     align-items: center;
@@ -40,8 +35,6 @@ HEADER
     color: #6f42c1;
 
     font-size: 22px;
-
-
 }
 
 .customer-other-installment-success-header-content {
@@ -51,34 +44,27 @@ HEADER
 .customer-other-installment-success-header-content h2 {
     margin: 0 0 3px;
 
-
     color: #343a40;
 
     font-size: 1rem;
     font-weight: 850;
-
-
 }
 
 .customer-other-installment-success-header-content p {
     margin: 0;
 
-
     color: #6c757d;
 
     font-size: 0.75rem;
     line-height: 1.7;
-
-
 }
 
 /* =========================================================
-CARD
-========================================================= */
+   CARD
+   ========================================================= */
 
 .customer-other-installment-success-card {
     padding: 17px;
-
 
     background: #fff;
 
@@ -86,19 +72,16 @@ CARD
     border-radius: 18px;
 
     box-shadow: 0 5px 18px rgba(48, 43, 99, 0.06);
-
-
 }
 
 /* =========================================================
-CARD TITLE
-========================================================= */
+   CARD TITLE
+   ========================================================= */
 
 .customer-other-installment-success-card-title {
     display: flex;
     align-items: center;
     gap: 9px;
-
 
     margin-bottom: 13px;
 
@@ -106,14 +89,11 @@ CARD TITLE
 
     font-size: 0.86rem;
     font-weight: 800;
-
-
 }
 
 .customer-other-installment-success-card-title-icon {
     width: 32px;
     height: 32px;
-
 
     display: flex;
     align-items: center;
@@ -125,28 +105,22 @@ CARD TITLE
     color: #0d6efd;
 
     font-size: 15px;
-
-
 }
 
 /* =========================================================
-INFO GRID
-========================================================= */
+   INFO GRID
+   ========================================================= */
 
 .customer-other-installment-success-info-grid {
     display: grid;
 
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 8px;
-
-
 }
 
 .customer-other-installment-success-info-item {
     min-width: 0;
-
 
     padding: 10px 11px;
 
@@ -154,26 +128,20 @@ INFO GRID
     border-radius: 12px;
 
     background: #fafbfe;
-
-
 }
 
 .customer-other-installment-success-info-item span {
     display: block;
-
 
     margin-bottom: 3px;
 
     color: #8a8f98;
 
     font-size: 0.68rem;
-
-
 }
 
 .customer-other-installment-success-info-item strong {
     display: block;
-
 
     overflow: hidden;
 
@@ -184,19 +152,16 @@ INFO GRID
 
     white-space: nowrap;
     text-overflow: ellipsis;
-
-
 }
 
 /* =========================================================
-AMOUNT
-========================================================= */
+   AMOUNT
+   ========================================================= */
 
 .customer-other-installment-success-amount {
     display: flex;
     align-items: center;
     gap: 11px;
-
 
     margin-top: 10px;
     padding: 12px;
@@ -209,15 +174,12 @@ AMOUNT
         rgba(111, 66, 193, 0.055),
         rgba(13, 110, 253, 0.045)
     );
-
-
 }
 
 .customer-other-installment-success-amount-icon {
     width: 40px;
     height: 40px;
     flex: 0 0 40px;
-
 
     display: flex;
     align-items: center;
@@ -229,8 +191,6 @@ AMOUNT
     color: #6f42c1;
 
     font-size: 18px;
-
-
 }
 
 .customer-other-installment-success-amount-content {
@@ -240,49 +200,39 @@ AMOUNT
 .customer-other-installment-success-amount-content span {
     display: block;
 
-
     margin-bottom: 2px;
 
     color: #6c757d;
 
     font-size: 0.68rem;
-
-
 }
 
 .customer-other-installment-success-amount-content strong {
     display: block;
 
-
     color: #5b36a3;
 
     font-size: 1.05rem;
     font-weight: 900;
-
-
 }
 
 .customer-other-installment-success-amount-content small {
     margin-right: 3px;
 
-
     color: #6c757d;
 
     font-size: 0.68rem;
     font-weight: 600;
-
-
 }
 
 /* =========================================================
-SUCCESS NOTICE
-========================================================= */
+   SUCCESS NOTICE
+   ========================================================= */
 
 .customer-other-installment-success-notice {
     display: flex;
     align-items: flex-start;
     gap: 9px;
-
 
     margin-top: 10px;
     padding: 10px 11px;
@@ -291,19 +241,14 @@ SUCCESS NOTICE
     border-radius: 12px;
 
     background: rgba(13, 110, 253, 0.045);
-
-
 }
 
 .customer-other-installment-success-notice-icon {
     flex: 0 0 auto;
 
-
     color: #0d6efd;
 
     font-size: 17px;
-
-
 }
 
 .customer-other-installment-success-notice-content {
@@ -313,46 +258,72 @@ SUCCESS NOTICE
 .customer-other-installment-success-notice-content strong {
     display: block;
 
-
     margin-bottom: 2px;
 
     color: #343a40;
 
     font-size: 0.75rem;
     font-weight: 800;
-
-
 }
 
 .customer-other-installment-success-notice-content p {
     margin: 0;
 
-
     color: #6c757d;
 
     font-size: 0.69rem;
     line-height: 1.7;
-
-
 }
 
 /* =========================================================
-BACK BUTTON
-========================================================= */
+   ACTION BUTTONS
+   ========================================================= */
 
-.customer-other-installment-success-button {
+.customer-other-installment-success-actions {
     width: 100%;
 
-
     display: flex;
+    align-items: stretch;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.customer-other-installment-success-actions a {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 42px;
+
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
 
-    margin-top: 11px;
-    padding: 11px 12px;
+    gap: 6px;
 
-    border: 0;
-    border-radius: 13px;
+    padding: 9px 8px;
+
+    border-radius: 11px;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+    text-decoration: none;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+/* =========================================================
+   RECEIPT / PRINT
+   ========================================================= */
+
+.customer-other-installment-success-print {
+    color: #fff !important;
 
     background: linear-gradient(
         135deg,
@@ -360,89 +331,74 @@ BACK BUTTON
         #0d6efd
     );
 
-    color: #fff;
+    border: 1px solid transparent;
 
-    text-decoration: none;
-
-    transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease;
-
-
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.10);
 }
 
-.customer-other-installment-success-button:hover {
-    color: #fff;
-
+.customer-other-installment-success-print:hover {
+    color: #fff !important;
 
     transform: translateY(-1px);
 
     box-shadow: 0 7px 18px rgba(111, 66, 193, 0.18);
-
-
-}
-
-.customer-other-installment-success-button:active {
-    transform: translateY(0);
-}
-
-.customer-other-installment-success-button-icon {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
-
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 10px;
-
-    background: rgba(255, 255, 255, 0.14);
-
-    font-size: 16px;
-
-
-}
-
-.customer-other-installment-success-button-content {
-    min-width: 0;
-    flex: 1;
-}
-
-.customer-other-installment-success-button-content strong {
-    display: block;
-
-
-    margin-bottom: 1px;
-
-    font-size: 0.78rem;
-    font-weight: 800;
-
-
-}
-
-.customer-other-installment-success-button-content small {
-    display: block;
-
-
-    color: rgba(255, 255, 255, 0.72);
-
-    font-size: 0.64rem;
-
-
-}
-
-.customer-other-installment-success-button-arrow {
-    font-size: 15px;
 }
 
 /* =========================================================
-MOBILE
-========================================================= */
+   BACK
+   ========================================================= */
+
+.customer-other-installment-success-back {
+    color: #495057 !important;
+
+    background: #f8f9fa;
+
+    border: 1px solid #e1e5ea;
+}
+
+.customer-other-installment-success-back:hover {
+    color: #343a40 !important;
+
+    background: #eef0f3;
+
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+.customer-other-installment-success-home {
+    color: #0d6efd !important;
+
+    background: rgba(13, 110, 253, 0.07);
+
+    border: 1px solid rgba(13, 110, 253, 0.12);
+}
+
+.customer-other-installment-success-home:hover {
+    color: #0b5ed7 !important;
+
+    background: rgba(13, 110, 253, 0.12);
+
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   BUTTON ICON
+   ========================================================= */
+
+.customer-other-installment-success-actions i {
+    flex: 0 0 auto;
+
+    font-size: 14px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 575.98px) {
-
 
     .customer-other-installment-success {
         max-width: 100%;
@@ -461,5 +417,42 @@ MOBILE
         padding: 9px;
     }
 
+    .customer-other-installment-success-actions {
+        gap: 6px;
+    }
 
+    .customer-other-installment-success-actions a {
+        min-height: 39px;
+
+        padding: 7px 5px;
+
+        font-size: 0.64rem;
+    }
+
+    .customer-other-installment-success-actions i {
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .customer-other-installment-success-actions {
+        gap: 4px;
+    }
+
+    .customer-other-installment-success-actions a {
+        min-height: 37px;
+
+        padding: 6px 3px;
+
+        font-size: 0.58rem;
+    }
+
+    .customer-other-installment-success-actions i {
+        font-size: 12px;
+    }
 }

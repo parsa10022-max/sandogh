@@ -11,14 +11,12 @@ use App\Enums\PaymentMethod;
 use App\Enums\WithdrawalStatus;
 use Illuminate\Http\Request;
 
-
 class WithdrawalController extends Controller
 {
     public function __construct(
         private AccountService $accountService
     ) {
     }
-
 
     public function index()
     {
@@ -29,18 +27,15 @@ class WithdrawalController extends Controller
             ->latest()
             ->paginate(20);
 
-
         return view(
             'withdrawals.index',
             compact('withdrawals')
         );
     }
 
-
     public function create(Account $account)
     {
         $account->load('customer');
-
 
         return view(
             'accounts.withdrawal.create',
@@ -48,29 +43,18 @@ class WithdrawalController extends Controller
         );
     }
 
-
     public function store(
         WithdrawalRequest $request,
         Account $account
     ) {
-
-
         $this->accountService->withdraw(
-
             account: $account,
-
             amount: $request->amount,
-
             paymentMethod: PaymentMethod::BANK_TRANSFER,
-
             iban: \App\Support\Iban::normalize($request->iban),
-
             description: $request->description,
-
             createdBy: auth()->id(),
-
         );
-
 
         return redirect()
             ->route('accounts.show', $account)
@@ -93,66 +77,79 @@ class WithdrawalController extends Controller
         );
     }
 
+    public function approve(
+        Request $request,
+        Withdrawal $withdrawal
+    ) {
+        $request->validate([
+            'payment_bank' => [
+                'required',
+                'integer',
+            ],
 
+            'payment_tracking_code' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+        ]);
 
+        if ($withdrawal->status !== WithdrawalStatus::PENDING) {
+            return back()->with(
+                'error',
+                'این درخواست دیگر در وضعیت قابل پرداخت نیست.'
+            );
+        }
 
-public function approve(
-    Request $request,
-    Withdrawal $withdrawal
-) {
-    $request->validate([
-        'payment_bank' => [
-            'required',
-            'integer',
-        ],
+        $withdrawal->update([
+            'status' => WithdrawalStatus::PAID,
+            'payment_bank' => $request->payment_bank,
+            'payment_tracking_code' => $request->payment_tracking_code,
+            'paid_by' => auth()->id(),
+            'paid_at' => now(),
+        ]);
 
-        'payment_tracking_code' => [
-            'required',
-            'string',
-            'max:100',
-        ],
-    ]);
-
-    if ($withdrawal->status !== WithdrawalStatus::PENDING) {
-        return back()->with(
-            'error',
-            'این درخواست دیگر در وضعیت قابل پرداخت نیست.'
-        );
+        return redirect()
+            ->route('withdrawals.show', $withdrawal)
+            ->with(
+                'success',
+                'برداشت با موفقیت پرداخت شد.'
+            );
     }
 
-    $withdrawal->update([
-        'status' => WithdrawalStatus::PAID,
+    public function receipt(Withdrawal $withdrawal)
+    {
+        $withdrawal->load([
+            'account.customer',
+            'paidBy',
+        ]);
 
-        'payment_bank' => $request->payment_bank,
-
-        'payment_tracking_code' => $request->payment_tracking_code,
-
-        'paid_by' => auth()->id(),
-
-        'paid_at' => now(),
-    ]);
-
-    return redirect()
-        ->route('withdrawals.show', $withdrawal)
-        ->with(
-            'success',
-            'برداشت با موفقیت پرداخت شد.'
+        abort_if(
+            $withdrawal->status !== WithdrawalStatus::PAID,
+            404
         );
-}
 
-
-
+        return view(
+            'receipts.saving-withdraw',
+            [
+                'withdrawal' => $withdrawal,
+                'title' => 'رسید برداشت از حساب پس‌انداز',
+                'receipt_number' => $withdrawal->payment_tracking_code,
+                'receipt_date' => $withdrawal->paid_at
+                    ? \Morilog\Jalali\Jalalian::fromDateTime(
+                        $withdrawal->paid_at
+                    )->format('Y/m/d H:i')
+                    : '-',
+            ]
+        );
+    }
 
     public function cancel(Withdrawal $withdrawal)
     {
         $this->accountService->cancel(
-
             withdrawal: $withdrawal,
-
             customerId: auth()->user()->customer->id,
-
         );
-
 
         return back()->with(
             'success',
@@ -160,24 +157,19 @@ public function approve(
         );
     }
 
-
-
     public function myWithdrawals()
     {
         $withdrawals = Withdrawal::whereHas(
             'account',
             function ($query) {
-
                 $query->where(
                     'customer_id',
                     auth()->user()->customer->id
                 );
-
             }
         )
             ->latest()
             ->paginate(15);
-
 
         return view(
             'accounts.withdrawal.index',

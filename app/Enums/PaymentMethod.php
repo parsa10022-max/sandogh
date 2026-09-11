@@ -9,6 +9,7 @@ enum PaymentMethod: int
     case GATEWAY = 3;             // درگاه آنلاین
     case LOAN_DISBURSEMENT = 4;   // واریز مبلغ وام
     case BANK_TRANSFER = 5;       // انتقال بانکی
+    case ACCOUNT_BALANCE = 6; // پرداخت از موجودی حساب
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum PaymentMethod: int
             self::GATEWAY           => 'درگاه آنلاین',
             self::LOAN_DISBURSEMENT => 'واریز مبلغ وام',
             self::BANK_TRANSFER     => 'انتقال بانکی',
+            self::ACCOUNT_BALANCE => 'موجودی حساب',
         };
     }
 }

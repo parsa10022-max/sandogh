@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'تأیید شماره موبایل')
+@section('title', 'تأیید کد بازیابی رمز')
 
 @section('content')
 
@@ -21,44 +21,35 @@
                             </div>
 
                             <h5 class="fw-bold mb-2">
-                                تأیید شماره موبایل
+                                تأیید کد بازیابی
                             </h5>
 
                             <p class="text-muted small mb-0">
-                                کد تأیید ارسال‌شده به شماره موبایل خود را وارد کنید.
+                                کد ۶ رقمی ارسال‌شده را وارد کنید.
                             </p>
 
                         </div>
 
-                        @if ($errors->any())
+                        @if(session('success'))
+
+                            <div class="alert alert-success small">
+                                {{ session('success') }}
+                            </div>
+
+                        @endif
+
+                        @if($errors->any())
 
                             <div class="alert alert-danger small">
-
                                 {{ $errors->first() }}
-
                             </div>
 
                         @endif
 
-
-                        @if(config('app.debug') && isset($otp) && $otp)
-
-                            <div class="alert alert-warning small">
-
-                                <strong>
-                                    کد تست OTP:
-                                </strong>
-
-                                <span class="fs-5 fw-bold">
-                                {{ $otp->code }}
-                            </span>
-
-                            </div>
-
-                        @endif
-
-
-                        <form method="POST" action="{{ route('otp.verify') }}">
+                        <form
+                            method="POST"
+                            action="{{ route('password.otp.verify') }}"
+                        >
 
                             @csrf
 
@@ -75,44 +66,44 @@
                                     type="text"
                                     id="code"
                                     name="code"
-                                    value="{{ old('code') }}"
                                     class="form-control text-center"
                                     maxlength="6"
                                     inputmode="numeric"
                                     autocomplete="one-time-code"
-                                    placeholder="کد ۶ رقمی"
                                     required
                                     autofocus
                                 >
 
                             </div>
 
-
                             <button
                                 type="submit"
                                 class="btn btn-primary w-100"
                             >
-
                                 <i class="bi bi-check-circle me-1"></i>
-
                                 تأیید کد
-
                             </button>
 
                         </form>
 
+                        @if(config('app.debug') && $otp)
+
+                            <div class="alert alert-warning mt-3 mb-0 small text-center">
+
+                                کد تست:
+                                <strong>{{ $otp->code }}</strong>
+
+                            </div>
+
+                        @endif
 
                         <div class="text-center mt-3">
 
                             <a
-                                href="{{ url('/forgot-password') }}"
+                                href="{{ route('password.request') }}"
                                 class="text-decoration-none small"
                             >
-
-                                <i class="bi bi-arrow-right me-1"></i>
-
                                 تغییر شماره موبایل
-
                             </a>
 
                         </div>
@@ -128,4 +119,3 @@
     </div>
 
 @endsection
-

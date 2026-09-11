@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'تأیید شماره موبایل')
+@section('title', 'فراموشی رمز عبور')
 
 @section('content')
 
@@ -17,102 +17,75 @@
                         <div class="text-center mb-4">
 
                             <div class="mb-3">
-                                <i class="bi bi-shield-check fs-1 text-primary"></i>
+                                <i class="bi bi-key-fill fs-1 text-primary"></i>
                             </div>
 
                             <h5 class="fw-bold mb-2">
-                                تأیید شماره موبایل
+                                فراموشی رمز عبور
                             </h5>
 
                             <p class="text-muted small mb-0">
-                                کد تأیید ارسال‌شده به شماره موبایل خود را وارد کنید.
+                                شماره موبایل خود را وارد کنید تا کد تأیید برای شما ارسال شود.
                             </p>
 
                         </div>
 
-                        @if ($errors->any())
+                        @if($errors->any())
 
                             <div class="alert alert-danger small">
-
                                 {{ $errors->first() }}
-
                             </div>
 
                         @endif
 
-
-                        @if(config('app.debug') && isset($otp) && $otp)
-
-                            <div class="alert alert-warning small">
-
-                                <strong>
-                                    کد تست OTP:
-                                </strong>
-
-                                <span class="fs-5 fw-bold">
-                                {{ $otp->code }}
-                            </span>
-
-                            </div>
-
-                        @endif
-
-
-                        <form method="POST" action="{{ route('otp.verify') }}">
+                        <form
+                            method="POST"
+                            action="{{ route('password.otp.send') }}"
+                        >
 
                             @csrf
 
                             <div class="mb-3">
 
                                 <label
-                                    for="code"
+                                    for="mobile"
                                     class="form-label"
                                 >
-                                    کد تأیید
+                                    شماره موبایل
                                 </label>
 
                                 <input
                                     type="text"
-                                    id="code"
-                                    name="code"
-                                    value="{{ old('code') }}"
-                                    class="form-control text-center"
-                                    maxlength="6"
+                                    id="mobile"
+                                    name="mobile"
+                                    value="{{ old('mobile') }}"
+                                    class="form-control"
+                                    placeholder="مثلاً 09123456789"
+                                    maxlength="20"
                                     inputmode="numeric"
-                                    autocomplete="one-time-code"
-                                    placeholder="کد ۶ رقمی"
                                     required
                                     autofocus
                                 >
 
                             </div>
 
-
                             <button
                                 type="submit"
                                 class="btn btn-primary w-100"
                             >
-
-                                <i class="bi bi-check-circle me-1"></i>
-
-                                تأیید کد
-
+                                <i class="bi bi-send me-1"></i>
+                                ارسال کد تأیید
                             </button>
 
                         </form>
 
-
                         <div class="text-center mt-3">
 
                             <a
-                                href="{{ url('/forgot-password') }}"
+                                href="{{ route('login') }}"
                                 class="text-decoration-none small"
                             >
-
-                                <i class="bi bi-arrow-right me-1"></i>
-
-                                تغییر شماره موبایل
-
+                                بازگشت به صفحه ورود
                             </a>
 
                         </div>
@@ -128,4 +101,3 @@
     </div>
 
 @endsection
-

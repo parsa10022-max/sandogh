@@ -29,11 +29,9 @@ use App\Http\Controllers\Customer\ServicesController;
 use App\Http\Controllers\Customer\SettingsController;
 use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Admin\AccountingController;
-
-
-
-
-
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Admin\DailyOperationsReportController;
 
 
 /*
@@ -60,41 +58,62 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-
 Route::get(
     '/login',
     [LoginController::class, 'showLoginForm']
-)
-    ->name('login');
-
+)->name('login');
 
 Route::post(
     '/login',
     [LoginController::class, 'login']
-)
-    ->name('login.store');
-
+)->name('login.store');
 
 Route::get(
     '/otp',
     [OtpController::class, 'showVerifyForm']
-)
-    ->name('otp.form');
-
+)->name('otp.form');
 
 Route::post(
     '/otp',
     [OtpController::class, 'verify']
-)
-    ->name('otp.verify');
+)->name('otp.verify');
 
 
 /*
 |--------------------------------------------------------------------------
-| Public Loan Information
+| Forgot Password
 |--------------------------------------------------------------------------
 */
 
+Route::get(
+    '/forgot-password',
+    [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'create']
+)->name('password.request');
+
+Route::post(
+    '/forgot-password',
+    [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendOtp']
+)->name('password.otp.send');
+
+Route::get(
+    '/forgot-password/otp',
+    [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showOtpForm']
+)->name('password.otp.form');
+
+Route::post(
+    '/forgot-password/otp',
+    [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'verifyOtp']
+)->name('password.otp.verify');
+
+Route::get(
+    '/reset-password',
+    [\App\Http\Controllers\Auth\ResetPasswordController::class, 'create']
+)->name('password.reset');
+
+Route::put(
+    '/reset-password',
+    [\App\Http\Controllers\Auth\ResetPasswordController::class, 'update']
+)->name('password.reset.update');
 
 
 /*
@@ -103,20 +122,15 @@ Route::post(
 |--------------------------------------------------------------------------
 */
 
-
 Route::get(
     '/donation',
     [PublicDonationController::class, 'create']
-)
-    ->name('donation.create');
-
+)->name('donation.create');
 
 Route::post(
     '/donation',
     [PublicDonationController::class, 'store']
-)
-    ->name('donation.store');
-
+)->name('donation.store');
 
 Route::get(
     '/donation/success/{donationPayment}',
@@ -124,13 +138,7 @@ Route::get(
         \App\Http\Controllers\DonationController::class,
         'success'
     ]
-)
-    ->name('donation.success');
-
-
-
-
-
+)->name('donation.success');
 
 
 /*
@@ -139,7 +147,7 @@ Route::get(
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'admin.access'])->group(function () {
+Route::middleware(['auth', 'reports.access'])->group(function () {
 
 
     /*
@@ -149,21 +157,35 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     */
 
     Route::get(
+        'admin/password',
+        [PasswordController::class, 'edit']
+    )->name('admin.password.edit');
+
+    Route::put(
+        'admin/password',
+        [PasswordController::class, 'update']
+    )->name('admin.password.update');
+
+    Route::get(
+        'admin/profile',
+        [ProfileController::class, 'index']
+    )->name('admin.profile.index');
+
+    Route::put(
+        'admin/profile',
+        [ProfileController::class, 'update']
+    )->name('admin.profile.update');
+
+    Route::get(
         '/dashboard',
         [DashboardController::class, 'index']
-    )
-        ->middleware('admin.access')
-        ->name('dashboard');
-
-
-
-
+    )->name('dashboard');
 
     Route::get(
         'loans/overdue',
         [LoanController::class, 'overdue']
-    )
-        ->name('loans.overdue');
+    )->name('loans.overdue');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -171,53 +193,40 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::get(
         '/accounts/{account}/adjustment',
         [BalanceAdjustmentController::class, 'create']
-    )
-        ->name('accounts.adjustment.create');
+    )->name('accounts.adjustment.create');
 
     Route::post(
         '/accounts/{account}/adjustment',
         [BalanceAdjustmentController::class, 'store']
-    )
-        ->name('accounts.adjustment.store');
+    )->name('accounts.adjustment.store');
 
     Route::get(
         '/accounts',
         [AccountController::class, 'index']
-    )
-        ->name('accounts.index');
-
+    )->name('accounts.index');
 
     Route::get(
         '/accounts/{account}',
         [AccountController::class, 'show']
-    )
-        ->name('accounts.show');
-
+    )->name('accounts.show');
 
     Route::get(
         '/accounts/{account}/deposit',
         [DepositController::class, 'create']
-    )
-        ->name('accounts.deposit.create');
-
+    )->name('accounts.deposit.create');
 
     Route::post(
         '/accounts/deposit',
         [DepositController::class, 'store']
-    )
-        ->name('accounts.deposit');
-
+    )->name('accounts.deposit');
 
     Route::get(
         '/accounts/{account}/transactions',
         [AccountController::class, 'transactions']
-    )
-        ->name('accounts.transactions');
-
+    )->name('accounts.transactions');
 
 
     /*
@@ -226,20 +235,15 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::get(
         '/accounts/{account}/withdrawal',
         [WithdrawalController::class, 'create']
-    )
-        ->name('accounts.withdrawal.create');
-
+    )->name('accounts.withdrawal.create');
 
     Route::post(
         '/accounts/{account}/withdrawal',
         [WithdrawalController::class, 'store']
-    )
-        ->name('accounts.withdrawal.store');
-
+    )->name('accounts.withdrawal.store');
 
     Route::resource('withdrawals', WithdrawalController::class)
         ->only([
@@ -248,34 +252,30 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
             'update',
         ]);
 
-
     Route::post(
         '/withdrawals/{withdrawal}/approve',
         [WithdrawalController::class, 'approve']
-    )
-        ->name('withdrawals.approve');
-
+    )->name('withdrawals.approve');
 
     Route::patch(
         '/withdrawals/{withdrawal}/cancel',
         [WithdrawalController::class, 'cancel']
-    )
-        ->name('withdrawals.cancel');
-
+    )->name('withdrawals.cancel');
 
     Route::post(
         '/withdrawals/{withdrawal}/reject',
         [WithdrawalController::class, 'reject']
-    )
-        ->name('withdrawals.reject');
-
+    )->name('withdrawals.reject');
 
     Route::get(
         '/my-withdrawals',
         [WithdrawalController::class, 'myWithdrawals']
-    )
-        ->name('withdrawals.mine');
+    )->name('withdrawals.mine');
 
+    Route::get(
+        '/withdrawals/{withdrawal}/receipt',
+        [\App\Http\Controllers\Account\WithdrawalController::class, 'receipt']
+    )->name('withdrawals.receipt');
 
 
     /*
@@ -283,7 +283,6 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     | Customers
     |--------------------------------------------------------------------------
     */
-
 
     Route::get(
         'customers/{customer}/accounts/create',
@@ -308,29 +307,22 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     Route::get(
         'customers/archive',
         [CustomerController::class, 'archive']
-    )
-        ->name('customers.archive');
-
+    )->name('customers.archive');
 
     Route::patch(
         'customers/{id}/restore',
         [CustomerController::class, 'restore']
-    )
-        ->name('customers.restore');
-
+    )->name('customers.restore');
 
     Route::get(
         'customers/search-code',
         [CustomerController::class, 'searchByCode']
-    )
-        ->name('customers.search.code');
-
+    )->name('customers.search.code');
 
     Route::resource(
         'customers',
         CustomerController::class
     );
-
 
 
     /*
@@ -339,19 +331,16 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::resource(
         'system-accounts',
         SystemAccountController::class
-    )
-        ->only([
-            'index',
-            'create',
-            'store',
-            'edit',
-            'update',
-        ]);
-
+    )->only([
+        'index',
+        'create',
+        'store',
+        'edit',
+        'update',
+    ]);
 
     Route::patch(
         'system-accounts/{systemAccount}/change-status',
@@ -359,9 +348,7 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
             SystemAccountController::class,
             'changeStatus'
         ]
-    )
-        ->name('system-accounts.change-status');
-
+    )->name('system-accounts.change-status');
 
 
     /*
@@ -369,7 +356,6 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     | Loan Types
     |--------------------------------------------------------------------------
     */
-
 
     Route::resource('loan-types', LoanTypeController::class)
         ->parameters([
@@ -383,13 +369,10 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
             'update',
         ]);
 
-
     Route::patch(
         'loan-types/{loanType}/change-status',
         [LoanTypeController::class, 'changeStatus']
-    )
-        ->name('loan-types.change-status');
-
+    )->name('loan-types.change-status');
 
 
     /*
@@ -398,42 +381,32 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::resource(
         'loan-requests',
         LoanRequestController::class
-    )
-        ->only([
-            'index',
-            'create',
-            'store',
-            'edit',
-            'update',
-            'show',
-
-        ]);
-
+    )->only([
+        'index',
+        'create',
+        'store',
+        'edit',
+        'update',
+        'show',
+    ]);
 
     Route::post(
         'loan-requests/{loanRequest}/approve',
         [LoanRequestController::class, 'approve']
-    )
-        ->name('loan-requests.approve');
-
+    )->name('loan-requests.approve');
 
     Route::post(
         'loan-requests/{loanRequest}/reject',
         [LoanRequestController::class, 'reject']
-    )
-        ->name('loan-requests.reject');
-
+    )->name('loan-requests.reject');
 
     Route::put(
         'loan-requests/{loanRequest}/update-review-date',
         [LoanRequestController::class, 'updateReviewDate']
-    )
-        ->name('loan-requests.update-review-date');
-
+    )->name('loan-requests.update-review-date');
 
 
     /*
@@ -442,19 +415,15 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::post(
         'loans/calculate',
         [LoanController::class, 'calculate']
-    )
-        ->name('loans.calculate');
+    )->name('loans.calculate');
 
     Route::get(
         'loans/previous-guarantors/{customer}',
         [LoanController::class, 'previousGuarantors']
-    )
-        ->name('loans.previous-guarantors');
-
+    )->name('loans.previous-guarantors');
 
     Route::resource('loans', LoanController::class)
         ->only([
@@ -468,40 +437,34 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
         ]);
 
 
-
-
-
     /*
     |--------------------------------------------------------------------------
     | Manual Donations
     |--------------------------------------------------------------------------
     */
 
-
     Route::get(
         'donations/manual/create',
         [DonationController::class, 'manualCreate']
-    )
-        ->name('donations.manual.create');
-
+    )->name('donations.manual.create');
 
     Route::post(
         'donations/manual',
         [DonationController::class, 'manualStore']
-    )
-        ->name('donations.manual.store');
-
+    )->name('donations.manual.store');
 
     Route::get(
         'donations',
         [DonationController::class, 'index']
-    )
-        ->name('donations.index');
+    )->name('donations.index');
+
+
     /*
     |--------------------------------------------------------------------------
     | Admin Accounting
     |--------------------------------------------------------------------------
     */
+
     Route::prefix('admin/accounting')
         ->name('admin.accounting.')
         ->group(function () {
@@ -532,9 +495,28 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
             )->name('confirm');
         });
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Daily Operations Report
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('admin/reports')
+        ->name('admin.reports.')
+        ->group(function () {
+
+            Route::get(
+                '/daily-operations',
+                [
+                    DailyOperationsReportController::class,
+                    'index'
+                ]
+            )->name('daily-operations');
+
+        });
+
 });
-
-
 
 
 /*
@@ -577,33 +559,22 @@ Route::middleware('auth')
     });
 
 
-
 /*
 |--------------------------------------------------------------------------
 | Customer Panel Routes
 |--------------------------------------------------------------------------
 */
-// خروج مشترک
+
 Route::post(
     '/logout',
     LogoutController::class
-)
-    ->middleware('auth')
-    ->name('logout');
-
-
-
-
+)->middleware('auth')->name('logout');
 
 
 Route::middleware(['auth', 'customer.access'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {
-
-
-
-
 
         Route::put(
             'settings/password',
@@ -636,11 +607,15 @@ Route::middleware(['auth', 'customer.access'])
         )->name('settings.password.verify.submit');
 
 
-        Route::get('/loans', [CustomerLoanController::class, 'index'])
-            ->name('loans.index');
+        Route::get(
+            '/loans',
+            [CustomerLoanController::class, 'index']
+        )->name('loans.index');
 
-        Route::get('/loans/{loan}', [CustomerLoanController::class, 'show'])
-            ->name('loans.show');
+        Route::get(
+            '/loans/{loan}',
+            [CustomerLoanController::class, 'show']
+        )->name('loans.show');
 
 
         Route::get(
@@ -663,14 +638,21 @@ Route::middleware(['auth', 'customer.access'])
         | Customer Loan Requests
         |--------------------------------------------------------------------------
         */
-        Route::get('/services', [ServicesController::class, 'index'])
-            ->name('services');
 
-        Route::get('settings', [SettingsController::class, 'index'])
-            ->name('settings.index');
+        Route::get(
+            '/services',
+            [ServicesController::class, 'index']
+        )->name('services');
 
-        Route::get('profile', [ProfileController::class, 'index'])
-            ->name('profile.index');
+        Route::get(
+            'settings',
+            [SettingsController::class, 'index']
+        )->name('settings.index');
+
+        Route::get(
+            'profile',
+            [ProfileController::class, 'index']
+        )->name('profile.index');
 
         Route::get(
             'loan-request/create',
@@ -687,12 +669,12 @@ Route::middleware(['auth', 'customer.access'])
             [\App\Http\Controllers\Customer\LoanRequestController::class, 'index']
         )->name('loan-requests.index');
 
-
-
         Route::get(
             'loan-request/{loanRequest}',
             [\App\Http\Controllers\Customer\LoanRequestController::class, 'show']
         )->name('loan-request.show');
+
+
         /*
         |--------------------------------------------------------------------------
         | Customer Dashboard
@@ -705,9 +687,7 @@ Route::middleware(['auth', 'customer.access'])
                 CustomerDashboardController::class,
                 'index'
             ]
-        )
-            ->name('dashboard');
-
+        )->name('dashboard');
 
 
         Route::get(
@@ -718,31 +698,23 @@ Route::middleware(['auth', 'customer.access'])
             ]
         )->name('installments.index');
 
+
         /*
         |--------------------------------------------------------------------------
         | Savings Account
         |--------------------------------------------------------------------------
         */
 
-
-        // واریز به حساب پس‌انداز خود
-
         Route::get(
             'savings/deposit',
             [SavingsTransferController::class, 'ownDepositCreate']
-        )
-            ->name('savings.deposit.create');
-
+        )->name('savings.deposit.create');
 
         Route::post(
             'savings/deposit',
             [SavingsTransferController::class, 'ownDepositStore']
-        )
-            ->name('savings.deposit.store');
+        )->name('savings.deposit.store');
 
-
-
-        // برداشت از حساب پس‌انداز
 
         Route::get(
             'savings/withdrawal',
@@ -752,7 +724,6 @@ Route::middleware(['auth', 'customer.access'])
             ]
         )->name('savings.withdrawal.create');
 
-
         Route::post(
             'savings/withdrawal',
             [
@@ -760,7 +731,6 @@ Route::middleware(['auth', 'customer.access'])
                 'store'
             ]
         )->name('savings.withdrawal.store');
-
 
         Route::get(
             'savings/withdrawal/success/{withdrawal}',
@@ -771,8 +741,11 @@ Route::middleware(['auth', 'customer.access'])
         )->name('savings.withdrawal.success');
 
 
-
-        // گردش حساب
+        /*
+        |--------------------------------------------------------------------------
+        | Savings Transactions
+        |--------------------------------------------------------------------------
+        */
 
         Route::get(
             'savings/transactions',
@@ -780,9 +753,7 @@ Route::middleware(['auth', 'customer.access'])
                 SavingsTransferController::class,
                 'transactions'
             ]
-        )
-            ->name('savings.transactions');
-
+        )->name('savings.transactions');
 
 
         /*
@@ -791,58 +762,47 @@ Route::middleware(['auth', 'customer.access'])
         |--------------------------------------------------------------------------
         */
 
-
         Route::get(
             'savings-transfer',
             [SavingsTransferController::class, 'create']
-        )
-            ->name('savings-transfer.create');
-
+        )->name('savings-transfer.create');
 
         Route::post(
             'savings-transfer/search',
             [SavingsTransferController::class, 'search']
-        )
-            ->name('savings-transfer.search');
-
+        )->name('savings-transfer.search');
 
         Route::post(
             'savings-transfer',
             [SavingsTransferController::class, 'store']
-        )
-            ->name('savings-transfer.store');
-
+        )->name('savings-transfer.store');
 
         Route::get(
             'savings/deposit/savings-transfer/success/{transfer}',
             [PaymentController::class, 'savingsTransferSuccess']
-        )
-            ->name('savings.deposit.savings-transfer.success');
-
+        )->name('savings.deposit.savings-transfer.success');
 
         Route::get(
             'savings-transfer/failed',
             [PaymentController::class, 'savingsTransferFailed']
-        )
-            ->name('savings-transfer.failed');
+        )->name('savings-transfer.failed');
 
 
 
+        Route::post(
+            'installments/{installment}/pay-from-savings',
+            [PaymentController::class, 'payFromSavings']
+        )->name('installments.pay-from-savings');
         /*
-|--------------------------------------------------------------------------
-| Other Installments Payment
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | Other Installments Payment
+        |--------------------------------------------------------------------------
+        */
 
         Route::get(
             'installments/others',
             [OtherInstallmentPaymentController::class, 'create']
-        )
-            ->name('installments.others.create');
-
-
-
-
+        )->name('installments.others.create');
 
         Route::post(
             'installments/others/pay',
@@ -850,16 +810,12 @@ Route::middleware(['auth', 'customer.access'])
                 OtherInstallmentPaymentController::class,
                 'pay'
             ]
-        )
-            ->name('installments.others.pay');
-
+        )->name('installments.others.pay');
 
         Route::get(
             'installments/others/{payment}/success',
             [InstallmentController::class, 'othersPaymentSuccess']
-        )
-            ->name('installments.others.payment.success');
-
+        )->name('installments.others.payment.success');
 
 
         /*
@@ -868,44 +824,32 @@ Route::middleware(['auth', 'customer.access'])
         |--------------------------------------------------------------------------
         */
 
-
         Route::get(
             'donations/create',
             [CustomerDonationController::class, 'create']
-        )
-            ->name('donations.create');
-
+        )->name('donations.create');
 
         Route::post(
             'donations',
             [CustomerDonationController::class, 'store']
-        )
-            ->name('donations.store');
-
+        )->name('donations.store');
 
         Route::get(
             'donations/payment/{donationPayment}',
             [CustomerDonationController::class, 'payment']
-        )
-            ->name('donations.payment');
-
+        )->name('donations.payment');
 
         Route::post(
             'donations/payment/{donationPayment}/pay',
             [CustomerDonationController::class, 'pay']
-        )
-            ->name('donations.pay');
-
+        )->name('donations.pay');
 
         Route::get(
             'donations/success/{donationPayment}',
             [CustomerDonationController::class, 'success']
-        )
-            ->name('donations.success');
-
+        )->name('donations.success');
 
     });
-
 
 
 /*
@@ -914,18 +858,10 @@ Route::middleware(['auth', 'customer.access'])
 |--------------------------------------------------------------------------
 */
 
-
-/*
-|--------------------------------------------------------------------------
-| Test Components
-|--------------------------------------------------------------------------
-*/
-
 Route::view(
     '/test-components',
     'test.components'
 );
-
 
 
 /*
@@ -948,9 +884,4 @@ if (app()->environment('local')) {
     );
 
 }
-
-
-
-
-
 

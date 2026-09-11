@@ -18,33 +18,37 @@ class InstallmentController extends Controller
 
         $loan = Loan::query()
             ->where('customer_id', $customer->id)
-            ->where(
-                'status',
-                LoanStatus::ACTIVE
-            )
+            ->where('status', LoanStatus::ACTIVE)
             ->with([
                 'loanType',
+
                 'installments' => function ($query) {
                     $query->orderBy('installment_number');
                 },
+
+                // ضامنین وام
+                'guarantors.customer',
             ])
             ->first();
 
         $installment = $loan?->installments
-            ->firstWhere(
-                'status',
-                InstallmentStatus::PENDING
-            );
+            ->firstWhere('status', InstallmentStatus::PENDING);
 
+        $savingsAccount = \App\Models\Account::query()
+            ->where('customer_id', $customer->id)
+            ->where('account_type', \App\Enums\AccountType::SAVING)
+            ->first();
 
         return view(
             'customer.installments.index',
             compact(
                 'loan',
-                'installment'
+                'installment',
+                'savingsAccount'
             )
         );
     }
+
     public function success(\App\Models\LoanPayment $payment)
     {
         $customer = auth()->user()->customer;
@@ -60,6 +64,7 @@ class InstallmentController extends Controller
             compact('payment')
         );
     }
+
     public function othersPaymentSuccess(\App\Models\LoanPayment $payment)
     {
         $customer = auth()->user()->customer;
