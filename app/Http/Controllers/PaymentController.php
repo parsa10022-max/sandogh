@@ -443,5 +443,67 @@ class PaymentController extends Controller
     /**
      * رسید موفقیت واریز پس‌انداز
      */
+    public function savingsTransferSuccess(SavingsTransfer $transfer)
+    {
+        $customer = auth()->user()->customer;
 
+        /*
+        |--------------------------------------------------------------------------
+        | بررسی دسترسی
+        |--------------------------------------------------------------------------
+        |
+        | مشتری باید یا واریزکننده باشد یا صاحب حساب مقصد.
+        |
+        */
+
+        if (
+            !$customer ||
+            (
+                $transfer->sender_user_id !== auth()->id()
+                &&
+                $transfer->receiver_customer_id !== $customer->id
+            )
+        ) {
+            abort(403);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | فقط پرداخت موفق
+        |--------------------------------------------------------------------------
+        */
+
+        if ($transfer->status !== 'paid') {
+            abort(404);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | نمایش رسید
+        |--------------------------------------------------------------------------
+        */
+
+        $transfer->load([
+            'sender',
+            'receiver',
+            'account',
+        ]);
+
+        return view(
+            'receipts.savings-transfer',
+            [
+                'title' =>
+                    'رسید واریز به حساب پس‌انداز',
+
+                'receipt_number' =>
+                    $transfer->tracking_code,
+
+                'receipt_date' =>
+                    $transfer->paid_at?->format('Y/m/d H:i'),
+
+                'transfer' =>
+                    $transfer,
+            ]
+        );
+    }
 }

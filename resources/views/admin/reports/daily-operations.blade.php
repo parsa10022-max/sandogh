@@ -20,14 +20,38 @@
                     return '—';
                 }
 
-                return \Morilog\Jalali\Jalalian::fromCarbon($date)
-                    ->format($withTime ? 'Y/m/d H:i' : 'Y/m/d');
+                try {
+
+                    return \Morilog\Jalali\Jalalian::fromCarbon($date)
+                        ->format(
+                            $withTime
+                                ? 'Y/m/d H:i'
+                                : 'Y/m/d'
+                        );
+
+                } catch (\Throwable $e) {
+
+                    return '—';
+
+                }
             };
 
 
             /*
             |--------------------------------------------------------------------------
             | فرمت شماره حساب
+            |--------------------------------------------------------------------------
+            |
+            | استفاده از Non-Breaking Hyphen باعث می‌شود:
+            |
+            | 6111-000005
+            |
+            | در چاپ به:
+            |
+            | 6111-
+            | 000005
+            |
+            | شکسته نشود.
             |--------------------------------------------------------------------------
             */
 
@@ -38,7 +62,12 @@
                 }
 
                 $accountNumber = str_replace(
-                    '-',
+                    [
+                        '-',
+                        ' ',
+                        "\u{2010}",
+                        "\u{2011}",
+                    ],
                     '',
                     (string) $accountNumber
                 );
@@ -48,16 +77,52 @@
                 }
 
                 return substr($accountNumber, 0, 4)
-                    . '-'
+                    . "\u{2011}"
                     . substr($accountNumber, 4);
             };
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | نام مشتری
+            |--------------------------------------------------------------------------
+            */
+
+            $customerName = function ($customer) {
+
+                if (!$customer) {
+                    return '—';
+                }
+
+                return trim(
+                    ($customer->first_name ?? '')
+                    . ' '
+                    . ($customer->last_name ?? '')
+                ) ?: '—';
+            };
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | تعداد کل عملیات
+            |--------------------------------------------------------------------------
+            */
+
+            $totalOperations =
+                $counts['customers']
+                + $counts['own_savings_transfers']
+                + $counts['other_savings_transfers']
+                + $counts['own_loan_payments']
+                + $counts['other_loan_payments']
+                + $counts['donations']
+                + $counts['loan_requests'];
 
         @endphp
 
 
-        {{-- =========================================
-             Header
-             ========================================= --}}
+        {{-- =========================================================
+             HEADER
+        ========================================================== --}}
 
         <div class="card border-0 shadow-sm rounded-4 mb-4 report-header">
 
@@ -71,13 +136,13 @@
 
                             <i class="bi bi-journal-text me-1"></i>
 
-                            گزارش عملیات صندوق
+                            گزارش عملیات مشتریان
 
                         </h4>
 
                         <div class="text-muted small">
 
-                            گزارش ثبت‌نام‌ها، دریافت‌ها، پرداخت‌ها و سایر عملیات صندوق
+                            گزارش عملیات انجام‌شده از سمت مشتریان صندوق
 
                         </div>
 
@@ -107,9 +172,9 @@
         </div>
 
 
-        {{-- =========================================
-             Filters
-             ========================================= --}}
+        {{-- =========================================================
+             FILTERS
+        ========================================================== --}}
 
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
 
@@ -121,6 +186,8 @@
                 >
 
                     <div class="row g-3 align-items-end">
+
+                        {{-- از تاریخ --}}
 
                         <div class="col-12 col-md-2">
 
@@ -145,6 +212,8 @@
                         </div>
 
 
+                        {{-- تا تاریخ --}}
+
                         <div class="col-12 col-md-2">
 
                             <label
@@ -167,6 +236,8 @@
 
                         </div>
 
+
+                        {{-- نوع عملیات --}}
 
                         <div class="col-12 col-md-2">
 
@@ -194,42 +265,42 @@
                                     value="registration"
                                     @selected($operationType === 'registration')
                                 >
-                                ثبت‌نام عضو
+                                ثبت‌نام مشتری
                                 </option>
 
                                 <option
-                                    value="deposit"
-                                    @selected($operationType === 'deposit')
+                                    value="saving_own"
+                                    @selected($operationType === 'saving_own')
                                 >
-                                واریز
+                                واریز به پس‌انداز خود
                                 </option>
 
                                 <option
-                                    value="withdrawal"
-                                    @selected($operationType === 'withdrawal')
+                                    value="saving_other"
+                                    @selected($operationType === 'saving_other')
                                 >
-                                برداشت
+                                واریز به پس‌انداز دیگران
                                 </option>
 
                                 <option
-                                    value="loan_payment"
-                                    @selected($operationType === 'loan_payment')
+                                    value="loan_payment_own"
+                                    @selected($operationType === 'loan_payment_own')
                                 >
-                                پرداخت قسط
+                                پرداخت قسط از حساب خود
                                 </option>
 
                                 <option
-                                    value="transfer"
-                                    @selected($operationType === 'transfer')
+                                    value="loan_payment_other"
+                                    @selected($operationType === 'loan_payment_other')
                                 >
-                                انتقال پس‌انداز
+                                پرداخت قسط دیگران
                                 </option>
 
                                 <option
                                     value="donation"
                                     @selected($operationType === 'donation')
                                 >
-                                کمک به صندوق
+                                کمک / صدقه
                                 </option>
 
                                 <option
@@ -243,6 +314,8 @@
 
                         </div>
 
+
+                        {{-- عضو --}}
 
                         <div class="col-12 col-md-3">
 
@@ -272,10 +345,8 @@
                                         (string) $customer->id
                                         )
                                         >
-
                                         {{ $customer->first_name }}
                                         {{ $customer->last_name }}
-
                                     </option>
 
                                 @endforeach
@@ -285,7 +356,9 @@
                         </div>
 
 
-                        <div class="col-12 col-md-2">
+                        {{-- تأیید حسابداری --}}
+
+                        <div class="col-12 col-md-3">
 
                             <div class="form-check mb-2">
 
@@ -329,12 +402,11 @@
         </div>
 
 
-        {{-- =========================================
-             Summary
-             ========================================= --}}
+        {{-- =========================================================
+             SUMMARY CARDS
+        ========================================================== --}}
 
         <div class="row g-3 mb-4">
-
 
             {{-- ثبت‌نام --}}
 
@@ -345,7 +417,7 @@
                     <div class="card-body">
 
                         <div class="summary-label">
-                            ثبت‌نام جدید
+                            ثبت‌نام مشتری
                         </div>
 
                         <div class="summary-value">
@@ -353,87 +425,6 @@
                             {{ number_format($counts['customers']) }}
 
                             نفر
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {{-- واریز --}}
-
-            <div class="col-6 col-md-4 col-xl-2">
-
-                <div class="card summary-card h-100">
-
-                    <div class="card-body">
-
-                        <div class="summary-label">
-                            واریز
-                        </div>
-
-                        <div class="summary-value">
-
-                            {{ number_format($totals['deposits']) }}
-
-                            ریال
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {{-- برداشت --}}
-
-            <div class="col-6 col-md-4 col-xl-2">
-
-                <div class="card summary-card h-100">
-
-                    <div class="card-body">
-
-                        <div class="summary-label">
-                            برداشت
-                        </div>
-
-                        <div class="summary-value">
-
-                            {{ number_format($totals['withdrawals']) }}
-
-                            ریال
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {{-- پرداخت اقساط --}}
-
-            <div class="col-6 col-md-4 col-xl-2">
-
-                <div class="card summary-card h-100">
-
-                    <div class="card-body">
-
-                        <div class="summary-label">
-                            پرداخت اقساط
-                        </div>
-
-                        <div class="summary-value">
-
-                            {{ number_format($totals['loan_payments']) }}
-
-                            ریال
 
                         </div>
 
@@ -498,7 +489,7 @@
             </div>
 
 
-            {{-- کمک به صندوق --}}
+            {{-- قسط خود --}}
 
             <div class="col-6 col-md-4 col-xl-2">
 
@@ -507,7 +498,61 @@
                     <div class="card-body">
 
                         <div class="summary-label">
-                            کمک به صندوق
+                            قسط خود
+                        </div>
+
+                        <div class="summary-value">
+
+                            {{ number_format($totals['own_loan_payments']) }}
+
+                            ریال
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- قسط دیگران --}}
+
+            <div class="col-6 col-md-4 col-xl-2">
+
+                <div class="card summary-card h-100">
+
+                    <div class="card-body">
+
+                        <div class="summary-label">
+                            قسط دیگران
+                        </div>
+
+                        <div class="summary-value">
+
+                            {{ number_format($totals['other_loan_payments']) }}
+
+                            ریال
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- صدقه --}}
+
+            <div class="col-6 col-md-4 col-xl-2">
+
+                <div class="card summary-card h-100">
+
+                    <div class="card-body">
+
+                        <div class="summary-label">
+                            کمک / صدقه
                         </div>
 
                         <div class="summary-value">
@@ -527,9 +572,9 @@
         </div>
 
 
-        {{-- =========================================
-             Overall Status
-             ========================================= --}}
+        {{-- =========================================================
+             OVERALL STATUS
+        ========================================================== --}}
 
         <div class="card border-0 shadow-sm rounded-4 mb-4">
 
@@ -537,6 +582,7 @@
 
                 <div class="row g-3 text-center">
 
+                    {{-- تعداد عملیات --}}
 
                     <div class="col-6 col-md-3">
 
@@ -546,33 +592,26 @@
 
                         <div class="summary-value">
 
-                            {{ number_format(
-                                $counts['customers']
-                                + $counts['deposits']
-                                + $counts['withdrawals']
-                                + $counts['loan_payments']
-                                + $counts['savings_transfers']
-                                + $counts['donations']
-                                + $counts['loan_requests']
-                            ) }}
+                            {{ number_format($totalOperations) }}
 
                         </div>
 
                     </div>
 
 
+                    {{-- مجموع پس‌انداز --}}
+
                     <div class="col-6 col-md-3">
 
                         <div class="summary-label">
-                            ورود وجه
+                            مجموع واریز به پس‌انداز
                         </div>
 
                         <div class="summary-value">
 
                             {{ number_format(
-                                $totals['deposits']
-                                + $totals['loan_payments']
-                                + $totals['donations']
+                                $totals['own_savings_transfers']
+                                + $totals['other_savings_transfers']
                             ) }}
 
                             ریال
@@ -582,15 +621,20 @@
                     </div>
 
 
+                    {{-- مجموع اقساط --}}
+
                     <div class="col-6 col-md-3">
 
                         <div class="summary-label">
-                            خروج وجه
+                            مجموع پرداخت اقساط
                         </div>
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['withdrawals']) }}
+                            {{ number_format(
+                                $totals['own_loan_payments']
+                                + $totals['other_loan_payments']
+                            ) }}
 
                             ریال
 
@@ -599,15 +643,17 @@
                     </div>
 
 
+                    {{-- مجموع دریافت‌ها --}}
+
                     <div class="col-6 col-md-3">
 
                         <div class="summary-label">
-                            خالص عملیات
+                            مجموع دریافت‌ها
                         </div>
 
                         <div class="summary-value">
 
-                            {{ number_format($netAmount) }}
+                            {{ number_format($totalReceived) }}
 
                             ریال
 
@@ -622,11 +668,11 @@
         </div>
 
 
-        {{-- =========================================
-             Operations Table
-             ========================================= --}}
+        {{-- =========================================================
+             OPERATIONS TABLE
+        ========================================================== --}}
 
-        <div class="card border-0 shadow-sm rounded-4">
+        <div class="card border-0 shadow-sm rounded-4 operations-card">
 
             <div class="card-header bg-white border-0 pt-4 px-4">
 
@@ -636,21 +682,13 @@
 
                         <i class="bi bi-list-check me-1"></i>
 
-                        عملیات صندوق
+                        عملیات مشتریان
 
                     </h5>
 
                     <span class="text-muted small">
 
-                        {{ number_format(
-                            $counts['customers']
-                            + $counts['deposits']
-                            + $counts['withdrawals']
-                            + $counts['loan_payments']
-                            + $counts['savings_transfers']
-                            + $counts['donations']
-                            + $counts['loan_requests']
-                        ) }}
+                        {{ number_format($totalOperations) }}
 
                         عملیات
 
@@ -669,37 +707,21 @@
 
                     <tr>
 
-                        <th class="text-center">
-                            ردیف
-                        </th>
+                        <th>ردیف</th>
 
-                        <th>
-                            نوع عملیات
-                        </th>
+                        <th>نوع عملیات</th>
 
-                        <th>
-                            کد عضو
-                        </th>
+                        <th>کد عضو</th>
 
-                        <th>
-                            عضو
-                        </th>
+                        <th>مشخصات عملیات</th>
 
-                        <th>
-                            شماره حساب
-                        </th>
+                        <th>شماره حساب / وام / قسط</th>
 
-                        <th>
-                            مبلغ
-                        </th>
+                        <th>مبلغ</th>
 
-                        <th>
-                            تاریخ
-                        </th>
+                        <th>تاریخ</th>
 
-                        <th>
-                            توضیحات
-                        </th>
+                        <th>توضیحات</th>
 
                     </tr>
 
@@ -713,15 +735,15 @@
                     @endphp
 
 
-                    {{-- =====================================
-                         ثبت‌نام
-                         ===================================== --}}
+                    {{-- =================================================
+                         1. ثبت‌نام مشتری
+                    ================================================== --}}
 
                     @foreach($customers as $customer)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
@@ -731,13 +753,13 @@
 
                                     <i class="bi bi-person-plus me-1"></i>
 
-                                    ثبت‌نام جدید
+                                    ثبت‌نام مشتری
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td dir="ltr">
 
                                 {{ $customer->customer_code ?? '—' }}
 
@@ -747,18 +769,19 @@
 
                                 <div class="fw-semibold">
 
-                                    {{ $customer->first_name }}
-                                    {{ $customer->last_name }}
+                                    {{ $customerName($customer) }}
 
                                 </div>
 
                                 @if($customer->mobile)
 
-                                    <small class="text-muted">
+                                    <div class="small text-muted">
+
+                                        موبایل:
 
                                         {{ $customer->mobile }}
 
-                                    </small>
+                                    </div>
 
                                 @endif
 
@@ -790,15 +813,15 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         واریز
-                         ===================================== --}}
+                    {{-- =================================================
+                         2. واریز به پس‌انداز خود
+                    ================================================== --}}
 
-                    @foreach($deposits as $deposit)
+                    @foreach($ownSavingsTransfers as $transfer)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
@@ -806,46 +829,62 @@
 
                                 <span class="badge bg-success-subtle text-success">
 
-                                    <i class="bi bi-arrow-down-circle me-1"></i>
+                                    <i class="bi bi-wallet2 me-1"></i>
 
-                                    واریز
+                                    واریز به پس‌انداز خود
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td dir="ltr">
 
-                                {{ $deposit->account?->customer?->customer_code ?? '—' }}
+                                {{ $transfer->receiver?->customer_code ?? '—' }}
 
                             </td>
 
                             <td>
 
-                                @if($deposit->account?->customer)
+                                <div class="fw-semibold">
 
-                                    {{ $deposit->account->customer->first_name }}
-                                    {{ $deposit->account->customer->last_name }}
+                                    واریزکننده:
 
-                                @else
+                                    {{ $customerName(
+                                        $transfer->sender?->customer
+                                    ) }}
 
-                                    —
+                                </div>
 
-                                @endif
+                                <div class="small text-muted mt-1">
+
+                                    دریافت‌کننده:
+
+                                    {{ $customerName(
+                                        $transfer->receiver
+                                    ) }}
+
+                                </div>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td
+                                dir="ltr"
+                                class="account-number"
+                            >
 
-                                {{ $formatAccountNumber(
-                                    $deposit->account?->account_number
-                                ) }}
+                                <span dir="ltr">
+
+                                    {{ $formatAccountNumber(
+                                        $transfer->account?->account_number
+                                    ) }}
+
+                                </span>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($deposit->amount) }}
+                                {{ number_format($transfer->amount) }}
 
                                 ریال
 
@@ -854,16 +893,14 @@
                             <td>
 
                                 {{ $jalaliDate(
-                                    $deposit->transaction_date,
+                                    $transfer->paid_at,
                                     true
                                 ) }}
 
                             </td>
 
                             <td>
-
-                                {{ $deposit->description ?? 'واریز به حساب' }}
-
+                                واریز از طریق درگاه به حساب پس‌انداز خود
                             </td>
 
                         </tr>
@@ -871,62 +908,100 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         برداشت
-                         ===================================== --}}
+                    {{-- =================================================
+                         3. واریز به پس‌انداز دیگران
+                    ================================================== --}}
 
-                    @foreach($withdrawals as $withdrawal)
+                    @foreach($otherSavingsTransfers as $transfer)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-danger-subtle text-danger">
+                                <span class="badge bg-info-subtle text-info-emphasis">
 
-                                    <i class="bi bi-arrow-up-circle me-1"></i>
+                                    <i class="bi bi-person-plus me-1"></i>
 
-                                    برداشت
+                                    واریز به پس‌انداز دیگران
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td>
 
-                                {{ $withdrawal->account?->customer?->customer_code ?? '—' }}
+                                <div class="small">
+
+                                    واریزکننده:
+
+                                    <span dir="ltr">
+
+                                        {{ $transfer->sender?->customer?->customer_code ?? '—' }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="small mt-1">
+
+                                    دریافت‌کننده:
+
+                                    <span dir="ltr">
+
+                                        {{ $transfer->receiver?->customer_code ?? '—' }}
+
+                                    </span>
+
+                                </div>
 
                             </td>
 
                             <td>
 
-                                @if($withdrawal->account?->customer)
+                                <div class="fw-semibold">
 
-                                    {{ $withdrawal->account->customer->first_name }}
-                                    {{ $withdrawal->account->customer->last_name }}
+                                    واریزکننده:
 
-                                @else
+                                    {{ $customerName(
+                                        $transfer->sender?->customer
+                                    ) }}
 
-                                    —
+                                </div>
 
-                                @endif
+                                <div class="small text-muted mt-1">
+
+                                    دریافت‌کننده:
+
+                                    {{ $customerName(
+                                        $transfer->receiver
+                                    ) }}
+
+                                </div>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td
+                                dir="ltr"
+                                class="account-number"
+                            >
 
-                                {{ $formatAccountNumber(
-                                    $withdrawal->account?->account_number
-                                ) }}
+                                <span dir="ltr">
+
+                                    {{ $formatAccountNumber(
+                                        $transfer->account?->account_number
+                                    ) }}
+
+                                </span>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($withdrawal->amount) }}
+                                {{ number_format($transfer->amount) }}
 
                                 ریال
 
@@ -935,14 +1010,29 @@
                             <td>
 
                                 {{ $jalaliDate(
-                                    $withdrawal->paid_at,
+                                    $transfer->paid_at,
                                     true
                                 ) }}
 
                             </td>
 
                             <td>
-                                برداشت پرداخت‌شده
+
+                                واریز به حساب پس‌انداز
+                                {{ $customerName(
+                                    $transfer->receiver
+                                ) }}
+
+                                <div class="small text-muted mt-1">
+
+                                    توسط:
+
+                                    {{ $customerName(
+                                        $transfer->sender?->customer
+                                    ) }}
+
+                                </div>
+
                             </td>
 
                         </tr>
@@ -950,15 +1040,15 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         پرداخت قسط
-                         ===================================== --}}
+                    {{-- =================================================
+                         4. پرداخت قسط خود
+                    ================================================== --}}
 
-                    @foreach($loanPayments as $payment)
+                    @foreach($ownLoanPayments as $payment)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
@@ -968,13 +1058,13 @@
 
                                     <i class="bi bi-credit-card me-1"></i>
 
-                                    پرداخت قسط
+                                    پرداخت قسط خود
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td dir="ltr">
 
                                 {{ $payment->loan?->customer?->customer_code ?? '—' }}
 
@@ -982,24 +1072,49 @@
 
                             <td>
 
-                                @if($payment->loan?->customer)
+                                <div class="fw-semibold">
 
-                                    {{ $payment->loan->customer->first_name }}
-                                    {{ $payment->loan->customer->last_name }}
+                                    پرداخت‌کننده:
 
-                                @else
+                                    {{ $customerName(
+                                        $payment->user?->customer
+                                    ) }}
 
-                                    —
+                                </div>
 
-                                @endif
+                                <div class="small text-muted mt-1">
+
+                                    وام‌گیرنده:
+
+                                    {{ $customerName(
+                                        $payment->loan?->customer
+                                    ) }}
+
+                                </div>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td>
 
-                                {{ $formatAccountNumber(
-                                    $payment->loan?->customer?->accounts?->first()?->account_number
-                                ) }}
+                                <div class="fw-semibold">
+
+                                    وام شماره:
+
+                                    <span dir="ltr">
+
+                                        {{ $payment->loan?->loan_number ?? '—' }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="small text-muted mt-1">
+
+                                    قسط شماره:
+
+                                    {{ $payment->installment?->installment_number ?? '—' }}
+
+                                </div>
 
                             </td>
 
@@ -1022,16 +1137,27 @@
 
                             <td>
 
-                                @if($payment->installment)
+                                پرداخت قسط شماره
 
-                                    قسط شماره
-                                    {{ $payment->installment->installment_number ?? '—' }}
+                                {{ $payment->installment?->installment_number ?? '—' }}
 
-                                @else
+                                از وام
 
-                                    پرداخت قسط
+                                <span dir="ltr">
 
-                                @endif
+                                    {{ $payment->loan?->loan_number ?? '—' }}
+
+                                </span>
+
+                                <div class="small text-muted mt-1">
+
+                                    پرداخت‌کننده:
+
+                                    {{ $customerName(
+                                        $payment->user?->customer
+                                    ) }}
+
+                                </div>
 
                             </td>
 
@@ -1040,66 +1166,109 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         واریز به حساب پس‌انداز خود
-                         ===================================== --}}
+                    {{-- =================================================
+                         5. پرداخت قسط دیگران
+                    ================================================== --}}
 
-                    @foreach($ownSavingsTransfers as $transfer)
+                    @foreach($otherLoanPayments as $payment)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-info-subtle text-info-emphasis">
+                                <span class="badge bg-warning-subtle text-warning-emphasis">
 
-                                    <i class="bi bi-wallet2 me-1"></i>
+                                    <i class="bi bi-people me-1"></i>
 
-                                    واریز به پس‌انداز خود
+                                    پرداخت قسط دیگران
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td>
 
-                                {{ $transfer->receiver?->customer_code ?? '—' }}
+                                <div class="small">
+
+                                    پرداخت‌کننده:
+
+                                    <span dir="ltr">
+
+                                        {{ $payment->user?->customer?->customer_code ?? '—' }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="small mt-1">
+
+                                    وام‌گیرنده:
+
+                                    <span dir="ltr">
+
+                                        {{ $payment->loan?->customer?->customer_code ?? '—' }}
+
+                                    </span>
+
+                                </div>
 
                             </td>
 
                             <td>
 
-                                @if($transfer->receiver)
+                                <div class="fw-semibold">
 
-                                    <div class="fw-semibold">
+                                    پرداخت‌کننده:
 
-                                        {{ $transfer->receiver->first_name }}
-                                        {{ $transfer->receiver->last_name }}
+                                    {{ $customerName(
+                                        $payment->user?->customer
+                                    ) }}
 
-                                    </div>
+                                </div>
 
-                                @else
+                                <div class="small text-muted mt-1">
 
-                                    —
+                                    وام‌گیرنده:
 
-                                @endif
+                                    {{ $customerName(
+                                        $payment->loan?->customer
+                                    ) }}
+
+                                </div>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td>
 
-                                {{ $formatAccountNumber(
-                                    $transfer->receiver?->accounts?->first()?->account_number
-                                ) }}
+                                <div class="fw-semibold">
+
+                                    وام شماره:
+
+                                    <span dir="ltr">
+
+                                        {{ $payment->loan?->loan_number ?? '—' }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="small text-muted mt-1">
+
+                                    قسط شماره:
+
+                                    {{ $payment->installment?->installment_number ?? '—' }}
+
+                                </div>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($transfer->amount) }}
+                                {{ number_format($payment->amount) }}
 
                                 ریال
 
@@ -1108,7 +1277,7 @@
                             <td>
 
                                 {{ $jalaliDate(
-                                    $transfer->paid_at,
+                                    $payment->paid_at,
                                     true
                                 ) }}
 
@@ -1116,124 +1285,35 @@
 
                             <td>
 
-                                واریز به حساب پس‌انداز خود
+                                پرداخت قسط شماره
 
-                            </td>
+                                {{ $payment->installment?->installment_number ?? '—' }}
 
-                        </tr>
+                                از وام
 
-                    @endforeach
+                                <span dir="ltr">
 
-
-                    {{-- =====================================
-                         واریز به حساب پس‌انداز دیگران
-                         ===================================== --}}
-
-                    @foreach($otherSavingsTransfers as $transfer)
-
-                        <tr>
-
-                            <td class="text-center">
-                                {{ $row++ }}
-                            </td>
-
-                            <td>
-
-                                <span class="badge bg-primary-subtle text-primary">
-
-                                    <i class="bi bi-person-plus me-1"></i>
-
-                                    واریز به پس‌انداز دیگران
+                                    {{ $payment->loan?->loan_number ?? '—' }}
 
                                 </span>
 
-                            </td>
+                                <div class="small text-muted mt-1">
 
-                            <td dir="ltr" class="text-center">
+                                    پرداخت‌کننده:
 
-                                {{ $transfer->receiver?->customer_code ?? '—' }}
+                                    {{ $customerName(
+                                        $payment->user?->customer
+                                    ) }}
 
-                            </td>
+                                    <br>
 
-                            <td>
+                                    وام‌گیرنده:
 
-                                @if($transfer->receiver)
-
-                                    <div class="fw-semibold">
-
-                                        {{ $transfer->receiver->first_name }}
-                                        {{ $transfer->receiver->last_name }}
-
-                                    </div>
-
-                                    @if($transfer->sender)
-
-                                        <div class="small text-muted">
-
-                                            واریزکننده:
-
-                                            {{ $transfer->sender->name ?? '—' }}
-
-                                        </div>
-
-                                    @endif
-
-                                @else
-
-                                    —
-
-                                @endif
-
-                            </td>
-
-                            <td dir="ltr" class="text-center">
-
-                                <div>
-
-                                    <small class="text-muted">
-                                        مبدأ:
-                                    </small>
-
-                                    {{ $formatAccountNumber(
-                                        $transfer->account?->account_number
+                                    {{ $customerName(
+                                        $payment->loan?->customer
                                     ) }}
 
                                 </div>
-
-                                <div>
-
-                                    <small class="text-muted">
-                                        مقصد:
-                                    </small>
-
-                                    {{ $formatAccountNumber(
-                                        $transfer->receiver?->accounts?->first()?->account_number
-                                    ) }}
-
-                                </div>
-
-                            </td>
-
-                            <td class="fw-semibold">
-
-                                {{ number_format($transfer->amount) }}
-
-                                ریال
-
-                            </td>
-
-                            <td>
-
-                                {{ $jalaliDate(
-                                    $transfer->paid_at,
-                                    true
-                                ) }}
-
-                            </td>
-
-                            <td>
-
-                                واریز به حساب پس‌انداز عضو دیگر
 
                             </td>
 
@@ -1242,15 +1322,15 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         کمک به صندوق
-                         ===================================== --}}
+                    {{-- =================================================
+                         6. کمک / صدقه
+                    ================================================== --}}
 
                     @foreach($donations as $donation)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
@@ -1260,13 +1340,13 @@
 
                                     <i class="bi bi-heart me-1"></i>
 
-                                    کمک به صندوق
+                                    کمک / صدقه
 
                                 </span>
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td dir="ltr">
 
                                 {{ $donation->customer?->customer_code ?? '—' }}
 
@@ -1276,22 +1356,48 @@
 
                                 @if($donation->customer)
 
-                                    {{ $donation->customer->first_name }}
-                                    {{ $donation->customer->last_name }}
+                                    <div class="fw-semibold">
+
+                                        کمک‌کننده:
+
+                                        {{ $customerName(
+                                            $donation->customer
+                                        ) }}
+
+                                    </div>
+
+                                @elseif($donation->donor_name)
+
+                                    <div class="fw-semibold">
+
+                                        کمک‌کننده:
+
+                                        {{ $donation->donor_name }}
+
+                                    </div>
 
                                 @else
 
-                                    —
+                                    <div class="fw-semibold">
+                                        کمک‌کننده عمومی
+                                    </div>
 
                                 @endif
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td
+                                dir="ltr"
+                                class="account-number"
+                            >
 
-                                {{ $formatAccountNumber(
-                                    $donation->customer?->accounts?->first()?->account_number
-                                ) }}
+                                <span dir="ltr">
+
+                                    {{ $formatAccountNumber(
+                                        $donation->account?->account_number
+                                    ) }}
+
+                                </span>
 
                             </td>
 
@@ -1306,7 +1412,7 @@
                             <td>
 
                                 {{ $jalaliDate(
-                                    $donation->paid_at,
+                                    $donation->created_at,
                                     true
                                 ) }}
 
@@ -1314,13 +1420,21 @@
 
                             <td>
 
-                                @if($donation->donationType)
+                                کمک / صدقه از طریق درگاه
 
-                                    {{ $donation->donationType->name }}
+                                @if($donation->tracking_code)
 
-                                @else
+                                    <div class="small text-muted">
 
-                                    کمک به صندوق
+                                        پیگیری:
+
+                                        <span dir="ltr">
+
+                                            {{ $donation->tracking_code }}
+
+                                        </span>
+
+                                    </div>
 
                                 @endif
 
@@ -1331,15 +1445,15 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         درخواست وام
-                         ===================================== --}}
+                    {{-- =================================================
+                         7. درخواست وام
+                    ================================================== --}}
 
                     @foreach($loanRequests as $loanRequest)
 
                         <tr>
 
-                            <td class="text-center">
+                            <td>
                                 {{ $row++ }}
                             </td>
 
@@ -1355,7 +1469,7 @@
 
                             </td>
 
-                            <td dir="ltr" class="text-center">
+                            <td dir="ltr">
 
                                 {{ $loanRequest->customer?->customer_code ?? '—' }}
 
@@ -1363,16 +1477,15 @@
 
                             <td>
 
-                                @if($loanRequest->customer)
+                                <div class="fw-semibold">
 
-                                    {{ $loanRequest->customer->first_name }}
-                                    {{ $loanRequest->customer->last_name }}
+                                    درخواست‌کننده:
 
-                                @else
+                                    {{ $customerName(
+                                        $loanRequest->customer
+                                    ) }}
 
-                                    —
-
-                                @endif
+                                </div>
 
                             </td>
 
@@ -1413,19 +1526,11 @@
                     @endforeach
 
 
-                    {{-- =====================================
-                         Empty
-                         ===================================== --}}
+                    {{-- =================================================
+                         EMPTY
+                    ================================================== --}}
 
-                    @if(
-                        $counts['customers'] === 0 &&
-                        $counts['deposits'] === 0 &&
-                        $counts['withdrawals'] === 0 &&
-                        $counts['loan_payments'] === 0 &&
-                        $counts['savings_transfers'] === 0 &&
-                        $counts['donations'] === 0 &&
-                        $counts['loan_requests'] === 0
-                    )
+                    @if($totalOperations === 0)
 
                         <tr>
 
@@ -1452,6 +1557,488 @@
 
         </div>
 
+
     </div>
+
+
+    {{-- =========================================================
+         REPORT CSS
+    ========================================================== --}}
+
+    <style>
+
+        /*
+        |--------------------------------------------------------------------------
+        | LTR
+        |--------------------------------------------------------------------------
+        |
+        | فقط span را inline-block می‌کنیم.
+        | خود td نباید inline-block شود.
+        |--------------------------------------------------------------------------
+        */
+
+        .daily-operations-report .operations-table span[dir="ltr"] {
+            direction: ltr;
+            unicode-bidi: embed;
+            display: inline-block;
+        }
+
+
+        .daily-operations-report .operations-table td[dir="ltr"] {
+            direction: ltr;
+            unicode-bidi: embed;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | شماره حساب
+        |--------------------------------------------------------------------------
+        */
+
+        .daily-operations-report .operations-table td.account-number,
+        .daily-operations-report .operations-table td.account-number span {
+
+            white-space: nowrap !important;
+
+            word-break: keep-all !important;
+
+            overflow-wrap: normal !important;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | کدها و شماره‌های LTR
+        |--------------------------------------------------------------------------
+        */
+
+        .daily-operations-report .operations-table td[dir="ltr"] {
+
+            white-space: nowrap;
+
+            word-break: keep-all;
+
+            overflow-wrap: normal;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | جدول
+        |--------------------------------------------------------------------------
+        */
+
+        .daily-operations-report .operations-table {
+
+            min-width: 1050px;
+
+            width: 100%;
+
+            color: #334155;
+
+            font-size: .87rem;
+
+        }
+
+
+        .daily-operations-report .operations-table th {
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+        }
+
+
+        .daily-operations-report .operations-table td {
+
+            vertical-align: middle;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Summary
+        |--------------------------------------------------------------------------
+        */
+
+        .daily-operations-report .summary-card {
+
+            border: 0;
+
+            border-radius: 1rem;
+
+            box-shadow: 0 .125rem .5rem rgba(15, 23, 42, .06);
+
+        }
+
+
+        .daily-operations-report .summary-label {
+
+            color: #64748b;
+
+            font-size: .82rem;
+
+            margin-bottom: .35rem;
+
+        }
+
+
+        .daily-operations-report .summary-value {
+
+            color: #1e293b;
+
+            font-weight: 700;
+
+            font-size: 1rem;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PRINT
+        |--------------------------------------------------------------------------
+        */
+
+        @media print {
+
+            @page {
+
+                size: A4 landscape;
+
+                margin: 8mm;
+
+            }
+
+
+            html,
+            body {
+
+                width: 100% !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                background: #fff !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف اجزای غیرقابل چاپ
+            |--------------------------------------------------------------------------
+            */
+
+            .no-print,
+            .navbar,
+            .sidebar,
+            footer {
+
+                display: none !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | گزارش
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report {
+
+                width: 100% !important;
+
+                max-width: none !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | کارت‌ها
+            |--------------------------------------------------------------------------
+            */
+
+            .report-header,
+            .summary-card {
+
+                break-inside: avoid !important;
+
+                page-break-inside: avoid !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | کارت جدول
+            |--------------------------------------------------------------------------
+            */
+
+            .operations-card {
+
+                box-shadow: none !important;
+
+                border: 1px solid #ddd !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | جدول چاپ
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table {
+
+                width: 100% !important;
+
+                min-width: 0 !important;
+
+                table-layout: fixed !important;
+
+                border-collapse: collapse !important;
+
+                font-size: 8.5pt !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Header جدول در صفحات بعدی
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table thead {
+
+                display: table-header-group !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از شکستن ردیف
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table tbody tr {
+
+                break-inside: avoid !important;
+
+                page-break-inside: avoid !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | سلول‌ها
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table th,
+            .daily-operations-report .operations-table td {
+
+                padding: 4px 5px !important;
+
+                vertical-align: middle !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | عرض ستون‌ها
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table th:nth-child(1),
+            .daily-operations-report .operations-table td:nth-child(1) {
+
+                width: 4% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(2),
+            .daily-operations-report .operations-table td:nth-child(2) {
+
+                width: 12% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(3),
+            .daily-operations-report .operations-table td:nth-child(3) {
+
+                width: 10% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(4),
+            .daily-operations-report .operations-table td:nth-child(4) {
+
+                width: 20% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(5),
+            .daily-operations-report .operations-table td:nth-child(5) {
+
+                width: 18% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(6),
+            .daily-operations-report .operations-table td:nth-child(6) {
+
+                width: 11% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(7),
+            .daily-operations-report .operations-table td:nth-child(7) {
+
+                width: 11% !important;
+
+            }
+
+
+            .daily-operations-report .operations-table th:nth-child(8),
+            .daily-operations-report .operations-table td:nth-child(8) {
+
+                width: 14% !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | LTR در چاپ
+            |--------------------------------------------------------------------------
+            |
+            | مهم:
+            | display:inline-block فقط روی span اعمال می‌شود.
+            | روی td اعمال نمی‌شود.
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table span[dir="ltr"] {
+
+                direction: ltr !important;
+
+                unicode-bidi: embed !important;
+
+                display: inline-block !important;
+
+            }
+
+
+            .daily-operations-report .operations-table td[dir="ltr"] {
+
+                direction: ltr !important;
+
+                unicode-bidi: embed !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | شماره حساب در چاپ
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table td.account-number,
+            .daily-operations-report .operations-table td.account-number span {
+
+                white-space: nowrap !important;
+
+                word-break: keep-all !important;
+
+                overflow-wrap: normal !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | کد مشتری و سایر اعداد LTR
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table td[dir="ltr"] {
+
+                white-space: nowrap !important;
+
+                word-break: keep-all !important;
+
+                overflow-wrap: normal !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از نمایش کنترل‌های Bootstrap در چاپ
+            |--------------------------------------------------------------------------
+            */
+
+            .table-responsive {
+
+                overflow: visible !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | رنگ‌ها در چاپ
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .operations-table th {
+
+                background: #f3f4f6 !important;
+
+                color: #111827 !important;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف سایه
+            |--------------------------------------------------------------------------
+            */
+
+            .daily-operations-report .card {
+
+                box-shadow: none !important;
+
+            }
+
+        }
+
+    </style>
 
 @endsection

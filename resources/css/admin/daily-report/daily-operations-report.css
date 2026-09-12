@@ -1,147 +1,307 @@
-css
-    /* =========================================
-       Daily Operations Report
-       ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Daily Operations Report
+|--------------------------------------------------------------------------
+| گزارش عملیات روزانه مشتریان صندوق
+| Design System #1
+| Bootstrap 5.3 RTL
+| Vazirmatn
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report {
     font-family: "Vazirmatn", sans-serif;
+    color: #252b3a;
 }
 
 
-/* =========================================
-   Header
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Header
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report .report-header {
-    background: #fff;
-    border: 1px solid rgba(108, 99, 255, 0.08) !important;
+    background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f8f7ff 100%
+    );
+
+    border: 1px solid rgba(99, 102, 241, 0.08) !important;
 }
 
 .daily-operations-report .report-header h4 {
-    color: #343a40;
-    font-size: 1.15rem;
+    color: #34304f;
+}
+
+.daily-operations-report .report-header h4 i {
+    color: #6366f1;
 }
 
 
-/* =========================================
-   Summary Cards
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Cards
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report .card {
+    border: 1px solid rgba(30, 41, 59, 0.06);
+}
+
+.daily-operations-report .card-body {
+    position: relative;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Summary Cards
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report .summary-card {
-    background: #fff;
-    border: 1px solid rgba(108, 99, 255, 0.08);
-    border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+
+    background: #ffffff;
+
+    border: 1px solid rgba(99, 102, 241, 0.08);
+
+    border-radius: 1rem;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+    overflow: hidden;
+}
+
+.daily-operations-report .summary-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #6366f1,
+        #3b82f6
+    );
 }
 
 .daily-operations-report .summary-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
-}
 
-.daily-operations-report .summary-card .card-body {
-    padding: 1rem;
+    border-color: rgba(99, 102, 241, 0.18);
+
+    box-shadow:
+        0 0.5rem 1.5rem
+        rgba(31, 41, 55, 0.08);
 }
 
 .daily-operations-report .summary-label {
-    color: #6c757d;
-    font-size: 0.78rem;
-    margin-bottom: 0.35rem;
+    color: #64748b;
+
+    font-size: 0.82rem;
+
+    font-weight: 600;
+
+    line-height: 1.7;
 }
 
 .daily-operations-report .summary-value {
-    color: #343a40;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.5;
+    margin-top: 0.35rem;
+
+    color: #312e81;
+
+    font-size: 1.05rem;
+
+    font-weight: 800;
+
+    line-height: 1.8;
 }
 
 
-/* =========================================
-   Filter Card
-   ========================================= */
-
-.daily-operations-report .card {
-    border-radius: 14px;
-}
+/*
+|--------------------------------------------------------------------------
+| Filters
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report .form-label {
-    color: #495057;
-    font-size: 0.82rem;
+    color: #374151;
+
+    font-size: 0.88rem;
 }
 
 .daily-operations-report .form-control,
 .daily-operations-report .form-select {
-    min-height: 42px;
-    border-radius: 9px;
-    border-color: #dee2e6;
-    font-size: 0.85rem;
+    min-height: 44px;
+
+    border: 1px solid #dbe1ea;
+
+    border-radius: 0.75rem;
+
+    background-color: #ffffff;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 0.9rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .daily-operations-report .form-control:focus,
 .daily-operations-report .form-select:focus {
-    border-color: #8b7cf6;
-    box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.12);
+    border-color: #818cf8;
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(99, 102, 241, 0.12);
+}
+
+.daily-operations-report .form-check-input {
+    width: 1.1rem;
+    height: 1.1rem;
+
+    cursor: pointer;
+}
+
+.daily-operations-report .form-check-input:checked {
+    background-color: #6366f1;
+
+    border-color: #6366f1;
 }
 
 .daily-operations-report .form-check-label {
-    color: #495057;
-    font-size: 0.8rem;
+    color: #475569;
+
+    font-size: 0.85rem;
+
+    cursor: pointer;
 }
 
 
-/* =========================================
-   Buttons
-   ========================================= */
-
-.daily-operations-report .btn {
-    border-radius: 9px;
-    font-size: 0.82rem;
-    font-weight: 600;
-}
+/*
+|--------------------------------------------------------------------------
+| Buttons
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report .btn-primary {
-    box-shadow: 0 3px 8px rgba(13, 110, 253, 0.15);
+    min-height: 42px;
+
+    border: 0;
+
+    border-radius: 0.75rem;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #4f46e5
+    );
+
+    box-shadow:
+        0 0.3rem 0.8rem
+        rgba(79, 70, 229, 0.18);
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.daily-operations-report .btn-primary:hover {
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #4338ca
+    );
+
+    box-shadow:
+        0 0.45rem 1rem
+        rgba(79, 70, 229, 0.24);
+
+    transform: translateY(-1px);
+}
+
+.daily-operations-report .btn-primary:active {
+    transform: translateY(0);
 }
 
 
-/* =========================================
-   Overall Status
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Overall Status
+|--------------------------------------------------------------------------
+*/
 
-.daily-operations-report .card > .card-body {
-    background: #fff;
+.daily-operations-report
+.card:not(.summary-card)
+.summary-value {
+    color: #312e81;
 }
 
-.daily-operations-report .summary-card + .summary-card {
-    min-height: 100%;
+.daily-operations-report
+.card:not(.summary-card)
+.summary-label {
+    color: #64748b;
 }
 
 
-/* =========================================
-   Operations Table
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Operations Table
+|--------------------------------------------------------------------------
+*/
 
 .daily-operations-report .operations-table {
-    margin-bottom: 0;
-    font-size: 0.82rem;
+    width: 100%;
+
+    min-width: 1050px;
+
+    color: #334155;
+
+    font-size: 0.87rem;
 }
 
 .daily-operations-report .operations-table thead th {
-    background: #f8f9fc;
-    color: #495057;
-    border-bottom: 1px solid #e9ecef;
-    font-size: 0.78rem;
+    padding: 1rem 0.75rem;
+
+    background-color: #f8fafc;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    color: #475569;
+
+    font-size: 0.82rem;
+
     font-weight: 700;
-    padding: 0.85rem 0.75rem;
+
     white-space: nowrap;
+
+    vertical-align: middle;
 }
 
 .daily-operations-report .operations-table tbody td {
-    color: #495057;
-    border-color: #f0f1f3;
-    padding: 0.75rem;
+    padding: 0.9rem 0.75rem;
+
+    border-bottom: 1px solid #eef2f7;
+
     vertical-align: middle;
 }
 
@@ -150,212 +310,1098 @@ css
 }
 
 .daily-operations-report .operations-table tbody tr:hover {
-    background: #fafaff;
+    background-color: #f8faff;
+}
+
+.daily-operations-report .operations-table tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 
-/* =========================================
-   Member / Account Number
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Operation Details
+|--------------------------------------------------------------------------
+*/
 
-.daily-operations-report .operations-table td:nth-child(4) {
-    font-family: "Vazirmatn", sans-serif;
-    font-weight: 600;
+.daily-operations-report
+.operations-table
+.fw-semibold {
+    color: #334155;
+
+    line-height: 1.8;
+}
+
+.daily-operations-report
+.operations-table
+.text-muted {
+    color: #7c8798 !important;
+}
+
+.daily-operations-report
+.operations-table
+.small {
+    font-size: 0.78rem;
+
+    line-height: 1.8;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Badges
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+.badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.2rem;
+
+    min-width: 125px;
+
+    padding: 0.5rem 0.7rem;
+
+    border-radius: 0.65rem;
+
+    font-family: inherit;
+
+    font-size: 0.76rem;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+}
+
+.daily-operations-report
+.operations-table
+.badge i {
+    font-size: 0.85rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Money
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+td.fw-semibold {
+    white-space: nowrap;
+}
+
+.daily-operations-report
+.operations-table
+td:nth-child(6) {
+    color: #166534;
+
+    font-weight: 800;
+
     white-space: nowrap;
 }
 
 
-/* =========================================
-   Amount
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Account / Loan / Installment
+|--------------------------------------------------------------------------
+*/
 
-.daily-operations-report .operations-table td:nth-child(5) {
+.daily-operations-report
+.operations-table
+td:nth-child(5) {
+    word-break: normal;
+
+    overflow-wrap: normal;
+
+    white-space: normal;
+}
+
+.daily-operations-report
+.operations-table
+td:nth-child(5)
+span[dir="ltr"] {
+    display: inline-block;
+
+    direction: ltr;
+
+    unicode-bidi: embed;
+
+    white-space: nowrap !important;
+
+    word-break: keep-all !important;
+
+    overflow-wrap: normal !important;
+}
+
+.daily-operations-report
+.operations-table
+td:nth-child(5)
+.fw-semibold {
+    color: #3730a3;
+}
+
+.daily-operations-report
+.operations-table
+td:nth-child(5)
+.small {
+    color: #64748b !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Customer / Payer / Borrower
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+td:nth-child(4) {
+    min-width: 210px;
+
+    text-align: right;
+}
+
+.daily-operations-report
+.operations-table
+td:nth-child(3) {
+    min-width: 125px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| LTR Values
+|--------------------------------------------------------------------------
+|
+| مهم:
+| فقط span دارای dir=ltr باید inline-block باشد.
+| خود td نباید inline-block شود.
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+span[dir="ltr"] {
+    direction: ltr;
+
+    unicode-bidi: embed;
+
+    display: inline-block;
+}
+
+.daily-operations-report
+.operations-table
+td[dir="ltr"] {
+    direction: ltr;
+
+    unicode-bidi: embed;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Account Numbers
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+td.account-number,
+.daily-operations-report
+.operations-table
+td.account-number span {
+    white-space: nowrap !important;
+
+    word-break: keep-all !important;
+
+    overflow-wrap: normal !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| LTR Table Cells
+|--------------------------------------------------------------------------
+*/
+
+.daily-operations-report
+.operations-table
+td[dir="ltr"] {
     white-space: nowrap;
-    font-weight: 600;
+
+    word-break: keep-all;
+
+    overflow-wrap: normal;
 }
 
 
-/* =========================================
-   Badges
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Table Responsive
+|--------------------------------------------------------------------------
+*/
 
-.daily-operations-report .operations-table .badge {
-    border-radius: 7px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.45rem 0.6rem;
-    white-space: nowrap;
+.daily-operations-report .table-responsive {
+    border-radius: 0 0 1rem 1rem;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        #c7d2fe
+        #f8fafc;
+}
+
+.daily-operations-report
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.daily-operations-report
+.table-responsive::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.daily-operations-report
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+
+    border-radius: 10px;
+}
+
+.daily-operations-report
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a5b4fc;
 }
 
 
-/* =========================================
-   Card Header
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| Empty State
+|--------------------------------------------------------------------------
+*/
 
-.daily-operations-report .card-header {
-    background: #fff !important;
+.daily-operations-report
+.operations-table
+.bi-inbox {
+    color: #a5b4fc;
 }
 
-.daily-operations-report .card-header h5 {
-    color: #343a40;
-    font-size: 0.98rem;
-}
+.daily-operations-report
+.operations-table
+td[colspan="8"] {
+    padding: 4rem 1rem !important;
 
-
-/* =========================================
-   Mobile
-   ========================================= */
-
-@media (max-width: 767.98px) {
-
-    .daily-operations-report {
-        padding-left: 0.65rem;
-        padding-right: 0.65rem;
-    }
-
-    .daily-operations-report .report-header .card-body {
-        padding: 1rem;
-    }
-
-    .daily-operations-report .report-header h4 {
-        font-size: 1rem;
-    }
-
-    .daily-operations-report .summary-card .card-body {
-        padding: 0.8rem;
-    }
-
-    .daily-operations-report .summary-label {
-        font-size: 0.72rem;
-    }
-
-    .daily-operations-report .summary-value {
-        font-size: 0.88rem;
-    }
-
-    .daily-operations-report .operations-table {
-        min-width: 850px;
-        font-size: 0.76rem;
-    }
-
-    .daily-operations-report .operations-table thead th,
-    .daily-operations-report .operations-table tbody td {
-        padding: 0.6rem 0.55rem;
-    }
-
-    .daily-operations-report .card-header {
-        padding: 0.9rem 1rem !important;
-    }
+    background: #fcfcff;
 }
 
 
-/* =========================================
-   Print
-   ========================================= */
+/*
+|--------------------------------------------------------------------------
+| PRINT
+|--------------------------------------------------------------------------
+|
+| در چاپ فقط جدول عملیات چاپ می‌شود.
+|
+| حذف می‌شوند:
+| - Header
+| - فیلترها
+| - Summary Cards
+| - Overall Status
+| - عنوان بالای جدول
+| - دکمه چاپ
+| - Sidebar / Navbar / Footer
+|--------------------------------------------------------------------------
+*/
 
 @media print {
 
+    /*
+    |--------------------------------------------------------------------------
+    | Page
+    |--------------------------------------------------------------------------
+    */
+
     @page {
-        size: A4 portrait;
-        margin: 10mm;
+        size: A4 landscape;
+
+        margin: 6mm;
     }
 
     html,
     body {
-        background: #fff !important;
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        background: #ffffff !important;
+
+        font-family:
+            "Vazirmatn",
+            sans-serif !important;
+
+        color: #111827 !important;
     }
 
     body {
-        font-family: "Vazirmatn", sans-serif !important;
-        font-size: 10px;
-    }
-
-    .sidebar,
-    .navbar,
-    header,
-    footer,
-    form,
-    .btn,
-    .no-print {
-        display: none !important;
-    }
-
-    .daily-operations-report {
-        width: 100% !important;
-        max-width: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    .daily-operations-report .report-header {
-        border: 0 !important;
-        box-shadow: none !important;
-        margin-bottom: 8px !important;
-    }
-
-    .daily-operations-report .report-header .card-body {
-        padding: 0 0 8px !important;
-    }
-
-    .daily-operations-report .report-header h4 {
-        font-size: 15px;
-    }
-
-    .daily-operations-report .summary-card,
-    .daily-operations-report .card {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-        border-radius: 5px !important;
-    }
-
-    .daily-operations-report .summary-card {
-        break-inside: avoid;
-    }
-
-    .daily-operations-report .summary-card .card-body {
-        padding: 6px;
-    }
-
-    .daily-operations-report .summary-label {
-        font-size: 8px;
-    }
-
-    .daily-operations-report .summary-value {
-        font-size: 9px;
-    }
-
-    .daily-operations-report .operations-table {
-        width: 100% !important;
-        min-width: 0 !important;
-        font-size: 8px !important;
-    }
-
-    .daily-operations-report .operations-table thead th {
-        background: #f2f2f2 !important;
-        font-size: 8px;
-        padding: 5px;
-    }
-
-    .daily-operations-report .operations-table tbody td {
-        padding: 5px;
-    }
-
-    .daily-operations-report .operations-table tr {
-        break-inside: avoid;
-    }
-
-    .daily-operations-report .badge {
-        border: 0 !important;
-        font-size: 7px !important;
-        padding: 2px 4px !important;
-    }
-
-    .daily-operations-report .table-responsive {
         overflow: visible !important;
     }
 
-    .daily-operations-report .card-header {
-        padding: 7px 10px !important;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Main Container
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report {
+        width: 100% !important;
+
+        max-width: none !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hide Everything Except Table
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report .report-header,
+    .daily-operations-report .no-print,
+    .daily-operations-report > .row,
+    .daily-operations-report > .card:not(.operations-card),
+    .daily-operations-report .operations-card .card-header,
+    .navbar,
+    .sidebar,
+    footer {
+        display: none !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Operations Card
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report .operations-card {
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        border: 0 !important;
+
+        border-radius: 0 !important;
+
+        box-shadow: none !important;
+
+        background: #ffffff !important;
+
+        break-inside: auto !important;
+
+        page-break-inside: auto !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Table Container
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-card
+    .table-responsive {
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        overflow: visible !important;
+
+        border-radius: 0 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Table
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table {
+        display: table !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        table-layout: fixed !important;
+
+        border-collapse: collapse !important;
+
+        border-spacing: 0 !important;
+
+        font-size: 7.4pt !important;
+
+        color: #111827 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Repeating Header
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    thead {
+        display: table-header-group !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    thead tr {
+        display: table-row !important;
+
+        break-inside: avoid !important;
+
+        page-break-inside: avoid !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    thead th {
+        display: table-cell !important;
+
+        padding: 1.8mm 1.2mm !important;
+
+        background: #e5e7eb !important;
+
+        color: #111827 !important;
+
+        border: 1px solid #9ca3af !important;
+
+        font-size: 7.3pt !important;
+
+        font-weight: 800 !important;
+
+        line-height: 1.4 !important;
+
+        white-space: nowrap !important;
+
+        vertical-align: middle !important;
+
+        text-align: center !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Table Body
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    tbody {
+        display: table-row-group !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    tbody tr {
+        display: table-row !important;
+
+        break-inside: avoid !important;
+
+        page-break-inside: avoid !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    tbody td {
+        display: table-cell !important;
+
+        padding: 1.5mm 1.2mm !important;
+
+        background: #ffffff !important;
+
+        color: #111827 !important;
+
+        border: 1px solid #d1d5db !important;
+
+        font-size: 7.2pt !important;
+
+        line-height: 1.5 !important;
+
+        vertical-align: middle !important;
+
+        word-break: normal !important;
+
+        overflow-wrap: normal !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Column Widths
+    |--------------------------------------------------------------------------
+    |
+    | 1  ردیف
+    | 2  نوع عملیات
+    | 3  کد عضو
+    | 4  مشخصات عملیات
+    | 5  حساب / وام / قسط
+    | 6  مبلغ
+    | 7  تاریخ
+    | 8  توضیحات
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(1),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(1) {
+        width: 4% !important;
+
+        text-align: center !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(2),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(2) {
+        width: 12% !important;
+
+        text-align: center !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(3),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(3) {
+        width: 10% !important;
+
+        text-align: center !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(4),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(4) {
+        width: 20% !important;
+
+        min-width: 0 !important;
+
+        text-align: right !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(5),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(5) {
+        width: 18% !important;
+
+        min-width: 0 !important;
+
+        text-align: center !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(6),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(6) {
+        width: 11% !important;
+
+        text-align: center !important;
+
+        white-space: nowrap !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(7),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(7) {
+        width: 11% !important;
+
+        text-align: center !important;
+
+        white-space: nowrap !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    th:nth-child(8),
+    .daily-operations-report
+    .operations-table
+    td:nth-child(8) {
+        width: 14% !important;
+
+        min-width: 0 !important;
+
+        text-align: right !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LTR Values
+    |--------------------------------------------------------------------------
+    |
+    | فقط span دارای dir=ltr inline-block است.
+    | td همچنان table-cell باقی می‌ماند.
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    span[dir="ltr"] {
+        direction: ltr !important;
+
+        unicode-bidi: embed !important;
+
+        display: inline-block !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    td[dir="ltr"] {
+        direction: ltr !important;
+
+        unicode-bidi: embed !important;
+
+        display: table-cell !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Account / Loan / Installment
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(5) {
+        word-break: normal !important;
+
+        overflow-wrap: normal !important;
+
+        white-space: normal !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(5)
+    span[dir="ltr"] {
+        direction: ltr !important;
+
+        unicode-bidi: embed !important;
+
+        display: inline-block !important;
+
+        white-space: nowrap !important;
+
+        word-break: keep-all !important;
+
+        overflow-wrap: normal !important;
+
+        letter-spacing: 0 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Account Number
+    |--------------------------------------------------------------------------
+    |
+    | 6111-000005 باید یک‌تکه چاپ شود.
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td.account-number,
+    .daily-operations-report
+    .operations-table
+    td.account-number span {
+        white-space: nowrap !important;
+
+        word-break: keep-all !important;
+
+        overflow-wrap: normal !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Money
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(6) {
+        color: #111827 !important;
+
+        font-weight: 800 !important;
+
+        white-space: nowrap !important;
+
+        word-break: keep-all !important;
+
+        overflow-wrap: normal !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Date
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(7) {
+        white-space: nowrap !important;
+
+        word-break: keep-all !important;
+
+        overflow-wrap: normal !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Customer / Payer / Borrower
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(4) {
+        word-break: normal !important;
+
+        overflow-wrap: break-word !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Description
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td:nth-child(8) {
+        white-space: normal !important;
+
+        word-break: normal !important;
+
+        overflow-wrap: break-word !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Badges
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    .badge {
+        display: inline-flex !important;
+
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+
+        padding: 0.7mm 1.1mm !important;
+
+        border: 1px solid #9ca3af !important;
+
+        border-radius: 1.5mm !important;
+
+        background: #f9fafb !important;
+
+        color: #111827 !important;
+
+        font-size: 6.7pt !important;
+
+        font-weight: 700 !important;
+
+        white-space: normal !important;
+
+        line-height: 1.4 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Text
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    .text-muted {
+        color: #374151 !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    .small {
+        font-size: 6.5pt !important;
+
+        line-height: 1.5 !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    .fw-semibold {
+        color: #111827 !important;
+
+        font-weight: 700 !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Empty State
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table
+    td[colspan="8"] {
+        padding: 12mm 5mm !important;
+
+        background: #ffffff !important;
+
+        color: #4b5563 !important;
+
+        text-align: center !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Remove Screen Effects
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report * {
+        animation: none !important;
+
+        transition: none !important;
+    }
+
+    .daily-operations-report
+    .operations-table
+    tbody tr:hover {
+        background: transparent !important;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Visibility
+    |--------------------------------------------------------------------------
+    */
+
+    .daily-operations-report
+    .operations-table {
+        visibility: visible !important;
     }
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Tablet
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 991.98px) {
+
+    .daily-operations-report
+    .operations-table {
+        min-width: 1000px;
+    }
+
+    .daily-operations-report
+    .summary-value {
+        font-size: 0.95rem;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Mobile
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 767.98px) {
+
+    .daily-operations-report
+    .report-header
+    .card-body {
+        padding: 1rem;
+    }
+
+    .daily-operations-report
+    .report-header
+    h4 {
+        font-size: 1.05rem;
+    }
+
+    .daily-operations-report
+    .report-header
+    .text-muted {
+        font-size: 0.76rem;
+
+        line-height: 1.8;
+    }
+
+    .daily-operations-report
+    .summary-card
+    .card-body {
+        padding: 0.85rem;
+    }
+
+    .daily-operations-report
+    .summary-label {
+        font-size: 0.74rem;
+    }
+
+    .daily-operations-report
+    .summary-value {
+        font-size: 0.88rem;
+    }
+
+    .daily-operations-report
+    .operations-table {
+        min-width: 980px;
+    }
+
+    .daily-operations-report
+    .operations-table
+    tbody
+    td {
+        padding: 0.75rem 0.6rem;
+    }
+
+    .daily-operations-report
+    .operations-table
+    .badge {
+        min-width: 115px;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Small Mobile
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 575.98px) {
+
+    .daily-operations-report
+    .row.g-3 {
+        --bs-gutter-x: 0.65rem;
+
+        --bs-gutter-y: 0.65rem;
+    }
+
+    .daily-operations-report
+    .summary-card {
+        border-radius: 0.85rem;
+    }
+
+    .daily-operations-report
+    .summary-card
+    .card-body {
+        padding: 0.75rem;
+    }
+
+    .daily-operations-report
+    .summary-label {
+        font-size: 0.7rem;
+    }
+
+    .daily-operations-report
+    .summary-value {
+        font-size: 0.82rem;
+    }
+
+    .daily-operations-report
+    .btn-primary {
+        min-height: 40px;
+
+        font-size: 0.82rem;
+    }
+}

@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\AccountingStatus;
-use App\Enums\DonationStatus;
-use App\Enums\TransactionType;
-use App\Enums\WithdrawalStatus;
 use App\Http\Controllers\Controller;
-use App\Models\AccountTransaction;
 use App\Models\Customer;
-use App\Models\Donation;
+use App\Models\DonationPayment;
 use App\Models\LoanPayment;
 use App\Models\LoanRequest;
 use App\Models\SavingsTransfer;
-use App\Models\Withdrawal;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -54,7 +50,7 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | ثبت‌نام اعضای جدید
+        | 1. ثبت‌نام مشتری
         |--------------------------------------------------------------------------
         */
 
@@ -92,172 +88,10 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | واریزهای حساب
+        | 2 و 7. واریز به حساب پس‌انداز خود / دیگران
         |--------------------------------------------------------------------------
         |
-        | این بخش مربوط به AccountTransaction است.
-        | انتقال پس‌انداز در این بخش قرار نمی‌گیرد.
-        |
-        */
-
-        $deposits = AccountTransaction::query()
-            ->with([
-                'account.customer',
-                'creator',
-            ])
-            ->where(
-                'transaction_type',
-                TransactionType::DEPOSIT
-            )
-            ->where(function (Builder $query) {
-
-                $query
-                    ->whereNull('description')
-                    ->orWhere(
-                        'description',
-                        'not like',
-                        'برگشت مبلغ برداشت%'
-                    );
-
-            })
-            ->when(
-                $fromDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'transaction_date',
-                    '>=',
-                    $fromDate
-                )
-            )
-            ->when(
-                $toDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'transaction_date',
-                    '<=',
-                    $toDate
-                )
-            )
-            ->when(
-                $customerId,
-                fn (Builder $query) =>
-                $query->whereHas(
-                    'account',
-                    fn (Builder $accountQuery) =>
-                    $accountQuery->where(
-                        'customer_id',
-                        $customerId
-                    )
-                )
-            )
-            ->latest('transaction_date')
-            ->latest('id')
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | برداشت‌ها
-        |--------------------------------------------------------------------------
-        */
-
-        $withdrawals = Withdrawal::query()
-            ->with([
-                'account.customer',
-                'paidBy',
-            ])
-            ->where(
-                'status',
-                WithdrawalStatus::PAID
-            )
-            ->when(
-                $fromDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'paid_at',
-                    '>=',
-                    $fromDate
-                )
-            )
-            ->when(
-                $toDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'paid_at',
-                    '<=',
-                    $toDate
-                )
-            )
-            ->when(
-                $customerId,
-                fn (Builder $query) =>
-                $query->whereHas(
-                    'account',
-                    fn (Builder $accountQuery) =>
-                    $accountQuery->where(
-                        'customer_id',
-                        $customerId
-                    )
-                )
-            )
-            ->latest('paid_at')
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | پرداخت اقساط
-        |--------------------------------------------------------------------------
-        */
-
-        $loanPayments = LoanPayment::query()
-            ->with([
-                'loan.customer.accounts',
-                'loan.customer.user',
-                'installment',
-                'user',
-            ])
-            ->whereNotNull('paid_at')
-            ->when(
-                $fromDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'paid_at',
-                    '>=',
-                    $fromDate
-                )
-            )
-            ->when(
-                $toDate,
-                fn (Builder $query) =>
-                $query->whereDate(
-                    'paid_at',
-                    '<=',
-                    $toDate
-                )
-            )
-            ->when(
-                $customerId,
-                fn (Builder $query) =>
-                $query->whereHas(
-                    'loan',
-                    fn (Builder $loanQuery) =>
-                    $loanQuery->where(
-                        'customer_id',
-                        $customerId
-                    )
-                )
-            )
-            ->latest('paid_at')
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | انتقال‌های پس‌انداز
-        |--------------------------------------------------------------------------
-        |
-        | فقط انتقال‌های موفق.
+        | فقط واریز موفق درگاه.
         |
         */
 
@@ -272,6 +106,7 @@ class DailyOperationsReportController extends Controller
                 'status',
                 'paid'
             )
+            ->whereNotNull('paid_at')
             ->when(
                 $fromDate,
                 fn (Builder $query) =>
@@ -294,30 +129,18 @@ class DailyOperationsReportController extends Controller
                 $customerId,
                 function (Builder $query) use ($customerId) {
 
-                    $query->where(function (Builder $q) use ($customerId) {
-
-                        /*
-                         * مشتری مقصد
-                         */
-                        $q->where(
-                            'receiver_customer_id',
-                            $customerId
-                        );
-
-                        /*
-                         * مشتری صاحب حساب مبدأ
-                         */
-                        $q->orWhereHas(
-                            'account',
-                            fn (Builder $accountQuery) =>
-                            $accountQuery->where(
+                    /*
+                     * مشتری در این بخش یعنی واریزکننده.
+                     */
+                    $query->whereIn(
+                        'sender_user_id',
+                        User::query()
+                            ->where(
                                 'customer_id',
                                 $customerId
                             )
-                        );
-
-                    });
-
+                            ->select('id')
+                    );
                 }
             )
             ->latest('paid_at')
@@ -327,20 +150,69 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | کمک‌های صندوق
+        | فقط عملیات حسابداری تأیید شده
         |--------------------------------------------------------------------------
         */
 
-        $donations = Donation::query()
+        if ($onlyConfirmed) {
+
+            $savingsTransfers = $savingsTransfers->filter(
+                fn ($transfer) =>
+                    $transfer->accounting_status
+                    === AccountingStatus::CONFIRMED
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | تفکیک واریز به حساب خود / دیگران
+        |--------------------------------------------------------------------------
+        */
+
+        $ownSavingsTransfers = $savingsTransfers->filter(
+            function ($transfer) {
+
+                $receiverUserId =
+                    $transfer->receiver?->user?->id;
+
+                return $receiverUserId !== null
+                    && $receiverUserId === $transfer->sender_user_id;
+            }
+        );
+
+
+        $otherSavingsTransfers = $savingsTransfers->filter(
+            function ($transfer) {
+
+                $receiverUserId =
+                    $transfer->receiver?->user?->id;
+
+                return $receiverUserId === null
+                    || $receiverUserId !== $transfer->sender_user_id;
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 3 و 4. پرداخت قسط خود / دیگران
+        |--------------------------------------------------------------------------
+        |
+        | user_id = پرداخت‌کننده
+        |
+        | loan.customer = صاحب وام
+        |
+        */
+
+        $loanPayments = LoanPayment::query()
             ->with([
-                'customer.accounts',
-                'donationType',
-                'creator',
+                'loan.customer.accounts',
+                'loan.customer.user',
+                'installment',
+                'user.customer',
             ])
-            ->where(
-                'status',
-                DonationStatus::SUCCESS
-            )
+            ->whereNotNull('paid_at')
             ->when(
                 $fromDate,
                 fn (Builder $query) =>
@@ -361,19 +233,134 @@ class DailyOperationsReportController extends Controller
             )
             ->when(
                 $customerId,
+                function (Builder $query) use ($customerId) {
+
+                    /*
+                     * مشتری در این قسمت یعنی پرداخت‌کننده.
+                     */
+                    $query->whereIn(
+                        'user_id',
+                        User::query()
+                            ->where(
+                                'customer_id',
+                                $customerId
+                            )
+                            ->select('id')
+                    );
+                }
+            )
+            ->latest('paid_at')
+            ->latest('id')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | فقط عملیات حسابداری تأیید شده
+        |--------------------------------------------------------------------------
+        */
+
+        if ($onlyConfirmed) {
+
+            $loanPayments = $loanPayments->filter(
+                fn ($payment) =>
+                    $payment->accounting_status
+                    === AccountingStatus::CONFIRMED
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | تفکیک پرداخت قسط خود / دیگران
+        |--------------------------------------------------------------------------
+        */
+
+        $ownLoanPayments = $loanPayments->filter(
+            function ($payment) {
+
+                $customerUserId =
+                    $payment->loan?->customer?->user?->id;
+
+                return $customerUserId !== null
+                    && $customerUserId === $payment->user_id;
+            }
+        );
+
+
+        $otherLoanPayments = $loanPayments->filter(
+            function ($payment) {
+
+                $customerUserId =
+                    $payment->loan?->customer?->user?->id;
+
+                return $customerUserId === null
+                    || $customerUserId !== $payment->user_id;
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 5. کمک / صدقه
+        |--------------------------------------------------------------------------
+        |
+        | منبع واقعی:
+        | donation_payments
+        |
+        | در پروژه فعلی:
+        |
+        | status = 1  => پرداخت موفق
+        | paid_at      => ممکن است null باشد
+        |
+        | بنابراین موفق بودن پرداخت را با status بررسی می‌کنیم
+        | و تاریخ عملیات را از created_at می‌گیریم.
+        |
+        */
+
+        $donations = DonationPayment::query()
+            ->with([
+                'customer',
+                'account',
+            ])
+            ->where(
+                'status',
+                1
+            )
+            ->when(
+                $fromDate,
+                fn (Builder $query) =>
+                $query->whereDate(
+                    'created_at',
+                    '>=',
+                    $fromDate
+                )
+            )
+            ->when(
+                $toDate,
+                fn (Builder $query) =>
+                $query->whereDate(
+                    'created_at',
+                    '<=',
+                    $toDate
+                )
+            )
+            ->when(
+                $customerId,
                 fn (Builder $query) =>
                 $query->where(
                     'customer_id',
                     $customerId
                 )
             )
-            ->latest('paid_at')
+            ->latest('created_at')
+            ->latest('id')
             ->get();
 
 
         /*
         |--------------------------------------------------------------------------
-        | درخواست‌های وام
+        | 6. درخواست وام
         |--------------------------------------------------------------------------
         */
 
@@ -418,172 +405,72 @@ class DailyOperationsReportController extends Controller
                 )
             )
             ->latest('created_at')
+            ->latest('id')
             ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | فقط عملیات مالی قطعی
-        |--------------------------------------------------------------------------
-        */
-
-        if ($onlyConfirmed) {
-
-            $savingsTransfers = $savingsTransfers->filter(
-                fn ($transfer) =>
-                    $transfer->accounting_status
-                    === AccountingStatus::CONFIRMED
-            );
-
-            $loanPayments = $loanPayments->filter(
-                fn ($payment) =>
-                    $payment->accounting_status
-                    === AccountingStatus::CONFIRMED
-            );
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | تفکیک واریز به حساب پس‌انداز خود و دیگران
-        |--------------------------------------------------------------------------
-        |
-        | خود:
-        | صاحب مشتری مقصد = کاربری که انتقال را انجام داده است.
-        |
-        | دیگران:
-        | صاحب مشتری مقصد با کاربر فرستنده متفاوت است.
-        |
-        */
-
-        $ownSavingsTransfers = $savingsTransfers->filter(
-            function ($transfer) {
-
-                $receiverUserId =
-                    $transfer->receiver?->user?->id;
-
-                return $receiverUserId !== null
-                    && $receiverUserId === $transfer->sender_user_id;
-            }
-        );
-
-
-        $otherSavingsTransfers = $savingsTransfers->filter(
-            function ($transfer) {
-
-                $receiverUserId =
-                    $transfer->receiver?->user?->id;
-
-                return $receiverUserId === null
-                    || $receiverUserId !== $transfer->sender_user_id;
-            }
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | تفکیک پرداخت قسط خود و دیگران
-        |--------------------------------------------------------------------------
-        */
-
-        $ownLoanPayments = $loanPayments->filter(
-            function ($payment) {
-
-                $customerUserId =
-                    $payment->loan?->customer?->user?->id;
-
-                return $customerUserId !== null
-                    && $customerUserId === $payment->user_id;
-            }
-        );
-
-
-        $otherLoanPayments = $loanPayments->filter(
-            function ($payment) {
-
-                $customerUserId =
-                    $payment->loan?->customer?->user?->id;
-
-                return $customerUserId === null
-                    || $customerUserId !== $payment->user_id;
-            }
-        );
 
 
         /*
         |--------------------------------------------------------------------------
         | فیلتر نوع عملیات
         |--------------------------------------------------------------------------
-        |
-        | نکته:
-        | transfer شامل هر دو نوع انتقال پس‌انداز است.
-        |
         */
 
         switch ($operationType) {
 
             case 'registration':
 
-                $deposits = collect();
-                $withdrawals = collect();
-                $loanPayments = collect();
-                $savingsTransfers = collect();
                 $ownSavingsTransfers = collect();
                 $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
+                $otherLoanPayments = collect();
                 $donations = collect();
                 $loanRequests = collect();
 
                 break;
 
 
-            case 'deposit':
+            case 'saving_own':
 
                 $customers = collect();
-                $withdrawals = collect();
-                $loanPayments = collect();
-                $savingsTransfers = collect();
-                $ownSavingsTransfers = collect();
                 $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
+                $otherLoanPayments = collect();
                 $donations = collect();
                 $loanRequests = collect();
 
                 break;
 
 
-            case 'withdrawal':
+            case 'saving_other':
 
                 $customers = collect();
-                $deposits = collect();
-                $loanPayments = collect();
-                $savingsTransfers = collect();
                 $ownSavingsTransfers = collect();
-                $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
+                $otherLoanPayments = collect();
                 $donations = collect();
                 $loanRequests = collect();
 
                 break;
 
 
-            case 'loan_payment':
+            case 'loan_payment_own':
 
                 $customers = collect();
-                $deposits = collect();
-                $withdrawals = collect();
-                $savingsTransfers = collect();
                 $ownSavingsTransfers = collect();
                 $otherSavingsTransfers = collect();
+                $otherLoanPayments = collect();
                 $donations = collect();
                 $loanRequests = collect();
 
                 break;
 
 
-            case 'transfer':
+            case 'loan_payment_other':
 
                 $customers = collect();
-                $deposits = collect();
-                $withdrawals = collect();
-                $loanPayments = collect();
+                $ownSavingsTransfers = collect();
+                $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
                 $donations = collect();
                 $loanRequests = collect();
 
@@ -593,12 +480,10 @@ class DailyOperationsReportController extends Controller
             case 'donation':
 
                 $customers = collect();
-                $deposits = collect();
-                $withdrawals = collect();
-                $loanPayments = collect();
-                $savingsTransfers = collect();
                 $ownSavingsTransfers = collect();
                 $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
+                $otherLoanPayments = collect();
                 $loanRequests = collect();
 
                 break;
@@ -607,12 +492,10 @@ class DailyOperationsReportController extends Controller
             case 'loan_request':
 
                 $customers = collect();
-                $deposits = collect();
-                $withdrawals = collect();
-                $loanPayments = collect();
-                $savingsTransfers = collect();
                 $ownSavingsTransfers = collect();
                 $otherSavingsTransfers = collect();
+                $ownLoanPayments = collect();
+                $otherLoanPayments = collect();
                 $donations = collect();
 
                 break;
@@ -633,23 +516,17 @@ class DailyOperationsReportController extends Controller
 
         $totals = [
 
-            'deposits' =>
-                $deposits->sum('amount'),
-
-            'withdrawals' =>
-                $withdrawals->sum('amount'),
-
-            'loan_payments' =>
-                $loanPayments->sum('amount'),
-
-            'savings_transfers' =>
-                $savingsTransfers->sum('amount'),
-
             'own_savings_transfers' =>
                 $ownSavingsTransfers->sum('amount'),
 
             'other_savings_transfers' =>
                 $otherSavingsTransfers->sum('amount'),
+
+            'own_loan_payments' =>
+                $ownLoanPayments->sum('amount'),
+
+            'other_loan_payments' =>
+                $otherLoanPayments->sum('amount'),
 
             'donations' =>
                 $donations->sum('amount'),
@@ -659,18 +536,19 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | خالص عملیات مالی
+        | مجموع عملیات مالی مشتری
         |--------------------------------------------------------------------------
         |
-        | انتقال بین حساب اعضا در خالص صندوق لحاظ نمی‌شود.
+        | این عدد خالص حسابداری نیست.
         |
         */
 
-        $netAmount =
-            $totals['deposits']
-            + $totals['loan_payments']
-            + $totals['donations']
-            - $totals['withdrawals'];
+        $totalReceived =
+            $totals['own_savings_transfers']
+            + $totals['other_savings_transfers']
+            + $totals['own_loan_payments']
+            + $totals['other_loan_payments']
+            + $totals['donations'];
 
 
         /*
@@ -684,23 +562,17 @@ class DailyOperationsReportController extends Controller
             'customers' =>
                 $customers->count(),
 
-            'deposits' =>
-                $deposits->count(),
-
-            'withdrawals' =>
-                $withdrawals->count(),
-
-            'loan_payments' =>
-                $loanPayments->count(),
-
-            'savings_transfers' =>
-                $savingsTransfers->count(),
-
             'own_savings_transfers' =>
                 $ownSavingsTransfers->count(),
 
             'other_savings_transfers' =>
                 $otherSavingsTransfers->count(),
+
+            'own_loan_payments' =>
+                $ownLoanPayments->count(),
+
+            'other_loan_payments' =>
+                $otherLoanPayments->count(),
 
             'donations' =>
                 $donations->count(),
@@ -713,7 +585,7 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | لیست اعضا برای فیلتر
+        | مشتریان برای فیلتر
         |--------------------------------------------------------------------------
         */
 
@@ -730,7 +602,7 @@ class DailyOperationsReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | ارسال اطلاعات به View
+        | ارسال به View
         |--------------------------------------------------------------------------
         */
 
@@ -738,14 +610,10 @@ class DailyOperationsReportController extends Controller
             'admin.reports.daily-operations',
             compact(
                 'customers',
-                'deposits',
-                'withdrawals',
-                'loanPayments',
-                'ownLoanPayments',
-                'otherLoanPayments',
-                'savingsTransfers',
                 'ownSavingsTransfers',
                 'otherSavingsTransfers',
+                'ownLoanPayments',
+                'otherLoanPayments',
                 'donations',
                 'loanRequests',
                 'totals',
@@ -757,7 +625,7 @@ class DailyOperationsReportController extends Controller
                 'onlyConfirmed',
                 'fromDate',
                 'toDate',
-                'netAmount',
+                'totalReceived',
             )
         );
     }
