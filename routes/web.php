@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\AccountingController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\DailyOperationsReportController;
-
+use App\Http\Controllers\Admin\GatewayTransactionsReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -502,9 +502,22 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
+    /*
+    /*
+|--------------------------------------------------------------------------
+| Reports
+|--------------------------------------------------------------------------
+*/
+
     Route::prefix('admin/reports')
         ->name('admin.reports.')
         ->group(function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Daily Operations Report
+            |--------------------------------------------------------------------------
+            */
 
             Route::get(
                 '/daily-operations',
@@ -514,11 +527,38 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
                 ]
             )->name('daily-operations');
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | Gateway Transactions Report
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/gateway-transactions',
+                [
+                    GatewayTransactionsReportController::class,
+                    'index'
+                ]
+            )->name('gateway-transactions');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Gateway Transactions Export
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/gateway-transactions/export',
+                [
+                    GatewayTransactionsReportController::class,
+                    'export'
+                ]
+            )->name('gateway-transactions.export');
+
         });
-
 });
-
-
 /*
 |--------------------------------------------------------------------------
 | Payments

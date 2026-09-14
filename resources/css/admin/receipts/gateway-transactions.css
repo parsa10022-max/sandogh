@@ -1,0 +1,641 @@
+/*
+|--------------------------------------------------------------------------
+| Gateway Transactions Report
+| Design System #1
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report {
+    --report-primary: #6f42c1;
+    --report-primary-dark: #59339d;
+    --report-blue: #0d6efd;
+    --report-success: #198754;
+    --report-danger: #dc3545;
+    --report-warning: #f59f00;
+    --report-bg: #f6f7fb;
+    --report-border: #e9e7f2;
+    --report-text: #2f3340;
+    --report-muted: #7b8190;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Page
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report {
+    background: var(--report-bg);
+    min-height: calc(100vh - 70px);
+    padding-bottom: 35px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Header
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report > .d-flex:first-child {
+    padding: 4px 2px;
+}
+
+.gateway-report h4 {
+    color: var(--report-text);
+    font-weight: 800;
+}
+
+.gateway-report h4 .bi {
+    color: var(--report-primary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Summary Cards
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .report-stat-card {
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid var(--report-border) !important;
+    border-radius: 18px !important;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 18px rgba(44, 38, 70, 0.06) !important;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.gateway-report .report-stat-card::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 5px;
+    height: 100%;
+
+    background: linear-gradient(
+        180deg,
+        var(--report-primary),
+        var(--report-blue)
+    );
+
+    opacity: 0.9;
+}
+
+.gateway-report .report-stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 28px rgba(44, 38, 70, 0.10) !important;
+}
+
+.gateway-report .report-stat-card .card-body {
+    padding: 20px;
+}
+
+.gateway-report .report-stat-icon {
+    width: 52px;
+    height: 52px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    font-size: 1.35rem;
+
+    flex-shrink: 0;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Summary icon colors
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .report-stat-icon.bg-primary-subtle {
+    background: #eee8fb !important;
+    color: var(--report-primary) !important;
+}
+
+.gateway-report .report-stat-icon.bg-success-subtle {
+    background: #e8f7ef !important;
+    color: var(--report-success) !important;
+}
+
+.gateway-report .report-stat-icon.bg-danger-subtle {
+    background: #fdebed !important;
+    color: var(--report-danger) !important;
+}
+
+.gateway-report .report-stat-icon.bg-warning-subtle {
+    background: #fff5df !important;
+    color: var(--report-warning) !important;
+}
+
+.gateway-report .report-stat-card .fs-4 {
+    color: var(--report-text);
+    margin-top: 2px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Amount Summary
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .card.border-0.shadow-sm {
+    border: 1px solid var(--report-border) !important;
+
+    border-radius: 18px !important;
+
+    box-shadow:
+        0 5px 18px rgba(44, 38, 70, 0.05) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Filters
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .form-label {
+    color: var(--report-text);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.gateway-report .form-control,
+.gateway-report .form-select {
+    min-height: 44px;
+
+    border: 1px solid #ddd9e8;
+    border-radius: 11px;
+
+    background-color: #fff;
+
+    font-family: inherit;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.gateway-report .form-control:focus,
+.gateway-report .form-select:focus {
+    border-color: var(--report-primary);
+
+    box-shadow:
+        0 0 0 0.2rem rgba(111, 66, 193, 0.12);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Buttons
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .btn {
+    min-height: 42px;
+
+    border-radius: 11px;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.gateway-report .btn:hover {
+    transform: translateY(-1px);
+}
+
+.gateway-report .btn-primary {
+    background: linear-gradient(
+        135deg,
+        var(--report-primary),
+        var(--report-blue)
+    );
+
+    border: none;
+
+    box-shadow:
+        0 5px 12px rgba(111, 66, 193, 0.18);
+}
+
+.gateway-report .btn-success {
+    box-shadow:
+        0 5px 12px rgba(25, 135, 84, 0.14);
+}
+
+.gateway-report .btn-danger {
+    box-shadow:
+        0 5px 12px rgba(220, 53, 69, 0.12);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Main Transactions Card
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .gateway-report-card {
+    border: 1px solid var(--report-border) !important;
+
+    border-radius: 20px !important;
+
+    background: #fff;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 7px 25px rgba(44, 38, 70, 0.07) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Transactions Header
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .gateway-report-card > .border-bottom {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #faf9fe 100%
+        );
+
+    border-color: var(--report-border) !important;
+
+    padding: 18px 20px !important;
+}
+
+.gateway-report .gateway-report-card h5 {
+    color: var(--report-text);
+    font-weight: 800;
+}
+
+.gateway-report .gateway-report-card .text-muted {
+    color: var(--report-muted) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Report Actions
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .report-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.gateway-report .report-actions .btn {
+    white-space: nowrap;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Table
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .table-responsive {
+    scrollbar-width: thin;
+}
+
+.gateway-report .table {
+    margin-bottom: 0;
+
+    color: var(--report-text);
+}
+
+.gateway-report .table thead th {
+    padding: 15px 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7f4fc,
+            #f2f6ff
+        );
+
+    border-bottom: 1px solid #ddd9e8;
+
+    color: #4b4264;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.gateway-report .table tbody td {
+    padding: 14px 13px;
+
+    border-color: #f0eef5;
+
+    font-size: 0.86rem;
+}
+
+.gateway-report .table tbody tr {
+    transition:
+        background-color 0.15s ease;
+}
+
+.gateway-report .table tbody tr:hover {
+    background-color: #faf9fe;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Amount
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .table tbody td.fw-semibold {
+    color: var(--report-primary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Operation Badge
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .table .badge {
+    border-radius: 8px;
+
+    padding: 7px 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.gateway-report .table .bg-primary-subtle {
+    background: #eee8fb !important;
+    color: #6540a8 !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Status Badges
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .badge.bg-success-subtle {
+    background: #e8f7ef !important;
+    color: #167448 !important;
+}
+
+.gateway-report .badge.bg-danger-subtle {
+    background: #fdebed !important;
+    color: #b42333 !important;
+}
+
+.gateway-report .badge.bg-warning-subtle {
+    background: #fff4d9 !important;
+    color: #9a6800 !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Empty State
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .table tbody td[colspan] {
+    padding: 65px 20px !important;
+}
+
+.gateway-report .table tbody td[colspan] .bi {
+    color: #c7c1d9;
+}
+
+.gateway-report .table tbody td[colspan] .fw-semibold {
+    color: var(--report-text);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Total Footer
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .table tfoot td {
+    padding: 16px 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f6f2fc,
+            #f1f5ff
+        );
+
+    border-top: 2px solid #d9d2e8;
+
+    color: var(--report-text);
+}
+
+.gateway-report .table tfoot td:nth-child(6) {
+    color: var(--report-primary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Print Header
+|--------------------------------------------------------------------------
+*/
+
+.gateway-report .print-header {
+    display: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Print
+|--------------------------------------------------------------------------
+*/
+
+@media print {
+
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+
+    body {
+        background: #fff !important;
+    }
+
+    .gateway-report {
+        width: 100% !important;
+        max-width: none !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        background: #fff !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .gateway-report .print-header {
+        display: block !important;
+
+        text-align: center;
+
+        margin-bottom: 15px;
+    }
+
+    .gateway-report .print-header h4 {
+        margin: 0 0 5px;
+
+        font-weight: 800;
+    }
+
+    .gateway-report .print-date {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .gateway-report .gateway-report-card {
+        border: 0 !important;
+
+        box-shadow: none !important;
+
+        border-radius: 0 !important;
+    }
+
+    .gateway-report .gateway-report-card .table-responsive {
+        overflow: visible !important;
+    }
+
+    .gateway-report .table {
+        width: 100% !important;
+
+        font-size: 10px;
+
+        border-collapse: collapse !important;
+    }
+
+    .gateway-report .table th,
+    .gateway-report .table td {
+        border: 1px solid #999 !important;
+
+        padding: 5px !important;
+    }
+
+    .gateway-report .table thead th {
+        background: #f1f1f1 !important;
+
+        color: #000 !important;
+    }
+
+    .gateway-report .table tfoot td {
+        background: #f5f5f5 !important;
+
+        color: #000 !important;
+
+        font-weight: 700;
+
+        border-top: 2px solid #555 !important;
+    }
+
+    .gateway-report .badge {
+        border: 0 !important;
+
+        background: transparent !important;
+
+        color: #000 !important;
+
+        padding: 0 !important;
+
+        font-weight: 600;
+    }
+
+    .gateway-report .badge i {
+        display: none !important;
+    }
+
+    .gateway-report .text-muted {
+        color: #555 !important;
+    }
+
+    .gateway-report .small {
+        font-size: 9px;
+    }
+
+    .gateway-report tr {
+        page-break-inside: avoid;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mobile
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 767.98px) {
+
+    .gateway-report {
+        padding-top: 12px;
+    }
+
+    .gateway-report .report-stat-card .card-body {
+        padding: 15px;
+    }
+
+    .gateway-report .report-stat-icon {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 13px;
+
+        font-size: 1.15rem;
+    }
+
+    .gateway-report .report-stat-card .fs-4 {
+        font-size: 1.2rem !important;
+    }
+
+    .gateway-report .report-actions {
+        width: 100%;
+
+        justify-content: stretch;
+    }
+
+    .gateway-report .report-actions .btn {
+        flex: 1 1 auto;
+    }
+
+    .gateway-report .gateway-report-card {
+        border-radius: 16px !important;
+    }
+
+    .gateway-report .gateway-report-card > .border-bottom {
+        padding: 15px !important;
+    }
+
+}
