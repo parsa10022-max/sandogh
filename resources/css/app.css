@@ -92,6 +92,8 @@
 @import "./admin/daily-report/daily-operations-report.css";
 @import "./admin/receipts/gateway-transactions.css";
 
+@import "./welcome.css";
+
 
 /* =========================================================
    Jalali Date Picker

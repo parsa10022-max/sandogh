@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>ورود به سامانه</title>
+    <title>ساخت حساب کاربری</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
@@ -20,31 +20,6 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         rel="stylesheet"
     >
-
-    <style>
-        body {
-            font-family: Vazirmatn, Tahoma, sans-serif;
-        }
-
-        .login-icon {
-            width: 64px;
-            height: 64px;
-            background: #f0ebfa;
-            color: #6f42c1;
-        }
-
-        .login-card {
-            border-radius: 20px;
-        }
-
-        .login-link {
-            color: #6f42c1;
-        }
-
-        .login-link:hover {
-            color: #59359c;
-        }
-    </style>
 </head>
 
 <body class="bg-light">
@@ -55,24 +30,30 @@
 
         <div class="col-12 col-md-6 col-lg-5">
 
-            <div class="card border-0 shadow-sm login-card">
+            <div class="card border-0 shadow-sm rounded-4">
 
                 <div class="card-body p-4 p-md-5">
 
                     <div class="text-center mb-4">
 
                         <div
-                            class="login-icon d-inline-flex align-items-center justify-content-center rounded-4 mb-3"
+                            class="d-inline-flex align-items-center justify-content-center rounded-4 mb-3"
+                            style="
+                                width: 64px;
+                                height: 64px;
+                                background: #f0ebfa;
+                                color: #6f42c1;
+                            "
                         >
-                            <i class="bi bi-person-lock fs-3"></i>
+                            <i class="bi bi-person-plus fs-3"></i>
                         </div>
 
                         <h1 class="h5 fw-bold mb-2">
-                            ورود به سامانه
+                            ساخت حساب کاربری
                         </h1>
 
                         <p class="text-muted small mb-0">
-                            برای استفاده از امکانات صندوق وارد حساب کاربری خود شوید.
+                            اطلاعات ورود به سامانه را برای خود تعیین کنید.
                         </p>
 
                     </div>
@@ -99,7 +80,7 @@
 
                     <form
                         method="POST"
-                        action="{{ route('login.store') }}"
+                        action="{{ route('customer-activation.create-account') }}"
                     >
                         @csrf
 
@@ -123,9 +104,13 @@
                                 required
                             >
 
+                            <div class="form-text">
+                                نام کاربری باید یکتا باشد.
+                            </div>
+
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
 
                             <label
                                 for="password"
@@ -139,7 +124,28 @@
                                 id="password"
                                 name="password"
                                 class="form-control form-control-lg"
-                                autocomplete="current-password"
+                                autocomplete="new-password"
+                                dir="ltr"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label
+                                for="password_confirmation"
+                                class="form-label fw-semibold"
+                            >
+                                تکرار رمز عبور
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                class="form-control form-control-lg"
+                                autocomplete="new-password"
                                 dir="ltr"
                                 required
                             >
@@ -150,40 +156,10 @@
                             type="submit"
                             class="btn btn-primary w-100 py-2"
                         >
-                            <i class="bi bi-box-arrow-in-left me-1"></i>
-                            ورود
+                            ایجاد حساب کاربری
                         </button>
 
                     </form>
-
-                    <div class="text-center mt-4">
-
-                        <a
-                            href="{{ route('password.request') }}"
-                            class="text-decoration-none small login-link"
-                        >
-                            فراموشی رمز عبور
-                        </a>
-
-                    </div>
-
-                    <hr class="my-4">
-
-                    <div class="text-center">
-
-                        <p class="text-muted small mb-2">
-                            عضو صندوق هستید ولی هنوز حساب کاربری ندارید؟
-                        </p>
-
-                        <a
-                            href="{{ route('customer-activation.create') }}"
-                            class="text-decoration-none fw-semibold login-link"
-                        >
-                            فعال‌سازی حساب کاربری
-                            <i class="bi bi-person-plus me-1"></i>
-                        </a>
-
-                    </div>
 
                 </div>
 

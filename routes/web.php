@@ -33,6 +33,8 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\DailyOperationsReportController;
 use App\Http\Controllers\Admin\GatewayTransactionsReportController;
+use App\Http\Controllers\Admin\FundStatisticController;
+use App\Http\Controllers\Auth\CustomerActivationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,8 +49,10 @@ use App\Http\Controllers\Admin\GatewayTransactionsReportController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (\App\Services\FundStatistic\FundStatisticService $service) {
+    return view('welcome', [
+        'stats' => $service->get(),
+    ]);
 });
 
 
@@ -78,6 +82,34 @@ Route::post(
     [OtpController::class, 'verify']
 )->name('otp.verify');
 
+Route::get(
+    '/activate-account',
+    [CustomerActivationController::class, 'create']
+)->name('customer-activation.create');
+
+Route::post(
+    '/activate-account',
+    [CustomerActivationController::class, 'sendOtp']
+)->name('customer-activation.send-otp');
+Route::get(
+    '/activate-account/otp',
+    [CustomerActivationController::class, 'showOtp']
+)->name('customer-activation.otp');
+
+Route::post(
+    '/activate-account/otp',
+    [CustomerActivationController::class, 'verifyOtp']
+)->name('customer-activation.verify-otp');
+
+Route::get(
+    '/activate-account/account',
+    [CustomerActivationController::class, 'showAccount']
+)->name('customer-activation.account');
+
+Route::post(
+    '/activate-account/account',
+    [CustomerActivationController::class, 'createAccount']
+)->name('customer-activation.create-account');
 
 /*
 |--------------------------------------------------------------------------
@@ -559,6 +591,30 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 
         });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Fund Statistics
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'reports.access'])
+    ->prefix('admin/fund-statistics')
+    ->name('admin.fund-statistics.')
+    ->group(function () {
+
+        Route::get(
+            '/',
+            [FundStatisticController::class, 'edit']
+        )->name('edit');
+
+        Route::put(
+            '/',
+            [FundStatisticController::class, 'update']
+        )->name('update');
+
+    });
+
 /*
 |--------------------------------------------------------------------------
 | Payments

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
+
 class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
@@ -65,6 +66,12 @@ class Customer extends Model
         return $this->hasMany(Account::class);
     }
 
+    public function activationOtps(): HasMany
+    {
+        return $this->hasMany(
+            CustomerActivationOtp::class
+        );
+    }
 
 /**
  * وام‌های مشتری

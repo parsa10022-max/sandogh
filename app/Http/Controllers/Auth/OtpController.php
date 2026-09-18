@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -10,7 +9,6 @@ use App\Http\Requests\Auth\OtpRequest;
 use App\Enums\UserRole;
 
 class OtpController extends Controller
-
 {
     public function __construct(
         private OtpService $otpService
@@ -36,6 +34,7 @@ class OtpController extends Controller
 
         return view('auth.otp', compact('otp'));
     }
+
     /**
      * بررسی کد OTP
      */
@@ -57,20 +56,21 @@ class OtpController extends Controller
 
         Auth::login($user);
 
+        $user->update([
+            'last_login_at' => now(),
+        ]);
+
         session()->forget('login_user_id');
 
-
         if ($user->role === UserRole::CUSTOMER) {
-
-            return redirect()
-                ->route('customer.dashboard');
-
+            return redirect()->intended(
+                route('customer.dashboard')
+            );
         }
 
-
-        return redirect()
-            ->route('dashboard');
+        return redirect()->route('dashboard');
     }
+
     private function getLoginUser(): ?User
     {
         $userId = session('login_user_id');
@@ -82,3 +82,4 @@ class OtpController extends Controller
         return User::find($userId);
     }
 }
+

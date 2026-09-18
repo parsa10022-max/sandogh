@@ -384,7 +384,35 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | آمار صندوق
+    |--------------------------------------------------------------------------
+    */
 
+    [
+        'title' => 'آمار صندوق',
+        'icon' => 'bar-chart-line',
+        'children' => [
+
+            [
+                'title' => 'آمار صندوق',
+                'icon'  => 'clipboard-data',
+                'route' => 'admin.fund-statistics.edit',
+                'active' => [
+                    'admin.fund-statistics.edit',
+                    'admin.fund-statistics.update',
+                ],
+                'roles' => [
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::BOARD_MEMBER,
+                    UserRole::OPERATOR,
+                ],
+            ],
+
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | مدیریت سیستم
