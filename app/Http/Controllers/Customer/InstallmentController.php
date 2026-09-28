@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
+use App\Enums\AccountType;
 use App\Enums\InstallmentStatus;
 use App\Enums\LoanStatus;
+use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Loan;
+use App\Models\LoanPayment;
+use Illuminate\View\View;
 
 class InstallmentController extends Controller
 {
     /**
      * نمایش اقساط وام خود مشتری
      */
-    public function index()
+    public function index(): View
     {
         $customer = auth()->user()->customer;
+
+        abort_unless($customer, 403);
 
         $loan = Loan::query()
             ->where('customer_id', $customer->id)
@@ -26,17 +32,19 @@ class InstallmentController extends Controller
                     $query->orderBy('installment_number');
                 },
 
-                // ضامنین وام
                 'guarantors.customer',
             ])
             ->first();
 
         $installment = $loan?->installments
-            ->firstWhere('status', InstallmentStatus::PENDING);
+            ->firstWhere(
+                'status',
+                InstallmentStatus::PENDING
+            );
 
-        $savingsAccount = \App\Models\Account::query()
+        $savingsAccount = Account::query()
             ->where('customer_id', $customer->id)
-            ->where('account_type', \App\Enums\AccountType::SAVING)
+            ->where('account_type', AccountType::SAVING)
             ->first();
 
         return view(
@@ -49,8 +57,12 @@ class InstallmentController extends Controller
         );
     }
 
-    public function success(\App\Models\LoanPayment $payment)
-    {
+    /**
+     * صفحه موفقیت پرداخت قسط خود مشتری
+     */
+    public function success(
+        LoanPayment $payment
+    ): View {
         $customer = auth()->user()->customer;
 
         abort_unless(
@@ -65,13 +77,14 @@ class InstallmentController extends Controller
         );
     }
 
-    public function othersPaymentSuccess(\App\Models\LoanPayment $payment)
-    {
-        $customer = auth()->user()->customer;
-
+    /**
+     * صفحه موفقیت پرداخت قسط شخص دیگر
+     */
+    public function othersPaymentSuccess(
+        LoanPayment $payment
+    ): View {
         abort_unless(
-            $customer &&
-            $payment->loan->customer_id !== $customer->id,
+            $payment->user_id === auth()->id(),
             403
         );
 

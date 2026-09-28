@@ -27,7 +27,6 @@ class UpdateCustomerRequest extends FormRequest
         $customer = $this->route('customer');
 
         return [
-
             'customer_code' => [
                 'required',
                 'string',
@@ -73,15 +72,12 @@ class UpdateCustomerRequest extends FormRequest
             'iban' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    if ($value && !\App\Support\Iban::isValid($value)) {
+                    if ($value && !Iban::isValid($value)) {
                         $fail('شماره شبا معتبر نیست.');
                     }
                 },
             ],
-
         ];
-
-
     }
 
     protected function prepareForValidation(): void
@@ -91,4 +87,36 @@ class UpdateCustomerRequest extends FormRequest
         ]);
     }
 
+    public function messages(): array
+    {
+        return [
+            'customer_code.required' => 'کد مشتری الزامی است.',
+            'customer_code.string' => 'کد مشتری باید به صورت متن وارد شود.',
+            'customer_code.max' => 'کد مشتری نمی‌تواند بیشتر از ۲۰ کاراکتر باشد.',
+            'customer_code.unique' => 'این کد مشتری قبلاً ثبت شده است.',
+
+            'first_name.required' => 'نام الزامی است.',
+            'first_name.string' => 'نام باید به صورت متن وارد شود.',
+            'first_name.max' => 'نام نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'last_name.required' => 'نام خانوادگی الزامی است.',
+            'last_name.string' => 'نام خانوادگی باید به صورت متن وارد شود.',
+            'last_name.max' => 'نام خانوادگی نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'father_name.string' => 'نام پدر باید به صورت متن وارد شود.',
+            'father_name.max' => 'نام پدر نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'national_code.required' => 'کد ملی الزامی است.',
+            'national_code.digits' => 'کد ملی باید ۱۰ رقم باشد.',
+            'national_code.unique' => 'این کد ملی قبلاً ثبت شده است.',
+
+            'mobile.required' => 'شماره موبایل الزامی است.',
+            'mobile.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'mobile.unique' => 'این شماره موبایل قبلاً ثبت شده است.',
+
+            'mobile_second.digits' => 'شماره موبایل دوم باید ۱۱ رقم باشد.',
+
+            'iban.required' => 'شماره شبا الزامی است.',
+        ];
+    }
 }

@@ -39,13 +39,13 @@
 
             <div class="customer-other-installment-card-title">
 
-            <span class="customer-other-installment-card-title-icon">
-                <i class="bi bi-file-earmark-text"></i>
-            </span>
+                <span class="customer-other-installment-card-title-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </span>
 
                 <span>
-                اطلاعات قسط
-            </span>
+                    اطلاعات قسط
+                </span>
 
             </div>
 
@@ -55,56 +55,77 @@
             ====================================================== --}}
             <div class="customer-other-installment-info-grid">
 
+                {{-- نام عضو --}}
                 <div class="customer-other-installment-info-item">
-        <span class="customer-other-installment-info-label">
-            نام عضو
-        </span>
+
+                    <span class="customer-other-installment-info-label">
+                        نام عضو
+                    </span>
 
                     <strong>
                         {{ $installment->loan->customer->full_name }}
                     </strong>
+
                 </div>
 
 
+                {{-- شماره وام --}}
                 <div class="customer-other-installment-info-item">
-        <span class="customer-other-installment-info-label">
-            شماره وام
-        </span>
+
+                    <span class="customer-other-installment-info-label">
+                        شماره وام
+                    </span>
 
                     <strong dir="ltr">
                         {{ $installment->loan->full_loan_number }}
                     </strong>
+
                 </div>
 
 
+                {{-- نوع وام --}}
                 <div class="customer-other-installment-info-item">
-        <span class="customer-other-installment-info-label">
-            نوع وام
-        </span>
+
+                    <span class="customer-other-installment-info-label">
+                        نوع وام
+                    </span>
 
                     <strong>
                         {{ $installment->loan->loanType->name }}
                     </strong>
+
                 </div>
 
 
+                {{-- شماره قسط --}}
                 <div class="customer-other-installment-info-item">
-        <span class="customer-other-installment-info-label">
-            شماره قسط
-        </span>
+
+                    <span class="customer-other-installment-info-label">
+                        شماره قسط
+                    </span>
 
                     <strong>
-                        {{ $installment->installment_number }}
+                        {{ fa_number($installment->installment_number) }}
                     </strong>
+
+                </div>
+
+
+                {{-- مبلغ قسط --}}
+                <div class="customer-other-installment-info-item">
+
+                    <span class="customer-other-installment-info-label">
+                        مبلغ قسط
+                    </span>
+
+                    <strong>
+                        {{ fa_money($installment->amount) }}
+                        <small>ریال</small>
+                    </strong>
+
                 </div>
 
             </div>
-
-
-            {{-- =====================================================
-                 Amount
-            ====================================================== --}}
-
 
 
             {{-- =====================================================
@@ -135,34 +156,49 @@
             {{-- =====================================================
                  Payment
             ====================================================== --}}
-            <form method="POST"
-                  action="{{ route('customer.installments.others.pay') }}">
+            <form
+                method="POST"
+                action="{{ route('customer.installments.others.pay') }}"
+            >
 
                 @csrf
 
-                <input type="hidden"
-                       name="installment_id"
-                       value="{{ $installment->id }}">
+                <input
+                    type="hidden"
+                    name="installment_id"
+                    value="{{ $installment->id }}"
+                >
 
-                <button type="submit"
-                        class="customer-other-installment-pay-button">
+                <button
+                    type="submit"
+                    class="customer-other-installment-pay-button"
+                >
 
-        <span class="customer-other-installment-pay-icon">
-            <i class="bi bi-credit-card-fill"></i>
-        </span>
+                    <span class="customer-other-installment-pay-icon">
+
+                        <i class="bi bi-credit-card-fill"></i>
+
+                    </span>
+
 
                     <span class="customer-other-installment-pay-content">
 
-            <strong>
-                پرداخت قسط
-            </strong>
+                        <strong>
+                            پرداخت قسط
+                        </strong>
 
-            <span class="customer-other-installment-pay-amount">
-                {{ number_format($installment->amount) }}
-                <small>ریال</small>
-            </span>
+                        <span class="customer-other-installment-pay-amount">
 
-        </span>
+                            {{ fa_money($installment->amount) }}
+
+                            <small>
+                                ریال
+                            </small>
+
+                        </span>
+
+                    </span>
+
 
                     <i class="bi bi-arrow-left customer-other-installment-pay-arrow"></i>
 
@@ -175,3 +211,4 @@
     </div>
 
 @endsection
+

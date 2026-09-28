@@ -11,63 +11,42 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-
         $accountType = $request->account_type;
 
-
         $accounts = Account::with('customer')
-
             ->when($search, function ($query) use ($search) {
 
                 $search = str_replace('-', '', $search);
 
+                $query->where(function ($query) use ($search) {
 
-                $query->whereRaw(
-                    "REPLACE(account_number, '-', '') LIKE ?",
-                    ["%{$search}%"]
-                )
-
-
-                    ->orWhere('name', 'like', "%{$search}%")
-
-
-                    ->orWhereHas('customer', function ($q) use ($search) {
-
-                        $q->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('national_code', 'like', "%{$search}%");
-
-                    });
-
+                    $query->whereRaw(
+                        "REPLACE(account_number, '-', '') LIKE ?",
+                        ["%{$search}%"]
+                    )
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($q) use ($search) {
+                            $q->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%")
+                                ->orWhere('national_code', 'like', "%{$search}%");
+                        });
+                });
             })
-
-
             ->when($accountType, function ($query) use ($accountType) {
-
                 $query->where(
                     'account_type',
                     $accountType
                 );
-
             })
-
-
             ->latest()
-
             ->paginate(15)
-
             ->withQueryString();
-
-
 
         // آمار بالای صفحه
 
         $totalAccounts = Account::count();
 
-
         $totalBalance = Account::sum('balance');
-
-
 
         return view(
             'accounts.index',
@@ -83,41 +62,39 @@ class AccountController extends Controller
     {
         $account->load('customer');
 
-        return view('accounts.show', compact('account'));
+        return view(
+            'accounts.show',
+            compact('account')
+        );
     }
 
-
-public function transactions(Account $account)
-{
-    $transactions = $account->transactions()
-        ->with('creator')
-        ->orderByDesc('transaction_date')
-        ->orderByDesc('id')
-        ->paginate(15);
-
-
-    $summary = [
-        'balance' => $account->balance,
-
-        'count' => $account->transactions()
-            ->count(),
-
-        'last' => $account->transactions()
+    public function transactions(Account $account)
+    {
+        $transactions = $account->transactions()
+            ->with('creator')
             ->orderByDesc('transaction_date')
             ->orderByDesc('id')
-            ->first(),
-    ];
+            ->paginate(15);
 
+        $summary = [
+            'balance' => $account->balance,
 
-    return view(
-        'accounts.transactions',
-        compact(
-            'account',
-            'transactions',
-            'summary'
-        )
-    );
+            'count' => $account->transactions()
+                ->count(),
+
+            'last' => $account->transactions()
+                ->orderByDesc('transaction_date')
+                ->orderByDesc('id')
+                ->first(),
+        ];
+
+        return view(
+            'accounts.transactions',
+            compact(
+                'account',
+                'transactions',
+                'summary'
+            )
+        );
+    }
 }
-
-}
-

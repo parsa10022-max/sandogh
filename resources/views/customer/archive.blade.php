@@ -153,7 +153,10 @@
                         <tr>
 
                             <td>
-                                <span class="customer-index-code">
+                                <span
+                                    class="customer-index-code"
+                                    dir="ltr"
+                                >
                                     {{ $customer->customer_code }}
                                 </span>
                             </td>
@@ -164,11 +167,11 @@
                                 </span>
                             </td>
 
-                            <td >
+                            <td dir="ltr">
                                 {{ $customer->national_code }}
                             </td>
 
-                            <td >
+                            <td dir="ltr">
                                 {{ $customer->mobile }}
                             </td>
 
@@ -183,8 +186,6 @@
                             <td class="text-center">
 
                                 <div class="customer-index-actions">
-
-
 
                                     <form
                                         action="{{ route('customers.restore', $customer->id) }}"
@@ -255,3 +256,4 @@
     </div>
 
 @endsection
+

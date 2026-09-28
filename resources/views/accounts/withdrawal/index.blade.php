@@ -44,7 +44,7 @@
                                 <tr>
 
                                     <td>
-                                        {{ number_format($withdrawal->amount) }}
+                                        {{ fa_money($withdrawal->amount) }}
                                         ریال
                                     </td>
 
@@ -109,38 +109,41 @@
 
                                     <td>
 
-                                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                            $withdrawal->created_at
-                                        )->format('Y/m/d H:i') }}
+                                        {{ fa_number(
+                                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                                $withdrawal->created_at
+                                            )->format('Y/m/d H:i')
+                                        ) }}
 
                                     </td>
 
 
                                     <td>
 
-                                        <a href="{{ route('withdrawals.show',$withdrawal) }}"
-                                           class="btn btn-sm btn-primary mb-1">
-
+                                        <a
+                                            href="{{ route('withdrawals.show', $withdrawal) }}"
+                                            class="btn btn-sm btn-primary mb-1"
+                                        >
                                             مشاهده
-
                                         </a>
 
 
                                         @if($withdrawal->status === \App\Enums\WithdrawalStatus::PENDING)
 
-                                            <form method="POST"
-                                                  action="{{ route('withdrawals.cancel',$withdrawal) }}"
-                                                  class="d-inline">
+                                            <form
+                                                method="POST"
+                                                action="{{ route('withdrawals.cancel', $withdrawal) }}"
+                                                class="d-inline"
+                                            >
 
                                                 @csrf
                                                 @method('PATCH')
 
                                                 <button
                                                     class="btn btn-sm btn-outline-danger"
-                                                    onclick="return confirm('آیا از لغو این درخواست اطمینان دارید؟')">
-
+                                                    onclick="return confirm('آیا از لغو این درخواست اطمینان دارید؟')"
+                                                >
                                                     لغو درخواست
-
                                                 </button>
 
                                             </form>
@@ -180,3 +183,5 @@
     </div>
 
 @endsection
+
+

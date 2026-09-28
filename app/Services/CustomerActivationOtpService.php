@@ -1,12 +1,14 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Enums\CustomerActivationOtpStatus;
 use App\Models\Customer;
 use App\Models\CustomerActivationOtp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class CustomerActivationOtpService
 {
     private const OTP_EXPIRE_MINUTES = 2;
@@ -20,30 +22,30 @@ class CustomerActivationOtpService
         Customer $customer,
         Request $request
     ): CustomerActivationOtp {
-        // OTPهای قبلی این عضو لغو شوند
-        $this->cancel($customer);
+        return DB::transaction(function () use ($customer, $request) {
 
-        $code = $this->generateCode();
+            $this->cancel($customer);
 
-        return CustomerActivationOtp::create([
-            'customer_id' => $customer->id,
+            $code = $this->generateCode();
 
-            'mobile' => $customer->mobile,
+            return CustomerActivationOtp::create([
+                'customer_id' => $customer->id,
+                'mobile' => $customer->mobile,
 
-            'code' => $code,
+                // OTP به صورت Hash ذخیره می‌شود
+                'code' => Hash::make($code),
 
-            'status' => CustomerActivationOtpStatus::PENDING,
+                'status' => CustomerActivationOtpStatus::PENDING,
+                'attempts' => 0,
 
-            'attempts' => 0,
+                'expires_at' => now()->addMinutes(
+                    self::OTP_EXPIRE_MINUTES
+                ),
 
-            'expires_at' => now()->addMinutes(
-                self::OTP_EXPIRE_MINUTES
-            ),
-
-            'ip_address' => $request->ip(),
-
-            'user_agent' => $request->userAgent(),
-        ]);
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+        });
     }
 
     /**
@@ -53,58 +55,62 @@ class CustomerActivationOtpService
         Customer $customer,
         string $code
     ): bool {
-        $otp = CustomerActivationOtp::query()
-            ->forCustomer($customer->id)
-            ->valid()
-            ->latest('id')
-            ->first();
+        return DB::transaction(function () use ($customer, $code) {
 
-        if (! $otp) {
-            return false;
-        }
+            $otp = CustomerActivationOtp::query()
+                ->forCustomer($customer->id)
+                ->valid()
+                ->latest('id')
+                ->lockForUpdate()
+                ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | محدودیت تعداد تلاش
-        |--------------------------------------------------------------------------
-        */
+            if (! $otp) {
+                return false;
+            }
 
-        if ($otp->attempts >= self::MAX_ATTEMPTS) {
-            $this->cancelOtp($otp);
+            /*
+            |--------------------------------------------------------------------------
+            | محدودیت تعداد تلاش
+            |--------------------------------------------------------------------------
+            */
 
-            return false;
-        }
+            if ($otp->attempts >= self::MAX_ATTEMPTS) {
+                $this->cancelOtp($otp);
 
-        /*
-        |--------------------------------------------------------------------------
-        | ثبت تلاش
-        |--------------------------------------------------------------------------
-        */
+                return false;
+            }
 
-        $otp->increment('attempts');
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت تلاش
+            |--------------------------------------------------------------------------
+            */
 
-        /*
-        |--------------------------------------------------------------------------
-        | بررسی کد
-        |--------------------------------------------------------------------------
-        */
+            $otp->increment('attempts');
 
-        if ($otp->code !== $code) {
-            return false;
-        }
+            /*
+            |--------------------------------------------------------------------------
+            | بررسی کد
+            |--------------------------------------------------------------------------
+            */
 
-        /*
-        |--------------------------------------------------------------------------
-        | تأیید موفق
-        |--------------------------------------------------------------------------
-        */
+            if (! Hash::check($code, $otp->code)) {
+                return false;
+            }
 
-        $otp->update([
-            'status' => CustomerActivationOtpStatus::VERIFIED,
-            'verified_at' => now(),
-        ]);
+            /*
+            |--------------------------------------------------------------------------
+            | تأیید موفق
+            |--------------------------------------------------------------------------
+            */
 
-        return true;
+            $otp->update([
+                'status' => CustomerActivationOtpStatus::VERIFIED,
+                'verified_at' => now(),
+            ]);
+
+            return true;
+        });
     }
 
     /**

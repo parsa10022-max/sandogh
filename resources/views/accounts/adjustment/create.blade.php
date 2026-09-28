@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     <div class="container py-4 adjustment-page">
 
         {{-- Header --}}
@@ -106,7 +107,7 @@
                             id="currentBalance"
                             data-value="{{ $account->balance }}"
                         >
-                            {{ number_format($account->balance) }}
+                            {{ fa_money($account->balance) }}
 
                             <small>
                                 ریال
@@ -176,8 +177,8 @@
                             >
 
                             <span class="adjustment-input-unit">
-        ریال
-    </span>
+                            ریال
+                        </span>
 
                         </div>
 
@@ -260,9 +261,6 @@
                         ></div>
 
                     </div>
-
-
-
 
 
                     {{-- هشدار --}}
@@ -370,7 +368,7 @@
             function format(value) {
 
                 return Number(value)
-                    .toLocaleString('en-US');
+                    .toLocaleString('fa-IR');
 
             }
 
@@ -455,5 +453,6 @@
         });
 
     </script>
+
 
 @endsection

@@ -1,4 +1,3 @@
-
 @extends('customer.layouts.app')
 
 @section('title', 'جزئیات درخواست وام')
@@ -22,8 +21,10 @@
 
         <div class="loan-request-show-top">
 
-            <a href="{{ route('customer.loan-requests.index') }}"
-               class="loan-request-back-button">
+            <a
+                href="{{ route('customer.loan-requests.index') }}"
+                class="loan-request-back-button"
+            >
 
                 <i class="bi bi-arrow-right"></i>
 
@@ -60,7 +61,7 @@
 
                         <span>
                             شماره درخواست:
-                            {{ $loanRequest->id }}
+                            <span dir="ltr">{{ $loanRequest->id }}</span>
                         </span>
 
                     </div>
@@ -75,6 +76,22 @@
                     $status = $loanRequest->status instanceof \BackedEnum
                         ? $loanRequest->status->value
                         : $loanRequest->status;
+
+                    $createdDate = $loanRequest->created_at
+                        ? fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $loanRequest->created_at
+                            )->format('Y/m/d')
+                        )
+                        : '-';
+
+                    $reviewedDate = $loanRequest->reviewed_at
+                        ? fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $loanRequest->reviewed_at
+                            )->format('Y/m/d')
+                        )
+                        : null;
 
                 @endphp
 
@@ -128,15 +145,20 @@
 
             <div class="loan-request-show-body">
 
+                {{-- مبلغ درخواستی --}}
+
                 <div class="loan-request-show-info">
 
                     <span>
                         مبلغ درخواستی
                     </span>
 
-                    <strong class="loan-request-show-amount">
+                    <strong
+                        class="loan-request-show-amount"
+                        dir="rtl"
+                    >
 
-                        {{ number_format($loanRequest->requested_amount) }}
+                        {{ fa_money($loanRequest->requested_amount) }}
 
                         <small>
                             ریال
@@ -147,22 +169,26 @@
                 </div>
 
 
+                {{-- تاریخ ثبت --}}
+
                 <div class="loan-request-show-info">
 
                     <span>
                         تاریخ ثبت درخواست
                     </span>
 
-                    <strong>
+                    <strong dir="rtl">
 
-                        {{ \Morilog\Jalali\Jalalian::fromCarbon($loanRequest->created_at)->format('Y/m/d') }}
+                        {{ $createdDate }}
 
                     </strong>
 
                 </div>
 
 
-                @if($loanRequest->reviewed_at)
+                {{-- تاریخ بررسی --}}
+
+                @if($reviewedDate)
 
                     <div class="loan-request-show-info">
 
@@ -170,9 +196,9 @@
                             تاریخ بررسی
                         </span>
 
-                        <strong>
+                        <strong dir="rtl">
 
-                            {{ \Morilog\Jalali\Jalalian::fromCarbon($loanRequest->reviewed_at)->format('Y/m/d') }}
+                            {{ $reviewedDate }}
 
                         </strong>
 
@@ -224,7 +250,11 @@
 
                     </div>
 
+
                     <div class="loan-request-show-loan-grid">
+
+
+                        {{-- شماره وام --}}
 
                         <div>
 
@@ -232,11 +262,16 @@
                                 شماره وام
                             </span>
 
-                            <strong>
+                            <strong dir="rtl">
+
                                 {{ $loanRequest->loan->full_loan_number }}
+
                             </strong>
 
                         </div>
+
+
+                        {{-- مبلغ وام --}}
 
                         <div>
 
@@ -244,9 +279,14 @@
                                 مبلغ وام
                             </span>
 
-                            <strong>
-                                {{ number_format($loanRequest->loan->loan_amount) }}
-                                <small>ریال</small>
+                            <strong dir="rtl">
+
+                                {{ fa_money($loanRequest->loan->loan_amount) }}
+
+                                <small>
+                                    ریال
+                                </small>
+
                             </strong>
 
                         </div>
@@ -264,8 +304,10 @@
 
             <div class="loan-request-show-footer">
 
-                <a href="{{ route('customer.loan-requests.index') }}"
-                   class="loan-request-show-cancel">
+                <a
+                    href="{{ route('customer.loan-requests.index') }}"
+                    class="loan-request-show-cancel"
+                >
 
                     <i class="bi bi-arrow-right"></i>
 
@@ -280,4 +322,3 @@
     </div>
 
 @endsection
-

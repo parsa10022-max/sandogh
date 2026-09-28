@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\UserOtpType;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,7 +17,13 @@ class ResetPasswordController extends Controller
     public function create()
     {
         if (! session('forgot_password_verified')) {
-            return redirect()->route('password.request');
+            return redirect()
+                ->route('password.request');
+        }
+
+        if (! session('forgot_password_user_id')) {
+            return redirect()
+                ->route('password.request');
         }
 
         return view('auth.reset-password');
@@ -27,7 +35,15 @@ class ResetPasswordController extends Controller
     public function update(Request $request)
     {
         if (! session('forgot_password_verified')) {
-            return redirect()->route('password.request');
+            return redirect()
+                ->route('password.request');
+        }
+
+        $userId = session('forgot_password_user_id');
+
+        if (! $userId) {
+            return redirect()
+                ->route('password.request');
         }
 
         $validated = $request->validate(
@@ -54,34 +70,33 @@ class ResetPasswordController extends Controller
             ]
         );
 
-        $userId = session('forgot_password_user_id');
-
-        $user = \App\Models\User::find($userId);
+        $user = User::find($userId);
 
         if (! $user) {
-            session()->forget([
+            $request->session()->forget([
                 'forgot_password_user_id',
                 'forgot_password_verified',
             ]);
 
-            return redirect()->route('password.request');
+            return redirect()
+                ->route('password.request');
         }
 
         $user->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        // لغو OTPهای بازیابی باقی‌مانده
-        app(\App\Services\OtpService::class)->cancel(
+        app(OtpService::class)->cancel(
             $user,
             UserOtpType::PASSWORD_RESET
         );
 
-        // پایان کامل فرآیند بازیابی
-        session()->forget([
+        $request->session()->forget([
             'forgot_password_user_id',
             'forgot_password_verified',
         ]);
+
+        $request->session()->regenerate();
 
         return redirect()
             ->route('login')

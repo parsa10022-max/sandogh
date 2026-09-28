@@ -65,6 +65,7 @@ class CustomerAccountController extends Controller
             compact('customer', 'account')
         );
     }
+
     public function update(
         UpdateAccountRequest $request,
         Customer $customer,

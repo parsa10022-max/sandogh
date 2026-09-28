@@ -45,13 +45,13 @@
 
                 <div class="account-section-title">
 
-                <span class="account-section-icon">
-                    <i class="bi bi-info-circle"></i>
-                </span>
+                    <span class="account-section-icon">
+                        <i class="bi bi-info-circle"></i>
+                    </span>
 
                     <span>
-                    مشخصات حساب
-                </span>
+                        مشخصات حساب
+                    </span>
 
                 </div>
 
@@ -65,19 +65,19 @@
                     {{-- صاحب حساب --}}
                     <div class="account-info-item">
 
-                    <span class="account-info-label">
-                        <i class="bi bi-person"></i>
-                        صاحب حساب
-                    </span>
+                        <span class="account-info-label">
+                            <i class="bi bi-person"></i>
+                            صاحب حساب
+                        </span>
 
                         <div class="account-info-value">
 
                             @if($account->customer)
 
                                 <span class="account-type-badge customer">
-                                <i class="bi bi-person-fill"></i>
-                                مشتری
-                            </span>
+                                    <i class="bi bi-person-fill"></i>
+                                    مشتری
+                                </span>
 
                                 <strong>
                                     {{ $account->customer->first_name }}
@@ -87,9 +87,9 @@
                             @else
 
                                 <span class="account-type-badge system">
-                                <i class="bi bi-bank2"></i>
-                                سیستمی
-                            </span>
+                                    <i class="bi bi-bank2"></i>
+                                    سیستمی
+                                </span>
 
                                 <strong>
                                     {{ $account->name ?? '-' }}
@@ -107,10 +107,10 @@
 
                         <div class="account-info-item">
 
-                        <span class="account-info-label">
-                            <i class="bi bi-person-vcard"></i>
-                            کد مشتری
-                        </span>
+                            <span class="account-info-label">
+                                <i class="bi bi-person-vcard"></i>
+                                کد مشتری
+                            </span>
 
                             <strong class="account-info-value account-code">
                                 {{ $account->customer->customer_code }}
@@ -124,10 +124,10 @@
                     {{-- شماره حساب --}}
                     <div class="account-info-item">
 
-                    <span class="account-info-label">
-                        <i class="bi bi-credit-card"></i>
-                        شماره حساب
-                    </span>
+                        <span class="account-info-label">
+                            <i class="bi bi-credit-card"></i>
+                            شماره حساب
+                        </span>
 
                         <strong
                             class="account-info-value account-number"
@@ -142,10 +142,10 @@
                     {{-- نوع حساب --}}
                     <div class="account-info-item">
 
-                    <span class="account-info-label">
-                        <i class="bi bi-wallet2"></i>
-                        نوع حساب
-                    </span>
+                        <span class="account-info-label">
+                            <i class="bi bi-wallet2"></i>
+                            نوع حساب
+                        </span>
 
                         <strong class="account-info-value">
                             {{ $account->account_type->label() }}
@@ -165,14 +165,14 @@
 
                     <div class="account-balance-content">
 
-                    <span class="account-balance-label">
-                        موجودی فعلی
-                    </span>
+                        <span class="account-balance-label">
+                            موجودی فعلی
+                        </span>
 
                         <div class="account-balance-value">
 
                             <strong>
-                                {{ number_format($account->balance) }}
+                                {{ fa_money($account->balance) }}
                             </strong>
 
                             <span>ریال</span>
@@ -195,13 +195,13 @@
 
                 <div class="account-section-title">
 
-                <span class="account-section-icon">
-                    <i class="bi bi-lightning-charge"></i>
-                </span>
+                    <span class="account-section-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </span>
 
                     <span>
-                    عملیات حساب
-                </span>
+                        عملیات حساب
+                    </span>
 
                 </div>
 
@@ -218,21 +218,21 @@
                         class="account-action-btn deposit"
                     >
 
-                    <span class="account-action-icon">
-                        <i class="bi bi-arrow-up-circle"></i>
-                    </span>
+                        <span class="account-action-icon">
+                            <i class="bi bi-arrow-down-circle"></i>
+                        </span>
 
                         <span class="account-action-content">
 
-                        <strong>
-                            واریز
-                        </strong>
+                            <strong>
+                                واریز
+                            </strong>
 
-                        <small>
-                            ثبت واریز به حساب
-                        </small>
+                            <small>
+                                ثبت واریز به حساب
+                            </small>
 
-                    </span>
+                        </span>
 
                         <i class="bi bi-chevron-left account-action-arrow"></i>
 
@@ -245,21 +245,21 @@
                         class="account-action-btn withdrawal"
                     >
 
-                    <span class="account-action-icon">
-                        <i class="bi bi-arrow-down-circle"></i>
-                    </span>
+                        <span class="account-action-icon">
+                            <i class="bi bi-arrow-up-circle"></i>
+                        </span>
 
                         <span class="account-action-content">
 
-                        <strong>
-                            برداشت از حساب
-                        </strong>
+                            <strong>
+                                برداشت از حساب
+                            </strong>
 
-                        <small>
-                            ثبت برداشت از حساب
-                        </small>
+                            <small>
+                                ثبت برداشت از حساب
+                            </small>
 
-                    </span>
+                        </span>
 
                         <i class="bi bi-chevron-left account-action-arrow"></i>
 
@@ -272,21 +272,21 @@
                         class="account-action-btn transactions"
                     >
 
-                    <span class="account-action-icon">
-                        <i class="bi bi-list-ul"></i>
-                    </span>
+                        <span class="account-action-icon">
+                            <i class="bi bi-list-ul"></i>
+                        </span>
 
                         <span class="account-action-content">
 
-                        <strong>
-                            گردش حساب
-                        </strong>
+                            <strong>
+                                گردش حساب
+                            </strong>
 
-                        <small>
-                            مشاهده تراکنش‌های حساب
-                        </small>
+                            <small>
+                                مشاهده تراکنش‌های حساب
+                            </small>
 
-                    </span>
+                        </span>
 
                         <i class="bi bi-chevron-left account-action-arrow"></i>
 
@@ -299,21 +299,21 @@
                         class="account-action-btn adjustment"
                     >
 
-                    <span class="account-action-icon">
-                        <i class="bi bi-pencil-square"></i>
-                    </span>
+                        <span class="account-action-icon">
+                            <i class="bi bi-pencil-square"></i>
+                        </span>
 
                         <span class="account-action-content">
 
-                        <strong>
-                            اصلاح موجودی
-                        </strong>
+                            <strong>
+                                اصلاح موجودی
+                            </strong>
 
-                        <small>
-                            اصلاح دستی موجودی حساب
-                        </small>
+                            <small>
+                                اصلاح دستی موجودی حساب
+                            </small>
 
-                    </span>
+                        </span>
 
                         <i class="bi bi-chevron-left account-action-arrow"></i>
 
@@ -328,3 +328,4 @@
     </div>
 
 @endsection
+

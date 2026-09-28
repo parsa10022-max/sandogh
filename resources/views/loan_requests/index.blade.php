@@ -47,7 +47,7 @@
                 @if($loanRequests->total() > 0)
 
                     <div class="loan-requests-count">
-                        {{ $loanRequests->total() }} درخواست
+                        {{ fa_number($loanRequests->total()) }} درخواست
                     </div>
 
                 @endif
@@ -235,10 +235,10 @@
 
                         <tr>
 
-                            {{-- ID --}}
+                            {{-- ID / Row Number --}}
                             <td>
                                 <span class="loan-request-id">
-                                    {{ $loanRequest->id }}
+                                    {{ fa_number($loanRequest->id) }}
                                 </span>
                             </td>
 
@@ -265,7 +265,7 @@
                             <td>
 
                                 <span class="loan-request-amount">
-                                    {{ number_format($loanRequest->requested_amount) }}
+                                    {{ fa_money($loanRequest->requested_amount) }}
                                 </span>
 
                                 <small class="loan-request-currency">
@@ -281,7 +281,7 @@
                                 @if($loanRequest->approved_amount)
 
                                     <span class="loan-request-amount approved">
-                                        {{ number_format($loanRequest->approved_amount) }}
+                                        {{ fa_money($loanRequest->approved_amount) }}
                                     </span>
 
                                     <small class="loan-request-currency">
@@ -308,13 +308,13 @@
 
                                     <span class="loan-request-status pending">
 
-                                            <span class="loan-request-status-dot"></span>
+                                        <span class="loan-request-status-dot"></span>
 
-                                            <i class="bi bi-hourglass-split"></i>
+                                        <i class="bi bi-hourglass-split"></i>
 
-                                            در حال بررسی
+                                        در حال بررسی
 
-                                        </span>
+                                    </span>
 
                                     @break
 
@@ -323,13 +323,13 @@
 
                                     <span class="loan-request-status approved">
 
-                                            <span class="loan-request-status-dot"></span>
+                                        <span class="loan-request-status-dot"></span>
 
-                                            <i class="bi bi-check-circle"></i>
+                                        <i class="bi bi-check-circle"></i>
 
-                                            تأیید شده
+                                        تأیید شده
 
-                                        </span>
+                                    </span>
 
                                     @break
 
@@ -338,13 +338,13 @@
 
                                     <span class="loan-request-status rejected">
 
-                                            <span class="loan-request-status-dot"></span>
+                                        <span class="loan-request-status-dot"></span>
 
-                                            <i class="bi bi-x-circle"></i>
+                                        <i class="bi bi-x-circle"></i>
 
-                                            رد شده
+                                        رد شده
 
-                                        </span>
+                                    </span>
 
                                     @break
 
@@ -353,13 +353,13 @@
 
                                     <span class="loan-request-status cancelled">
 
-                                            <span class="loan-request-status-dot"></span>
+                                        <span class="loan-request-status-dot"></span>
 
-                                            <i class="bi bi-slash-circle"></i>
+                                        <i class="bi bi-slash-circle"></i>
 
-                                            لغو شده
+                                        لغو شده
 
-                                        </span>
+                                    </span>
 
                                     @break
 
@@ -374,7 +374,7 @@
                                 @if($loanRequest->next_review_date)
 
                                     <span class="loan-request-date">
-                                        {{ jdate($loanRequest->next_review_date)->format('Y/m/d') }}
+                                        {{ fa_number(jdate($loanRequest->next_review_date)->format('Y/m/d')) }}
                                     </span>
 
                                 @else
@@ -436,7 +436,7 @@
                             <td>
 
                                 <span class="loan-request-date">
-                                    {{ jdate($loanRequest->created_at)->format('Y/m/d') }}
+                                    {{ fa_number(jdate($loanRequest->created_at)->format('Y/m/d')) }}
                                 </span>
 
                             </td>

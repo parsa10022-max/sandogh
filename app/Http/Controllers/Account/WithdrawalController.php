@@ -81,18 +81,36 @@ class WithdrawalController extends Controller
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $request->validate([
-            'payment_bank' => [
-                'required',
-                'integer',
-            ],
+        $request->validate(
+            [
+                'payment_bank' => [
+                    'required',
+                    'integer',
+                ],
 
-            'payment_tracking_code' => [
-                'required',
-                'string',
-                'max:100',
+                'payment_tracking_code' => [
+                    'required',
+                    'string',
+                    'max:100',
+                ],
             ],
-        ]);
+            [
+                'payment_bank.required' =>
+                    'انتخاب بانک پرداخت الزامی است.',
+
+                'payment_bank.integer' =>
+                    'بانک پرداخت انتخاب‌شده معتبر نیست.',
+
+                'payment_tracking_code.required' =>
+                    'وارد کردن کد پیگیری پرداخت الزامی است.',
+
+                'payment_tracking_code.string' =>
+                    'کد پیگیری پرداخت باید به صورت متن باشد.',
+
+                'payment_tracking_code.max' =>
+                    'کد پیگیری پرداخت نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+            ]
+        );
 
         if ($withdrawal->status !== WithdrawalStatus::PENDING) {
             return back()->with(

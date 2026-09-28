@@ -7,22 +7,15 @@ use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-
 
 class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
-    use HasFactory; use SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'customer_code',
@@ -36,11 +29,6 @@ class Customer extends Model
         'status',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -48,12 +36,18 @@ class Customer extends Model
         ];
     }
 
+    /**
+     * حساب کاربری عضو
+     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'customer_id');
     }
 
-    public function guarantorLoans()
+    /**
+     * وام‌هایی که مشتری ضامن آنهاست
+     */
+    public function guarantorLoans(): HasMany
     {
         return $this->hasMany(LoanGuarantor::class);
     }
@@ -66,107 +60,88 @@ class Customer extends Model
         return $this->hasMany(Account::class);
     }
 
+    /**
+     * OTPهای فعال‌سازی
+     */
     public function activationOtps(): HasMany
     {
-        return $this->hasMany(
-            CustomerActivationOtp::class
+        return $this->hasMany(CustomerActivationOtp::class);
+    }
+
+    /**
+     * وام‌های مشتری
+     */
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
+    }
+
+    /**
+     * مشتریان فعال
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where(
+            'status',
+            CustomerStatus::ACTIVE
         );
     }
 
-/**
- * وام‌های مشتری
- */
-public function loans(): HasMany
-{
-    return $this->hasMany(Loan::class);
-}
-
-
-
-
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('status', CustomerStatus::ACTIVE->value);
-    }
-
-    public function scopeSearch(Builder $query, ?string $search): Builder
-    {
-        if (! empty($search)) {
-
+    /**
+     * جستجوی مشتری
+     */
+    public function scopeSearch(
+        Builder $query,
+        ?string $search
+    ): Builder {
+        if (filled($search)) {
             $query->where(function (Builder $q) use ($search) {
-
-                $q->where('customer_code', 'like', "%{$search}%")
-                    ->orWhere('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('national_code', 'like', "%{$search}%")
-                    ->orWhere('mobile', 'like', "%{$search}%");
-
+                $q->where(
+                    'customer_code',
+                    'like',
+                    "%{$search}%"
+                )
+                    ->orWhere(
+                        'first_name',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'last_name',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'national_code',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'mobile',
+                        'like',
+                        "%{$search}%"
+                    );
             });
-
         }
 
         return $query;
     }
 
+    /**
+     * نام کامل
+     */
     public function getFullNameAttribute(): string
     {
-        return trim($this->first_name . ' ' . $this->last_name);
+        return trim(
+            $this->first_name . ' ' . $this->last_name
+        );
     }
 
+    /**
+     * نام نمایشی
+     */
     public function getDisplayNameAttribute(): string
     {
         return "{$this->customer_code} - {$this->full_name}";
     }
-
-    public function searchByCode(Request $request)
-    {
-        $request->validate([
-            'code' => [
-                'required',
-            ],
-        ]);
-
-
-        $customer = Customer::query()
-            ->active()
-            ->where(
-                'customer_code',
-                $request->code
-            )
-            ->first();
-
-
-        if (!$customer) {
-
-            return response()->json([
-
-                'found' => false,
-
-                'message' => 'مشتری پیدا نشد.'
-
-            ]);
-
-        }
-
-
-        return response()->json([
-
-            'found' => true,
-
-
-            'customer' => [
-
-                'id' => $customer->id,
-
-                'code' => $customer->customer_code,
-
-                'name' => $customer->full_name,
-
-                'mobile' => $customer->mobile,
-
-            ]
-
-        ]);
-    }
-
 }

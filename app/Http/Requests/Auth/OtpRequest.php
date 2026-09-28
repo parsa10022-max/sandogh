@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
-
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-
 
 class OtpRequest extends FormRequest
 {
@@ -29,4 +27,11 @@ class OtpRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'code.required' => 'کد تأیید الزامی است.',
+            'code.digits' => 'کد تأیید باید ۶ رقم باشد.',
+        ];
+    }
 }

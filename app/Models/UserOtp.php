@@ -57,28 +57,49 @@ class UserOtp extends Model
 
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('status', UserOtpStatus::PENDING);
+        return $query->where(
+            'status',
+            UserOtpStatus::PENDING->value
+        );
     }
 
     public function scopeLogin(Builder $query): Builder
     {
-        return $query->where('type', UserOtpType::LOGIN);
+        return $query->where(
+            'type',
+            UserOtpType::LOGIN->value
+        );
     }
 
     public function scopeValid(Builder $query): Builder
     {
         return $query
-            ->where('status', UserOtpStatus::PENDING)
-            ->where('expires_at', '>', now());
+            ->where(
+                'status',
+                UserOtpStatus::PENDING->value
+            )
+            ->where(
+                'expires_at',
+                '>',
+                now()
+            );
     }
-    public function scopeForUser(Builder $query, int $userId): Builder
-    {
-        return $query->where('user_id', $userId);
+
+    public function scopeForUser(
+        Builder $query,
+        int $userId
+    ): Builder {
+        return $query->where(
+            'user_id',
+            $userId
+        );
     }
+
     public function scopeNotCancelled(Builder $query): Builder
     {
         return $query->whereNull('cancelled_at');
     }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors
@@ -87,7 +108,7 @@ class UserOtp extends Model
 
     public function getIsExpiredAttribute(): bool
     {
-        return $this->expires_at->isPast();
+        return $this->expires_at?->isPast() ?? true;
     }
 
     public function getIsVerifiedAttribute(): bool

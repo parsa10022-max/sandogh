@@ -34,7 +34,7 @@
 
                 <strong>
 
-                    {{ number_format($withdrawal->amount) }}
+                    {{ fa_money($withdrawal->amount) }}
 
                     <small>
                         ریال
@@ -56,9 +56,11 @@
 
                     @if($withdrawal->paid_at)
 
-                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                            $withdrawal->paid_at
-                        )->format('Y/m/d H:i') }}
+                        {{ fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $withdrawal->paid_at
+                            )->format('Y/m/d H:i')
+                        ) }}
 
                     @else
 
@@ -169,3 +171,4 @@
     </div>
 
 @endsection
+

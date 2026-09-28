@@ -12,10 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'reports.access' => \App\Http\Middleware\AdminAccess::class,
+            'admin.access' => \App\Http\Middleware\AdminAccess::class,
             'customer.access' => \App\Http\Middleware\CustomerAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

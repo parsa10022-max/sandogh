@@ -4,7 +4,6 @@
 
 @section('content')
 
-
     <div class="customer-loans-page">
 
         {{-- =====================================================
@@ -39,8 +38,8 @@
                 <i class="bi bi-arrow-right"></i>
 
                 <span>
-                داشبورد
-            </span>
+                    داشبورد
+                </span>
             </a>
 
         </section>
@@ -78,12 +77,12 @@
 
                 <div class="customer-loans-summary-content">
 
-                <span class="customer-loans-summary-label">
-                    مجموع وام‌ها
-                </span>
+                    <span class="customer-loans-summary-label">
+                        مجموع وام‌ها
+                    </span>
 
                     <strong class="customer-loans-summary-value">
-                        {{ number_format($totalLoans) }}
+                        {{ fa_number($totalLoans) }}
                     </strong>
 
                 </div>
@@ -99,12 +98,12 @@
 
                 <div class="customer-loans-summary-content">
 
-                <span class="customer-loans-summary-label">
-                    وام فعال
-                </span>
+                    <span class="customer-loans-summary-label">
+                        وام فعال
+                    </span>
 
                     <strong class="customer-loans-summary-value success">
-                        {{ number_format($activeLoans) }}
+                        {{ fa_number($activeLoans) }}
                     </strong>
 
                 </div>
@@ -120,12 +119,12 @@
 
                 <div class="customer-loans-summary-content">
 
-                <span class="customer-loans-summary-label">
-                    تسویه‌شده
-                </span>
+                    <span class="customer-loans-summary-label">
+                        تسویه‌شده
+                    </span>
 
                     <strong class="customer-loans-summary-value">
-                        {{ number_format($finishedLoans) }}
+                        {{ fa_number($finishedLoans) }}
                     </strong>
 
                 </div>
@@ -141,12 +140,12 @@
 
                 <div class="customer-loans-summary-content">
 
-                <span class="customer-loans-summary-label">
-                    در این صفحه
-                </span>
+                    <span class="customer-loans-summary-label">
+                        در این صفحه
+                    </span>
 
                     <strong class="customer-loans-summary-value">
-                        {{ number_format($loans->count()) }}
+                        {{ fa_number($loans->count()) }}
                     </strong>
 
                 </div>
@@ -178,8 +177,8 @@
                         </h2>
 
                         <span>
-                        جزئیات و روند بازپرداخت
-                    </span>
+                            جزئیات و روند بازپرداخت
+                        </span>
 
                     </div>
 
@@ -189,12 +188,12 @@
                 <div class="customer-loans-count">
 
                     <strong>
-                        {{ number_format($loans->total()) }}
+                        {{ fa_number($loans->total()) }}
                     </strong>
 
                     <span>
-                    وام
-                </span>
+                        وام
+                    </span>
 
                 </div>
 
@@ -281,11 +280,11 @@
 
                                     <div class="customer-loan-card-name">
 
-                                    <span class="customer-loan-card-label">
-                                        شماره وام
-                                    </span>
+                                        <span class="customer-loan-card-label">
+                                            شماره وام
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $loan->full_loan_number }}
                                         </strong>
 
@@ -301,8 +300,8 @@
                                         <i class="bi bi-tag-fill"></i>
 
                                         <span>
-                                        {{ $loan->loanType?->name ?? 'وام' }}
-                                    </span>
+                                            {{ $loan->loanType?->name ?? 'وام' }}
+                                        </span>
 
                                     </div>
 
@@ -311,31 +310,31 @@
 
                                         <span class="customer-loan-status active">
 
-                                        <i class="bi bi-circle-fill"></i>
+                                            <i class="bi bi-circle-fill"></i>
 
-                                        فعال
+                                            فعال
 
-                                    </span>
+                                        </span>
 
                                     @elseif($isFinished)
 
                                         <span class="customer-loan-status finished">
 
-                                        <i class="bi bi-check-circle-fill"></i>
+                                            <i class="bi bi-check-circle-fill"></i>
 
-                                        تسویه‌شده
+                                            تسویه‌شده
 
-                                    </span>
+                                        </span>
 
                                     @else
 
                                         <span class="customer-loan-status cancelled">
 
-                                        <i class="bi bi-x-circle-fill"></i>
+                                            <i class="bi bi-x-circle-fill"></i>
 
-                                        لغوشده
+                                            لغوشده
 
-                                    </span>
+                                        </span>
 
                                     @endif
 
@@ -360,7 +359,7 @@
                                     <div class="customer-loan-main-value">
 
                                         <strong>
-                                            {{ number_format($loan->loan_amount) }}
+                                            {{ fa_money($loan->loan_amount) }}
                                         </strong>
 
                                         <small>
@@ -375,12 +374,12 @@
                                 {{-- مبلغ قسط --}}
                                 <div class="customer-loan-data">
 
-                                <span>
-                                    مبلغ قسط
-                                </span>
+                                    <span>
+                                        مبلغ قسط
+                                    </span>
 
                                     <strong>
-                                        {{ number_format($loan->installment_amount) }}
+                                        {{ fa_money($loan->installment_amount) }}
 
                                         <small>
                                             ریال
@@ -393,12 +392,12 @@
                                 {{-- تعداد اقساط --}}
                                 <div class="customer-loan-data">
 
-                                <span>
-                                    تعداد اقساط
-                                </span>
+                                    <span>
+                                        تعداد اقساط
+                                    </span>
 
                                     <strong>
-                                        {{ number_format($loan->installment_count) }}
+                                        {{ fa_number($loan->installment_count) }}
 
                                         <small>
                                             قسط
@@ -411,12 +410,12 @@
                                 {{-- پرداخت شده --}}
                                 <div class="customer-loan-data success">
 
-                                <span>
-                                    پرداخت‌شده
-                                </span>
+                                    <span>
+                                        پرداخت‌شده
+                                    </span>
 
                                     <strong>
-                                        {{ number_format($paidCount) }}
+                                        {{ fa_number($paidCount) }}
 
                                         <small>
                                             قسط
@@ -429,12 +428,12 @@
                                 {{-- باقی مانده --}}
                                 <div class="customer-loan-data danger">
 
-                                <span>
-                                    باقی‌مانده
-                                </span>
+                                    <span>
+                                        باقی‌مانده
+                                    </span>
 
                                     <strong>
-                                        {{ number_format($remainingAmount) }}
+                                        {{ fa_money($remainingAmount) }}
 
                                         <small>
                                             ریال
@@ -460,18 +459,18 @@
                                             <i class="bi bi-people-fill"></i>
 
                                             <span>
-                                            ضامنین وام
-                                        </span>
+                                                ضامنین وام
+                                            </span>
 
                                         </div>
 
                                         <span class="customer-loan-guarantors-count">
 
-                                        {{ number_format($loan->guarantors->count()) }}
+                                            {{ fa_number($loan->guarantors->count()) }}
 
-                                        ضامن
+                                            ضامن
 
-                                    </span>
+                                        </span>
 
                                     </div>
 
@@ -506,9 +505,9 @@
 
                                                     <div class="customer-loan-guarantor-name">
 
-                                                    <span>
-                                                        ضامن {{ $guarantor->guarantor_order }}
-                                                    </span>
+                                                        <span>
+                                                            ضامن {{ fa_number($guarantor->guarantor_order) }}
+                                                        </span>
 
                                                         <strong>
                                                             {{ $guarantor->full_name }}
@@ -530,8 +529,8 @@
                                                             <i class="bi bi-phone"></i>
 
                                                             <span>
-                                                            موبایل
-                                                        </span>
+                                                                موبایل
+                                                            </span>
 
                                                             <strong dir="ltr">
                                                                 {{ $guarantorMobile }}
@@ -549,8 +548,8 @@
                                                             <i class="bi bi-file-earmark-text"></i>
 
                                                             <span>
-                                                            نوع مدرک
-                                                        </span>
+                                                                نوع مدرک
+                                                            </span>
 
                                                             <strong>
                                                                 {{ $guarantor->guarantee_type->label() }}
@@ -568,8 +567,8 @@
                                                             <i class="bi bi-hash"></i>
 
                                                             <span>
-                                                            شماره مدرک
-                                                        </span>
+                                                                شماره مدرک
+                                                            </span>
 
                                                             <strong dir="ltr">
                                                                 {{ $guarantor->guarantee_number }}
@@ -587,12 +586,12 @@
                                                             <i class="bi bi-cash-stack"></i>
 
                                                             <span>
-                                                            مبلغ ضمانت
-                                                        </span>
+                                                                مبلغ ضمانت
+                                                            </span>
 
                                                             <strong>
 
-                                                                {{ number_format($guarantor->guarantee_amount) }}
+                                                                {{ fa_money($guarantor->guarantee_amount) }}
 
                                                                 <small>
                                                                     ریال
@@ -624,12 +623,12 @@
 
                                 <div class="customer-loan-progress-header">
 
-                                <span>
-                                    پیشرفت بازپرداخت
-                                </span>
+                                    <span>
+                                        پیشرفت بازپرداخت
+                                    </span>
 
                                     <strong>
-                                        {{ $progress }}٪
+                                        {{ fa_number($progress) }}٪
                                     </strong>
 
                                 </div>
@@ -647,15 +646,15 @@
 
                                 <div class="customer-loan-progress-footer">
 
-                                <span>
-                                    {{ number_format($paidCount) }}
-                                    قسط پرداخت شده
-                                </span>
+                                    <span>
+                                        {{ fa_number($paidCount) }}
+                                        قسط پرداخت شده
+                                    </span>
 
                                     <span>
-                                    {{ number_format($remainingCount) }}
-                                    قسط باقی‌مانده
-                                </span>
+                                        {{ fa_number($remainingCount) }}
+                                        قسط باقی‌مانده
+                                    </span>
 
                                 </div>
 
@@ -675,12 +674,12 @@
 
                                     <div>
 
-                                    <span>
-                                        شروع وام
-                                    </span>
+                                        <span>
+                                            شروع وام
+                                        </span>
 
                                         <strong>
-                                            {{ $loan->start_date_jalali }}
+                                            {{ fa_number($loan->start_date_jalali) }}
                                         </strong>
 
                                     </div>
@@ -693,9 +692,9 @@
                                     class="customer-loan-details-button"
                                 >
 
-                                <span>
-                                    جزئیات
-                                </span>
+                                    <span>
+                                        جزئیات
+                                    </span>
 
                                     <i class="bi bi-arrow-left"></i>
 
@@ -729,5 +728,5 @@
 
     </div>
 
-
 @endsection
+

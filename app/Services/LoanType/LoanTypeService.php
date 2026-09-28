@@ -2,17 +2,21 @@
 
 namespace App\Services\LoanType;
 
+use App\Enums\LoanTypeStatus;
 use App\Models\LoanType;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use App\Enums\LoanTypeStatus;
+use RuntimeException;
+
 class LoanTypeService
 {
     /**
      * دریافت لیست صفحه‌بندی شده
      */
-    public function getPaginated(int $perPage = 15, ?string $search = null): LengthAwarePaginator
-    {
+    public function getPaginated(
+        int $perPage = 15,
+        ?string $search = null
+    ): LengthAwarePaginator {
         return LoanType::query()
             ->search($search)
             ->latest()
@@ -60,8 +64,10 @@ class LoanTypeService
     /**
      * بروزرسانی نوع وام
      */
-    public function update(LoanType $loanType, array $data): bool
-    {
+    public function update(
+        LoanType $loanType,
+        array $data
+    ): bool {
         return $loanType->update($data);
     }
 
@@ -71,20 +77,29 @@ class LoanTypeService
     public function changeStatus(
         LoanType $loanType
     ): LoanType {
-
         $loanType->update([
-            'status' => $loanType->status === LoanTypeStatus::ACTIVE
-                ? LoanTypeStatus::INACTIVE
-                : LoanTypeStatus::ACTIVE,
+            'status' =>
+                $loanType->status === LoanTypeStatus::ACTIVE
+                    ? LoanTypeStatus::INACTIVE
+                    : LoanTypeStatus::ACTIVE,
         ]);
 
         return $loanType->fresh();
     }
+
     /**
      * حذف نوع وام
      */
-    public function delete(LoanType $loanType): ?bool
-    {
+    public function delete(
+        LoanType $loanType
+    ): ?bool {
+
+        if ($loanType->loans()->exists()) {
+            throw new RuntimeException(
+                'این نوع وام دارای وام ثبت‌شده است و قابل حذف نیست.'
+            );
+        }
+
         return $loanType->delete();
     }
 }

@@ -28,9 +28,9 @@
 
                     <h1>جزئیات وام</h1>
 
-                    <span>
-                    {{ $loan->full_loan_number }}
-                </span>
+                    <span dir="ltr">
+                        {{ $loan->full_loan_number }}
+                    </span>
 
                 </div>
 
@@ -41,23 +41,23 @@
             @if($loan->status?->value === 'active')
 
                 <span class="customer-loan-show-status active">
-                <i class="bi bi-check-circle-fill"></i>
-                فعال
-            </span>
+                    <i class="bi bi-check-circle-fill"></i>
+                    فعال
+                </span>
 
             @elseif($loan->status?->value === 'finished')
 
                 <span class="customer-loan-show-status finished">
-                <i class="bi bi-check-circle-fill"></i>
-                تسویه شده
-            </span>
+                    <i class="bi bi-check-circle-fill"></i>
+                    تسویه شده
+                </span>
 
             @else
 
                 <span class="customer-loan-show-status cancelled">
-                <i class="bi bi-x-circle-fill"></i>
-                لغو شده
-            </span>
+                    <i class="bi bi-x-circle-fill"></i>
+                    لغو شده
+                </span>
 
             @endif
 
@@ -79,7 +79,7 @@
                     <span>مبلغ وام</span>
 
                     <strong>
-                        {{ number_format($loan->loan_amount) }}
+                        {{ fa_money($loan->loan_amount) }}
                         <small>ریال</small>
                     </strong>
                 </div>
@@ -97,7 +97,7 @@
                     <span>مبلغ هر قسط</span>
 
                     <strong>
-                        {{ number_format($loan->installment_amount) }}
+                        {{ fa_money($loan->installment_amount) }}
                         <small>ریال</small>
                     </strong>
                 </div>
@@ -115,7 +115,7 @@
                     <span>باقی‌مانده</span>
 
                     <strong>
-                        {{ number_format($loan->remainingAmount()) }}
+                        {{ fa_money($loan->remainingAmount()) }}
                         <small>ریال</small>
                     </strong>
                 </div>
@@ -133,7 +133,7 @@
                     <span>اقساط باقی‌مانده</span>
 
                     <strong>
-                        {{ $loan->remainingInstallmentsCount() }}
+                        {{ fa_number($loan->remainingInstallmentsCount()) }}
                         <small>قسط</small>
                     </strong>
                 </div>
@@ -176,12 +176,12 @@
                     </h2>
 
                     <span>
-                    پیشرفت پرداخت اقساط وام
-                </span>
+                        پیشرفت پرداخت اقساط وام
+                    </span>
                 </div>
 
                 <strong>
-                    {{ $progress }}٪
+                    {{ fa_number($progress) }}٪
                 </strong>
 
             </div>
@@ -203,8 +203,8 @@
                     <span>پرداخت شده</span>
 
                     <strong>
-                        {{ $paidCount }}
-                        <small>از {{ $totalCount }} قسط</small>
+                        {{ fa_number($paidCount) }}
+                        <small>از {{ fa_number($totalCount) }} قسط</small>
                     </strong>
                 </div>
 
@@ -213,7 +213,7 @@
                     <span>مبلغ پرداخت شده</span>
 
                     <strong>
-                        {{ number_format($paidAmount) }}
+                        {{ fa_money($paidAmount) }}
                         <small>ریال</small>
                     </strong>
                 </div>
@@ -223,7 +223,7 @@
                     <span>مبلغ باقی‌مانده</span>
 
                     <strong>
-                        {{ number_format($remainingAmount) }}
+                        {{ fa_money($remainingAmount) }}
                         <small>ریال</small>
                     </strong>
                 </div>
@@ -248,8 +248,8 @@
                     <h2>اطلاعات وام</h2>
 
                     <span>
-                    مشخصات اصلی وام
-                </span>
+                        مشخصات اصلی وام
+                    </span>
                 </div>
 
             </div>
@@ -261,7 +261,7 @@
 
                     <span>شماره وام</span>
 
-                    <strong>
+                    <strong dir="ltr">
                         {{ $loan->full_loan_number }}
                     </strong>
 
@@ -284,7 +284,7 @@
                     <span>تعداد اقساط</span>
 
                     <strong>
-                        {{ $loan->installment_count }}
+                        {{ fa_number($loan->installment_count) }}
                         قسط
                     </strong>
 
@@ -307,7 +307,7 @@
                     <span>تاریخ شروع</span>
 
                     <strong>
-                        {{ $loan->start_date_jalali }}
+                        {{ fa_number($loan->start_date_jalali) }}
                     </strong>
 
                 </div>
@@ -318,7 +318,7 @@
                     <span>اولین سررسید</span>
 
                     <strong>
-                        {{ $loan->first_due_date_jalali }}
+                        {{ fa_number($loan->first_due_date_jalali) }}
                     </strong>
 
                 </div>
@@ -329,7 +329,7 @@
                     <span>آخرین سررسید</span>
 
                     <strong>
-                        {{ $loan->last_due_date_jalali }}
+                        {{ fa_number($loan->last_due_date_jalali) }}
                     </strong>
 
                 </div>
@@ -342,10 +342,6 @@
         {{-- =====================================================
              INSTALLMENTS
              ===================================================== --}}
-
-
-
-
 
         <section class="customer-loan-installments-card">
 
@@ -362,8 +358,8 @@
                     <h2>اقساط وام</h2>
 
                     <span>
-                وضعیت و پرداخت اقساط
-            </span>
+                        وضعیت و پرداخت اقساط
+                    </span>
                 </div>
 
             </div>
@@ -440,12 +436,12 @@
                                  ================================================= --}}
                             <div class="customer-installment-number">
 
-                        <span>
-                            قسط
-                        </span>
+                                <span>
+                                    قسط
+                                </span>
 
                                 <strong>
-                                    {{ $installment->installment_number }}
+                                    {{ fa_number($installment->installment_number) }}
                                 </strong>
 
                             </div>
@@ -456,12 +452,14 @@
                                  ================================================= --}}
                             <div class="customer-installment-date">
 
-                        <span>
-                            سررسید
-                        </span>
+                                <span>
+                                    سررسید
+                                </span>
 
                                 <strong>
-                                    {{ $installment->due_date_jalali ?? '—' }}
+                                    {{ $installment->due_date_jalali
+                                        ? fa_number($installment->due_date_jalali)
+                                        : '—' }}
                                 </strong>
 
                             </div>
@@ -472,12 +470,12 @@
                                  ================================================= --}}
                             <div class="customer-installment-amount">
 
-                        <span>
-                            مبلغ
-                        </span>
+                                <span>
+                                    مبلغ
+                                </span>
 
                                 <strong>
-                                    {{ number_format($installment->amount) }}
+                                    {{ fa_money($installment->amount) }}
 
                                     <small>
                                         ریال
@@ -500,11 +498,11 @@
 
                                     <span class="paid">
 
-                                <i class="bi bi-check-circle-fill"></i>
+                                        <i class="bi bi-check-circle-fill"></i>
 
-                                پرداخت شده
+                                        پرداخت شده
 
-                            </span>
+                                    </span>
 
 
                                     {{-- =================================================
@@ -518,21 +516,21 @@
 
                                             <span class="overdue">
 
-                                        <i class="bi bi-exclamation-circle-fill"></i>
+                                                <i class="bi bi-exclamation-circle-fill"></i>
 
-                                        معوق
+                                                معوق
 
-                                    </span>
+                                            </span>
 
                                         @else
 
                                             <span class="pending">
 
-                                        <i class="bi bi-clock-fill"></i>
+                                                <i class="bi bi-clock-fill"></i>
 
-                                        پرداخت نشده
+                                                پرداخت نشده
 
-                                    </span>
+                                            </span>
 
                                         @endif
 
@@ -568,11 +566,11 @@
 
                                     <span class="pending">
 
-                                <i class="bi bi-lock-fill"></i>
+                                        <i class="bi bi-lock-fill"></i>
 
-                                در انتظار پرداخت قسط قبلی
+                                        در انتظار پرداخت قسط قبلی
 
-                            </span>
+                                    </span>
 
                                 @endif
 
@@ -595,24 +593,14 @@
                     <i class="bi bi-calendar-x"></i>
 
                     <span>
-                هنوز قسطی برای این وام ثبت نشده است.
-            </span>
+                        هنوز قسطی برای این وام ثبت نشده است.
+                    </span>
 
                 </div>
 
             @endif
 
         </section>
-
-
-
-
-
-
-
-
-
-
 
 
         {{-- =====================================================
@@ -633,3 +621,4 @@
     </div>
 
 @endsection
+

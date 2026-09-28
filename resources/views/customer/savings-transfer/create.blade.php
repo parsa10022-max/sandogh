@@ -1,4 +1,3 @@
-blade
 @extends('customer.layouts.app')
 
 @section('title', 'واریز به حساب پس‌انداز دیگران')
@@ -61,9 +60,9 @@ blade
 
                 <div class="customer-savings-transfer-search-input">
 
-        <span class="customer-savings-transfer-search-icon">
-            <i class="bi bi-credit-card-2-front"></i>
-        </span>
+                    <span class="customer-savings-transfer-search-icon">
+                        <i class="bi bi-credit-card-2-front"></i>
+                    </span>
 
                     <input
                         id="customer_keyword"
@@ -73,7 +72,8 @@ blade
                         inputmode="numeric"
                         autocomplete="off"
                         maxlength="11"
-                        required>
+                        required
+                    >
 
                 </div>
 
@@ -81,13 +81,14 @@ blade
                 <button
                     type="button"
                     id="search_customer"
-                    class="customer-savings-transfer-search-button">
+                    class="customer-savings-transfer-search-button"
+                >
 
                     <i class="bi bi-search"></i>
 
                     <span>
-            جستجو
-        </span>
+                        جستجو
+                    </span>
 
                 </button>
 
@@ -96,16 +97,8 @@ blade
 
             <div
                 id="customer-result"
-                class="customer-savings-transfer-result d-none">
-            </div>
-
-
-            {{-- =====================================================
-                 Customer Result
-            ====================================================== --}}
-            <div
-                id="customer-result"
-                class="customer-savings-transfer-result d-none">
+                class="customer-savings-transfer-result d-none"
+            >
             </div>
 
 
@@ -115,7 +108,8 @@ blade
             <form
                 method="POST"
                 action="{{ route('customer.savings-transfer.store') }}"
-                id="savings-transfer-form">
+                id="savings-transfer-form"
+            >
 
                 @csrf
 
@@ -123,7 +117,8 @@ blade
                 <input
                     type="hidden"
                     name="receiver_customer_id"
-                    id="receiver_customer_id">
+                    id="receiver_customer_id"
+                >
 
 
                 {{-- =================================================
@@ -133,7 +128,8 @@ blade
 
                     <label
                         for="amount_display"
-                        class="customer-savings-transfer-label">
+                        class="customer-savings-transfer-label"
+                    >
 
                         مبلغ واریز
 
@@ -146,12 +142,13 @@ blade
                             id="amount_display"
                             inputmode="numeric"
                             autocomplete="off"
-                            placeholder="مثلاً ۵۰,۰۰۰"
-                            required>
+                            placeholder="مثلاً ۵۰٬۰۰۰"
+                            required
+                        >
 
                         <span>
-            ریال
-        </span>
+                            ریال
+                        </span>
 
                     </div>
 
@@ -159,7 +156,8 @@ blade
                     <input
                         type="hidden"
                         name="amount"
-                        id="amount">
+                        id="amount"
+                    >
 
                     @error('amount')
 
@@ -183,7 +181,8 @@ blade
                     type="submit"
                     class="customer-savings-transfer-pay-button"
                     id="payment_button"
-                    disabled>
+                    disabled
+                >
 
                     <span class="customer-savings-transfer-pay-icon">
 
@@ -236,3 +235,4 @@ blade
     @endpush
 
 @endsection
+

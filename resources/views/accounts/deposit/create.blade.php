@@ -2,10 +2,7 @@
 
 @section('title', 'واریز به حساب پس‌انداز')
 
-
-
 @section('content')
-
 
     <div class="container py-4 account-deposit-page">
 
@@ -147,7 +144,7 @@
                     </span>
 
                         <strong>
-                            {{ number_format($account->balance) }}
+                            {{ fa_money($account->balance) }}
 
                             <small>
                                 ریال
@@ -330,19 +327,19 @@
 
                                     <span class="account-deposit-payment-content">
 
-                    <span class="account-deposit-payment-icon">
-                        <i class="bi {{ $paymentIcon }}"></i>
-                    </span>
+                                    <span class="account-deposit-payment-icon">
+                                        <i class="bi {{ $paymentIcon }}"></i>
+                                    </span>
 
-                    <span class="account-deposit-payment-text">
-                        {{ $method->label() }}
-                    </span>
+                                    <span class="account-deposit-payment-text">
+                                        {{ $method->label() }}
+                                    </span>
 
-                    <span class="account-deposit-payment-check">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </span>
+                                    <span class="account-deposit-payment-check">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </span>
 
-                </span>
+                                </span>
 
                                 </label>
 
@@ -357,9 +354,6 @@
                         @enderror
 
                     </div>
-
-
-
 
 
                     {{-- توضیحات --}}
@@ -433,5 +427,6 @@
         </div>
 
     </div>
+
 
 @endsection

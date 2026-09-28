@@ -46,7 +46,7 @@
                         </span>
 
                         <strong class="loan-summary-value">
-                            {{ number_format($loan->loan_amount) }}
+                            {{ fa_money($loan->loan_amount) }}
                             <small>ریال</small>
                         </strong>
 
@@ -73,7 +73,7 @@
                         </span>
 
                         <strong class="loan-summary-value">
-                            {{ $loan->installment_count }}
+                            {{ fa_number($loan->installment_count) }}
                             <small>قسط</small>
                         </strong>
 
@@ -100,10 +100,11 @@
                         </span>
 
                         <strong class="loan-summary-value">
-                            {{ $loan->installments
-                                ->where('status', \App\Enums\InstallmentStatus::PAID)
-                                ->count()
-                            }}
+                            {{ fa_number(
+                                $loan->installments
+                                    ->where('status', \App\Enums\InstallmentStatus::PAID)
+                                    ->count()
+                            ) }}
                             <small>قسط</small>
                         </strong>
 
@@ -130,14 +131,15 @@
                         </span>
 
                         <strong class="loan-summary-value">
-                            {{ $loan->installments
-                                ->where(
-                                    'status',
-                                    '!=',
-                                    \App\Enums\InstallmentStatus::PAID
-                                )
-                                ->count()
-                            }}
+                            {{ fa_number(
+                                $loan->installments
+                                    ->where(
+                                        'status',
+                                        '!=',
+                                        \App\Enums\InstallmentStatus::PAID
+                                    )
+                                    ->count()
+                            ) }}
                             <small>قسط</small>
                         </strong>
 
@@ -165,7 +167,7 @@
 
                         <strong class="loan-summary-value">
 
-                            {{ number_format(
+                            {{ fa_money(
                                 $loan->installments
                                     ->where(
                                         'status',
@@ -202,7 +204,7 @@
 
                         <strong class="loan-summary-value">
 
-                            {{ number_format(
+                            {{ fa_money(
                                 $loan->loan_amount -
                                 $loan->installments
                                     ->where(
@@ -239,7 +241,7 @@
                         </span>
 
                         <strong class="loan-summary-value loan-summary-date">
-                            {{ $loan->first_due_date_jalali }}
+                            {{ fa_number($loan->first_due_date_jalali) }}
                         </strong>
 
                     </div>
@@ -265,7 +267,7 @@
                         </span>
 
                         <strong class="loan-summary-value loan-summary-date">
-                            {{ $loan->last_due_date_jalali }}
+                            {{ fa_number($loan->last_due_date_jalali) }}
                         </strong>
 
                     </div>
@@ -330,7 +332,7 @@
                                     </span>
 
                                     <strong>
-                                        {{ $nextInstallment->installment_number }}
+                                        {{ fa_number($nextInstallment->installment_number) }}
                                     </strong>
 
                                 </div>
@@ -344,7 +346,7 @@
 
                                     <strong class="loan-next-amount">
 
-                                        {{ number_format($nextInstallment->amount) }}
+                                        {{ fa_money($nextInstallment->amount) }}
 
                                         <small>ریال</small>
 
@@ -360,7 +362,7 @@
                                     </span>
 
                                     <strong>
-                                        {{ $nextInstallment->due_date_jalali ?? $nextInstallment->due_date }}
+                                        {{ fa_number($nextInstallment->due_date_jalali ?? $nextInstallment->due_date) }}
                                     </strong>
 
                                 </div>
@@ -435,13 +437,13 @@
                         <div class="loan-progress-top">
 
                             <strong>
-                                {{ $progress }}٪
+                                {{ fa_number($progress) }}٪
                             </strong>
 
                             <span>
-                                {{ $paidCount }}
+                                {{ fa_number($paidCount) }}
                                 از
-                                {{ $loan->installment_count }}
+                                {{ fa_number($loan->installment_count) }}
                                 قسط
                             </span>
 
@@ -464,9 +466,9 @@
 
                         <div class="loan-progress-description">
 
-                            {{ $paidCount }}
+                            {{ fa_number($paidCount) }}
                             قسط از
-                            {{ $loan->installment_count }}
+                            {{ fa_number($loan->installment_count) }}
                             قسط پرداخت شده است.
 
                         </div>

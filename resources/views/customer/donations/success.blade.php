@@ -106,12 +106,11 @@
 
                         <strong class="customer-donation-success-amount">
 
-                            {{ number_format($donationPayment->amount) }}
+                            {{ fa_money($donationPayment->amount) }}
 
                             <small>ریال</small>
 
                         </strong>
-
                     </div>
 
 

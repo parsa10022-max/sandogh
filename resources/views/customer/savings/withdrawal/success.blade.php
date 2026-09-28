@@ -89,6 +89,9 @@
                     )
                 );
 
+                // تبدیل اعداد شبا به فارسی
+                $ibanFormatted = fa_number($ibanFormatted);
+
             @endphp
 
 
@@ -178,7 +181,7 @@
 
                     <strong class="customer-savings-withdrawal-success-amount">
 
-                        {{ number_format($withdrawal->amount) }}
+                        {{ fa_money($withdrawal->amount) }}
 
                         <small>
                             ریال
@@ -237,12 +240,14 @@
                         تاریخ درخواست
                     </span>
 
-                    <strong dir="ltr">
+                    <strong>
 
                         {{
-                            \Morilog\Jalali\Jalalian::fromDateTime(
-                                $withdrawal->created_at
-                            )->format('Y/m/d H:i')
+                            fa_number(
+                                \Morilog\Jalali\Jalalian::fromDateTime(
+                                    $withdrawal->created_at
+                                )->format('Y/m/d H:i')
+                            )
                         }}
 
                     </strong>
@@ -296,3 +301,4 @@
     </div>
 
 @endsection
+

@@ -35,21 +35,20 @@
                 </h2>
             </div>
 
-
             <div class="customer-donation-payment-card">
 
                 {{-- Header --}}
                 <div class="customer-donation-payment-header">
 
-                <span class="customer-donation-payment-icon"
-                      style="
-                          background: {{ $accountColor }}1A;
-                          color: {{ $accountColor }};
-                          ">
+                    <span class="customer-donation-payment-icon"
+                          style="
+                              background: {{ $accountColor }}1A;
+                              color: {{ $accountColor }};
+                              ">
 
-                    <i class="bi bi-heart-fill"></i>
+                        <i class="bi bi-heart-fill"></i>
 
-                </span>
+                    </span>
 
                     <div>
 
@@ -58,22 +57,21 @@
                         </h3>
 
                         <span>
-                        بررسی اطلاعات پرداخت
-                    </span>
+                            بررسی اطلاعات پرداخت
+                        </span>
 
                     </div>
 
                 </div>
-
 
                 {{-- اطلاعات --}}
                 <div class="customer-donation-payment-info">
 
                     <div class="customer-donation-payment-row">
 
-                    <span>
-                        حساب مقصد
-                    </span>
+                        <span>
+                            حساب مقصد
+                        </span>
 
                         <strong>
                             {{ $accountName }}
@@ -81,12 +79,11 @@
 
                     </div>
 
-
                     <div class="customer-donation-payment-row">
 
-                    <span>
-                        شماره حساب
-                    </span>
+                        <span>
+                            شماره حساب
+                        </span>
 
                         <strong dir="ltr">
                             {{ $donationPayment->account->account_number }}
@@ -94,15 +91,14 @@
 
                     </div>
 
-
                     <div class="customer-donation-payment-row amount">
 
-                    <span>
-                        مبلغ کمک
-                    </span>
+                        <span>
+                            مبلغ کمک
+                        </span>
 
                         <strong>
-                            {{ number_format($donationPayment->amount) }}
+                            {{ fa_money($donationPayment->amount) }}
                             <small>ریال</small>
                         </strong>
 
@@ -110,18 +106,16 @@
 
                 </div>
 
-
                 {{-- اطلاع --}}
                 <div class="customer-donation-payment-alert">
 
                     <i class="bi bi-shield-check"></i>
 
                     <span>
-                    برای تکمیل کمک، به درگاه پرداخت منتقل خواهید شد.
-                </span>
+                        برای تکمیل کمک، به درگاه پرداخت منتقل خواهید شد.
+                    </span>
 
                 </div>
-
 
                 {{-- پرداخت --}}
                 <form method="POST"
@@ -132,17 +126,16 @@
                     <button type="submit"
                             class="customer-donation-submit">
 
-                    <span>
-                        <i class="bi bi-credit-card"></i>
-                        پرداخت از طریق درگاه
-                    </span>
+                        <span>
+                            <i class="bi bi-credit-card"></i>
+                            پرداخت از طریق درگاه
+                        </span>
 
                         <i class="bi bi-arrow-left"></i>
 
                     </button>
 
                 </form>
-
 
                 {{-- انصراف --}}
                 <a href="{{ route('customer.dashboard') }}"
@@ -161,3 +154,4 @@
     </div>
 
 @endsection
+

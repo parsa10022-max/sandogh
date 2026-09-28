@@ -54,7 +54,6 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes
-            $table->index('customer_id');
             $table->index('mobile');
             $table->index('status');
             $table->index('expires_at');

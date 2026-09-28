@@ -3,25 +3,24 @@
 namespace App\Models;
 
 use App\Enums\InstallmentInterval;
+use App\Enums\InstallmentStatus;
 use App\Enums\LoanStatus;
+use App\Models\Concerns\HasJalaliDates;
 use Database\Factories\LoanFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Concerns\HasJalaliDates;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\InstallmentStatus;
-use App\Models\LoanRequest;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loan extends Model
 {
     /** @use HasFactory<LoanFactory> */
-    use HasFactory, SoftDeletes ,HasJalaliDates;
+    use HasFactory;
+    use SoftDeletes;
+    use HasJalaliDates;
 
     protected $fillable = [
         'customer_id',
@@ -52,7 +51,7 @@ class Loan extends Model
             'installment_interval' => InstallmentInterval::class,
 
             'loan_amount' => 'integer',
-            'installment_amount' =>'integer',
+            'installment_amount' => 'integer',
 
             'start_date' => 'date',
             'first_due_date' => 'date',
@@ -85,56 +84,53 @@ class Loan extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
     public function installments(): HasMany
     {
-        return $this->hasMany(
-            Installment::class
-        );
+        return $this->hasMany(Installment::class);
     }
 
-    public function guarantors()
+    public function guarantors(): HasMany
     {
         return $this->hasMany(LoanGuarantor::class);
     }
 
-    public function loanRequest()
+    public function loanRequest(): HasOne
     {
         return $this->hasOne(LoanRequest::class);
     }
 
-
-
     /*
-|--------------------------------------------------------------------------
-| Payment Helpers
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | Payment Helpers
+    |--------------------------------------------------------------------------
+    */
 
-    public function paidInstallments()
+    public function paidInstallments(): HasMany
     {
         return $this->installments()
-            ->where('status', InstallmentStatus::PAID->value);
+            ->where(
+                'status',
+                InstallmentStatus::PAID->value
+            );
     }
-
 
     public function paidInstallmentsCount(): int
     {
         return $this->paidInstallments()->count();
     }
 
-
     public function remainingInstallmentsCount(): int
     {
-        return $this->installment_count - $this->paidInstallmentsCount();
+        return $this->installment_count
+            - $this->paidInstallmentsCount();
     }
-
 
     public function paidAmount(): int
     {
         return $this->paidInstallments()
             ->sum('amount');
     }
-
 
     public function remainingAmount(): int
     {
@@ -155,40 +151,60 @@ class Loan extends Model
         );
     }
 
-    public function scopeSearch($query, $search)
-    {
-        if (!$search) {
+    public function scopeSearch(
+        Builder $query,
+        ?string $search
+    ): Builder {
+        if (! filled($search)) {
             return $query;
         }
 
         // حذف خط تیره از جستجو
         $search = str_replace('-', '', $search);
 
-        return $query
-            ->where(function ($q) use ($search) {
+        return $query->where(function (Builder $q) use ($search) {
 
-                // جستجو شماره وام (پیشوند + شماره وام)
-                $q->whereHas('loanType', function ($loanTypeQuery) use ($search) {
+            // جستجوی شماره وام
+            $q->whereHas(
+                'loanType',
+                function (Builder $loanTypeQuery) use ($search) {
 
                     $loanTypeQuery->whereRaw(
-                        "CONCAT(prefix, loans.loan_number) LIKE ?",
+                        'CONCAT(prefix, loans.loan_number) LIKE ?',
                         ["%{$search}%"]
                     );
+                }
+            )
 
-                })
-
-                    // جستجو اطلاعات مشتری
-                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
+                // جستجوی اطلاعات مشتری
+                ->orWhereHas(
+                    'customer',
+                    function (Builder $customerQuery) use ($search) {
 
                         $customerQuery
-                            ->where('customer_code', 'like', "%{$search}%")
-                            ->orWhere('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('mobile', 'like', "%{$search}%");
-
-                    });
-
-            });
+                            ->where(
+                                'customer_code',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhere(
+                                'first_name',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhere(
+                                'last_name',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhere(
+                                'mobile',
+                                'like',
+                                "%{$search}%"
+                            );
+                    }
+                );
+        });
     }
 
     /*
@@ -210,7 +226,7 @@ class Loan extends Model
      */
     public function getFormattedLoanAmountAttribute(): string
     {
-        return number_format($this->loan_amount);
+        return fa_money($this->loan_amount);
     }
 
     /**
@@ -218,33 +234,58 @@ class Loan extends Model
      */
     public function getFormattedInstallmentAmountAttribute(): string
     {
-        return number_format($this->installment_amount);
+        return fa_money($this->installment_amount);
     }
+
+    /**
+     * تاریخ شروع شمسی
+     */
     public function getStartDateJalaliAttribute(): string
     {
         return $this->toJalali($this->start_date);
     }
 
+    /**
+     * اولین سررسید شمسی
+     */
     public function getFirstDueDateJalaliAttribute(): string
     {
         return $this->toJalali($this->first_due_date);
     }
 
+    /**
+     * آخرین سررسید شمسی
+     */
     public function getLastDueDateJalaliAttribute(): string
     {
         return $this->toJalali($this->last_due_date);
     }
 
+    /**
+     * تاریخ ایجاد شمسی
+     */
     public function getCreatedAtJalaliAttribute(): string
     {
-        return $this->toJalali($this->created_at, 'Y/m/d H:i');
+        return $this->toJalali(
+            $this->created_at,
+            'Y/m/d H:i'
+        );
     }
 
+    /**
+     * تاریخ ویرایش شمسی
+     */
     public function getUpdatedAtJalaliAttribute(): string
     {
-        return $this->toJalali($this->updated_at, 'Y/m/d H:i');
+        return $this->toJalali(
+            $this->updated_at,
+            'Y/m/d H:i'
+        );
     }
 
+    /**
+     * آیا حداقل یک پرداخت دارد؟
+     */
     public function hasPayment(): bool
     {
         return $this->installments()
@@ -252,8 +293,15 @@ class Loan extends Model
             ->exists();
     }
 
+    /**
+     * شماره وام برای جستجو
+     */
     public function getSearchLoanNumberAttribute(): string
     {
-        return preg_replace('/\D/', '', $this->full_loan_number);
+        return preg_replace(
+            '/\D/',
+            '',
+            $this->full_loan_number
+        );
     }
 }

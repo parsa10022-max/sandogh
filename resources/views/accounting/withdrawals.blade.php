@@ -2,8 +2,6 @@
 
 @section('title', 'برداشت‌های پس‌انداز')
 
-
-
 @section('content')
 
     <div class="container-fluid savings-withdrawals-page">
@@ -56,7 +54,7 @@
                 </div>
 
                 <div class="savings-withdrawals-count">
-                    {{ $withdrawals->total() }} مورد
+                    {{ fa_number($withdrawals->total()) }} مورد
                 </div>
 
             </div>
@@ -108,7 +106,7 @@
                                 {{-- Number --}}
                                 <td class="savings-withdrawal-row-number">
 
-                                    {{ $withdrawals->firstItem() + $loop->index }}
+                                    {{ fa_number($withdrawals->firstItem() + $loop->index) }}
 
                                 </td>
 
@@ -145,7 +143,7 @@
                                 <td class="savings-withdrawal-amount">
 
                                     <span class="savings-withdrawal-amount-value">
-                                        {{ number_format($withdrawal->amount ?? 0) }}
+                                        {{ fa_money($withdrawal->amount ?? 0) }}
                                     </span>
 
                                     <span class="savings-withdrawal-amount-unit">
@@ -189,11 +187,11 @@
                                     @if($withdrawal->paid_at)
 
                                         <span>
-                                            {{ $withdrawal->paid_at->format('Y/m/d') }}
+                                            {{ fa_number($withdrawal->paid_at->format('Y/m/d')) }}
                                         </span>
 
                                         <small>
-                                            {{ $withdrawal->paid_at->format('H:i') }}
+                                            {{ fa_number($withdrawal->paid_at->format('H:i')) }}
                                         </small>
 
                                     @else

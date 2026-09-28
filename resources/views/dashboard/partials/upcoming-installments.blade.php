@@ -24,7 +24,7 @@
         <span class="dashboard-upcoming-count">
             <i class="bi bi-list-check"></i>
 
-            {{ $dashboard['upcomingInstallments']->count() }}
+            {{ fa_number($dashboard['upcomingInstallments']->count()) }}
 
             قسط
         </span>
@@ -73,7 +73,10 @@
                     {{-- Loan --}}
                     <td>
 
-                        <div class="dashboard-upcoming-loan">
+                        <div
+                            class="dashboard-upcoming-loan"
+                            dir="ltr"
+                        >
 
                             <span class="dashboard-upcoming-loan-prefix">
                                 {{ $installment->loan->loanType->prefix }}
@@ -113,7 +116,7 @@
 
                             <i class="bi bi-calendar3"></i>
 
-                            {{ $installment->due_date_jalali }}
+                            {{ fa_number($installment->due_date_jalali) }}
 
                         </span>
 
@@ -125,7 +128,7 @@
 
                         <div class="dashboard-upcoming-amount">
 
-                            {{ number_format($installment->amount) }}
+                            {{ fa_money($installment->amount) }}
 
                             <small>
                                 ریال
@@ -149,7 +152,7 @@
 
                             <i class="bi bi-clock"></i>
 
-                            {{ $remainingDays }}
+                            {{ fa_number($remainingDays) }}
 
                             روز
 
@@ -195,3 +198,4 @@
     </div>
 
 </div>
+

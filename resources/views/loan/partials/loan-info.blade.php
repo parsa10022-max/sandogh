@@ -74,7 +74,10 @@
                         شماره وام
                     </span>
 
-                    <span class="loan-info-value loan-number-display">
+                    <span
+                        class="loan-info-value loan-number-display"
+                        dir="ltr"
+                    >
                         {{ $loan->full_loan_number }}
                     </span>
 
@@ -93,7 +96,7 @@
                     </span>
 
                     <span class="loan-info-value loan-money-value">
-                        {{ number_format($loan->loan_amount) }}
+                        {{ fa_money($loan->loan_amount) }}
                         <small>ریال</small>
                     </span>
 
@@ -112,7 +115,7 @@
                     </span>
 
                     <span class="loan-info-value loan-money-value loan-installment-value">
-                        {{ number_format($loan->installment_amount) }}
+                        {{ fa_money($loan->installment_amount) }}
                         <small>ریال</small>
                     </span>
 
@@ -131,7 +134,7 @@
                     </span>
 
                     <span class="loan-info-value">
-                        {{ $loan->installment_count }}
+                        {{ fa_number($loan->installment_count) }}
                     </span>
 
                 </div>
@@ -167,7 +170,7 @@
                     </span>
 
                     <span class="loan-info-value">
-                        {{ $loan->start_date_jalali }}
+                        {{ fa_number($loan->start_date_jalali) }}
                     </span>
 
                 </div>
@@ -185,7 +188,7 @@
                     </span>
 
                     <span class="loan-info-value">
-                        {{ $loan->first_due_date_jalali }}
+                        {{ fa_number($loan->first_due_date_jalali) }}
                     </span>
 
                 </div>
@@ -203,7 +206,7 @@
                     </span>
 
                     <span class="loan-info-value">
-                        {{ $loan->last_due_date_jalali }}
+                        {{ fa_number($loan->last_due_date_jalali) }}
                     </span>
 
                 </div>

@@ -8,7 +8,6 @@
 
 @section('content')
 
-
     @php
         /*
          |--------------------------------------------------------------------------
@@ -24,9 +23,6 @@
          |--------------------------------------------------------------------------
          | اولین قسط قابل پرداخت
          |--------------------------------------------------------------------------
-         |
-         | فقط اولین قسط پرداخت‌نشده باید دکمه پرداخت داشته باشد.
-         |
          */
 
         $firstPayableInstallment = $sortedOverdueInstallments->first();
@@ -37,11 +33,6 @@
          |--------------------------------------------------------------------------
          | حذف اعلان‌های تکراری اقساط معوق
          |--------------------------------------------------------------------------
-         |
-         | اقساط معوق در کارت بالای صفحه نمایش داده می‌شوند،
-         | بنابراین اعلان‌های overdue_installment را از لیست اعلان‌ها
-         | حذف می‌کنیم تا اطلاعات تکراری نمایش داده نشود.
-         |
          */
 
         $notificationCollection = $notifications->getCollection();
@@ -64,7 +55,7 @@
 
             @if($unreadCount > 0)
 
-                {{ $unreadCount }} اعلان جدید برای شما ثبت شده بود.
+                {{ fa_number($unreadCount) }} اعلان جدید برای شما ثبت شده بود.
 
             @else
 
@@ -101,7 +92,7 @@
                     <div class="loan-overdue-notice-text">
 
                         شما
-                        <strong>{{ $overdueCount }}</strong>
+                        <strong>{{ fa_number($overdueCount) }}</strong>
                         قسط پرداخت‌نشده دارید که از تاریخ سررسید آن گذشته است.
 
                     </div>
@@ -115,12 +106,12 @@
 
                         <div class="loan-overdue-summary-item">
 
-                        <span>
-                            تعداد اقساط معوق
-                        </span>
+                            <span>
+                                تعداد اقساط معوق
+                            </span>
 
                             <strong>
-                                {{ $overdueCount }}
+                                {{ fa_number($overdueCount) }}
                             </strong>
 
                         </div>
@@ -128,12 +119,12 @@
 
                         <div class="loan-overdue-summary-item">
 
-                        <span>
-                            مبلغ کل معوق
-                        </span>
+                            <span>
+                                مبلغ کل معوق
+                            </span>
 
                             <strong>
-                                {{ number_format($overdueAmount) }}
+                                {{ fa_money($overdueAmount) }}
                                 ریال
                             </strong>
 
@@ -167,7 +158,7 @@
 
                                     <strong>
                                         قسط شماره
-                                        {{ $installment->installment_number }}
+                                        {{ fa_number($installment->installment_number) }}
                                     </strong>
 
                                     @if($installment->loan?->loanType)
@@ -187,12 +178,12 @@
 
                                     <div>
 
-                                    <span>
-                                        مبلغ
-                                    </span>
+                                        <span>
+                                            مبلغ
+                                        </span>
 
                                         <strong>
-                                            {{ number_format($installment->amount) }}
+                                            {{ fa_money($installment->amount) }}
                                             ریال
                                         </strong>
 
@@ -201,12 +192,12 @@
 
                                     <div>
 
-                                    <span>
-                                        سررسید
-                                    </span>
+                                        <span>
+                                            سررسید
+                                        </span>
 
                                         <strong>
-                                            {{ $installment->due_date_jalali }}
+                                            {{ fa_number($installment->due_date_jalali) }}
                                         </strong>
 
                                     </div>
@@ -214,12 +205,12 @@
 
                                     <div>
 
-                                    <span>
-                                        تأخیر
-                                    </span>
+                                        <span>
+                                            تأخیر
+                                        </span>
 
                                         <strong>
-                                            {{ $installment->overdue_days }}
+                                            {{ fa_number($installment->overdue_days) }}
                                             روز
                                         </strong>
 
@@ -248,18 +239,17 @@
                                                 class="loan-notification-pay-btn"
                                             >
 
-                                            <span class="loan-notification-pay-icon">
-                                                <i class="bi bi-credit-card"></i>
-                                            </span>
+                                                <span class="loan-notification-pay-icon">
+                                                    <i class="bi bi-credit-card"></i>
+                                                </span>
 
                                                 <span class="loan-notification-pay-content">
 
-                                                <strong>
-                                                    پرداخت  قسط
-                                                </strong>
+                                                    <strong>
+                                                        پرداخت قسط
+                                                    </strong>
 
-
-                                            </span>
+                                                </span>
 
                                                 <i class="bi bi-chevron-left loan-notification-pay-arrow"></i>
 
@@ -334,13 +324,11 @@
 
                             @break
 
-
                             @case('loan_request_rejected')
 
                             <i class="bi bi-x-lg"></i>
 
                             @break
-
 
                             @case('loan_disbursed')
 
@@ -348,13 +336,11 @@
 
                             @break
 
-
                             @case('savings_deposit_success')
 
                             <i class="bi bi-arrow-down-circle"></i>
 
                             @break
-
 
                             @case('savings_deposit_other')
 
@@ -362,13 +348,11 @@
 
                             @break
 
-
                             @case('savings_transfer_success')
 
                             <i class="bi bi-arrow-left-right"></i>
 
                             @break
-
 
                             @case('savings_withdrawal_success')
 
@@ -376,13 +360,11 @@
 
                             @break
 
-
                             @case('installment_payment_success')
 
                             <i class="bi bi-calendar-check"></i>
 
                             @break
-
 
                             @case('other_installment_payment_success')
 
@@ -390,13 +372,11 @@
 
                             @break
 
-
                             @case('loan_overdue')
 
                             <i class="bi bi-exclamation-triangle"></i>
 
                             @break
-
 
                             @default
 
@@ -412,7 +392,6 @@
                     ================================================== --}}
 
                     <div class="loan-request-notice-content">
-
 
                         {{-- عنوان --}}
 
@@ -448,12 +427,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }} ریال
+                                            {{ fa_money($amount) }} ریال
                                         </strong>
 
                                     </div>
@@ -465,11 +444,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        شماره حساب
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            شماره حساب
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $accountNumber }}
                                         </strong>
 
@@ -482,11 +461,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        کد پیگیری
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            کد پیگیری
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $trackingCode }}
                                         </strong>
 
@@ -516,12 +495,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }} ریال
+                                            {{ fa_money($amount) }} ریال
                                         </strong>
 
                                     </div>
@@ -533,9 +512,9 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        واریز به
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            واریز به
+                                        </span>
 
                                         <strong>
                                             {{ $receiverName }}
@@ -550,11 +529,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        شماره حساب مقصد
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            شماره حساب مقصد
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $accountNumber }}
                                         </strong>
 
@@ -567,11 +546,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        کد پیگیری
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            کد پیگیری
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $trackingCode }}
                                         </strong>
 
@@ -601,12 +580,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }} ریال
+                                            {{ fa_money($amount) }} ریال
                                         </strong>
 
                                     </div>
@@ -618,12 +597,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        شماره قسط
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            شماره قسط
+                                        </span>
 
                                         <strong>
-                                            {{ $installmentNumber }}
+                                            {{ fa_number($installmentNumber) }}
                                         </strong>
 
                                     </div>
@@ -635,11 +614,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        کد پیگیری
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            کد پیگیری
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $trackingCode }}
                                         </strong>
 
@@ -664,12 +643,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ برداشت
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ برداشت
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }} ریال
+                                            {{ fa_money($amount) }} ریال
                                         </strong>
 
                                     </div>
@@ -681,11 +660,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        شماره حساب
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            شماره حساب
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $accountNumber }}
                                         </strong>
 
@@ -698,11 +677,11 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        کد پیگیری
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            کد پیگیری
+                                        </span>
 
-                                        <strong>
+                                        <strong dir="ltr">
                                             {{ $trackingCode }}
                                         </strong>
 
@@ -727,12 +706,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ وام
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ وام
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $data['approved_amount']) }}
+                                            {{ fa_money($data['approved_amount']) }}
                                             ریال
                                         </strong>
 
@@ -745,12 +724,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        تعداد اقساط
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            تعداد اقساط
+                                        </span>
 
                                         <strong>
-                                            {{ $data['approved_installment_count'] }}
+                                            {{ fa_number($data['approved_installment_count']) }}
                                             قسط
                                         </strong>
 
@@ -763,9 +742,9 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        دوره بازپرداخت
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            دوره بازپرداخت
+                                        </span>
 
                                         <strong>
 
@@ -813,8 +792,8 @@
                                     <i class="bi bi-chat-left-text"></i>
 
                                     <span>
-                                    پیام مدیر:
-                                </span>
+                                        پیام مدیر:
+                                    </span>
 
                                     <strong>
                                         {{ $data['review_note'] }}
@@ -839,12 +818,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ درخواستی
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ درخواستی
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $data['requested_amount']) }}
+                                            {{ fa_money($data['requested_amount']) }}
                                             ریال
                                         </strong>
 
@@ -857,12 +836,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        تاریخ مراجعه مجدد
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            تاریخ مراجعه مجدد
+                                        </span>
 
                                         <strong>
-                                            {{ $data['next_review_date'] }}
+                                            {{ fa_number($data['next_review_date']) }}
                                         </strong>
 
                                     </div>
@@ -881,8 +860,8 @@
                                     <i class="bi bi-chat-left-text"></i>
 
                                     <span>
-                                    پیام مدیر:
-                                </span>
+                                        پیام مدیر:
+                                    </span>
 
                                     <strong>
                                         {{ $data['review_note'] }}
@@ -907,12 +886,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ وام
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ وام
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }}
+                                            {{ fa_money($amount) }}
                                             ریال
                                         </strong>
 
@@ -930,21 +909,21 @@
                                     class="loan-notification-withdraw-btn"
                                 >
 
-                                <span class="loan-notification-withdraw-icon">
-                                    <i class="bi bi-wallet2"></i>
-                                </span>
+                                    <span class="loan-notification-withdraw-icon">
+                                        <i class="bi bi-wallet2"></i>
+                                    </span>
 
                                     <span class="loan-notification-withdraw-content">
 
-                                    <strong>
-                                        درخواست برداشت وجه
-                                    </strong>
+                                        <strong>
+                                            درخواست برداشت وجه
+                                        </strong>
 
-                                    <small>
-                                        برای دریافت مبلغ وام، درخواست برداشت ثبت کنید.
-                                    </small>
+                                        <small>
+                                            برای دریافت مبلغ وام، درخواست برداشت ثبت کنید.
+                                        </small>
 
-                                </span>
+                                    </span>
 
                                     <i class="bi bi-chevron-left loan-notification-withdraw-arrow"></i>
 
@@ -967,12 +946,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        قسط
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            قسط
+                                        </span>
 
                                         <strong>
-                                            شماره {{ $installmentNumber }}
+                                            شماره {{ fa_number($installmentNumber) }}
                                         </strong>
 
                                     </div>
@@ -984,12 +963,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        مبلغ قسط
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            مبلغ قسط
+                                        </span>
 
                                         <strong>
-                                            {{ number_format((int) $amount) }} ریال
+                                            {{ fa_money($amount) }} ریال
                                         </strong>
 
                                     </div>
@@ -1001,12 +980,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        میزان تأخیر
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            میزان تأخیر
+                                        </span>
 
                                         <strong>
-                                            {{ $data['overdue_days'] }} روز
+                                            {{ fa_number($data['overdue_days']) }} روز
                                         </strong>
 
                                     </div>
@@ -1018,12 +997,12 @@
 
                                     <div class="loan-request-detail">
 
-                                    <span class="loan-request-detail-label">
-                                        تاریخ سررسید
-                                    </span>
+                                        <span class="loan-request-detail-label">
+                                            تاریخ سررسید
+                                        </span>
 
                                         <strong>
-                                            {{ $data['due_date'] }}
+                                            {{ fa_number($data['due_date']) }}
                                         </strong>
 
                                     </div>
@@ -1043,7 +1022,7 @@
 
                             <i class="bi bi-calendar-event"></i>
 
-                            {{ jdate($notification->created_at)->format('Y/m/d H:i') }}
+                            {{ fa_number(jdate($notification->created_at)->format('Y/m/d H:i')) }}
 
                         </div>
 
@@ -1088,5 +1067,5 @@
 
     </div>
 
-
 @endsection
+

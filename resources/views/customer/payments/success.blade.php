@@ -37,14 +37,14 @@
                     <div class="customer-donation-success-row">
 
                         <div class="customer-donation-success-label">
-                        <span class="customer-donation-success-info-icon">
-                            <i class="bi bi-cash-coin"></i>
-                        </span>
+                            <span class="customer-donation-success-info-icon">
+                                <i class="bi bi-cash-coin"></i>
+                            </span>
 
                             شماره وام
                         </div>
 
-                        <strong>
+                        <strong dir="ltr">
                             {{ $payment->loan->full_loan_number }}
                         </strong>
 
@@ -53,15 +53,15 @@
                     <div class="customer-donation-success-row">
 
                         <div class="customer-donation-success-label">
-                        <span class="customer-donation-success-info-icon">
-                            <i class="bi bi-list-check"></i>
-                        </span>
+                            <span class="customer-donation-success-info-icon">
+                                <i class="bi bi-list-check"></i>
+                            </span>
 
                             شماره قسط
                         </div>
 
                         <strong>
-                            {{ $payment->installment->installment_number }}
+                            {{ fa_number($payment->installment->installment_number) }}
                         </strong>
 
                     </div>
@@ -69,15 +69,15 @@
                     <div class="customer-donation-success-row">
 
                         <div class="customer-donation-success-label">
-                        <span class="customer-donation-success-info-icon">
-                            <i class="bi bi-cash-stack"></i>
-                        </span>
+                            <span class="customer-donation-success-info-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </span>
 
                             مبلغ پرداختی
                         </div>
 
                         <strong class="customer-donation-success-amount">
-                            {{ number_format($payment->amount) }}
+                            {{ fa_money($payment->amount) }}
                             <small>ریال</small>
                         </strong>
 
@@ -86,15 +86,15 @@
                     <div class="customer-donation-success-row">
 
                         <div class="customer-donation-success-label">
-                        <span class="customer-donation-success-info-icon">
-                            <i class="bi bi-calendar3"></i>
-                        </span>
+                            <span class="customer-donation-success-info-icon">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
 
                             تاریخ پرداخت
                         </div>
 
                         <strong>
-                            {{ $payment->paid_at_jalali }}
+                            {{ fa_number($payment->paid_at_jalali) }}
                         </strong>
 
                     </div>
@@ -102,9 +102,9 @@
                     <div class="customer-donation-success-row">
 
                         <div class="customer-donation-success-label">
-                        <span class="customer-donation-success-info-icon">
-                            <i class="bi bi-receipt"></i>
-                        </span>
+                            <span class="customer-donation-success-info-icon">
+                                <i class="bi bi-receipt"></i>
+                            </span>
 
                             کد رهگیری
                         </div>
@@ -137,3 +137,4 @@
     </div>
 
 @endsection
+

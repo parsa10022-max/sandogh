@@ -84,7 +84,10 @@
                             </th>
 
                             <td>
-                                <span class="customer-value customer-value--primary">
+                                <span
+                                    class="customer-value customer-value--primary"
+                                    dir="ltr"
+                                >
                                     {{ $customer->customer_code }}
                                 </span>
                             </td>
@@ -295,6 +298,7 @@
                                             <a
                                                 href="{{ route('accounts.show', $account) }}"
                                                 class="customer-account-number"
+                                                dir="ltr"
                                             >
                                                 {{ $account->account_number }}
                                             </a>
@@ -317,7 +321,7 @@
 
                                             <span class="customer-account-balance">
 
-                                                {{ number_format($account->balance) }}
+                                                {{ fa_money($account->balance) }}
 
                                                 <span class="customer-account-balance__unit">
                                                     ریال
@@ -392,3 +396,4 @@
     </div>
 
 @endsection
+

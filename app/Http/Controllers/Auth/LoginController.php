@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -7,13 +8,11 @@ use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Hash;
 
-
 class LoginController extends Controller
 {
     public function __construct(
         private OtpService $otpService
-    )
-    {
+    ) {
     }
 
     /**
@@ -35,26 +34,33 @@ class LoginController extends Controller
             ->where('username', $data['username'])
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             return $this->invalidCredentials();
         }
 
-        if (!Hash::check($data['password'], $user->password)) {
+        if (! Hash::check($data['password'], $user->password)) {
             return $this->invalidCredentials();
         }
+
+        session()->forget([
+            'login_user_id',
+        ]);
 
         $this->otpService->generate($user);
+
         session([
             'login_user_id' => $user->id,
         ]);
 
-        return redirect()->route('otp.form');
+        return redirect()
+            ->route('otp.form');
     }
 
     private function invalidCredentials()
     {
-        return back()->withErrors([
-            'username' => 'نام کاربری یا رمز عبور اشتباه است.',
-        ]);
+        return back()
+            ->withErrors([
+                'username' => 'نام کاربری یا رمز عبور اشتباه است.',
+            ]);
     }
 }

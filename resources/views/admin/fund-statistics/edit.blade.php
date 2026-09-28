@@ -46,7 +46,7 @@
                         <span>وام‌های پرداخت‌شده</span>
 
                         <strong>
-                            {{ number_format($statistic?->paid_loans_count ?? 0) }}
+                            {{ fa_number($statistic?->paid_loans_count ?? 0) }}
                             <small>فقره</small>
                         </strong>
                     </div>
@@ -55,7 +55,7 @@
                         <span>مبلغ وام‌های پرداخت‌شده</span>
 
                         <strong>
-                            {{ number_format($statistic?->paid_loans_amount ?? 0) }}
+                            {{ fa_money($statistic?->paid_loans_amount ?? 0) }}
                             <small>ریال</small>
                         </strong>
                     </div>
@@ -64,7 +64,7 @@
                         <span>کمک‌های ثبت‌شده</span>
 
                         <strong>
-                            {{ number_format($statistic?->donations_count ?? 0) }}
+                            {{ fa_number($statistic?->donations_count ?? 0) }}
                             <small>مورد</small>
                         </strong>
                     </div>
@@ -74,10 +74,12 @@
 
                         <strong>
                             @if(
-      $statistic?->statistics_date &&
-      $statistic->statistics_date->format('Y-m-d') !== '0000-00-00'
-  )
-                                {{ \Morilog\Jalali\Jalalian::fromCarbon($statistic->statistics_date)->format('Y/m/d') }}
+                                $statistic?->statistics_date &&
+                                $statistic->statistics_date->format('Y-m-d') !== '0000-00-00'
+                            )
+                                {{ fa_number(
+                                    \Morilog\Jalali\Jalalian::fromCarbon($statistic->statistics_date)->format('Y/m/d')
+                                ) }}
                             @else
                                 ---
                             @endif
@@ -116,8 +118,8 @@
                                 >
 
                                 <span class="fund-statistics-unit">
-                                    فقره
-                                </span>
+                                فقره
+                            </span>
 
                             </div>
 
@@ -149,8 +151,8 @@
                                 >
 
                                 <span class="fund-statistics-unit">
-                                    ریال
-                                </span>
+                                ریال
+                            </span>
 
                             </div>
 
@@ -182,8 +184,8 @@
                                 >
 
                                 <span class="fund-statistics-unit">
-                                    مورد
-                                </span>
+                                مورد
+                            </span>
 
                             </div>
 
@@ -213,16 +215,16 @@
                                     autocomplete="off"
                                     placeholder="انتخاب تاریخ"
                                     value="{{ old(
-                                        'statistics_date',
-                                        isset($statistic) && $statistic->statistics_date
-                                            ? \Morilog\Jalali\Jalalian::fromCarbon($statistic->statistics_date)->format('Y/m/d')
-                                            : ''
-                                    ) }}"
+                                    'statistics_date',
+                                    isset($statistic) && $statistic->statistics_date
+                                        ? \Morilog\Jalali\Jalalian::fromCarbon($statistic->statistics_date)->format('Y/m/d')
+                                        : ''
+                                ) }}"
                                 >
 
                                 <span class="fund-statistics-unit">
-                                    <i class="bi bi-calendar-date"></i>
-                                </span>
+                                <i class="bi bi-calendar-date"></i>
+                            </span>
 
                             </div>
 
@@ -498,14 +500,39 @@
 
                 input.addEventListener('input', function () {
 
-                    let value = this.value.replace(/[^\d]/g, '');
+                    let value = this.value
+                        .replace(/[۰-۹٠-٩]/g, function (digit) {
+                            return {
+                                '۰': '0',
+                                '۱': '1',
+                                '۲': '2',
+                                '۳': '3',
+                                '۴': '4',
+                                '۵': '5',
+                                '۶': '6',
+                                '۷': '7',
+                                '۸': '8',
+                                '۹': '9',
+                                '٠': '0',
+                                '١': '1',
+                                '٢': '2',
+                                '٣': '3',
+                                '٤': '4',
+                                '٥': '5',
+                                '٦': '6',
+                                '٧': '7',
+                                '٨': '8',
+                                '٩': '9'
+                            }[digit];
+                        })
+                        .replace(/[^\d]/g, '');
 
                     if (!value) {
                         this.value = '';
                         return;
                     }
 
-                    this.value = Number(value).toLocaleString('en-US');
+                    this.value = Number(value).toLocaleString('fa-IR');
                 });
 
             });
@@ -513,7 +540,24 @@
             document.querySelector('form').addEventListener('submit', function () {
 
                 document.querySelectorAll('.number-format').forEach(function (input) {
-                    input.value = input.value.replace(/,/g, '');
+
+                    input.value = input.value
+                        .replace(/[۰-۹]/g, function (digit) {
+                            return {
+                                '۰': '0',
+                                '۱': '1',
+                                '۲': '2',
+                                '۳': '3',
+                                '۴': '4',
+                                '۵': '5',
+                                '۶': '6',
+                                '۷': '7',
+                                '۸': '8',
+                                '۹': '9'
+                            }[digit];
+                        })
+                        .replace(/[٬,،\s]/g, '');
+
                 });
 
             });

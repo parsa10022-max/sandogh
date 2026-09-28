@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DonationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,33 +19,22 @@ return new class extends Migration
             $table->foreignId('customer_id')
                 ->nullable()
                 ->constrained()
-                ->cascadeOnDelete();
-
+                ->nullOnDelete();
 
             $table->foreignId('account_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-
             $table->unsignedBigInteger('amount');
-
 
             $table->string('tracking_code')
                 ->nullable();
 
-
             $table->tinyInteger('status')
-                ->default(0);
-            // 0 انتظار پرداخت
-            // 1 پرداخت موفق
-            // 2 لغو شده
-
+                ->default(DonationStatus::PENDING->value);
 
             $table->timestamps();
-
-
         });
-
     }
 
     /**

@@ -68,9 +68,10 @@
                             {{-- شماره قسط --}}
                             <td class="text-center fw-bold">
 
-                                {{ $installment->installment_number }}
+                                {{ fa_number($installment->installment_number) }}
 
                             </td>
+
 
                             {{-- تاریخ سررسید --}}
                             <td class="text-center">
@@ -79,14 +80,16 @@
 
                             </td>
 
+
                             {{-- مبلغ --}}
                             <td class="text-center fw-bold loan-installment-amount">
 
-                                {{ number_format($installment->amount) }}
+                                {{ fa_money($installment->amount) }}
 
                                 <small>ریال</small>
 
                             </td>
+
 
                             {{-- وضعیت --}}
                             <td class="text-center">
@@ -115,6 +118,7 @@
 
                             </td>
 
+
                             {{-- تاریخ پرداخت --}}
                             <td class="text-center">
 
@@ -129,6 +133,7 @@
                                 @endif
 
                             </td>
+
 
                             {{-- عملیات --}}
                             <td class="text-center">
@@ -211,18 +216,20 @@
                         <th colspan="2" class="text-center">
 
                             تعداد اقساط :
-                            {{ $loan->installments->count() }}
+                            {{ fa_number($loan->installments->count()) }}
 
                         </th>
+
 
                         {{-- جمع مبلغ --}}
                         <th class="text-center loan-installment-amount">
 
-                            {{ number_format($loan->installments->sum('amount')) }}
+                            {{ fa_money($loan->installments->sum('amount')) }}
 
                             <small>ریال</small>
 
                         </th>
+
 
                         <th colspan="3" class="text-center">
 
@@ -243,4 +250,3 @@
     </div>
 
 </div>
-

@@ -29,6 +29,8 @@
 
                         @php
                             $paymentType = $data['payment_type'] ?? null;
+                            $paymentIntentId = $data['payment_intent_id'] ?? null;
+                            $token = $data['token'] ?? null;
                         @endphp
 
                         <table class="table table-bordered align-middle">
@@ -37,7 +39,9 @@
                             @if(in_array($paymentType, [
                                 'loan',
                                 'loan_payment',
-                                'installment'
+                                'installment',
+                                'installment_customer',
+                                'installment_other',
                             ]))
 
                                 <tr>
@@ -97,7 +101,7 @@
                             @elseif(in_array($paymentType, [
                                 'donation',
                                 'donation_customer',
-                                'donation_public'
+                                'donation_public',
                             ]))
 
                                 <tr>
@@ -144,7 +148,7 @@
                                 </th>
 
                                 <td>
-                                    {{ number_format($data['amount'] ?? 0) }}
+                                    {{ fa_money($data['amount'] ?? 0) }}
                                     ریال
                                 </td>
                             </tr>
@@ -161,6 +165,18 @@
                                 </td>
                             </tr>
 
+                            {{-- ======================= Payment Intent ======================= --}}
+
+                            <tr>
+                                <th>
+                                    شناسه Payment Intent
+                                </th>
+
+                                <td>
+                                    {{ $paymentIntentId ?? '-' }}
+                                </td>
+                            </tr>
+
                             {{-- ======================= توکن ======================= --}}
 
                             <tr>
@@ -169,7 +185,7 @@
                                 </th>
 
                                 <td>
-                                    {{ $data['token'] ?? '-' }}
+                                    {{ $token ?? '-' }}
                                 </td>
                             </tr>
 
@@ -181,9 +197,12 @@
 
                             {{-- ======================= پرداخت موفق ======================= --}}
 
-                            <a href="{{ route('payments.callback', array_merge($data, [
-                                'result' => 'success'
-                            ])) }}"
+                            <a href="{{ route('payments.callback', [
+                                ...$data,
+                                'payment_intent_id' => $paymentIntentId,
+                                'token' => $token,
+                                'result' => 'success',
+                            ]) }}"
                                class="btn btn-success">
 
                                 <i class="bi bi-check-circle"></i>
@@ -194,9 +213,12 @@
 
                             {{-- ======================= پرداخت ناموفق ======================= --}}
 
-                            <a href="{{ route('payments.callback', array_merge($data, [
-                                'result' => 'failed'
-                            ])) }}"
+                            <a href="{{ route('payments.callback', [
+                                ...$data,
+                                'payment_intent_id' => $paymentIntentId,
+                                'token' => $token,
+                                'result' => 'failed',
+                            ]) }}"
                                class="btn btn-danger">
 
                                 <i class="bi bi-x-circle"></i>
@@ -210,7 +232,7 @@
                             @if(in_array($paymentType, [
                                 'donation',
                                 'donation_customer',
-                                'donation_public'
+                                'donation_public',
                             ]))
 
                                 <a href="{{ route('customer.donations.payment', [

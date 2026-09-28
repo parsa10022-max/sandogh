@@ -24,7 +24,7 @@
         <span class="dashboard-latest-payments-count">
             <i class="bi bi-check-circle"></i>
 
-            {{ $dashboard['latestPayments']->count() }}
+            {{ fa_number($dashboard['latestPayments']->count()) }}
 
             پرداخت
         </span>
@@ -73,7 +73,10 @@
                     {{-- Loan --}}
                     <td>
 
-                        <div class="dashboard-payment-loan">
+                        <div
+                            class="dashboard-payment-loan"
+                            dir="ltr"
+                        >
 
                             <span class="dashboard-payment-loan-prefix">
                                 {{ $payment->loan->loanType->prefix }}
@@ -111,7 +114,7 @@
 
                         <div class="dashboard-payment-amount">
 
-                            {{ number_format($payment->amount) }}
+                            {{ fa_money($payment->amount) }}
 
                             <small>
                                 ریال
@@ -129,7 +132,10 @@
 
                             <i class="bi bi-calendar3"></i>
 
-                            {{ app(\App\Services\Date\JalaliDateService::class)->toJalali($payment->paid_at) }}
+                            {{ fa_number(
+                                app(\App\Services\Date\JalaliDateService::class)
+                                    ->toJalali($payment->paid_at)
+                            ) }}
 
                         </span>
 
@@ -139,7 +145,10 @@
                     {{-- Tracking Code --}}
                     <td>
 
-                        <span class="dashboard-payment-tracking">
+                        <span
+                            class="dashboard-payment-tracking"
+                            dir="ltr"
+                        >
 
                             <i class="bi bi-upc-scan"></i>
 

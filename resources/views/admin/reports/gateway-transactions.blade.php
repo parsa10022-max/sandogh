@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="fs-4 fw-bold">
-                                    {{ number_format($summary['total_count']) }}
+                                    {{ fa_number($summary['total_count']) }}
                                 </div>
                             </div>
 
@@ -71,7 +71,7 @@
                                 </div>
 
                                 <div class="fs-4 fw-bold">
-                                    {{ number_format($summary['successful_count']) }}
+                                    {{ fa_number($summary['successful_count']) }}
                                 </div>
                             </div>
 
@@ -99,7 +99,7 @@
                                 </div>
 
                                 <div class="fs-4 fw-bold">
-                                    {{ number_format($summary['failed_count']) }}
+                                    {{ fa_number($summary['failed_count']) }}
                                 </div>
                             </div>
 
@@ -127,7 +127,7 @@
                                 </div>
 
                                 <div class="fs-4 fw-bold">
-                                    {{ number_format($summary['pending_count']) }}
+                                    {{ fa_number($summary['pending_count']) }}
                                 </div>
                             </div>
 
@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="fs-4 fw-bold">
-                            {{ number_format($summary['successful_amount']) }}
+                            {{ fa_money($summary['successful_amount']) }}
 
                             <span class="fs-6 fw-normal text-muted">
                                 ریال
@@ -332,7 +332,7 @@
                     </h5>
 
                     <div class="text-muted small">
-                        {{ number_format($transactions->count()) }}
+                        {{ fa_number($transactions->count()) }}
                         تراکنش
                     </div>
 
@@ -387,7 +387,9 @@
 
                 <div class="print-date">
                     تاریخ چاپ:
-                    {{ \Morilog\Jalali\Jalalian::now()->format('Y/m/d H:i') }}
+                    {{ fa_number(
+                        \Morilog\Jalali\Jalalian::now()->format('Y/m/d H:i')
+                    ) }}
                 </div>
 
             </div>
@@ -458,7 +460,7 @@
                         <tr>
 
                             <td>
-                                {{ number_format($index + 1) }}
+                                {{ fa_number($index + 1) }}
                             </td>
 
 
@@ -466,12 +468,16 @@
 
                                 @if($transaction['date'])
 
-                                    {{ \Morilog\Jalali\Jalalian::fromCarbon(
-                                        \Carbon\Carbon::parse($transaction['date'])
-                                    )->format('Y/m/d') }}
+                                    {{ fa_number(
+                                        \Morilog\Jalali\Jalalian::fromCarbon(
+                                            \Carbon\Carbon::parse($transaction['date'])
+                                        )->format('Y/m/d')
+                                    ) }}
 
                                     <div class="small text-muted">
-                                        {{ \Carbon\Carbon::parse($transaction['date'])->format('H:i:s') }}
+                                        {{ fa_number(
+                                            \Carbon\Carbon::parse($transaction['date'])->format('H:i:s')
+                                        ) }}
                                     </div>
 
                                 @else
@@ -504,7 +510,7 @@
 
                             <td class="text-nowrap fw-semibold">
 
-                                {{ number_format($transaction['amount']) }}
+                                {{ fa_money($transaction['amount']) }}
 
                                 <span class="small text-muted">
                                     ریال
@@ -610,7 +616,7 @@
 
                             <td class="text-nowrap">
 
-                                {{ number_format($transactions->sum('amount')) }}
+                                {{ fa_money($transactions->sum('amount')) }}
 
                                 <span class="small text-muted">
                                     ریال
@@ -635,3 +641,4 @@
     </div>
 
 @endsection
+

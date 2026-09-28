@@ -15,8 +15,24 @@ class LoanGuarantorService
         Loan $loan,
         array $data
     ): LoanGuarantor {
-
         return DB::transaction(function () use ($loan, $data) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | قفل وام برای جلوگیری از Race Condition
+            |--------------------------------------------------------------------------
+            */
+
+            $loan = Loan::query()
+                ->whereKey($loan->id)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $loan) {
+                throw new Exception(
+                    'وام مربوطه پیدا نشد.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -30,6 +46,145 @@ class LoanGuarantorService
                 );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | اعتبارسنجی قوانین
+            |--------------------------------------------------------------------------
+            */
+
+            $this->validateGuarantor(
+                $loan,
+                $data
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از ثبت ترتیب تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            $order = (int) $data['guarantor_order'];
+
+            if (
+                $loan->guarantors()
+                    ->where('guarantor_order', $order)
+                    ->exists()
+            ) {
+                throw new Exception(
+                    'این ترتیب ضامن قبلاً برای این وام ثبت شده است.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | تبدیل Enum
+            |--------------------------------------------------------------------------
+            */
+
+            $guarantorType = $this->normalizeGuarantorType(
+                $data['guarantor_type']
+            );
+
+            $guaranteeType = $this->normalizeGuaranteeType(
+                $data['guarantee_type']
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | نرمال‌سازی اطلاعات ضمانت
+            |--------------------------------------------------------------------------
+            */
+
+            $guaranteeData = $this->normalizeGuaranteeData(
+                $guaranteeType,
+                $data
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت ضامن
+            |--------------------------------------------------------------------------
+            */
+
+            return LoanGuarantor::create([
+                'loan_id' => $loan->id,
+
+                'guarantor_order' => $order,
+
+                'guarantor_type' => $guarantorType,
+
+                'customer_id' =>
+                    $data['customer_id'] ?? null,
+
+                'first_name' =>
+                    $data['first_name'] ?? null,
+
+                'last_name' =>
+                    $data['last_name'] ?? null,
+
+                'national_code' =>
+                    $data['national_code'] ?? null,
+
+                'mobile' =>
+                    $data['mobile'] ?? null,
+
+                'guarantee_type' =>
+                    $guaranteeType,
+
+                'guarantee_number' =>
+                    $guaranteeData['guarantee_number'],
+
+                'guarantee_account_number' =>
+                    $guaranteeData['guarantee_account_number'],
+
+                'guarantee_amount' =>
+                    $guaranteeData['guarantee_amount'],
+            ]);
+        });
+    }
+
+    /**
+     * ویرایش ضامن
+     */
+    public function update(
+        LoanGuarantor $guarantor,
+        array $data
+    ): LoanGuarantor {
+        return DB::transaction(function () use (
+            $guarantor,
+            $data
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | دریافت وام مربوط به ضامن
+            |--------------------------------------------------------------------------
+            */
+
+            $guarantor->loadMissing('loan');
+
+            if (! $guarantor->loan) {
+                throw new Exception(
+                    'وام مربوط به ضامن پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | قفل وام برای جلوگیری از Race Condition
+            |--------------------------------------------------------------------------
+            */
+
+            $loan = Loan::query()
+                ->whereKey($guarantor->loan->id)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $loan) {
+                throw new Exception(
+                    'وام مربوط به ضامن پیدا نشد.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -42,6 +197,25 @@ class LoanGuarantorService
                 $data
             );
 
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از ثبت ترتیب تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            $order = (int) $data['guarantor_order'];
+
+            $duplicateOrder = LoanGuarantor::query()
+                ->where('loan_id', $loan->id)
+                ->where('guarantor_order', $order)
+                ->whereKeyNot($guarantor->id)
+                ->exists();
+
+            if ($duplicateOrder) {
+                throw new Exception(
+                    'این ترتیب ضامن قبلاً برای این وام ثبت شده است.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -56,107 +230,6 @@ class LoanGuarantorService
             $guaranteeType = $this->normalizeGuaranteeType(
                 $data['guarantee_type']
             );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | نرمال‌سازی اطلاعات ضمانت
-            |--------------------------------------------------------------------------
-            |
-            | چک:
-            | مبلغ + سریال + شماره حساب
-            |
-            | سفته:
-            | مبلغ + سریال
-            |
-            | سایر:
-            | اطلاعات ضمانت خالی
-            |
-            */
-
-            $guaranteeData = $this->normalizeGuaranteeData(
-                $guaranteeType,
-                $data
-            );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ثبت ضامن
-            |--------------------------------------------------------------------------
-            */
-
-            return LoanGuarantor::create([
-
-                'loan_id' =>
-                    $loan->id,
-
-                'guarantor_order' =>
-                    $data['guarantor_order'],
-
-                'guarantor_type' =>
-                    $guarantorType,
-
-                'customer_id' =>
-                    $data['customer_id'] ?? null,
-
-                'first_name' =>
-                    $data['first_name'] ?? null,
-
-                'last_name' =>
-                    $data['last_name'] ?? null,
-
-                'national_code' =>
-                    $data['national_code'] ?? null,
-
-                'mobile' =>
-                    $data['mobile'] ?? null,
-
-                'guarantee_type' =>
-                    $guaranteeType,
-
-                'guarantee_number' =>
-                    $guaranteeData['guarantee_number'],
-
-                'guarantee_account_number' =>
-                    $guaranteeData['guarantee_account_number'],
-
-                'guarantee_amount' =>
-                    $guaranteeData['guarantee_amount'],
-
-            ]);
-
-        });
-    }
-
-
-    /**
-     * ویرایش ضامن
-     */
-    public function update(
-        LoanGuarantor $guarantor,
-        array $data
-    ): LoanGuarantor {
-
-        return DB::transaction(function () use (
-            $guarantor,
-            $data
-        ) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | تبدیل Enum
-            |--------------------------------------------------------------------------
-            */
-
-            $guarantorType = $this->normalizeGuarantorType(
-                $data['guarantor_type']
-            );
-
-            $guaranteeType = $this->normalizeGuaranteeType(
-                $data['guarantee_type']
-            );
-
 
             /*
             |--------------------------------------------------------------------------
@@ -169,7 +242,6 @@ class LoanGuarantorService
                 $data
             );
 
-
             /*
             |--------------------------------------------------------------------------
             | بروزرسانی
@@ -177,6 +249,8 @@ class LoanGuarantorService
             */
 
             $guarantor->update([
+                'guarantor_order' =>
+                    $order,
 
                 'guarantor_type' =>
                     $guarantorType,
@@ -207,15 +281,11 @@ class LoanGuarantorService
 
                 'guarantee_amount' =>
                     $guaranteeData['guarantee_amount'],
-
             ]);
 
-
             return $guarantor->fresh();
-
         });
     }
-
 
     /**
      * تبدیل نوع ضامن به مقدار دیتابیس
@@ -223,7 +293,6 @@ class LoanGuarantorService
     private function normalizeGuarantorType(
         GuarantorType|string $type
     ): string {
-
         if ($type instanceof GuarantorType) {
             return $type->value;
         }
@@ -231,21 +300,18 @@ class LoanGuarantorService
         return GuarantorType::from($type)->value;
     }
 
-
     /**
      * تبدیل نوع ضمانت به مقدار دیتابیس
      */
     private function normalizeGuaranteeType(
         GuaranteeType|string $type
     ): string {
-
         if ($type instanceof GuaranteeType) {
             return $type->value;
         }
 
         return GuaranteeType::from($type)->value;
     }
-
 
     /**
      * نرمال‌سازی اطلاعات ضمانت
@@ -254,23 +320,15 @@ class LoanGuarantorService
         string $guaranteeType,
         array $data
     ): array {
-
-        /*
-        |--------------------------------------------------------------------------
-        | مبلغ
-        |--------------------------------------------------------------------------
-        */
-
         $amount = $data['guarantee_amount'] ?? null;
 
         if (is_string($amount)) {
             $amount = str_replace(
-                ',',
+                [',', '٬', ' '],
                 '',
                 $amount
             );
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -279,9 +337,7 @@ class LoanGuarantorService
         */
 
         if ($guaranteeType === GuaranteeType::CHECK->value) {
-
             return [
-
                 'guarantee_amount' =>
                     $amount,
 
@@ -290,10 +346,8 @@ class LoanGuarantorService
 
                 'guarantee_account_number' =>
                     $data['guarantee_account_number'] ?? null,
-
             ];
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -305,25 +359,17 @@ class LoanGuarantorService
             $guaranteeType ===
             GuaranteeType::PROMISSORY_NOTE->value
         ) {
-
             return [
-
                 'guarantee_amount' =>
                     $amount,
 
                 'guarantee_number' =>
                     $data['guarantee_number'] ?? null,
 
-                /*
-                | سفته شماره حساب ندارد
-                */
-
                 'guarantee_account_number' =>
                     null,
-
             ];
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -332,7 +378,6 @@ class LoanGuarantorService
         */
 
         return [
-
             'guarantee_amount' =>
                 null,
 
@@ -341,10 +386,8 @@ class LoanGuarantorService
 
             'guarantee_account_number' =>
                 null,
-
         ];
     }
-
 
     /**
      * اعتبارسنجی قوانین ضامن
@@ -353,36 +396,52 @@ class LoanGuarantorService
         Loan $loan,
         array $data
     ): void {
+        $order = (int) ($data['guarantor_order'] ?? 0);
 
-        $type = $data['guarantor_type'];
-
+        if (! in_array($order, [1, 2], true)) {
+            throw new Exception(
+                'ترتیب ضامن باید ۱ یا ۲ باشد.'
+            );
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | تبدیل string به Enum
+        | نوع ضامن
         |--------------------------------------------------------------------------
         */
+
+        $type = $data['guarantor_type'];
 
         if (is_string($type)) {
             $type = GuarantorType::from($type);
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | نوع ضمانت
+        |--------------------------------------------------------------------------
+        */
+
+        $guaranteeType = $data['guarantee_type'];
+
+        if (is_string($guaranteeType)) {
+            $guaranteeType = GuaranteeType::from($guaranteeType);
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | ضامن اول باید عضو صندوق باشد
+        | ضامن اول
         |--------------------------------------------------------------------------
         */
 
         if (
-            $data['guarantor_order'] == 1 &&
+            $order === 1 &&
             $type !== GuarantorType::CUSTOMER
         ) {
             throw new Exception(
                 'ضامن اول باید عضو صندوق باشد.'
             );
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -393,40 +452,48 @@ class LoanGuarantorService
         if ($type === GuarantorType::CUSTOMER) {
 
             if (empty($data['customer_id'])) {
-
                 throw new Exception(
                     'کد مشتری ضامن الزامی است.'
                 );
-
             }
 
-
             if (
-                $data['customer_id'] ==
-                $loan->customer_id
+                (int) $data['customer_id'] ===
+                (int) $loan->customer_id
             ) {
-
                 throw new Exception(
-                    'برای انتخاب خود وام‌گیرنده، نوع ضامن را "خود وام‌گیرنده" انتخاب کنید.'
+                    'وام‌گیرنده نمی‌تواند به عنوان ضامن شخصی خودش ثبت شود. برای ارائه چک صیادی، نوع ضامن را «خود وام‌گیرنده» انتخاب کنید.'
                 );
-
             }
 
             return;
         }
 
-
         /*
         |--------------------------------------------------------------------------
-        | خود وام گیرنده
+        | خود وام‌گیرنده
         |--------------------------------------------------------------------------
         */
 
         if ($type === GuarantorType::BORROWER) {
 
+            if ($order !== 2) {
+                throw new Exception(
+                    'خود وام‌گیرنده فقط می‌تواند به عنوان ضامن دوم ثبت شود.'
+                );
+            }
+
+            if (
+                $guaranteeType !==
+                GuaranteeType::CHECK
+            ) {
+                throw new Exception(
+                    'خود وام‌گیرنده فقط با ارائه چک صیادی می‌تواند به عنوان ضامن دوم ثبت شود.'
+                );
+            }
+
             return;
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -437,23 +504,18 @@ class LoanGuarantorService
         if ($type === GuarantorType::EXTERNAL) {
 
             if (empty($data['first_name'])) {
-
                 throw new Exception(
                     'نام ضامن الزامی است.'
                 );
             }
 
-
             if (empty($data['last_name'])) {
-
                 throw new Exception(
                     'نام خانوادگی ضامن الزامی است.'
                 );
             }
 
-
             if (empty($data['national_code'])) {
-
                 throw new Exception(
                     'کد ملی ضامن الزامی است.'
                 );
@@ -461,4 +523,3 @@ class LoanGuarantorService
         }
     }
 }
-

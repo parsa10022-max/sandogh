@@ -171,16 +171,15 @@
 
                                 <div class="loan-request-money-input">
 
-                                    <input type="number"
+                                    <input type="text"
                                            id="requested_amount"
                                            name="requested_amount"
-                                           min="0"
                                            inputmode="numeric"
                                            class="form-control @error('requested_amount') is-invalid @enderror"
                                            value="{{ old('requested_amount') }}"
-                                           placeholder="مثلاً 10000000">
+                                           placeholder="مثلاً ۱۰٬۰۰۰٬۰۰۰">
 
-                                    <span>تومان</span>
+                                    <span>ریال</span>
 
                                 </div>
 

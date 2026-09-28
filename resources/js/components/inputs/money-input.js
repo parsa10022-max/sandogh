@@ -187,7 +187,7 @@ class MoneyInput {
 
         value =
             value.replace(
-                /,/g,
+                /[,٬،]/g,
                 ''
             );
 
@@ -271,7 +271,7 @@ class MoneyInput {
             Number(
                 numericValue
             ).toLocaleString(
-                'en-US'
+                'fa-IR'
             );
 
 
@@ -572,7 +572,7 @@ class MoneyInput {
             valid = false;
 
             message =
-                `حداقل مبلغ ${this.min.toLocaleString('en-US')} است.`;
+                `حداقل مبلغ ${this.min.toLocaleString('fa-IR')} است.`;
 
         }
 
@@ -588,7 +588,7 @@ class MoneyInput {
             valid = false;
 
             message =
-                `حداکثر مبلغ ${this.max.toLocaleString('en-US')} است.`;
+                `حداکثر مبلغ ${this.max.toLocaleString('fa-IR')} است.`;
 
         }
 
@@ -749,7 +749,7 @@ class MoneyInput {
 
 /**
  * --------------------------------------------------------------------------
- * حذف کاما قبل از ارسال فرم
+ * حذف جداکننده قبل از ارسال فرم
  * --------------------------------------------------------------------------
  */
 
@@ -766,7 +766,7 @@ document.addEventListener(
                 input.value =
                     input.value
                         .replace(
-                            /,/g,
+                            /[,٬،]/g,
                             ''
                         );
 
@@ -782,7 +782,6 @@ document.addEventListener(
  * Auto Initialize
  * --------------------------------------------------------------------------
  */
-
 document.addEventListener(
     'DOMContentLoaded',
     () => {

@@ -6,6 +6,8 @@ use App\Enums\InstallmentStatus;
 use App\Enums\LoanStatus;
 use App\Models\Installment;
 use App\Models\Loan;
+use App\Models\LoanPayment;
+use Illuminate\Database\Eloquent\Collection;
 
 class LoanStatisticsService
 {
@@ -63,19 +65,17 @@ class LoanStatisticsService
                 ->whereDate('due_date', today())
                 ->where('status', InstallmentStatus::PENDING)
                 ->sum('amount'),
-
         ];
     }
 
     /**
-     * آخرین پرداخت‌ها
+     * آخرین پرداخت‌های موفق
      */
-    /**
-     * آخرین پرداخت‌ها
-     */
-    public function latestPayments(int $limit = 5)
-    {
-        return \App\Models\LoanPayment::query()
+    public function latestPayments(
+        int $limit = 5
+    ): Collection {
+        return LoanPayment::query()
+            ->whereNotNull('paid_at')
             ->whereHas('loan')
             ->with([
                 'loan.customer',
@@ -85,7 +85,4 @@ class LoanStatisticsService
             ->limit($limit)
             ->get();
     }
-
-
-
 }

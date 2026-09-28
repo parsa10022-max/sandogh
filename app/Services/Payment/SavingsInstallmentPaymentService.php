@@ -23,41 +23,165 @@ class SavingsInstallmentPaymentService
     ) {
     }
 
+    /**
+     * پرداخت قسط از حساب پس‌انداز
+     */
     public function pay(Installment $installment): LoanPayment
     {
-        $customer = auth()->user()?->customer;
+        $user = auth()->user();
 
-        if (! $customer) {
-            throw new \DomainException('عضو صندوق یافت نشد.');
+        if (! $user) {
+            throw new \DomainException(
+                'کاربر وارد سیستم نشده است.'
+            );
         }
 
-        return DB::transaction(function () use ($installment, $customer) {
+        $customer = $user->customer;
+
+        if (! $customer) {
+            throw new \DomainException(
+                'عضو صندوق یافت نشد.'
+            );
+        }
+
+        $userId = $user->id;
+
+        return DB::transaction(function () use (
+            $installment,
+            $customer,
+            $userId
+        ) {
+            /*
+            |--------------------------------------------------------------------------
+            | قفل وام
+            |--------------------------------------------------------------------------
+            */
+
+            $loanId = Installment::query()
+                ->whereKey($installment->id)
+                ->value('loan_id');
+
+            if (! $loanId) {
+                throw new \DomainException(
+                    'قسط موردنظر پیدا نشد.'
+                );
+            }
+
+            $loan = \App\Models\Loan::query()
+                ->with('customer')
+                ->lockForUpdate()
+                ->find($loanId);
+
+            if (! $loan) {
+                throw new \DomainException(
+                    'وام موردنظر پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | قفل قسط
+            |--------------------------------------------------------------------------
+            */
 
             $installment = Installment::query()
-                ->with(['loan.customer'])
                 ->lockForUpdate()
-                ->findOrFail($installment->id);
+                ->find($installment->id);
 
-            if ($installment->loan->status !== LoanStatus::ACTIVE) {
-                throw new \DomainException('این وام فعال نیست.');
+            if (! $installment) {
+                throw new \DomainException(
+                    'قسط موردنظر پیدا نشد.'
+                );
             }
+
+            if (
+                (int) $installment->loan_id !==
+                (int) $loan->id
+            ) {
+                throw new \DomainException(
+                    'اطلاعات قسط و وام معتبر نیست.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | پرداخت تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            $existingPayment = LoanPayment::query()
+                ->where(
+                    'installment_id',
+                    $installment->id
+                )
+                ->first();
+
+            if ($existingPayment) {
+                return $existingPayment;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | وضعیت وام
+            |--------------------------------------------------------------------------
+            */
+
+            if ($loan->status !== LoanStatus::ACTIVE) {
+                throw new \DomainException(
+                    'این وام فعال نیست.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | وضعیت قسط
+            |--------------------------------------------------------------------------
+            */
 
             if ($installment->status === InstallmentStatus::PAID) {
-                throw new \DomainException('این قسط قبلاً پرداخت شده است.');
+                throw new \DomainException(
+                    'این قسط قبلاً پرداخت شده است.'
+                );
             }
 
-            if ($installment->loan->customer_id !== $customer->id) {
-                throw new \DomainException('این قسط متعلق به شما نیست.');
+            /*
+            |--------------------------------------------------------------------------
+            | مالکیت
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                (int) $loan->customer_id !==
+                (int) $customer->id
+            ) {
+                throw new \DomainException(
+                    'این قسط متعلق به شما نیست.'
+                );
             }
 
-            $hasPreviousUnpaid = $installment->loan
+            /*
+            |--------------------------------------------------------------------------
+            | ترتیب پرداخت اقساط
+            |--------------------------------------------------------------------------
+            |
+            | PENDING و OVERDUE هر دو پرداخت‌نشده هستند.
+            |--------------------------------------------------------------------------
+            */
+
+            $hasPreviousUnpaid = $loan
                 ->installments()
                 ->where(
                     'installment_number',
                     '<',
                     $installment->installment_number
                 )
-                ->where('status', InstallmentStatus::PENDING)
+                ->whereIn(
+                    'status',
+                    [
+                        InstallmentStatus::PENDING,
+                        InstallmentStatus::OVERDUE,
+                    ]
+                )
                 ->exists();
 
             if ($hasPreviousUnpaid) {
@@ -66,9 +190,21 @@ class SavingsInstallmentPaymentService
                 );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | قفل حساب پس‌انداز
+            |--------------------------------------------------------------------------
+            */
+
             $account = Account::query()
-                ->where('customer_id', $customer->id)
-                ->where('account_type', AccountType::SAVING)
+                ->where(
+                    'customer_id',
+                    $customer->id
+                )
+                ->where(
+                    'account_type',
+                    AccountType::SAVING
+                )
                 ->lockForUpdate()
                 ->first();
 
@@ -78,6 +214,12 @@ class SavingsInstallmentPaymentService
                 );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | بررسی موجودی
+            |--------------------------------------------------------------------------
+            */
+
             $amount = $installment->amount;
 
             if ($account->balance < $amount) {
@@ -86,12 +228,34 @@ class SavingsInstallmentPaymentService
                 );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | تغییر موجودی
+            |--------------------------------------------------------------------------
+            */
+
             $balanceBefore = $account->balance;
             $balanceAfter = $balanceBefore - $amount;
 
-            $account->decrement('balance', $amount);
+            $account->decrement(
+                'balance',
+                $amount
+            );
 
-            $trackingCode = $this->trackingCodeService->generate();
+            /*
+            |--------------------------------------------------------------------------
+            | کد پیگیری
+            |--------------------------------------------------------------------------
+            */
+
+            $trackingCode =
+                $this->trackingCodeService->generate();
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت تراکنش حساب
+            |--------------------------------------------------------------------------
+            */
 
             $this->accountTransactionService->create(
                 account: $account,
@@ -101,63 +265,137 @@ class SavingsInstallmentPaymentService
                 amount: $amount,
                 balanceBefore: $balanceBefore,
                 balanceAfter: $balanceAfter,
-                createdBy: auth()->id(),
+                createdBy: $userId,
                 description: 'پرداخت قسط از حساب پس‌انداز',
             );
 
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت پرداخت قسط
+            |--------------------------------------------------------------------------
+            */
+
             $payment = LoanPayment::create([
-                'loan_id' => $installment->loan_id,
-                'installment_id' => $installment->id,
-                'user_id' => auth()->id(),
-                'amount' => $amount,
-                'tracking_code' => $trackingCode,
-                'gateway' => null,
-                'bank_transaction_id' => null,
-                'bank_reference_number' => null,
-                'paid_at' => now(),
+                'loan_id' =>
+                    $installment->loan_id,
+
+                'installment_id' =>
+                    $installment->id,
+
+                'user_id' =>
+                    $userId,
+
+                'amount' =>
+                    $amount,
+
+                'tracking_code' =>
+                    $trackingCode,
+
+                'gateway' =>
+                    null,
+
+                'bank_transaction_id' =>
+                    null,
+
+                'bank_reference_number' =>
+                    null,
+
+                'paid_at' =>
+                    now(),
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | علامت‌گذاری قسط
+            |--------------------------------------------------------------------------
+            */
 
             $installment->update([
-                'status' => InstallmentStatus::PAID,
-                'paid_at' => now(),
+                'status' =>
+                    InstallmentStatus::PAID,
+
+                'paid_at' =>
+                    now(),
             ]);
 
-            $hasUnpaidInstallments = $installment->loan
+            /*
+            |--------------------------------------------------------------------------
+            | تسویه وام
+            |--------------------------------------------------------------------------
+            */
+
+            $hasUnpaidInstallments = $loan
                 ->installments()
-                ->where('status', InstallmentStatus::PENDING)
+                ->whereIn(
+                    'status',
+                    [
+                        InstallmentStatus::PENDING,
+                        InstallmentStatus::OVERDUE,
+                    ]
+                )
                 ->exists();
 
             if (! $hasUnpaidInstallments) {
-                $installment->loan->update([
-                    'status' => LoanStatus::FINISHED,
+                $loan->update([
+                    'status' =>
+                        LoanStatus::FINISHED,
                 ]);
             }
 
-            $loanOwner = $installment->loan->customer?->user;
+            /*
+            |--------------------------------------------------------------------------
+            | اعلان صاحب وام
+            |--------------------------------------------------------------------------
+            */
+
+            $loanOwner = $loan
+                ->customer
+                ?->user;
 
             if ($loanOwner) {
                 Notification::create([
-                    'user_id' => $loanOwner->id,
-                    'type' => 'installment_payment_success',
-                    'title' => 'پرداخت قسط با موفقیت انجام شد.',
+                    'user_id' =>
+                        $loanOwner->id,
+
+                    'type' =>
+                        'installment_payment_success',
+
+                    'title' =>
+                        'پرداخت قسط با موفقیت انجام شد.',
+
                     'message' =>
                         'قسط شماره ' .
                         $installment->installment_number .
                         ' به مبلغ ' .
-                        number_format($payment->amount) .
+                        fa_money($payment->amount) .
                         ' ریال از حساب پس‌انداز پرداخت شد. کد پیگیری: ' .
                         $payment->tracking_code,
+
                     'data' => [
-                        'amount' => $payment->amount,
-                        'loan_id' => $payment->loan_id,
-                        'installment_id' => $payment->installment_id,
+                        'amount' =>
+                            $payment->amount,
+
+                        'loan_id' =>
+                            $payment->loan_id,
+
+                        'installment_id' =>
+                            $payment->installment_id,
+
                         'installment_number' =>
                             $installment->installment_number,
-                        'tracking_code' => $payment->tracking_code,
-                        'payment_id' => $payment->id,
-                        'paid_at' => $payment->paid_at,
+
+                        'tracking_code' =>
+                            $payment->tracking_code,
+
+                        'payment_id' =>
+                            $payment->id,
+
+                        'paid_at' =>
+                            $payment->paid_at,
                     ],
-                    'read_at' => null,
+
+                    'read_at' =>
+                        null,
                 ]);
             }
 

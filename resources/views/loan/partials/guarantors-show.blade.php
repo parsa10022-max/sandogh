@@ -27,7 +27,7 @@
         </div>
 
         <span class="loan-guarantors-count">
-            {{ $loan->guarantors->count() }} ضامن
+            {{ fa_number($loan->guarantors->count()) }} ضامن
         </span>
 
     </div>
@@ -157,7 +157,7 @@
                                     <div class="loan-guarantor-person-content">
 
                                         <strong>
-                                            ضامن {{ $guarantor->guarantor_order }}
+                                            ضامن {{ fa_number($guarantor->guarantor_order) }}
                                         </strong>
 
                                         <span class="loan-guarantor-type">
@@ -169,7 +169,7 @@
                                 </div>
 
                                 <span class="loan-guarantor-order">
-                                    #{{ $guarantor->guarantor_order }}
+                                    #{{ fa_number($guarantor->guarantor_order) }}
                                 </span>
 
                             </div>
@@ -299,7 +299,7 @@
                                         </span>
 
                                         <strong class="loan-guarantor-value loan-guarantor-amount">
-                                            {{ number_format($guarantor->guarantee_amount) }}
+                                            {{ fa_money($guarantor->guarantee_amount) }}
                                             <small>ریال</small>
                                         </strong>
 

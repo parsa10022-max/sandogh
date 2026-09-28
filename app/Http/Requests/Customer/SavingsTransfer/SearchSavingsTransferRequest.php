@@ -28,4 +28,13 @@ class SearchSavingsTransferRequest extends FormRequest
             'membership_number' => 'شماره عضویت',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'membership_number.required' => 'شماره عضویت الزامی است.',
+            'membership_number.integer' => 'شماره عضویت باید به صورت عدد صحیح باشد.',
+            'membership_number.exists' => 'شماره عضویت واردشده معتبر نیست.',
+        ];
+    }
 }

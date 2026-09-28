@@ -61,11 +61,11 @@
                     </span>
 
                     <strong
-                        dir="ltr"
                         class="customer-savings-deposit-account-number"
+                        dir="ltr"
                     >
-                        {{ $account->prefix }}
-                        {{ $account->account_number }}
+                        <span>{{ $account->prefix }}</span>
+                        <span>{{ $account->account_number }}</span>
                     </strong>
 
                 </div>
@@ -79,7 +79,7 @@
 
                     <strong>
 
-                        {{ number_format($account->balance) }}
+                        {{ fa_money($account->balance) }}
 
                         <small>
                             ریال
@@ -131,7 +131,7 @@
                             value="{{ old('amount') }}"
                             inputmode="numeric"
                             autocomplete="off"
-                            placeholder="مثلاً 500,000"
+                            placeholder="مثلاً ۵۰۰٬۰۰۰"
                             data-min="50000"
                             required
                         >
@@ -161,7 +161,7 @@
                         </span>
 
                         <strong>
-                            ۵۰,۰۰۰ ریال
+                            ۵۰٬۰۰۰ ریال
                         </strong>
 
                         <span>
@@ -216,3 +216,4 @@
     </div>
 
 @endsection
+

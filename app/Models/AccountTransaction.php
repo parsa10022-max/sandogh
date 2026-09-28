@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionSource;
 use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Enums\PaymentMethod;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AccountTransaction extends Model
 {
@@ -25,7 +25,6 @@ class AccountTransaction extends Model
         'description',
     ];
 
-
     protected function casts(): array
     {
         return [
@@ -35,11 +34,12 @@ class AccountTransaction extends Model
             'amount' => 'integer',
             'balance_before' => 'integer',
             'balance_after' => 'integer',
+
             'payment_method' => PaymentMethod::class,
+
             'transaction_date' => 'date',
         ];
     }
-
 
     /**
      * حساب مربوط به تراکنش
@@ -49,11 +49,13 @@ class AccountTransaction extends Model
         return $this->belongsTo(Account::class);
     }
 
-    public function withdrawal()
+    /**
+     * برداشت مرتبط با تراکنش
+     */
+    public function withdrawal(): HasOne
     {
         return $this->hasOne(Withdrawal::class);
     }
-
 
     /**
      * کاربر ثبت کننده

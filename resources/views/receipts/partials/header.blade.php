@@ -31,7 +31,7 @@
 
         <strong>تاریخ :</strong>
 
-        {{ $receipt_date ?? '-' }}
+        {{ fa_number($receipt_date ?? '-') }}
 
     </div>
 

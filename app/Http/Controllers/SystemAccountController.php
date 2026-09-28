@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AccountStatus;
 use App\Enums\AccountType;
 use App\Models\Account;
-use Illuminate\Http\Request;
-use App\Enums\AccountStatus;
-
 use Illuminate\Http\RedirectResponse;
-
-
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SystemAccountController extends Controller
 {
-
-    public function index()
+    public function index(): View
     {
         $accounts = Account::query()
             ->where(
@@ -24,58 +21,49 @@ class SystemAccountController extends Controller
             ->latest()
             ->paginate(15);
 
-
         return view(
             'system-accounts.index',
             compact('accounts')
         );
     }
 
-
-    public function create()
+    public function create(): View
     {
         return view(
             'system-accounts.create'
         );
     }
 
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-
             'name' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'account_number' => [
                 'required',
-                'unique:accounts,account_number'
+                'string',
+                'max:100',
+                'unique:accounts,account_number',
             ],
-
         ]);
 
-
         Account::create([
+            'name' => trim($data['name']),
 
-            'name' => $data['name'],
+            'account_number' => trim($data['account_number']),
 
-            'account_number'
-            => $data['account_number'],
-
-            'account_type'
-            => AccountType::SYSTEM,
+            'account_type' => AccountType::SYSTEM,
 
             'balance' => 0,
 
-            'status' => 1,
+            'status' => AccountStatus::ACTIVE,
 
             'opened_date' => now(),
-
         ]);
-
 
         return redirect()
             ->route('system-accounts.index')
@@ -85,8 +73,10 @@ class SystemAccountController extends Controller
             );
     }
 
-    public function edit(Account $systemAccount)
+    public function edit(Account $systemAccount): View
     {
+        $this->ensureSystemAccount($systemAccount);
+
         return view(
             'system-accounts.edit',
             compact('systemAccount')
@@ -96,24 +86,20 @@ class SystemAccountController extends Controller
     public function update(
         Request $request,
         Account $systemAccount
-    )
-    {
+    ): RedirectResponse {
+        $this->ensureSystemAccount($systemAccount);
 
         $data = $request->validate([
-
             'name' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
-
         ]);
-
 
         $systemAccount->update([
-            'name' => $data['name'],
+            'name' => trim($data['name']),
         ]);
-
 
         return redirect()
             ->route('system-accounts.index')
@@ -126,19 +112,15 @@ class SystemAccountController extends Controller
     /**
      * تغییر وضعیت حساب سیستمی
      */
-
-
-
     public function changeStatus(
         Account $systemAccount
     ): RedirectResponse {
+        $this->ensureSystemAccount($systemAccount);
 
         $systemAccount->update([
-
             'status' => $systemAccount->status === AccountStatus::ACTIVE
                 ? AccountStatus::CLOSED
                 : AccountStatus::ACTIVE,
-
         ]);
 
         return redirect()
@@ -147,5 +129,16 @@ class SystemAccountController extends Controller
                 'success',
                 'وضعیت حساب با موفقیت تغییر کرد.'
             );
+    }
+
+    /**
+     * اطمینان از اینکه حساب واقعاً سیستمی است.
+     */
+    private function ensureSystemAccount(Account $account): void
+    {
+        abort_unless(
+            $account->account_type === AccountType::SYSTEM,
+            404
+        );
     }
 }

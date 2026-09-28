@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Requests\Auth;
+
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,6 +25,14 @@ class LoginRequest extends FormRequest
         return [
             'username' => ['required'],
             'password' => ['required'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'username.required' => 'نام کاربری الزامی است.',
+            'password.required' => 'رمز عبور الزامی است.',
         ];
     }
 }

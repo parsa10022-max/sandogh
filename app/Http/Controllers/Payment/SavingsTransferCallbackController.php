@@ -8,55 +8,33 @@ use Illuminate\Http\Request;
 
 class SavingsTransferCallbackController extends Controller
 {
-
     public function __construct(
-
         private readonly SavingsTransferService $service
-
     ) {
     }
 
-
-
     public function handle(Request $request)
     {
-
         try {
-
-
-            $transfer =
-                $this->service->verifyPayment(
-
-                    $request->all()
-
-                );
-
-
+            $transfer = $this->service->verifyPayment(
+                $request->all()
+            );
 
             return redirect()
-
                 ->route(
                     'customer.savings-transfer.success',
                     $transfer->id
                 );
 
-
         } catch (\Throwable $e) {
-
+            report($e);
 
             return redirect()
-
-                ->route(
-                    'customer.savings-transfer.failed'
-                )
-
+                ->route('customer.savings-transfer.failed')
                 ->with(
                     'error',
-                    $e->getMessage()
+                    'پرداخت با موفقیت تکمیل نشد. لطفاً دوباره تلاش کنید.'
                 );
-
         }
-
     }
-
 }

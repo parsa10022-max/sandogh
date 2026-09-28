@@ -2,37 +2,35 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enums\AccountStatus;
+use App\Enums\AccountType;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Customer;
 use App\Services\Savings\SavingsTransferService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Morilog\Jalali\Jalalian;
 
 class SavingsTransferController extends Controller
 {
-
     public function __construct(
         private readonly SavingsTransferService $savingsTransferService,
     ) {
     }
 
-
-
     /**
      * فرم واریز
      */
-    public function create()
+    public function create(): View
     {
         return view(
             'customer.savings-transfer.create'
         );
     }
 
-
-
-    /**
-     * جستجوی عضو مقصد
-     */
     /**
      * جستجوی حساب پس‌انداز مقصد
      *
@@ -42,10 +40,14 @@ class SavingsTransferController extends Controller
      * 6111000011
      * 000011
      */
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $request->validate([
-            'keyword' => 'required|string',
+            'keyword' => [
+                'required',
+                'string',
+                'max:50',
+            ],
         ]);
 
         /*
@@ -56,7 +58,12 @@ class SavingsTransferController extends Controller
 
         $keyword = trim($request->keyword);
 
-        // اعداد فارسی
+        /*
+        |--------------------------------------------------------------------------
+        | تبدیل اعداد فارسی و عربی به انگلیسی
+        |--------------------------------------------------------------------------
+        */
+
         $keyword = strtr($keyword, [
             '۰' => '0',
             '۱' => '1',
@@ -68,10 +75,7 @@ class SavingsTransferController extends Controller
             '۷' => '7',
             '۸' => '8',
             '۹' => '9',
-        ]);
 
-        // اعداد عربی
-        $keyword = strtr($keyword, [
             '٠' => '0',
             '١' => '1',
             '٢' => '2',
@@ -86,7 +90,7 @@ class SavingsTransferController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | حذف خط تیره و فاصله
+        | حذف خط تیره و فاصله و جداکننده‌ها
         |--------------------------------------------------------------------------
         */
 
@@ -96,26 +100,28 @@ class SavingsTransferController extends Controller
             $keyword
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | اعتبارسنجی ساختار شماره حساب
+        |--------------------------------------------------------------------------
+        */
+
+        if (! ctype_digit($keyword)) {
+            return response()->json([
+                'found' => false,
+                'message' => 'شماره حساب نامعتبر است.',
+            ]);
+        }
 
         /*
         |--------------------------------------------------------------------------
         | اگر فقط 6 رقم آخر وارد شده باشد
-        |
-        | 000011
-        |
-        | تبدیل می‌شود به:
-        |
-        | 6111000011
         |--------------------------------------------------------------------------
         */
 
-        if (
-            strlen($keyword) === 6 &&
-            ctype_digit($keyword)
-        ) {
+        if (strlen($keyword) === 6) {
             $keyword = '6111' . $keyword;
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -123,14 +129,14 @@ class SavingsTransferController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $account = \App\Models\Account::query()
+        $account = Account::query()
             ->where(
                 'account_type',
-                \App\Enums\AccountType::SAVING->value
+                AccountType::SAVING->value
             )
             ->where(
                 'status',
-                \App\Enums\AccountStatus::ACTIVE->value
+                AccountStatus::ACTIVE->value
             )
             ->where(
                 'account_number',
@@ -139,7 +145,6 @@ class SavingsTransferController extends Controller
             ->with('customer')
             ->first();
 
-
         /*
         |--------------------------------------------------------------------------
         | حساب پیدا نشد
@@ -147,15 +152,12 @@ class SavingsTransferController extends Controller
         */
 
         if (! $account) {
-
             return response()->json([
                 'found' => false,
-
                 'message' =>
                     'حساب پس‌انداز فعال با این شماره پیدا نشد.',
             ]);
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -165,6 +167,13 @@ class SavingsTransferController extends Controller
 
         $customer = $account->customer;
 
+        if (! $customer) {
+            return response()->json([
+                'found' => false,
+                'message' =>
+                    'صاحب این حساب پیدا نشد.',
+            ]);
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -173,83 +182,105 @@ class SavingsTransferController extends Controller
         */
 
         return response()->json([
-
             'found' => true,
 
             'customer' => [
+                'id' => $customer->id,
 
-                'id' =>
-                    $customer->id,
-
-                'name' =>
-                    $customer->full_name,
+                'name' => $customer->full_name,
 
                 'account_number' =>
                     $account->account_number,
-
             ],
-
         ]);
     }
 
-
-
     /**
-     * شروع پرداخت
+     * شروع پرداخت به حساب پس‌انداز عضو دیگر
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-
-        $request->validate([
-
-            'receiver_customer_id' =>
-                'required|exists:customers,id',
-
-            'amount' =>
-                'required|integer|min:1000',
-
+        $request->merge([
+            'amount' => clean_money($request->amount),
         ]);
 
+        $request->validate([
+            'receiver_customer_id' => [
+                'required',
+                'integer',
+                'exists:customers,id',
+            ],
 
+            'amount' => [
+                'required',
+                'integer',
+                'min:1000',
+            ],
+        ]);
+
+        $customer = auth()->user()->customer;
+
+        if (! $customer) {
+            abort(403);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | جلوگیری از واریز به حساب خود از مسیر «پرداخت به دیگران»
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            (int) $request->receiver_customer_id ===
+            (int) $customer->id
+        ) {
+            return back()->with(
+                'error',
+                'برای واریز به حساب خودتان از بخش واریز به حساب خود استفاده کنید.'
+            );
+        }
 
         $receiver = Customer::findOrFail(
             $request->receiver_customer_id
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | شروع پرداخت
+        |--------------------------------------------------------------------------
+        */
 
-
-        $result =
-            $this->savingsTransferService->startPayment(
-
-                $receiver,
-
-                $request->amount
-
-            );
-
-
-
-        return redirect(
-            $result['gateway']['redirect_url']
+        $result = $this->savingsTransferService->startPayment(
+            $receiver,
+            (int) $request->amount
         );
 
+        return redirect()->away(
+            $result['gateway']['redirect_url']
+        );
     }
 
-    public function ownDepositCreate()
+    /**
+     * فرم واریز به حساب خود
+     */
+    public function ownDepositCreate(): View
     {
         $customer = auth()->user()->customer;
+
+        if (! $customer) {
+            abort(403);
+        }
 
         $account = $customer->accounts()
             ->where(
                 'account_type',
-                \App\Enums\AccountType::SAVING->value
+                AccountType::SAVING->value
             )
             ->where(
                 'status',
-                \App\Enums\AccountStatus::ACTIVE->value
+                AccountStatus::ACTIVE->value
             )
             ->firstOrFail();
-
 
         return view(
             'customer.savings.deposit.create',
@@ -257,235 +288,227 @@ class SavingsTransferController extends Controller
         );
     }
 
-    public function ownDepositStore(Request $request)
+    /**
+     * شروع واریز به حساب خود
+     */
+    public function ownDepositStore(Request $request): RedirectResponse
     {
-        $request->validate([
+        $request->merge([
+            'amount' => clean_money($request->amount),
+        ]);
 
+        $request->validate([
             'amount' => [
                 'required',
                 'integer',
-                'min:50000'
+                'min:50000',
             ],
-
         ]);
-
 
         $customer = auth()->user()->customer;
 
+        if (! $customer) {
+            abort(403);
+        }
 
-        $response = $this->savingsTransferService
-            ->startPayment(
-                $customer,
-                (int)$request->amount
-            );
-
+        $response = $this->savingsTransferService->startPayment(
+            $customer,
+            (int) $request->amount
+        );
 
         return redirect()->away(
             $response['gateway']['redirect_url']
         );
     }
 
+    /**
+     * تراکنش‌های حساب پس‌انداز
+     */
+    public function transactions(Request $request): View
+    {
+        $customer = auth()->user()->customer;
 
-public function transactions(Request $request)
-{
-    $customer = auth()->user()->customer;
+        if (! $customer) {
+            abort(403);
+        }
 
-    $account = $customer->accounts()
-        ->where(
-            'account_type',
-            \App\Enums\AccountType::SAVING->value
-        )
-        ->where(
-            'status',
-            \App\Enums\AccountStatus::ACTIVE->value
-        )
-        ->firstOrFail();
+        $account = $customer->accounts()
+            ->where(
+                'account_type',
+                AccountType::SAVING->value
+            )
+            ->where(
+                'status',
+                AccountStatus::ACTIVE->value
+            )
+            ->firstOrFail();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Query تراکنش‌ها
+        | جدیدترین → قدیمی‌ترین
+        |--------------------------------------------------------------------------
+        */
 
-    /*
-    |--------------------------------------------------------------------------
-    | Query تراکنش‌ها
-    | جدیدترین → قدیمی‌ترین
-    |--------------------------------------------------------------------------
-    */
+        $query = $account->transactions()
+            ->orderByDesc('transaction_date')
+            ->orderByDesc('id');
 
-    $query = $account->transactions()
-        ->orderByDesc('transaction_date')
-        ->orderByDesc('id');
+        /*
+        |--------------------------------------------------------------------------
+        | جستجوی شماره تراکنش
+        |--------------------------------------------------------------------------
+        */
 
+        if ($request->filled('transaction_no')) {
+            $transactionNo = trim($request->transaction_no);
 
-    /*
-    |--------------------------------------------------------------------------
-    | جستجوی شماره تراکنش
-    |--------------------------------------------------------------------------
-    */
+            if ($transactionNo !== '') {
+                $query->where(
+                    'transaction_no',
+                    'like',
+                    '%' . $transactionNo . '%'
+                );
+            }
+        }
 
-    if ($request->filled('transaction_no')) {
+        /*
+        |--------------------------------------------------------------------------
+        | نوع تراکنش
+        |--------------------------------------------------------------------------
+        */
 
-        $query->where(
-            'transaction_no',
-            'like',
-            '%' . trim($request->transaction_no) . '%'
-        );
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | نوع تراکنش
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        $request->filled('transaction_type')
-        && $request->transaction_type !== 'all'
-    ) {
-
-        $query->where(
-            'transaction_type',
-            $request->transaction_type
-        );
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | مبلغ
-    |--------------------------------------------------------------------------
-    */
-
-    if ($request->filled('amount')) {
-
-        $amount = trim($request->amount);
-
-        // تبدیل اعداد فارسی و عربی به انگلیسی
-        $amount = strtr($amount, [
-            '۰' => '0',
-            '۱' => '1',
-            '۲' => '2',
-            '۳' => '3',
-            '۴' => '4',
-            '۵' => '5',
-            '۶' => '6',
-            '۷' => '7',
-            '۸' => '8',
-            '۹' => '9',
-
-            '٠' => '0',
-            '١' => '1',
-            '٢' => '2',
-            '٣' => '3',
-            '٤' => '4',
-            '٥' => '5',
-            '٦' => '6',
-            '٧' => '7',
-            '٨' => '8',
-            '٩' => '9',
-        ]);
-
-        // حذف جداکننده‌های هزارگان
-        $amount = str_replace(
-            [',', '٬', ' '],
-            '',
-            $amount
-        );
-
-        // فقط عدد معتبر پذیرفته شود
-        if (ctype_digit($amount)) {
-
+        if (
+            $request->filled('transaction_type')
+            && $request->transaction_type !== 'all'
+        ) {
             $query->where(
-                'amount',
-                (int) $amount
+                'transaction_type',
+                $request->transaction_type
             );
-
         }
 
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | مبلغ
+        |--------------------------------------------------------------------------
+        */
 
+        if ($request->filled('amount')) {
+            $amount = trim($request->amount);
 
-    /*
-    |--------------------------------------------------------------------------
-    | از تاریخ
-    |--------------------------------------------------------------------------
-    */
+            /*
+            | تبدیل اعداد فارسی و عربی
+            */
 
-    if ($request->filled('from_date')) {
+            $amount = strtr($amount, [
+                '۰' => '0',
+                '۱' => '1',
+                '۲' => '2',
+                '۳' => '3',
+                '۴' => '4',
+                '۵' => '5',
+                '۶' => '6',
+                '۷' => '7',
+                '۸' => '8',
+                '۹' => '9',
 
-        try {
+                '٠' => '0',
+                '١' => '1',
+                '٢' => '2',
+                '٣' => '3',
+                '٤' => '4',
+                '٥' => '5',
+                '٦' => '6',
+                '٧' => '7',
+                '٨' => '8',
+                '٩' => '9',
+            ]);
 
-            $fromDate = \Morilog\Jalali\Jalalian::fromFormat(
-                'Y/m/d',
-                trim($request->from_date)
-            )->toCarbon()->format('Y-m-d');
+            /*
+            | حذف جداکننده‌های هزارگان
+            */
 
-            $query->whereDate(
-                'transaction_date',
-                '>=',
-                $fromDate
+            $amount = str_replace(
+                [',', '٬', ' '],
+                '',
+                $amount
             );
 
-        } catch (\Throwable $e) {
-
-            // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
-
+            if (ctype_digit($amount)) {
+                $query->where(
+                    'amount',
+                    (int) $amount
+                );
+            }
         }
 
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | از تاریخ
+        |--------------------------------------------------------------------------
+        */
 
+        if ($request->filled('from_date')) {
+            try {
+                $fromDate = Jalalian::fromFormat(
+                    'Y/m/d',
+                    trim($request->from_date)
+                )
+                    ->toCarbon()
+                    ->format('Y-m-d');
 
-    /*
-    |--------------------------------------------------------------------------
-    | تا تاریخ
-    |--------------------------------------------------------------------------
-    */
-
-    if ($request->filled('to_date')) {
-
-        try {
-
-            $toDate = \Morilog\Jalali\Jalalian::fromFormat(
-                'Y/m/d',
-                trim($request->to_date)
-            )->toCarbon()->format('Y-m-d');
-
-            $query->whereDate(
-                'transaction_date',
-                '<=',
-                $toDate
-            );
-
-        } catch (\Throwable $e) {
-
-            // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
-
+                $query->whereDate(
+                    'transaction_date',
+                    '>=',
+                    $fromDate
+                );
+            } catch (\Throwable) {
+                // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
+            }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | تا تاریخ
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('to_date')) {
+            try {
+                $toDate = Jalalian::fromFormat(
+                    'Y/m/d',
+                    trim($request->to_date)
+                )
+                    ->toCarbon()
+                    ->format('Y-m-d');
+
+                $query->whereDate(
+                    'transaction_date',
+                    '<=',
+                    $toDate
+                );
+            } catch (\Throwable) {
+                // تاریخ نامعتبر است؛ فیلتر تاریخ اعمال نمی‌شود.
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | صفحه‌بندی
+        |--------------------------------------------------------------------------
+        */
+
+        $transactions = $query
+            ->paginate(20)
+            ->withQueryString();
+
+        return view(
+            'customer.savings.transactions',
+            compact(
+                'account',
+                'transactions'
+            )
+        );
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | صفحه‌بندی
-    |--------------------------------------------------------------------------
-    */
-
-    $transactions = $query
-        ->paginate(20)
-        ->withQueryString();
-
-
-    return view(
-        'customer.savings.transactions',
-        compact(
-            'account',
-            'transactions'
-        )
-    );
-}
-
-
-
-
 }

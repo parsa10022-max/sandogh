@@ -32,12 +32,14 @@
         {{-- کد مشتری --}}
         <div class="customer-form-field">
 
-            <x-inputs.text-input
-                name="customer_code"
-                label="کد مشتری"
-                :value="old('customer_code', $customer->customer_code ?? '')"
-                required
-            />
+            <div dir="ltr">
+                <x-inputs.text-input
+                    name="customer_code"
+                    label="کد مشتری"
+                    :value="old('customer_code', $customer->customer_code ?? '')"
+                    required
+                />
+            </div>
 
         </div>
 
@@ -228,7 +230,7 @@
                     <span class="text-danger">*</span>
                 </label>
 
-                <div class="account-number-box">
+                <div class="account-number-box" dir="ltr">
 
                     <span
                         id="account-prefix"
@@ -321,5 +323,4 @@
     </div>
 
 @endif
-
 

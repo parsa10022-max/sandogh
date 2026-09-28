@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="savings-transfers-count">
-                    {{ $transfers->total() }} مورد
+                    {{ fa_number($transfers->total()) }} مورد
                 </div>
 
             </div>
@@ -110,7 +110,7 @@
                                 <td>
 
                                     <span class="savings-transfer-row-number">
-                                        {{ $transfers->firstItem() + $loop->index }}
+                                        {{ fa_number($transfers->firstItem() + $loop->index) }}
                                     </span>
 
                                 </td>
@@ -184,7 +184,7 @@
                                     <div class="savings-transfer-amount">
 
                                         <strong>
-                                            {{ number_format($transfer->amount ?? 0) }}
+                                            {{ fa_money($transfer->amount ?? 0) }}
                                         </strong>
 
                                         <small>
@@ -204,11 +204,11 @@
                                         <div class="savings-transfer-date">
 
                                             <span>
-                                                {{ $transfer->paid_at->format('Y/m/d') }}
+                                                {{ fa_number($transfer->paid_at->format('Y/m/d')) }}
                                             </span>
 
                                             <small>
-                                                {{ $transfer->paid_at->format('H:i') }}
+                                                {{ fa_number($transfer->paid_at->format('H:i')) }}
                                             </small>
 
                                         </div>

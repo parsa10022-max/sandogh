@@ -53,7 +53,9 @@
                         </span>
 
                         <strong class="loan-date-value">
-                            {{ $loan->start_date_jalali ?? '-' }}
+                            {{ !empty($loan->start_date_jalali)
+                                ? fa_number($loan->start_date_jalali)
+                                : '-' }}
                         </strong>
 
                     </div>
@@ -79,7 +81,9 @@
                         </span>
 
                         <strong class="loan-date-value">
-                            {{ $loan->first_due_date_jalali ?? '-' }}
+                            {{ !empty($loan->first_due_date_jalali)
+                                ? fa_number($loan->first_due_date_jalali)
+                                : '-' }}
                         </strong>
 
                     </div>
@@ -105,7 +109,9 @@
                         </span>
 
                         <strong class="loan-date-value">
-                            {{ $loan->last_due_date_jalali ?? '-' }}
+                            {{ !empty($loan->last_due_date_jalali)
+                                ? fa_number($loan->last_due_date_jalali)
+                                : '-' }}
                         </strong>
 
                     </div>

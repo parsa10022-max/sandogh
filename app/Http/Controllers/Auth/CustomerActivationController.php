@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerActivation\CreateAccountRequest;
+use App\Http\Requests\CustomerActivation\OtpRequest;
 use App\Http\Requests\CustomerActivation\SendOtpRequest;
 use App\Models\Customer;
 use App\Services\CustomerAccountActivationService;
 use App\Services\CustomerActivationOtpService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use RuntimeException;
@@ -124,15 +124,8 @@ class CustomerActivationController extends Controller
     }
 
     public function verifyOtp(
-        Request $request
+        OtpRequest $request
     ): RedirectResponse {
-        $request->validate([
-            'code' => [
-                'required',
-                'digits:6',
-            ],
-        ]);
-
         $customerId = session('customer_activation_id');
 
         if (! $customerId) {
@@ -180,7 +173,7 @@ class CustomerActivationController extends Controller
 
         $verified = $this->otpService->verify(
             $customer,
-            $request->input('code')
+            $request->validated('code')
         );
 
         if (! $verified) {
@@ -333,11 +326,13 @@ class CustomerActivationController extends Controller
                 $request->validated()
             );
         } catch (RuntimeException $e) {
+            report($e);
+
             return back()
                 ->withInput()
                 ->with(
                     'error',
-                    $e->getMessage()
+                    'ایجاد حساب کاربری انجام نشد. لطفاً دوباره تلاش کنید.'
                 );
         }
 

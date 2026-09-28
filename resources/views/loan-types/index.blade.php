@@ -66,7 +66,7 @@
                         </span>
 
                         <strong>
-                            {{ $loanTypes->total() }}
+                            {{ fa_number($loanTypes->total()) }}
                         </strong>
 
                     </div>
@@ -237,4 +237,3 @@
     </div>
 
 @endsection
-

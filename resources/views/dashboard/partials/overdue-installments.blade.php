@@ -28,7 +28,7 @@
             <span class="dashboard-overdue-count">
                 <i class="bi bi-list-check"></i>
 
-                {{ $dashboard['overdueInstallments']->count() }}
+                {{ fa_number($dashboard['overdueInstallments']->count()) }}
 
                 قسط
             </span>
@@ -36,7 +36,7 @@
             <span class="dashboard-overdue-amount">
                 <i class="bi bi-cash-stack"></i>
 
-                {{ number_format($dashboard['overdueInstallments']->sum('amount')) }}
+                {{ fa_money($dashboard['overdueInstallments']->sum('amount')) }}
 
                 ریال
             </span>
@@ -89,7 +89,10 @@
                     {{-- Loan --}}
                     <td>
 
-                        <div class="dashboard-loan-number">
+                        <div
+                            class="dashboard-loan-number"
+                            dir="ltr"
+                        >
 
                             <span class="dashboard-loan-prefix">
                                 {{ $installment->loan->loanType->prefix }}
@@ -129,7 +132,7 @@
 
                             <i class="bi bi-calendar3"></i>
 
-                            {{ $installment->due_date_jalali }}
+                            {{ fa_number($installment->due_date_jalali) }}
 
                         </span>
 
@@ -141,7 +144,7 @@
 
                         <span class="dashboard-installment-amount">
 
-                            {{ number_format($installment->amount) }}
+                            {{ fa_money($installment->amount) }}
 
                             <small>ریال</small>
 
@@ -157,7 +160,7 @@
 
                             <i class="bi bi-clock-history"></i>
 
-                            {{ $installment->overdue_days }}
+                            {{ fa_number($installment->overdue_days) }}
 
                             روز
 
@@ -171,8 +174,10 @@
 
                         @if (!$installment->payment)
 
-                            <a href="{{ route('loans.show', $installment->loan) }}"
-                               class="btn btn-sm dashboard-overdue-action">
+                            <a
+                                href="{{ route('loans.show', $installment->loan) }}"
+                                class="btn btn-sm dashboard-overdue-action"
+                            >
 
                                 <i class="bi bi-eye"></i>
 
@@ -234,3 +239,4 @@
     </div>
 
 </div>
+

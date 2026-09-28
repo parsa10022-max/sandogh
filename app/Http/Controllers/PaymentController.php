@@ -9,7 +9,6 @@ use App\Models\SavingsTransfer;
 use App\Services\Payment\PaymentResolverService;
 use App\Services\Payment\PaymentService;
 use App\Services\Payment\SavingsInstallmentPaymentService;
-use App\Services\Savings\SavingsTransferService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -17,7 +16,6 @@ class PaymentController extends Controller
     public function __construct(
         private readonly PaymentService $paymentService,
         private readonly PaymentResolverService $paymentResolver,
-        private readonly SavingsTransferService $savingsTransferService,
         private readonly SavingsInstallmentPaymentService $savingsInstallmentPaymentService,
     ) {
     }
@@ -28,13 +26,11 @@ class PaymentController extends Controller
     public function pay(Installment $installment)
     {
         try {
-
             $response = $this->paymentService->startPayment(
                 $installment
             );
 
             if (!$response['success']) {
-
                 return back()->with(
                     'error',
                     $response['message']
@@ -47,10 +43,11 @@ class PaymentController extends Controller
             );
 
         } catch (\Throwable $e) {
+            report($e);
 
             return back()->with(
                 'error',
-                $e->getMessage()
+                'خطا در شروع پرداخت. لطفاً دوباره تلاش کنید.'
             );
         }
     }
@@ -61,7 +58,9 @@ class PaymentController extends Controller
     public function payFromSavings(Installment $installment)
     {
         try {
-            $payment = $this->savingsInstallmentPaymentService->pay($installment);
+            $payment = $this->savingsInstallmentPaymentService->pay(
+                $installment
+            );
 
             return redirect()
                 ->route(
@@ -74,10 +73,11 @@ class PaymentController extends Controller
                 );
 
         } catch (\Throwable $e) {
+            report($e);
 
             return back()->with(
                 'error',
-                $e->getMessage()
+                'پرداخت قسط انجام نشد. لطفاً دوباره تلاش کنید.'
             );
         }
     }
@@ -88,7 +88,6 @@ class PaymentController extends Controller
     public function callback(Request $request)
     {
         try {
-
             $payment = $this->paymentResolver->verify(
                 $request->all()
             );
@@ -100,7 +99,6 @@ class PaymentController extends Controller
             */
 
             if ($payment instanceof SavingsTransfer) {
-
                 return redirect()->route(
                     'customer.savings.deposit.savings-transfer.success',
                     $payment
@@ -114,12 +112,10 @@ class PaymentController extends Controller
             */
 
             if ($payment instanceof LoanPayment) {
-
                 if (
                     $payment->loan->customer_id ===
                     auth()->user()->customer?->id
                 ) {
-
                     return redirect()->route(
                         'customer.installments.payment.success',
                         $payment
@@ -139,9 +135,7 @@ class PaymentController extends Controller
             */
 
             if ($payment instanceof DonationPayment) {
-
                 if ($payment->customer_id === null) {
-
                     return redirect()->route(
                         'donation.success',
                         $payment
@@ -159,6 +153,7 @@ class PaymentController extends Controller
             );
 
         } catch (\Throwable $e) {
+            report($e);
 
             /*
             |--------------------------------------------------------------------------
@@ -167,19 +162,17 @@ class PaymentController extends Controller
             */
 
             if ($request->payment_type === 'donation_customer') {
-
                 $donationPayment = DonationPayment::find(
                     $request->reference_id
                 );
 
                 if ($donationPayment) {
-
                     return redirect()
                         ->route(
                             'customer.donations.create',
                             [
                                 'account_id' =>
-                                    $donationPayment->account_id
+                                    $donationPayment->account_id,
                             ]
                         )
                         ->with(
@@ -208,7 +201,7 @@ class PaymentController extends Controller
                 )
                 ->with(
                     'error',
-                    $e->getMessage()
+                    'پرداخت با موفقیت تکمیل نشد. لطفاً دوباره تلاش کنید.'
                 );
         }
     }
@@ -229,14 +222,12 @@ class PaymentController extends Controller
                 ]
             )
         ) {
-
             $payment = DonationPayment::with('account')
                 ->find(
                     $data['reference_id'] ?? null
                 );
 
             if ($payment) {
-
                 $data['account_name'] =
                     $payment->account?->name;
 
@@ -310,7 +301,6 @@ class PaymentController extends Controller
         if (
             ($request->payment_type ?? null) === 'donation'
         ) {
-
             return redirect()
                 ->route('donation.create')
                 ->with(
@@ -326,13 +316,11 @@ class PaymentController extends Controller
         */
 
         if ($request->reference_id) {
-
             $transfer = SavingsTransfer::find(
                 $request->reference_id
             );
 
             if ($transfer) {
-
                 $customer = auth()->user()->customer;
 
                 /*
@@ -345,7 +333,6 @@ class PaymentController extends Controller
                     $customer &&
                     $transfer->receiver_customer_id === $customer->id
                 ) {
-
                     return redirect()
                         ->route(
                             'customer.savings.deposit.create'
@@ -380,12 +367,10 @@ class PaymentController extends Controller
         */
 
         if ($request->installment_id) {
-
             $installment = Installment::with('loan')
                 ->find($request->installment_id);
 
             if ($installment) {
-
                 $customer = auth()->user()->customer;
 
                 /*
@@ -398,7 +383,6 @@ class PaymentController extends Controller
                     $customer &&
                     $installment->loan->customer_id === $customer->id
                 ) {
-
                     return redirect()
                         ->route(
                             'customer.installments.index'

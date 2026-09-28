@@ -1,47 +1,41 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\BalanceAdjustmentController;
+use App\Http\Controllers\Account\CustomerAccountController;
+use App\Http\Controllers\Account\DepositController;
+use App\Http\Controllers\Account\WithdrawalController;
+use App\Http\Controllers\Admin\AccountingController;
+use App\Http\Controllers\Admin\DailyOperationsReportController;
+use App\Http\Controllers\Admin\DonationController;
+use App\Http\Controllers\Admin\FundStatisticController;
+use App\Http\Controllers\Admin\GatewayTransactionsReportController;
+use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Auth\CustomerActivationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\Customer\CustomerController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Loan\LoanController;
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\DonationController as CustomerDonationController;
+use App\Http\Controllers\Customer\InstallmentController;
 use App\Http\Controllers\Customer\LoanController as CustomerLoanController;
+use App\Http\Controllers\Customer\OtherInstallmentPaymentController;
+use App\Http\Controllers\Customer\ProfileController;
+use App\Http\Controllers\Customer\SavingsTransferController;
+use App\Http\Controllers\Customer\ServicesController;
+use App\Http\Controllers\Customer\SettingsController;
+use App\Http\Controllers\Customer\SavingsWithdrawalController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DonationController as PublicDonationController;
+use App\Http\Controllers\Loan\LoanController;
+use App\Http\Controllers\Loan\LoanRequestController;
 use App\Http\Controllers\LoanType\LoanTypeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SystemAccountController;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Account\DepositController;
-use App\Http\Controllers\Account\AccountController;
-use App\Http\Controllers\Account\WithdrawalController;
-use App\Http\Controllers\Loan\LoanRequestController;
-use App\Http\Controllers\Customer\SavingsTransferController;
-use App\Http\Controllers\Customer\CustomerDashboardController;
-use App\Http\Controllers\Customer\OtherInstallmentPaymentController;
-use App\Http\Controllers\Customer\InstallmentController;
-use App\Http\Controllers\Admin\DonationController;
-use App\Http\Controllers\Customer\DonationController as CustomerDonationController;
-use App\Http\Controllers\Account\BalanceAdjustmentController;
-use App\Http\Controllers\SystemAccountController;
-use App\Http\Controllers\DonationController as PublicDonationController;
-use App\Http\Controllers\Customer\ServicesController;
-use App\Http\Controllers\Customer\SettingsController;
-use App\Http\Controllers\Customer\ProfileController;
-use App\Http\Controllers\Admin\AccountingController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\PasswordController;
-use App\Http\Controllers\Admin\DailyOperationsReportController;
-use App\Http\Controllers\Admin\GatewayTransactionsReportController;
-use App\Http\Controllers\Admin\FundStatisticController;
-use App\Http\Controllers\Auth\CustomerActivationController;
-
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
-
 
 /*
 |--------------------------------------------------------------------------
@@ -57,8 +51,9 @@ Route::get('/', function (\App\Services\FundStatistic\FundStatisticService $serv
 
 
 /*
+/*
 |--------------------------------------------------------------------------
-| Admin Authentication
+| Authentication
 |--------------------------------------------------------------------------
 */
 
@@ -80,7 +75,15 @@ Route::get(
 Route::post(
     '/otp',
     [OtpController::class, 'verify']
-)->name('otp.verify');
+)->middleware('throttle:5,1')
+    ->name('otp.verify');
+
+
+/*
+|--------------------------------------------------------------------------
+| Customer Account Activation
+|--------------------------------------------------------------------------
+*/
 
 Route::get(
     '/activate-account',
@@ -90,7 +93,9 @@ Route::get(
 Route::post(
     '/activate-account',
     [CustomerActivationController::class, 'sendOtp']
-)->name('customer-activation.send-otp');
+)->middleware('throttle:3,1')
+    ->name('customer-activation.send-otp');
+
 Route::get(
     '/activate-account/otp',
     [CustomerActivationController::class, 'showOtp']
@@ -99,7 +104,8 @@ Route::get(
 Route::post(
     '/activate-account/otp',
     [CustomerActivationController::class, 'verifyOtp']
-)->name('customer-activation.verify-otp');
+)->middleware('throttle:5,1')
+    ->name('customer-activation.verify-otp');
 
 Route::get(
     '/activate-account/account',
@@ -110,6 +116,7 @@ Route::post(
     '/activate-account/account',
     [CustomerActivationController::class, 'createAccount']
 )->name('customer-activation.create-account');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -125,7 +132,8 @@ Route::get(
 Route::post(
     '/forgot-password',
     [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendOtp']
-)->name('password.otp.send');
+)->middleware('throttle:3,1')
+    ->name('password.otp.send');
 
 Route::get(
     '/forgot-password/otp',
@@ -135,7 +143,8 @@ Route::get(
 Route::post(
     '/forgot-password/otp',
     [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'verifyOtp']
-)->name('password.otp.verify');
+)->middleware('throttle:5,1')
+    ->name('password.otp.verify');
 
 Route::get(
     '/reset-password',
@@ -146,7 +155,6 @@ Route::put(
     '/reset-password',
     [\App\Http\Controllers\Auth\ResetPasswordController::class, 'update']
 )->name('password.reset.update');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -166,11 +174,25 @@ Route::post(
 
 Route::get(
     '/donation/success/{donationPayment}',
-    [
-        \App\Http\Controllers\DonationController::class,
-        'success'
-    ]
+    [PublicDonationController::class, 'success']
 )->name('donation.success');
+
+
+/*
+|--------------------------------------------------------------------------
+| Payment Gateway Callback
+|--------------------------------------------------------------------------
+|
+| Callback باید بدون auth قابل دسترسی باشد؛
+| اعتبارسنجی واقعی تراکنش داخل Controller/Service انجام می‌شود.
+|
+*/
+
+Route::match(
+    ['GET', 'POST'],
+    '/payments/callback',
+    [PaymentController::class, 'callback']
+)->name('payments.callback');
 
 
 /*
@@ -179,12 +201,11 @@ Route::get(
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'reports.access'])->group(function () {
-
+Route::middleware(['auth', 'admin.access'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Dashboard
+    | Admin Profile & Password
     |--------------------------------------------------------------------------
     */
 
@@ -200,13 +221,20 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 
     Route::get(
         'admin/profile',
-        [ProfileController::class, 'index']
+        [\App\Http\Controllers\Admin\ProfileController::class, 'index']
     )->name('admin.profile.index');
 
     Route::put(
         'admin/profile',
-        [ProfileController::class, 'update']
+        [\App\Http\Controllers\Admin\ProfileController::class, 'update']
     )->name('admin.profile.update');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
 
     Route::get(
         '/dashboard',
@@ -306,7 +334,7 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 
     Route::get(
         '/withdrawals/{withdrawal}/receipt',
-        [\App\Http\Controllers\Account\WithdrawalController::class, 'receipt']
+        [WithdrawalController::class, 'receipt']
     )->name('withdrawals.receipt');
 
 
@@ -318,22 +346,22 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 
     Route::get(
         'customers/{customer}/accounts/create',
-        [\App\Http\Controllers\Account\CustomerAccountController::class, 'create']
+        [CustomerAccountController::class, 'create']
     )->name('customers.accounts.create');
 
     Route::post(
         'customers/{customer}/accounts',
-        [\App\Http\Controllers\Account\CustomerAccountController::class, 'store']
+        [CustomerAccountController::class, 'store']
     )->name('customers.accounts.store');
 
     Route::get(
         'customers/{customer}/accounts/{account}/edit',
-        [\App\Http\Controllers\Account\CustomerAccountController::class, 'edit']
+        [CustomerAccountController::class, 'edit']
     )->name('customers.accounts.edit');
 
     Route::put(
         'customers/{customer}/accounts/{account}',
-        [\App\Http\Controllers\Account\CustomerAccountController::class, 'update']
+        [CustomerAccountController::class, 'update']
     )->name('customers.accounts.update');
 
     Route::get(
@@ -378,7 +406,7 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
         'system-accounts/{systemAccount}/change-status',
         [
             SystemAccountController::class,
-            'changeStatus'
+            'changeStatus',
         ]
     )->name('system-accounts.change-status');
 
@@ -530,67 +558,40 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Daily Operations Report
+    | Reports
     |--------------------------------------------------------------------------
     */
-
-    /*
-    /*
-|--------------------------------------------------------------------------
-| Reports
-|--------------------------------------------------------------------------
-*/
 
     Route::prefix('admin/reports')
         ->name('admin.reports.')
         ->group(function () {
 
-            /*
-            |--------------------------------------------------------------------------
-            | Daily Operations Report
-            |--------------------------------------------------------------------------
-            */
-
             Route::get(
                 '/daily-operations',
                 [
                     DailyOperationsReportController::class,
-                    'index'
+                    'index',
                 ]
             )->name('daily-operations');
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Gateway Transactions Report
-            |--------------------------------------------------------------------------
-            */
 
             Route::get(
                 '/gateway-transactions',
                 [
                     GatewayTransactionsReportController::class,
-                    'index'
+                    'index',
                 ]
             )->name('gateway-transactions');
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Gateway Transactions Export
-            |--------------------------------------------------------------------------
-            */
 
             Route::get(
                 '/gateway-transactions/export',
                 [
                     GatewayTransactionsReportController::class,
-                    'export'
+                    'export',
                 ]
             )->name('gateway-transactions.export');
-
         });
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -598,7 +599,7 @@ Route::middleware(['auth', 'reports.access'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'reports.access'])
+Route::middleware(['auth', 'admin.access'])
     ->prefix('admin/fund-statistics')
     ->name('admin.fund-statistics.')
     ->group(function () {
@@ -612,8 +613,8 @@ Route::middleware(['auth', 'reports.access'])
             '/',
             [FundStatisticController::class, 'update']
         )->name('update');
-
     });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -631,17 +632,6 @@ Route::middleware('auth')
             [PaymentController::class, 'pay']
         )->name('pay');
 
-        Route::match(
-            ['GET', 'POST'],
-            '/callback',
-            [PaymentController::class, 'callback']
-        )->name('callback');
-
-        Route::get(
-            '/fake',
-            [PaymentController::class, 'fake']
-        )->name('fake');
-
         Route::get(
             '/{payment}/success',
             [PaymentController::class, 'success']
@@ -651,13 +641,26 @@ Route::middleware('auth')
             '/failed',
             [PaymentController::class, 'failed']
         )->name('failed');
-
     });
 
 
 /*
 |--------------------------------------------------------------------------
-| Customer Panel Routes
+| Fake Payment Gateway - Local Only
+|--------------------------------------------------------------------------
+*/
+
+if (app()->environment('local')) {
+    Route::get(
+        '/payments/fake',
+        [PaymentController::class, 'fake']
+    )->middleware('auth')->name('payments.fake');
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Customer Panel
 |--------------------------------------------------------------------------
 */
 
@@ -672,36 +675,65 @@ Route::middleware(['auth', 'customer.access'])
     ->name('customer.')
     ->group(function () {
 
+        /*
+        |--------------------------------------------------------------------------
+        | Settings
+        |--------------------------------------------------------------------------
+        */
+
         Route::put(
             'settings/password',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'updatePassword']
+            [SettingsController::class, 'updatePassword']
         )->name('settings.password.update');
 
         Route::put(
             'settings/account',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'updateAccount']
+            [SettingsController::class, 'updateAccount']
         )->name('settings.account.update');
 
         Route::get(
             'settings/mobile/verify',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'showMobileVerification']
+            [SettingsController::class, 'showMobileVerification']
         )->name('settings.mobile.verify');
 
         Route::post(
             'settings/mobile/verify',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'verifyMobile']
+            [SettingsController::class, 'verifyMobile']
         )->name('settings.mobile.verify.submit');
 
         Route::get(
             'settings/password/verify',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'showPasswordVerification']
+            [SettingsController::class, 'showPasswordVerification']
         )->name('settings.password.verify');
 
         Route::post(
             'settings/password/verify',
-            [\App\Http\Controllers\Customer\SettingsController::class, 'verifyPassword']
+            [SettingsController::class, 'verifyPassword']
         )->name('settings.password.verify.submit');
 
+        Route::get(
+            'settings',
+            [SettingsController::class, 'index']
+        )->name('settings.index');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'profile',
+            [ProfileController::class, 'index']
+        )->name('profile.index');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Customer Loans
+        |--------------------------------------------------------------------------
+        */
 
         Route::get(
             '/loans',
@@ -714,19 +746,31 @@ Route::middleware(['auth', 'customer.access'])
         )->name('loans.show');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Notifications
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
             'notifications',
             [
                 \App\Http\Controllers\Customer\NotificationController::class,
-                'index'
+                'index',
             ]
         )->name('notifications.index');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Customer Services
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
-            'installments/{payment}/success',
-            [\App\Http\Controllers\Customer\InstallmentController::class, 'success']
-        )->name('installments.payment.success');
+            '/services',
+            [ServicesController::class, 'index']
+        )->name('services');
 
 
         /*
@@ -736,38 +780,35 @@ Route::middleware(['auth', 'customer.access'])
         */
 
         Route::get(
-            '/services',
-            [ServicesController::class, 'index']
-        )->name('services');
-
-        Route::get(
-            'settings',
-            [SettingsController::class, 'index']
-        )->name('settings.index');
-
-        Route::get(
-            'profile',
-            [ProfileController::class, 'index']
-        )->name('profile.index');
-
-        Route::get(
             'loan-request/create',
-            [\App\Http\Controllers\Customer\LoanRequestController::class, 'create']
+            [
+                \App\Http\Controllers\Customer\LoanRequestController::class,
+                'create',
+            ]
         )->name('loan-request.create');
 
         Route::post(
             'loan-request',
-            [\App\Http\Controllers\Customer\LoanRequestController::class, 'store']
+            [
+                \App\Http\Controllers\Customer\LoanRequestController::class,
+                'store',
+            ]
         )->name('loan-request.store');
 
         Route::get(
             'loan-requests',
-            [\App\Http\Controllers\Customer\LoanRequestController::class, 'index']
+            [
+                \App\Http\Controllers\Customer\LoanRequestController::class,
+                'index',
+            ]
         )->name('loan-requests.index');
 
         Route::get(
             'loan-request/{loanRequest}',
-            [\App\Http\Controllers\Customer\LoanRequestController::class, 'show']
+            [
+                \App\Http\Controllers\Customer\LoanRequestController::class,
+                'show',
+            ]
         )->name('loan-request.show');
 
 
@@ -781,18 +822,26 @@ Route::middleware(['auth', 'customer.access'])
             '/dashboard',
             [
                 CustomerDashboardController::class,
-                'index'
+                'index',
             ]
         )->name('dashboard');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Installments
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
             'installments',
-            [
-                \App\Http\Controllers\Customer\InstallmentController::class,
-                'index'
-            ]
+            [InstallmentController::class, 'index']
         )->name('installments.index');
+
+        Route::get(
+            'installments/{payment}/success',
+            [InstallmentController::class, 'success']
+        )->name('installments.payment.success');
 
 
         /*
@@ -811,29 +860,19 @@ Route::middleware(['auth', 'customer.access'])
             [SavingsTransferController::class, 'ownDepositStore']
         )->name('savings.deposit.store');
 
-
         Route::get(
             'savings/withdrawal',
-            [
-                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
-                'create'
-            ]
+            [SavingsWithdrawalController::class, 'create']
         )->name('savings.withdrawal.create');
 
         Route::post(
             'savings/withdrawal',
-            [
-                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
-                'store'
-            ]
+            [SavingsWithdrawalController::class, 'store']
         )->name('savings.withdrawal.store');
 
         Route::get(
             'savings/withdrawal/success/{withdrawal}',
-            [
-                \App\Http\Controllers\Customer\SavingsWithdrawalController::class,
-                'success'
-            ]
+            [SavingsWithdrawalController::class, 'success']
         )->name('savings.withdrawal.success');
 
 
@@ -847,14 +886,14 @@ Route::middleware(['auth', 'customer.access'])
             'savings/transactions',
             [
                 SavingsTransferController::class,
-                'transactions'
+                'transactions',
             ]
         )->name('savings.transactions');
 
 
         /*
         |--------------------------------------------------------------------------
-        | Transfer Savings To Other Members
+        | Savings Transfer To Other Members
         |--------------------------------------------------------------------------
         */
 
@@ -884,11 +923,18 @@ Route::middleware(['auth', 'customer.access'])
         )->name('savings-transfer.failed');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Installment Payment From Savings
+        |--------------------------------------------------------------------------
+        */
 
         Route::post(
             'installments/{installment}/pay-from-savings',
             [PaymentController::class, 'payFromSavings']
         )->name('installments.pay-from-savings');
+
+
         /*
         |--------------------------------------------------------------------------
         | Other Installments Payment
@@ -904,7 +950,7 @@ Route::middleware(['auth', 'customer.access'])
             'installments/others/pay',
             [
                 OtherInstallmentPaymentController::class,
-                'pay'
+                'pay',
             ]
         )->name('installments.others.pay');
 
@@ -916,7 +962,7 @@ Route::middleware(['auth', 'customer.access'])
 
         /*
         |--------------------------------------------------------------------------
-        | Customer Donation
+        | Customer Donations
         |--------------------------------------------------------------------------
         */
 
@@ -944,7 +990,6 @@ Route::middleware(['auth', 'customer.access'])
             'donations/success/{donationPayment}',
             [CustomerDonationController::class, 'success']
         )->name('donations.success');
-
     });
 
 
@@ -954,19 +999,12 @@ Route::middleware(['auth', 'customer.access'])
 |--------------------------------------------------------------------------
 */
 
-Route::view(
-    '/test-components',
-    'test.components'
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| Test OTP
-|--------------------------------------------------------------------------
-*/
-
 if (app()->environment('local')) {
+
+    Route::view(
+        '/test-components',
+        'test.components'
+    );
 
     Route::get(
         '/test-otp',
@@ -975,9 +1013,6 @@ if (app()->environment('local')) {
             $user = User::first();
 
             return $otpService->generate($user);
-
         }
     );
-
 }
-

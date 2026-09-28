@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\WithdrawalStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,21 +26,21 @@ return new class extends Migration
 
             $table->unsignedBigInteger('amount');
 
-
-
-            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('status')
+                ->default(WithdrawalStatus::PENDING->value);
 
             $table->foreignId('paid_by')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
 
-            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('paid_at')
+                ->nullable();
 
-            $table->text('description')->nullable();
+            $table->text('description')
+                ->nullable();
 
             $table->timestamps();
-
         });
     }
 

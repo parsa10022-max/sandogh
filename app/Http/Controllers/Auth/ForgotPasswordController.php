@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\UserOtpType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OtpRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
@@ -28,6 +29,37 @@ class ForgotPasswordController extends Controller
      */
     public function sendOtp(Request $request)
     {
+        $request->merge([
+            'mobile' => $request->mobile
+                ? preg_replace(
+                    '/\D/u',
+                    '',
+                    strtr($request->mobile, [
+                        '۰' => '0',
+                        '۱' => '1',
+                        '۲' => '2',
+                        '۳' => '3',
+                        '۴' => '4',
+                        '۵' => '5',
+                        '۶' => '6',
+                        '۷' => '7',
+                        '۸' => '8',
+                        '۹' => '9',
+                        '٠' => '0',
+                        '١' => '1',
+                        '٢' => '2',
+                        '٣' => '3',
+                        '٤' => '4',
+                        '٥' => '5',
+                        '٦' => '6',
+                        '٧' => '7',
+                        '٨' => '8',
+                        '٩' => '9',
+                    ])
+                )
+                : null,
+        ]);
+
         $validated = $request->validate(
             [
                 'mobile' => [
@@ -74,7 +106,10 @@ class ForgotPasswordController extends Controller
 
         return redirect()
             ->route('password.otp.form')
-            ->with('success', 'کد تأیید برای شماره موبایل شما ارسال شد.');
+            ->with(
+                'success',
+                'کد تأیید برای شماره موبایل شما ارسال شد.'
+            );
     }
 
     /**
@@ -107,7 +142,7 @@ class ForgotPasswordController extends Controller
     /**
      * تأیید OTP
      */
-    public function verifyOtp(Request $request)
+    public function verifyOtp(OtpRequest $request)
     {
         $user = $this->getUser();
 
@@ -116,25 +151,9 @@ class ForgotPasswordController extends Controller
                 ->route('password.request');
         }
 
-        $validated = $request->validate(
-            [
-                'code' => [
-                    'required',
-                    'digits:6',
-                ],
-            ],
-            [
-                'code.required' =>
-                    'وارد کردن کد تأیید الزامی است.',
-
-                'code.digits' =>
-                    'کد تأیید باید ۶ رقم باشد.',
-            ]
-        );
-
         if (! $this->otpService->verify(
             $user,
-            $validated['code'],
+            $request->validated('code'),
             UserOtpType::PASSWORD_RESET
         )) {
             return back()->withErrors([

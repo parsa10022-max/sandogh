@@ -4,7 +4,7 @@
 
 @section('content')
 
-    
+
     <div class="container-fluid accounts-page">
 
         {{-- جستجو و آمار --}}
@@ -60,12 +60,12 @@
 
                             <div class="accounts-stat-content">
 
-                            <span class="accounts-stat-label">
-                                تعداد حساب‌ها
-                            </span>
+                                <span class="accounts-stat-label">
+                                    تعداد حساب‌ها
+                                </span>
 
                                 <strong class="accounts-stat-value">
-                                    {{ number_format($totalAccounts) }}
+                                    {{ fa_number($totalAccounts) }}
                                 </strong>
 
                             </div>
@@ -81,12 +81,12 @@
 
                             <div class="accounts-stat-content">
 
-                            <span class="accounts-stat-label">
-                                موجودی کل
-                            </span>
+                                <span class="accounts-stat-label">
+                                    موجودی کل
+                                </span>
 
                                 <strong class="accounts-stat-value">
-                                    {{ number_format($totalBalance) }}
+                                    {{ fa_money($totalBalance) }}
                                     <small>ریال</small>
                                 </strong>
 
@@ -129,9 +129,9 @@
                 </div>
 
                 <span class="accounts-count">
-                {{ number_format($accounts->total()) }}
-                حساب
-            </span>
+                    {{ fa_number($accounts->total()) }}
+                    حساب
+                </span>
 
             </div>
 
@@ -167,11 +167,11 @@
 
                                     <div class="accounts-number">
 
-                                    <span class="{{ $account->customer ? 'accounts-customer-icon' : 'accounts-system-icon' }}">
+                                        <span class="{{ $account->customer ? 'accounts-customer-icon' : 'accounts-system-icon' }}">
 
-                                        <i class="bi {{ $account->customer ? 'bi-person-fill' : 'bi-bank2' }}"></i>
+                                            <i class="bi {{ $account->customer ? 'bi-person-fill' : 'bi-bank2' }}"></i>
 
-                                    </span>
+                                        </span>
 
                                         <strong>
                                             {{ $account->account_number }}
@@ -188,8 +188,8 @@
                                     @if($account->customer)
 
                                         <span class="accounts-customer-code">
-                                        {{ $account->customer->customer_code }}
-                                    </span>
+                                            {{ $account->customer->customer_code }}
+                                        </span>
 
                                     @else
 
@@ -208,9 +208,9 @@
                                         @if($account->customer)
 
                                             <span class="accounts-type-badge customer">
-                                            <i class="bi bi-person-fill"></i>
-                                            مشتری
-                                        </span>
+                                                <i class="bi bi-person-fill"></i>
+                                                مشتری
+                                            </span>
 
                                             <strong class="accounts-owner-name">
                                                 {{ $account->customer->first_name }}
@@ -220,9 +220,9 @@
                                         @else
 
                                             <span class="accounts-type-badge system">
-                                            <i class="bi bi-bank2"></i>
-                                            سیستمی
-                                        </span>
+                                                <i class="bi bi-bank2"></i>
+                                                سیستمی
+                                            </span>
 
                                             <strong class="accounts-owner-name">
                                                 {{ $account->name }}
@@ -241,7 +241,7 @@
                                     <div class="accounts-balance">
 
                                         <strong>
-                                            {{ number_format($account->balance) }}
+                                            {{ fa_money($account->balance) }}
                                         </strong>
 
                                         <span>ریال</span>
@@ -258,25 +258,25 @@
 
                                         <span class="accounts-status active">
 
-                                        <span class="accounts-status-dot"></span>
+                                            <span class="accounts-status-dot"></span>
 
-                                        <i class="bi bi-check-circle"></i>
+                                            <i class="bi bi-check-circle"></i>
 
-                                        فعال
+                                            فعال
 
-                                    </span>
+                                        </span>
 
                                     @else
 
                                         <span class="accounts-status inactive">
 
-                                        <span class="accounts-status-dot"></span>
+                                            <span class="accounts-status-dot"></span>
 
-                                        <i class="bi bi-x-circle"></i>
+                                            <i class="bi bi-x-circle"></i>
 
-                                        غیرفعال
+                                            غیرفعال
 
-                                    </span>
+                                        </span>
 
                                     @endif
 
@@ -355,3 +355,5 @@
     </div>
 
 @endsection
+
+

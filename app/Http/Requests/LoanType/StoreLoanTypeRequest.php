@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\LoanType;
 
+use App\Enums\LoanTypeStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\LoanTypeStatus;
-
 
 class StoreLoanTypeRequest extends FormRequest
 {
@@ -25,13 +24,64 @@ class StoreLoanTypeRequest extends FormRequest
      */
     public function rules(): array
     {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
 
-             return [
-                 'name' => ['required', 'string', 'max:100'],
-                 'prefix' => ['required', 'string', 'size:4', 'unique:loan_types,prefix'],
-                 'description' => ['nullable', 'string'],
-                 'status' => ['required', Rule::enum(LoanTypeStatus::class)],
-             ];
+            'prefix' => [
+                'required',
+                'string',
+                'size:4',
+                'unique:loan_types,prefix',
+            ],
 
+            'description' => [
+                'nullable',
+                'string',
+            ],
+
+            'status' => [
+                'required',
+                Rule::enum(LoanTypeStatus::class),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' =>
+                'نام نوع وام الزامی است.',
+
+            'name.string' =>
+                'نام نوع وام باید به صورت متن وارد شود.',
+
+            'name.max' =>
+                'نام نوع وام نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'prefix.required' =>
+                'پیشوند نوع وام الزامی است.',
+
+            'prefix.string' =>
+                'پیشوند نوع وام باید به صورت متن وارد شود.',
+
+            'prefix.size' =>
+                'پیشوند نوع وام باید دقیقاً ۴ کاراکتر باشد.',
+
+            'prefix.unique' =>
+                'این پیشوند قبلاً ثبت شده است.',
+
+            'description.string' =>
+                'توضیحات باید به صورت متن وارد شود.',
+
+            'status.required' =>
+                'وضعیت نوع وام الزامی است.',
+
+            'status.enum' =>
+                'وضعیت انتخاب‌شده معتبر نیست.',
+        ];
     }
 }

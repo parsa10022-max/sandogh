@@ -17,16 +17,15 @@
 
     @vite([
     'resources/css/app.css',
-    'resources/css/receipts.css',
     'resources/js/app.js',
     ])
-    ```
+
 
 </head>
 
 <body class="receipt-body">
 
-```
+
 <main class="receipt-page">
 
     <div class="receipt">

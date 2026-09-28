@@ -34,7 +34,7 @@
 
                 <strong>
 
-                    {{ number_format($transfer->amount) }}
+                    {{ fa_money($transfer->amount) }}
 
                     <small>
                         ریال
@@ -56,9 +56,11 @@
 
                     @if($transfer->paid_at)
 
-                        {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                            $transfer->paid_at
-                        )->format('Y/m/d H:i') }}
+                        {{ fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $transfer->paid_at
+                            )->format('Y/m/d H:i')
+                        ) }}
 
                     @else
 
@@ -175,10 +177,6 @@
             </div>
 
         </div>
-
-
-
-
 
     </div>
 

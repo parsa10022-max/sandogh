@@ -84,9 +84,9 @@
 
                 <div class="withdrawal-section-title">
 
-                <span class="withdrawal-section-icon">
-                    <i class="bi bi-wallet2"></i>
-                </span>
+                    <span class="withdrawal-section-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </span>
 
                     <div>
                         <h6>اطلاعات حساب</h6>
@@ -105,10 +105,10 @@
                     {{-- عضو --}}
                     <div class="withdrawal-account-item">
 
-                    <span class="withdrawal-info-label">
-                        <i class="bi bi-person"></i>
-                        عضو
-                    </span>
+                        <span class="withdrawal-info-label">
+                            <i class="bi bi-person"></i>
+                            عضو
+                        </span>
 
                         <strong>
                             {{ $account->customer->first_name }}
@@ -121,10 +121,10 @@
                     {{-- شماره حساب --}}
                     <div class="withdrawal-account-item">
 
-                    <span class="withdrawal-info-label">
-                        <i class="bi bi-credit-card"></i>
-                        شماره حساب
-                    </span>
+                        <span class="withdrawal-info-label">
+                            <i class="bi bi-credit-card"></i>
+                            شماره حساب
+                        </span>
 
                         <strong dir="ltr">
                             {{ $account->account_number }}
@@ -136,10 +136,10 @@
                     {{-- بانک مقصد --}}
                     <div class="withdrawal-account-item">
 
-                    <span class="withdrawal-info-label">
-                        <i class="bi bi-bank"></i>
-                        بانک مقصد
-                    </span>
+                        <span class="withdrawal-info-label">
+                            <i class="bi bi-bank"></i>
+                            بانک مقصد
+                        </span>
 
                         <strong>
                             {{ \App\Support\Iban::bankName($account->customer->iban) }}
@@ -161,9 +161,9 @@
 
                 <div class="withdrawal-section-title">
 
-                <span class="withdrawal-section-icon withdrawal-form-icon">
-                    <i class="bi bi-cash-stack"></i>
-                </span>
+                    <span class="withdrawal-section-icon withdrawal-form-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </span>
 
                     <div>
                         <h6>اطلاعات برداشت</h6>
@@ -194,12 +194,12 @@
 
                         <div class="withdrawal-balance-content">
 
-                        <span>
-                            موجودی قابل برداشت
-                        </span>
+                            <span>
+                                موجودی قابل برداشت
+                            </span>
 
                             <strong>
-                                {{ number_format($account->balance) }}
+                                {{ fa_money($account->balance) }}
                                 <small>ریال</small>
                             </strong>
 
@@ -231,9 +231,9 @@
                             <i class="bi bi-info-circle"></i>
 
                             <span>
-                            شماره شبای فعلی شما نمایش داده شده است.
-                            در صورت تغییر، شماره شبای جدید را وارد کنید.
-                        </span>
+                                شماره شبای فعلی شما نمایش داده شده است.
+                                در صورت تغییر، شماره شبای جدید را وارد کنید.
+                            </span>
 
                         </div>
 
@@ -267,8 +267,8 @@
                             >
 
                             <span class="withdrawal-input-unit">
-            ریال
-        </span>
+                                ریال
+                            </span>
 
                         </div>
 
@@ -342,7 +342,6 @@
 
     </div>
 
-
-
-
 @endsection
+
+

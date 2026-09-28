@@ -38,7 +38,10 @@
                             شماره درخواست
                         </span>
 
-                        <span class="loan-request-value">
+                        <span
+                            class="loan-request-value"
+                            dir="ltr"
+                        >
                             {{ $loan->loanRequest->id }}
                         </span>
 
@@ -58,7 +61,7 @@
 
                         <span class="loan-request-value loan-request-money">
 
-                            {{ number_format($loan->loanRequest->requested_amount) }}
+                            {{ fa_money($loan->loanRequest->requested_amount) }}
 
                             <small>
                                 ریال
@@ -82,7 +85,7 @@
 
                         <span class="loan-request-value loan-request-approved">
 
-                            {{ number_format($loan->loanRequest->approved_amount) }}
+                            {{ fa_money($loan->loanRequest->approved_amount) }}
 
                             <small>
                                 ریال
@@ -125,3 +128,4 @@
     </div>
 
 @endif
+

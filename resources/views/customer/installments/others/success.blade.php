@@ -8,7 +8,6 @@
 
 @section('content')
 
-
     <div class="customer-other-installment-success">
 
         {{-- =========================================================
@@ -42,13 +41,13 @@
 
             <div class="customer-other-installment-success-card-title">
 
-            <span class="customer-other-installment-success-card-title-icon">
-                <i class="bi bi-receipt"></i>
-            </span>
+                <span class="customer-other-installment-success-card-title-icon">
+                    <i class="bi bi-receipt"></i>
+                </span>
 
                 <span>
-                اطلاعات پرداخت
-            </span>
+                    اطلاعات پرداخت
+                </span>
 
             </div>
 
@@ -61,9 +60,9 @@
                 {{-- نام عضو --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    نام عضو
-                </span>
+                    <span>
+                        نام عضو
+                    </span>
 
                     <strong>
                         {{ $payment->loan->customer->full_name }}
@@ -75,12 +74,12 @@
                 {{-- شماره وام --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    شماره وام
-                </span>
+                    <span>
+                        شماره وام
+                    </span>
 
                     <strong dir="ltr">
-                        {{ $payment->loan->loan_number }}
+                        {{ $payment->loan->full_loan_number }}
                     </strong>
 
                 </div>
@@ -89,12 +88,12 @@
                 {{-- شماره قسط --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    شماره قسط
-                </span>
+                    <span>
+                        شماره قسط
+                    </span>
 
                     <strong>
-                        {{ $payment->installment->installment_number }}
+                        {{ fa_number($payment->installment->installment_number) }}
                     </strong>
 
                 </div>
@@ -103,12 +102,12 @@
                 {{-- شماره پیگیری --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    شماره پیگیری
-                </span>
+                    <span>
+                        شماره پیگیری
+                    </span>
 
                     <strong dir="ltr">
-                        {{ $payment->tracking_code ?? '---' }}
+                        {{ $payment->tracking_code ?: '---' }}
                     </strong>
 
                 </div>
@@ -127,12 +126,12 @@
 
                 <div class="customer-other-installment-success-amount-content">
 
-                <span>
-                    مبلغ پرداختی
-                </span>
+                    <span>
+                        مبلغ پرداختی
+                    </span>
 
                     <strong>
-                        {{ number_format($payment->amount) }}
+                        {{ fa_money($payment->amount) }}
 
                         <small>
                             ریال
@@ -174,23 +173,24 @@
             ====================================================== --}}
             <a
                 href="{{ route('customer.dashboard') }}"
-                class="customer-other-installment-success-button">
+                class="customer-other-installment-success-button"
+            >
 
-            <span class="customer-other-installment-success-button-icon">
-                <i class="bi bi-arrow-right"></i>
-            </span>
+                <span class="customer-other-installment-success-button-icon">
+                    <i class="bi bi-arrow-right"></i>
+                </span>
 
                 <span class="customer-other-installment-success-button-content">
 
-                <strong>
-                    بازگشت به خانه
-                </strong>
+                    <strong>
+                        بازگشت به خانه
+                    </strong>
 
-                <small>
-                    مشاهده اقساط وام
-                </small>
+                    <small>
+                        مشاهده اقساط وام
+                    </small>
 
-            </span>
+                </span>
 
                 <i class="bi bi-arrow-left customer-other-installment-success-button-arrow"></i>
 
@@ -200,5 +200,5 @@
 
     </div>
 
-
 @endsection
+

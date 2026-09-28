@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AccountStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,11 +23,10 @@ return new class extends Migration
 
             // شماره حساب
             // نمونه: 6111-2535
-            $table->string('account_number', 20)->unique();
+            $table->string('account_number', 20)
+                ->unique();
 
             // نوع حساب
-            // 1 = پس انداز
-            // 2 = جاری
             $table->unsignedTinyInteger('account_type');
 
             // موجودی (ریال)
@@ -34,11 +34,8 @@ return new class extends Migration
                 ->default(0);
 
             // وضعیت حساب
-            // 1 = فعال
-            // 2 = مسدود
-            // 0 = بسته
             $table->unsignedTinyInteger('status')
-                ->default(1);
+                ->default(AccountStatus::ACTIVE->value);
 
             // تاریخ افتتاح
             $table->date('opened_date');
@@ -48,7 +45,6 @@ return new class extends Migration
                 ->nullable();
 
             $table->timestamps();
-
 
             $table->index('account_type');
             $table->index('status');

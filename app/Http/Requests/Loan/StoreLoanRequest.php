@@ -5,6 +5,7 @@ namespace App\Http\Requests\Loan;
 use App\Enums\GuaranteeType;
 use App\Enums\GuarantorType;
 use App\Enums\LoanStatus;
+use App\Models\Loan;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -90,6 +91,7 @@ class StoreLoanRequest extends FormRequest
                 'required',
                 new Enum(GuaranteeType::class),
             ],
+
             'guarantor1_guarantee_amount' => [
                 'nullable',
                 'numeric',
@@ -107,7 +109,6 @@ class StoreLoanRequest extends FormRequest
                 'string',
                 'max:100',
             ],
-
 
             /*
             |--------------------------------------------------------------------------
@@ -151,6 +152,7 @@ class StoreLoanRequest extends FormRequest
                 'required',
                 new Enum(GuaranteeType::class),
             ],
+
             'guarantor2_guarantee_amount' => [
                 'nullable',
                 'numeric',
@@ -170,6 +172,82 @@ class StoreLoanRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+
+            'customer_id.required' => 'انتخاب وام‌گیرنده الزامی است.',
+            'customer_id.exists' => 'وام‌گیرنده انتخاب‌شده معتبر نیست.',
+
+            'loan_type_id.required' => 'انتخاب نوع وام الزامی است.',
+            'loan_type_id.exists' => 'نوع وام انتخاب‌شده معتبر نیست.',
+
+            'loan_number.required' => 'شماره وام الزامی است.',
+            'loan_number.integer' => 'شماره وام باید عدد صحیح باشد.',
+            'loan_number.unique' => 'این شماره وام قبلاً برای این نوع وام ثبت شده است.',
+
+            'start_date.required' => 'تاریخ شروع وام الزامی است.',
+            'start_date.string' => 'تاریخ شروع وام معتبر نیست.',
+
+            'loan_amount.required' => 'مبلغ وام الزامی است.',
+            'loan_amount.numeric' => 'مبلغ وام باید عددی باشد.',
+            'loan_amount.min' => 'مبلغ وام باید بیشتر از صفر باشد.',
+
+            'installment_count.required' => 'تعداد اقساط الزامی است.',
+            'installment_count.integer' => 'تعداد اقساط باید عدد صحیح باشد.',
+            'installment_count.min' => 'تعداد اقساط باید حداقل ۱ باشد.',
+
+            'installment_interval.required' => 'فاصله اقساط الزامی است.',
+            'installment_interval.integer' => 'فاصله اقساط باید عدد صحیح باشد.',
+            'installment_interval.in' => 'فاصله اقساط انتخاب‌شده معتبر نیست.',
+
+            'description.string' => 'توضیحات باید به صورت متن وارد شود.',
+            'description.max' => 'توضیحات نمی‌تواند بیشتر از ۱۰۰۰ کاراکتر باشد.',
+
+            'guarantor1_customer_id.required' => 'انتخاب ضامن اول الزامی است.',
+            'guarantor1_customer_id.exists' => 'ضامن اول انتخاب‌شده معتبر نیست.',
+
+            'guarantor1_guarantee_type.required' => 'نوع ضمانت ضامن اول الزامی است.',
+            'guarantor1_guarantee_type.enum' => 'نوع ضمانت ضامن اول معتبر نیست.',
+
+            'guarantor1_guarantee_amount.numeric' => 'مبلغ ضمانت ضامن اول باید عددی باشد.',
+            'guarantor1_guarantee_amount.min' => 'مبلغ ضمانت ضامن اول نمی‌تواند منفی باشد.',
+
+            'guarantor1_guarantee_number.string' => 'شماره ضمانت ضامن اول باید به صورت متن وارد شود.',
+            'guarantor1_guarantee_number.max' => 'شماره ضمانت ضامن اول نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantor1_guarantee_account_number.string' => 'شماره حساب ضمانت ضامن اول باید به صورت متن وارد شود.',
+            'guarantor1_guarantee_account_number.max' => 'شماره حساب ضمانت ضامن اول نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantor2_type.required' => 'نوع ضامن دوم الزامی است.',
+            'guarantor2_type.enum' => 'نوع ضامن دوم معتبر نیست.',
+
+            'guarantor2_customer_id.exists' => 'ضامن دوم انتخاب‌شده معتبر نیست.',
+
+            'guarantor2_first_name.string' => 'نام ضامن دوم باید به صورت متن وارد شود.',
+            'guarantor2_first_name.max' => 'نام ضامن دوم نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantor2_last_name.string' => 'نام خانوادگی ضامن دوم باید به صورت متن وارد شود.',
+            'guarantor2_last_name.max' => 'نام خانوادگی ضامن دوم نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantor2_national_code.digits' => 'کد ملی ضامن دوم باید ۱۰ رقم باشد.',
+            'guarantor2_mobile.digits' => 'شماره موبایل ضامن دوم باید ۱۱ رقم باشد.',
+
+            'guarantor2_guarantee_type.required' => 'نوع ضمانت ضامن دوم الزامی است.',
+            'guarantor2_guarantee_type.enum' => 'نوع ضمانت ضامن دوم معتبر نیست.',
+
+            'guarantor2_guarantee_amount.numeric' => 'مبلغ ضمانت ضامن دوم باید عددی باشد.',
+            'guarantor2_guarantee_amount.min' => 'مبلغ ضمانت ضامن دوم نمی‌تواند منفی باشد.',
+
+            'guarantor2_guarantee_number.string' => 'شماره ضمانت ضامن دوم باید به صورت متن وارد شود.',
+            'guarantor2_guarantee_number.max' => 'شماره ضمانت ضامن دوم نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantor2_guarantee_account_number.string' => 'شماره حساب ضمانت ضامن دوم باید به صورت متن وارد شود.',
+            'guarantor2_guarantee_account_number.max' => 'شماره حساب ضمانت ضامن دوم نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+        ];
+    }
+
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
@@ -180,7 +258,7 @@ class StoreLoanRequest extends FormRequest
             |--------------------------------------------------------------------------
             */
 
-            $hasActiveLoan = \App\Models\Loan::query()
+            $hasActiveLoan = Loan::query()
                 ->where('customer_id', $this->customer_id)
                 ->where('status', LoanStatus::ACTIVE->value)
                 ->exists();
@@ -207,11 +285,12 @@ class StoreLoanRequest extends FormRequest
                     'کد مشتری ضامن دوم الزامی است.'
                 );
             }
+
             /*
-|--------------------------------------------------------------------------
-| یک نفر نمی‌تواند هر دو ضامن باشد
-|--------------------------------------------------------------------------
-*/
+            |--------------------------------------------------------------------------
+            | یک نفر نمی‌تواند هر دو ضامن باشد
+            |--------------------------------------------------------------------------
+            */
 
             if (
                 $this->guarantor2_type === GuarantorType::CUSTOMER->value &&
@@ -289,7 +368,6 @@ class StoreLoanRequest extends FormRequest
                     'وام‌گیرنده نمی‌تواند ضامن دوم خودش باشد.'
                 );
             }
-
         });
     }
 }

@@ -6,8 +6,6 @@
 
 @section('header_subtitle', 'برداشت وجه از حساب پس‌انداز شما')
 
-
-
 @section('content')
 
     <div class="customer-savings-withdrawal-page">
@@ -21,9 +19,7 @@
             <div class="customer-savings-withdrawal-header">
 
                 <div class="customer-savings-withdrawal-header-icon">
-
                     <i class="bi bi-arrow-return-left"></i>
-
                 </div>
 
                 <div class="customer-savings-withdrawal-header-content">
@@ -68,7 +64,10 @@
                         شماره حساب
                     </span>
 
-                    <strong dir="ltr">
+                    <strong
+                        dir="ltr"
+                        class="customer-savings-withdrawal-account-number"
+                    >
                         {{ $account?->account_number ?? '-' }}
                     </strong>
 
@@ -82,8 +81,9 @@
                         موجودی فعلی
                     </span>
 
-                    <strong>
-                        {{ number_format($account?->balance ?? 0) }}
+                    <strong dir="rtl">
+
+                        {{ fa_money($account?->balance ?? 0) }}
 
                         <small>
                             ریال
@@ -110,8 +110,9 @@
 
 
                 {{-- =================================================
-                     IBAN ALERT
+                     IBAN
                 ================================================== --}}
+
                 @php
 
                     $iban = strtoupper(
@@ -132,6 +133,8 @@
                         )
                     );
 
+                    $ibanFormatted = fa_number($ibanFormatted);
+
                 @endphp
 
 
@@ -141,9 +144,9 @@
 
                     <div class="customer-savings-withdrawal-iban-content">
 
-        <span class="customer-savings-withdrawal-iban-title">
-            حساب مقصد برداشت
-        </span>
+                        <span class="customer-savings-withdrawal-iban-title">
+                            حساب مقصد برداشت
+                        </span>
 
 
                         @if($iban)
@@ -169,8 +172,8 @@
                             <i class="bi bi-person-fill"></i>
 
                             <span>
-                به نام:
-            </span>
+                                به نام:
+                            </span>
 
                             <strong>
                                 {{ $customer->full_name }}
@@ -215,7 +218,7 @@
                             value="{{ old('amount') }}"
                             inputmode="numeric"
                             autocomplete="off"
-                            placeholder="مثلاً 500,000"
+                            placeholder="مثلاً ۵۰۰٬۰۰۰"
                             data-min="500000"
                             required
                         >
@@ -230,9 +233,7 @@
                     @error('amount')
 
                     <div class="customer-savings-withdrawal-error">
-
                         {{ $message }}
-
                     </div>
 
                     @enderror
@@ -245,7 +246,7 @@
                         حداقل مبلغ برداشت
 
                         <strong>
-                            ۵۰۰,۰۰۰ ریال
+                            ۵۰۰٬۰۰۰ ریال
                         </strong>
 
                         است.
@@ -300,3 +301,4 @@
     </div>
 
 @endsection
+

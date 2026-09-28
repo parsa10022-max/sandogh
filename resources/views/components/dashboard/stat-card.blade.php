@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="dashboard-stat-value">
-                    {{ is_numeric($value) ? number_format($value) : $value }}
+                    {{ is_numeric($value) ? fa_number($value) : $value }}
 
                     @if($unit)
                         <span class="dashboard-stat-unit">
@@ -31,7 +31,7 @@
 
                 @if($subValue)
                     <div class="dashboard-stat-subvalue">
-                        {{ is_numeric($subValue) ? number_format($subValue) : $subValue }}
+                        {{ is_numeric($subValue) ? fa_number($subValue) : $subValue }}
                     </div>
                 @endif
 
@@ -46,6 +46,3 @@
     </div>
 
 </div>
-
-
-

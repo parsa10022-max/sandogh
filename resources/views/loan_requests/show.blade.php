@@ -100,7 +100,7 @@
                             </span>
 
                             <strong class="loan-request-info-value loan-request-money">
-                                {{ number_format($loanRequest->requested_amount) }}
+                                {{ fa_money($loanRequest->requested_amount) }}
                                 <small>ریال</small>
                             </strong>
 
@@ -126,40 +126,40 @@
                                     @case(\App\Enums\LoanRequestStatus::PENDING)
 
                                     <span class="loan-request-status pending">
-                                            <span class="loan-request-status-dot"></span>
-                                            <i class="bi bi-hourglass-split"></i>
-                                            در حال بررسی
-                                        </span>
+                                        <span class="loan-request-status-dot"></span>
+                                        <i class="bi bi-hourglass-split"></i>
+                                        در حال بررسی
+                                    </span>
 
                                     @break
 
                                     @case(\App\Enums\LoanRequestStatus::APPROVED)
 
                                     <span class="loan-request-status approved">
-                                            <span class="loan-request-status-dot"></span>
-                                            <i class="bi bi-check-circle"></i>
-                                            تأیید شده
-                                        </span>
+                                        <span class="loan-request-status-dot"></span>
+                                        <i class="bi bi-check-circle"></i>
+                                        تأیید شده
+                                    </span>
 
                                     @break
 
                                     @case(\App\Enums\LoanRequestStatus::REJECTED)
 
                                     <span class="loan-request-status rejected">
-                                            <span class="loan-request-status-dot"></span>
-                                            <i class="bi bi-x-circle"></i>
-                                            رد شده
-                                        </span>
+                                        <span class="loan-request-status-dot"></span>
+                                        <i class="bi bi-x-circle"></i>
+                                        رد شده
+                                    </span>
 
                                     @break
 
                                     @case(\App\Enums\LoanRequestStatus::CANCELLED)
 
                                     <span class="loan-request-status cancelled">
-                                            <span class="loan-request-status-dot"></span>
-                                            <i class="bi bi-slash-circle"></i>
-                                            لغو شده
-                                        </span>
+                                        <span class="loan-request-status-dot"></span>
+                                        <i class="bi bi-slash-circle"></i>
+                                        لغو شده
+                                    </span>
 
                                     @break
 
@@ -183,7 +183,7 @@
                             </span>
 
                             <strong class="loan-request-info-value">
-                                {{ jdate($loanRequest->created_at)->format('Y/m/d') }}
+                                {{ fa_number(jdate($loanRequest->created_at)->format('Y/m/d')) }}
                             </strong>
 
                         </div>
@@ -246,7 +246,7 @@
                                 </span>
 
                                 <strong class="loan-request-info-value loan-request-review-date">
-                                    {{ jdate($loanRequest->next_review_date)->format('Y/m/d') }}
+                                    {{ fa_number(jdate($loanRequest->next_review_date)->format('Y/m/d')) }}
                                 </strong>
 
                             </div>
@@ -309,7 +309,7 @@
                                 </span>
 
                                 <strong>
-                                    {{ number_format($loanRequest->approved_amount) }}
+                                    {{ fa_money($loanRequest->approved_amount) }}
                                     <small>ریال</small>
                                 </strong>
 
@@ -346,7 +346,7 @@
                                 </span>
 
                                 <strong>
-                                    {{ $loanRequest->approved_installment_count }}
+                                    {{ fa_number($loanRequest->approved_installment_count) }}
                                 </strong>
 
                             </div>
@@ -364,7 +364,7 @@
                                 </span>
 
                                 <strong>
-                                    {{ $loanRequest->approved_installment_interval }}
+                                    {{ fa_number($loanRequest->approved_installment_interval) }}
                                     ماه
                                 </strong>
 
@@ -702,11 +702,11 @@
                                         type="text"
                                         name="next_review_date"
                                         class="form-control"
-                                        placeholder="1405/02/01"
+                                        placeholder="۱۴۰۵/۰۲/۰۱"
                                         value="{{ old(
                                             'next_review_date',
                                             $loanRequest->next_review_date
-                                                ? jdate($loanRequest->next_review_date)->format('Y/m/d')
+                                                ? fa_number(jdate($loanRequest->next_review_date)->format('Y/m/d'))
                                                 : ''
                                         ) }}"
                                     >
@@ -817,7 +817,7 @@
                         مبلغ تأیید شده:
 
                         <strong>
-                            {{ number_format($loanRequest->approved_amount) }}
+                            {{ fa_money($loanRequest->approved_amount) }}
                             ریال
                         </strong>
                     </p>
@@ -897,11 +897,11 @@
                                     type="text"
                                     name="next_review_date"
                                     class="form-control"
-                                    placeholder="1405/02/01"
+                                    placeholder="۱۴۰۵/۰۲/۰۱"
                                     value="{{ old(
                                         'next_review_date',
                                         $loanRequest->next_review_date
-                                            ? jdate($loanRequest->next_review_date)->format('Y/m/d')
+                                            ? fa_number(jdate($loanRequest->next_review_date)->format('Y/m/d'))
                                             : ''
                                     ) }}"
                                 >

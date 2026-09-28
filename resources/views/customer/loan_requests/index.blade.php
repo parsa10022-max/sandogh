@@ -30,14 +30,18 @@
 
 
             @if($canCreateNewRequest)
-                <a href="{{ route('customer.loan-request.create') }}"
-                   class="btn btn-primary">
+
+                <a
+                    href="{{ route('customer.loan-request.create') }}"
+                    class="btn btn-primary"
+                >
 
                     <i class="bi bi-plus-circle"></i>
 
                     درخواست وام جدید
 
                 </a>
+
             @endif
 
         </div>
@@ -95,6 +99,30 @@
                         ? $loanRequest->status->value
                         : $loanRequest->status;
 
+                    $createdDate = $loanRequest->created_at
+                        ? fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $loanRequest->created_at
+                            )->format('Y/m/d')
+                        )
+                        : '-';
+
+                    $reviewedDate = $loanRequest->reviewed_at
+                        ? fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $loanRequest->reviewed_at
+                            )->format('Y/m/d')
+                        )
+                        : null;
+
+                    $nextReviewDate = $loanRequest->next_review_date
+                        ? fa_number(
+                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                $loanRequest->next_review_date
+                            )->format('Y/m/d')
+                        )
+                        : null;
+
                 @endphp
 
 
@@ -123,7 +151,7 @@
 
                                 <span>
                                     شماره درخواست:
-                                    {{ $loanRequest->id }}
+                                    <span dir="ltr">{{ $loanRequest->id }}</span>
                                 </span>
 
                             </div>
@@ -193,7 +221,7 @@
 
                             <strong class="customer-loan-request-amount">
 
-                                {{ number_format($loanRequest->requested_amount) }}
+                                {{ fa_money($loanRequest->requested_amount) }}
 
                                 <small>
                                     ریال
@@ -212,11 +240,9 @@
                                 تاریخ ثبت
                             </span>
 
-                            <strong class="customer-loan-request-value">
+                            <strong class="customer-loan-request-value" dir="rtl">
 
-                                {{ \Morilog\Jalali\Jalalian::fromCarbon(
-                                    \Carbon\Carbon::parse($loanRequest->created_at)
-                                )->format('Y/m/d') }}
+                                {{ $createdDate }}
 
                             </strong>
 
@@ -225,7 +251,7 @@
 
                         {{-- تاریخ بررسی --}}
 
-                        @if($loanRequest->reviewed_at)
+                        @if($reviewedDate)
 
                             <div class="customer-loan-request-info">
 
@@ -233,11 +259,9 @@
                                     تاریخ بررسی
                                 </span>
 
-                                <strong class="customer-loan-request-value">
+                                <strong class="customer-loan-request-value" dir="rtl">
 
-                                    {{ \Morilog\Jalali\Jalalian::fromCarbon(
-                                        \Carbon\Carbon::parse($loanRequest->reviewed_at)
-                                    )->format('Y/m/d') }}
+                                    {{ $reviewedDate }}
 
                                 </strong>
 
@@ -263,9 +287,9 @@
                                         مبلغ تأییدشده
                                     </span>
 
-                                    <strong class="customer-loan-request-amount">
+                                    <strong class="customer-loan-request-amount" dir="rtl">
 
-                                        {{ number_format($loanRequest->approved_amount) }}
+                                        {{ fa_money($loanRequest->approved_amount) }}
 
                                         <small>
                                             ریال
@@ -288,9 +312,12 @@
                                         تعداد اقساط
                                     </span>
 
-                                    <strong class="customer-loan-request-value">
+                                    <strong
+                                        class="customer-loan-request-value"
+                                        dir="rtl"
+                                    >
 
-                                        {{ $loanRequest->approved_installment_count }}
+                                        {{ fa_number($loanRequest->approved_installment_count) }}
 
                                         قسط
 
@@ -311,7 +338,10 @@
                                         فاصله اقساط
                                     </span>
 
-                                    <strong class="customer-loan-request-value">
+                                    <strong
+                                        class="customer-loan-request-value"
+                                        dir="rtl"
+                                    >
 
                                         @if($loanRequest->approved_installment_interval == 1)
 
@@ -324,7 +354,7 @@
                                         @else
 
                                             هر
-                                            {{ $loanRequest->approved_installment_interval }}
+                                            {{ fa_number($loanRequest->approved_installment_interval) }}
                                             ماه
 
                                         @endif
@@ -358,9 +388,7 @@
                             <div class="customer-loan-request-review-content">
 
                                 <div class="customer-loan-request-review-title">
-
                                     توضیح بررسی
-
                                 </div>
 
 
@@ -373,7 +401,7 @@
 
                                 {{-- تاریخ مراجعه مجدد --}}
 
-                                @if($loanRequest->next_review_date)
+                                @if($nextReviewDate)
 
                                     <div class="customer-loan-request-next-review">
 
@@ -383,11 +411,9 @@
                                             تاریخ مراجعه مجدد:
                                         </span>
 
-                                        <strong>
+                                        <strong dir="rtl">
 
-                                            {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                                $loanRequest->next_review_date
-                                            )->format('Y/m/d') }}
+                                            {{ $nextReviewDate }}
 
                                         </strong>
 
@@ -422,12 +448,14 @@
 
                             <div class="customer-loan-request-loan-number">
 
-    <span>
-        شماره وام:
-    </span>
+                                <span>
+                                    شماره وام:
+                                </span>
 
                                 <strong dir="ltr">
+
                                     {{ $loanRequest->loan->full_loan_number }}
+
                                 </strong>
 
                             </div>
@@ -443,11 +471,13 @@
 
                     <div class="customer-loan-request-footer">
 
-                        <a href="{{ route(
-                            'customer.loan-request.show',
-                            $loanRequest
-                        ) }}"
-                           class="customer-loan-request-details">
+                        <a
+                            href="{{ route(
+                                'customer.loan-request.show',
+                                $loanRequest
+                            ) }}"
+                            class="customer-loan-request-details"
+                        >
 
                             مشاهده جزئیات
 
@@ -486,8 +516,10 @@
                     </p>
 
 
-                    <a href="{{ route('customer.loan-request.create') }}"
-                       class="btn btn-primary">
+                    <a
+                        href="{{ route('customer.loan-request.create') }}"
+                        class="btn btn-primary"
+                    >
 
                         <i class="bi bi-plus-circle"></i>
 
@@ -519,3 +551,4 @@
     </div>
 
 @endsection
+

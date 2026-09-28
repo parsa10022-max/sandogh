@@ -7,6 +7,8 @@ use App\Enums\UserOtpType;
 use App\Models\User;
 use App\Models\UserOtp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class OtpService
 {
@@ -23,18 +25,25 @@ class OtpService
         ?string $mobile = null,
         ?Request $request = null
     ): UserOtp {
-        // فقط OTPهای همان نوع لغو شوند
-        $this->cancel($user, $type);
-
-        $code = $this->generateCode();
-
-        return $this->createOtp(
+        return DB::transaction(function () use (
             $user,
-            $code,
             $type,
             $mobile,
             $request
-        );
+        ) {
+            // فقط OTPهای همان نوع لغو شوند
+            $this->cancel($user, $type);
+
+            $code = $this->generateCode();
+
+            return $this->createOtp(
+                $user,
+                $code,
+                $type,
+                $mobile,
+                $request
+            );
+        });
     }
 
     /**
@@ -45,62 +54,66 @@ class OtpService
         string $code,
         UserOtpType $type = UserOtpType::LOGIN
     ): bool {
-        $otp = UserOtp::query()
-            ->forUser($user->id)
-            ->where('type', $type)
-            ->valid()
-            ->latest('id')
-            ->first();
+        return DB::transaction(function () use ($user, $code, $type) {
 
-        if (! $otp) {
-            return false;
-        }
+            $otp = UserOtp::query()
+                ->forUser($user->id)
+                ->where('type', $type)
+                ->valid()
+                ->latest('id')
+                ->lockForUpdate()
+                ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | محدودیت تعداد تلاش
-        |--------------------------------------------------------------------------
-        */
+            if (! $otp) {
+                return false;
+            }
 
-        if ($otp->attempts >= self::MAX_ATTEMPTS) {
+            /*
+            |--------------------------------------------------------------------------
+            | محدودیت تعداد تلاش
+            |--------------------------------------------------------------------------
+            */
+
+            if ($otp->attempts >= self::MAX_ATTEMPTS) {
+                $otp->update([
+                    'status' => UserOtpStatus::CANCELLED,
+                    'cancelled_at' => now(),
+                ]);
+
+                return false;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت تلاش
+            |--------------------------------------------------------------------------
+            */
+
+            $otp->increment('attempts');
+
+            /*
+            |--------------------------------------------------------------------------
+            | بررسی کد
+            |--------------------------------------------------------------------------
+            */
+
+            if (! Hash::check($code, $otp->code)) {
+                return false;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | تأیید موفق
+            |--------------------------------------------------------------------------
+            */
+
             $otp->update([
-                'status' => UserOtpStatus::CANCELLED,
-                'cancelled_at' => now(),
+                'status' => UserOtpStatus::VERIFIED,
+                'verified_at' => now(),
             ]);
 
-            return false;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ثبت تلاش
-        |--------------------------------------------------------------------------
-        */
-
-        $otp->increment('attempts');
-
-        /*
-        |--------------------------------------------------------------------------
-        | بررسی کد
-        |--------------------------------------------------------------------------
-        */
-
-        if ($otp->code !== $code) {
-            return false;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | تأیید موفق
-        |--------------------------------------------------------------------------
-        */
-
-        $otp->update([
-            'status' => UserOtpStatus::VERIFIED,
-            'verified_at' => now(),
-        ]);
-
-        return true;
+            return true;
+        });
     }
 
     /**
@@ -158,6 +171,9 @@ class OtpService
 
     /**
      * امکان درخواست OTP
+     *
+     * محدودیت درخواست در این مرحله از طریق
+     * middleware / rate limiter مدیریت می‌شود.
      */
     public function canRequest(User $user): bool
     {
@@ -187,7 +203,8 @@ class OtpService
 
             'mobile' => $mobile ?? $user->mobile,
 
-            'code' => $code,
+            // OTP به صورت Hash ذخیره می‌شود
+            'code' => Hash::make($code),
 
             'type' => $type,
 

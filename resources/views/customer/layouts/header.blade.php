@@ -77,7 +77,7 @@
 
             @if($unreadNotificationsCount > 0)
                 <span class="customer-header-badge">
-            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+                    {{ $unreadNotificationsCount > 99 ? '۹۹+' : fa_number($unreadNotificationsCount) }}
         </span>
             @endif
 

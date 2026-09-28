@@ -9,13 +9,17 @@ use App\Models\Loan;
 use App\Services\Date\JalaliDateService;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class LoanService
 {
     protected LoanCalculationService $calculator;
+
     protected InstallmentService $installmentService;
+
     protected JalaliDateService $jalaliDateService;
+
     protected LoanGuarantorService $loanGuarantorService;
 
     public function __construct(
@@ -32,9 +36,6 @@ class LoanService
 
     /**
      * لیست صفحه‌بندی شده وام‌ها
-     *
-     * جستجو مستقل از فیلتر وضعیت است.
-     * اگر status خالی باشد، همه وام‌ها نمایش داده می‌شوند.
      */
     public function getPaginated(
         ?string $search = null,
@@ -47,12 +48,6 @@ class LoanService
                 'loanType',
             ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | جستجو
-        |--------------------------------------------------------------------------
-        */
-
         if ($search !== null && trim($search) !== '') {
 
             $search = trim($search);
@@ -64,26 +59,35 @@ class LoanService
                     'like',
                     "%{$search}%"
                 )
+                    ->orWhereHas(
+                        'customer',
+                        function ($customerQuery) use ($search) {
 
-                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
-
-                        $customerQuery
-                            ->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('national_code', 'like', "%{$search}%")
-                            ->orWhere('mobile', 'like', "%{$search}%");
-                    });
+                            $customerQuery
+                                ->where(
+                                    'first_name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'last_name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'national_code',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'mobile',
+                                    'like',
+                                    "%{$search}%"
+                                );
+                        }
+                    );
             });
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | فیلتر وضعیت
-        |--------------------------------------------------------------------------
-        |
-        | null / all = همه وام‌ها
-        |
-        */
 
         if ($status === 'active') {
 
@@ -101,47 +105,31 @@ class LoanService
 
         } elseif ($status === 'overdue') {
 
-            /*
-            |--------------------------------------------------------------------------
-            | وام معوق
-            |--------------------------------------------------------------------------
-            |
-            | حداقل یک قسط:
-            | - در وضعیت PENDING باشد
-            | - تاریخ سررسید آن گذشته باشد
-            |
-            */
+            $query
+                ->where(
+                    'status',
+                    LoanStatus::ACTIVE
+                )
+                ->whereHas(
+                    'installments',
+                    function ($installmentQuery) {
 
-            $query->whereHas('installments', function ($installmentQuery) {
-
-                $installmentQuery
-                    ->where(
-                        'status',
-                        InstallmentStatus::PENDING
-                    )
-                    ->whereDate(
-                        'due_date',
-                        '<',
-                        today()
-                    );
-            });
+                        $installmentQuery
+                            ->where(
+                                'status',
+                                InstallmentStatus::PENDING
+                            )
+                            ->whereDate(
+                                'due_date',
+                                '<',
+                                today()
+                            );
+                    }
+                );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | مرتب‌سازی
-        |--------------------------------------------------------------------------
-        */
-
-        $query->latest('id');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Pagination
-        |--------------------------------------------------------------------------
-        */
-
         return $query
+            ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -149,39 +137,123 @@ class LoanService
     /**
      * ثبت وام
      */
+    /**
+     * ثبت وام
+     */
     public function create(array $data): Loan
     {
         return DB::transaction(function () use ($data) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | قفل مشتری برای جلوگیری از ایجاد همزمان وام
+            |--------------------------------------------------------------------------
+            */
+
+            $customer = \App\Models\Customer::query()
+                ->whereKey($data['customer_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            /*
+            |--------------------------------------------------------------------------
+            | بررسی نهایی وام فعال
+            |--------------------------------------------------------------------------
+            |
+            | این بررسی داخل Transaction و بعد از Lock انجام می‌شود.
+            | بنابراین دو درخواست همزمان نمی‌توانند برای یک مشتری
+            | دو وام فعال ایجاد کنند.
+            |
+            */
+
+            $hasActiveLoan = $customer->loans()
+                ->where(
+                    'status',
+                    LoanStatus::ACTIVE->value
+                )
+                ->exists();
+
+            if ($hasActiveLoan) {
+                throw new \RuntimeException(
+                    'این عضو در حال حاضر یک وام فعال دارد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | محاسبه وام
+            |--------------------------------------------------------------------------
+            */
 
             $calculation = $this->calculator->generate(
                 loanAmount: (int) $data['loan_amount'],
                 installmentCount: (int) $data['installment_count'],
                 startDate: $data['start_date'],
                 interval: (int) $data['installment_interval'],
-            );
+        );
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت وام
+            |--------------------------------------------------------------------------
+            */
 
             $loan = Loan::create([
-                'customer_id' => $data['customer_id'],
+                'customer_id' => $customer->id,
+
                 'loan_type_id' => $data['loan_type_id'],
+
                 'loan_number' => $data['loan_number'],
-                'loan_amount' => $calculation['loan_amount'],
-                'installment_amount' => $calculation['base_installment_amount'],
-                'installment_count' => $calculation['installment_count'],
-                'installment_interval' => $data['installment_interval'],
-                'start_date' => $this->jalaliDateService->toDatabase(
-                    $data['start_date']
-                ),
-                'first_due_date' => $calculation['first_due_date'],
-                'last_due_date' => $calculation['last_due_date'],
-                'status' => LoanStatus::ACTIVE,
-                'description' => $data['description'] ?? null,
-                'created_by' => auth()->id(),
+
+                'loan_amount' =>
+                    $calculation['loan_amount'],
+
+                'installment_amount' =>
+                    $calculation['base_installment_amount'],
+
+                'installment_count' =>
+                    $calculation['installment_count'],
+
+                'installment_interval' =>
+                    $data['installment_interval'],
+
+                'start_date' =>
+                    $this->jalaliDateService->toDatabase(
+                        $data['start_date']
+                    ),
+
+                'first_due_date' =>
+                    $calculation['first_due_date'],
+
+                'last_due_date' =>
+                    $calculation['last_due_date'],
+
+                'status' =>
+                    LoanStatus::ACTIVE,
+
+                'description' =>
+                    $data['description'] ?? null,
+
+                'created_by' =>
+                    auth()->id(),
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | ایجاد اقساط
+            |--------------------------------------------------------------------------
+            */
 
             $this->installmentService->createForLoan(
                 $loan,
                 $calculation['schedule']
             );
+
+            /*
+            |--------------------------------------------------------------------------
+            | ایجاد ضامن‌ها
+            |--------------------------------------------------------------------------
+            */
 
             $this->createGuarantors(
                 $loan,
@@ -204,23 +276,30 @@ class LoanService
         Loan $loan,
         array $data
     ): Loan {
-        /*
-        |--------------------------------------------------------------------------
-        | جلوگیری از ویرایش وام دارای پرداخت
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            $loan->installments()
-                ->whereHas('payment')
-                ->exists()
+        return DB::transaction(function () use (
+            $loan,
+            $data
         ) {
-            throw new \RuntimeException(
-                'به دلیل ثبت پرداخت، اطلاعات این وام قابل ویرایش نیست.'
-            );
-        }
 
-        return DB::transaction(function () use ($loan, $data) {
+            $loan = Loan::query()
+                ->whereKey($loan->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $installments = $loan->installments()
+                ->lockForUpdate()
+                ->get();
+
+            $hasPayment = $installments->contains(
+                fn ($installment) =>
+                $installment->payment()->exists()
+            );
+
+            if ($hasPayment) {
+                throw new \RuntimeException(
+                    'به دلیل ثبت پرداخت، اطلاعات این وام قابل ویرایش نیست.'
+                );
+            }
 
             $calculation = $this->calculator->generate(
                 loanAmount: (int) $data['loan_amount'],
@@ -233,16 +312,32 @@ class LoanService
                 'customer_id' => $data['customer_id'],
                 'loan_type_id' => $data['loan_type_id'],
                 'loan_number' => $data['loan_number'],
+
                 'loan_amount' => $calculation['loan_amount'],
-                'installment_amount' => $calculation['base_installment_amount'],
-                'installment_count' => $calculation['installment_count'],
-                'installment_interval' => $data['installment_interval'],
-                'start_date' => $this->jalaliDateService->toDatabase(
-                    $data['start_date']
-                ),
-                'first_due_date' => $calculation['first_due_date'],
-                'last_due_date' => $calculation['last_due_date'],
-                'description' => $data['description'] ?? null,
+
+                'installment_amount' =>
+                    $calculation['base_installment_amount'],
+
+                'installment_count' =>
+                    $calculation['installment_count'],
+
+                'installment_interval' =>
+                    $data['installment_interval'],
+
+                'start_date' =>
+                    $this->jalaliDateService->toDatabase(
+                        $data['start_date']
+                    ),
+
+                'first_due_date' =>
+                    $calculation['first_due_date'],
+
+                'last_due_date' =>
+                    $calculation['last_due_date'],
+
+                'description' =>
+                    $data['description'] ?? null,
+
                 'updated_by' => auth()->id(),
             ]);
 
@@ -287,23 +382,27 @@ class LoanService
      */
     public function delete(Loan $loan): bool
     {
-        /*
-        |--------------------------------------------------------------------------
-        | جلوگیری از حذف وام دارای پرداخت
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            $loan->installments()
-                ->whereHas('payment')
-                ->exists()
-        ) {
-            throw new \RuntimeException(
-                'به دلیل ثبت پرداخت، این وام قابل حذف نیست.'
-            );
-        }
-
         return DB::transaction(function () use ($loan) {
+
+            $loan = Loan::query()
+                ->whereKey($loan->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $installments = $loan->installments()
+                ->lockForUpdate()
+                ->get();
+
+            $hasPayment = $installments->contains(
+                fn ($installment) =>
+                $installment->payment()->exists()
+            );
+
+            if ($hasPayment) {
+                throw new \RuntimeException(
+                    'به دلیل ثبت پرداخت، این وام قابل حذف نیست.'
+                );
+            }
 
             return (bool) $loan->delete();
         });
@@ -316,12 +415,41 @@ class LoanService
         Loan $loan,
         LoanStatus $status
     ): Loan {
-        $loan->update([
-            'status' => $status,
-            'updated_by' => auth()->id(),
-        ]);
+        return DB::transaction(function () use (
+            $loan,
+            $status
+        ) {
 
-        return $loan->fresh();
+            $loan = Loan::query()
+                ->whereKey($loan->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (
+                $loan->status === LoanStatus::FINISHED
+                && $status !== LoanStatus::FINISHED
+            ) {
+                throw new \RuntimeException(
+                    'وام تسویه‌شده قابل بازگشت به وضعیت دیگر نیست.'
+                );
+            }
+
+            if (
+                $loan->status === LoanStatus::CANCELLED
+                && $status !== LoanStatus::CANCELLED
+            ) {
+                throw new \RuntimeException(
+                    'وام لغوشده قابل بازگشت به وضعیت دیگر نیست.'
+                );
+            }
+
+            $loan->update([
+                'status' => $status,
+                'updated_by' => auth()->id(),
+            ]);
+
+            return $loan->fresh();
+        });
     }
 
     /**
@@ -357,34 +485,56 @@ class LoanService
         Loan $loan,
         array $data
     ): void {
-        /*
-        |--------------------------------------------------------------------------
-        | ضامن اول - همیشه عضو صندوق
-        |--------------------------------------------------------------------------
-        */
+        if (empty($data['guarantor1_customer_id'])) {
+            throw new \InvalidArgumentException(
+                'ضامن اول انتخاب نشده است.'
+            );
+        }
+
+        if (! isset($data['guarantor1_guarantee_type'])) {
+            throw new \InvalidArgumentException(
+                'نوع ضمانت ضامن اول مشخص نشده است.'
+            );
+        }
+
+        if (! isset($data['guarantor2_type'])) {
+            throw new \InvalidArgumentException(
+                'نوع ضامن دوم مشخص نشده است.'
+            );
+        }
+
+        if (! isset($data['guarantor2_guarantee_type'])) {
+            throw new \InvalidArgumentException(
+                'نوع ضمانت ضامن دوم مشخص نشده است.'
+            );
+        }
 
         $this->loanGuarantorService->create($loan, [
             'guarantor_order' => 1,
-            'guarantor_type' => GuarantorType::CUSTOMER,
-            'customer_id' => $data['guarantor1_customer_id'],
+
+            'guarantor_type' =>
+                GuarantorType::CUSTOMER,
+
+            'customer_id' =>
+                $data['guarantor1_customer_id'],
+
             'first_name' => null,
             'last_name' => null,
             'national_code' => null,
             'mobile' => null,
-            'guarantee_type' => $data['guarantor1_guarantee_type'],
+
+            'guarantee_type' =>
+                $data['guarantor1_guarantee_type'],
+
             'guarantee_number' =>
                 $data['guarantor1_guarantee_number'] ?? null,
+
             'guarantee_account_number' =>
                 $data['guarantor1_guarantee_account_number'] ?? null,
+
             'guarantee_amount' =>
                 $data['guarantor1_guarantee_amount'] ?? null,
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | ضامن دوم
-        |--------------------------------------------------------------------------
-        */
 
         $type = GuarantorType::from(
             $data['guarantor2_type']
@@ -392,18 +542,25 @@ class LoanService
 
         $guarantor = [
             'guarantor_order' => 2,
+
             'guarantor_type' => $type,
+
             'customer_id' => null,
+
             'first_name' => null,
             'last_name' => null,
             'national_code' => null,
             'mobile' => null,
+
             'guarantee_type' =>
                 $data['guarantor2_guarantee_type'],
+
             'guarantee_number' =>
                 $data['guarantor2_guarantee_number'] ?? null,
+
             'guarantee_account_number' =>
                 $data['guarantor2_guarantee_account_number'] ?? null,
+
             'guarantee_amount' =>
                 $data['guarantor2_guarantee_amount'] ?? null,
         ];
@@ -411,6 +568,12 @@ class LoanService
         switch ($type) {
 
             case GuarantorType::CUSTOMER:
+
+                if (empty($data['guarantor2_customer_id'])) {
+                    throw new \InvalidArgumentException(
+                        'ضامن دوم عضو صندوق است اما انتخاب نشده است.'
+                    );
+                }
 
                 $guarantor['customer_id'] =
                     $data['guarantor2_customer_id'];
@@ -450,7 +613,7 @@ class LoanService
     /**
      * آخرین وام‌ها
      */
-    public function latest(int $limit = 5)
+    public function latest(int $limit = 5): Collection
     {
         return Loan::query()
             ->with([
@@ -469,25 +632,27 @@ class LoanService
         ?string $search = null,
         ?int $loanType = null,
         ?string $delay = null
-    ) {
+    ): Collection {
         return Loan::query()
 
-            /*
-             * فقط وام‌هایی که حداقل یک قسط معوق دارند
-             */
+            ->where(
+                'status',
+                LoanStatus::ACTIVE
+            )
+
             ->whereHas('installments', function ($q) {
 
-                $q->where('status', InstallmentStatus::PENDING)
-                    ->whereDate('due_date', '<', today());
-
+                $q->where(
+                    'status',
+                    InstallmentStatus::PENDING
+                )
+                    ->whereDate(
+                        'due_date',
+                        '<',
+                        today()
+                    );
             })
 
-            /*
-             * جستجو بر اساس:
-             * - شماره وام
-             * - نام
-             * - نام خانوادگی
-             */
             ->when($search, function ($q) use ($search) {
 
                 $q->where(function ($query) use ($search) {
@@ -497,48 +662,38 @@ class LoanService
                         'like',
                         "%{$search}%"
                     )
+                        ->orWhereHas(
+                            'customer',
+                            function ($customer) use ($search) {
 
-                        ->orWhereHas('customer', function ($customer) use ($search) {
-
-                            $customer->where(
-                                'first_name',
-                                'like',
-                                "%{$search}%"
-                            )
-                                ->orWhere(
-                                    'last_name',
-                                    'like',
-                                    "%{$search}%"
-                                );
-
-                        });
-
+                                $customer
+                                    ->where(
+                                        'first_name',
+                                        'like',
+                                        "%{$search}%"
+                                    )
+                                    ->orWhere(
+                                        'last_name',
+                                        'like',
+                                        "%{$search}%"
+                                    );
+                            }
+                        );
                 });
-
             })
 
-            /*
-             * فیلتر نوع وام
-             */
             ->when($loanType, function ($q) use ($loanType) {
 
                 $q->where(
                     'loan_type_id',
                     $loanType
                 );
-
             })
 
-            /*
-             * اطلاعات مورد نیاز
-             */
             ->with([
                 'customer',
                 'loanType',
 
-                /*
-                 * فقط اقساط معوق هر وام
-                 */
                 'installments' => function ($q) {
 
                     $q->where(
@@ -551,13 +706,9 @@ class LoanService
                             today()
                         )
                         ->orderBy('due_date');
-
                 },
             ])
 
-            /*
-             * تعداد اقساط معوق
-             */
             ->withCount([
                 'installments as overdue_count' => function ($q) {
 
@@ -570,37 +721,22 @@ class LoanService
                             '<',
                             today()
                         );
-
                 },
             ])
 
             ->latest()
-
             ->get()
 
-            /*
-             * مرتب‌سازی بر اساس بیشترین تأخیر
-             *
-             * قدیمی‌ترین قسط معوق = بیشترین میزان تأخیر
-             */
             ->sortByDesc(function ($loan) {
 
                 return optional(
                         $loan->installments->first()
                     )->overdue_days ?? 0;
-
             })
 
-            /*
-             * فیلتر میزان تأخیر
-             */
             ->filter(function ($loan) use ($delay) {
 
-                /*
-                 * حالت پیش‌فرض:
-                 * همه وام‌های معوق نمایش داده شوند.
-                 */
-                if (!$delay) {
+                if (! $delay) {
                     return true;
                 }
 
@@ -610,38 +746,21 @@ class LoanService
 
                 return match ($delay) {
 
-                    /*
-                     * کمتر از ۳۰ روز
-                     */
                     'less_30' =>
                         $days < 30,
 
-                    /*
-                     * ۳۰ تا کمتر از ۶۰ روز
-                     */
                     '30_60' =>
                         $days >= 30 && $days < 60,
 
-                    /*
-                     * ۶۰ تا ۹۰ روز
-                     */
                     '60_90' =>
                         $days >= 60 && $days <= 90,
 
-                    /*
-                     * بیشتر از ۹۰ روز
-                     */
                     'more_90' =>
                         $days > 90,
 
-                    /*
-                     * مقدار نامعتبر:
-                     * فیلتر اعمال نشود.
-                     */
                     default =>
                     true,
                 };
-
             })
 
             ->values();

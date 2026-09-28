@@ -9,26 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-
-
-        public function up(): void
+    public function up(): void
     {
         Schema::table('withdrawals', function (Blueprint $table) {
-
             $table->string('iban', 34)
                 ->after('amount');
-
         });
     }
 
-
-        public function down(): void
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::table('withdrawals', function (Blueprint $table) {
-
             $table->dropColumn('iban');
-
         });
     }
-
 };

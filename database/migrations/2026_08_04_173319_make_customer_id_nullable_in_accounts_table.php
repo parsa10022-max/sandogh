@@ -10,9 +10,7 @@ return new class extends Migration
     {
         Schema::table('accounts', function (Blueprint $table) {
 
-            $table->dropForeign([
-                'customer_id'
-            ]);
+            $table->dropForeign(['customer_id']);
 
             $table->foreignId('customer_id')
                 ->nullable()
@@ -22,14 +20,23 @@ return new class extends Migration
                 ->references('id')
                 ->on('customers')
                 ->nullOnDelete();
-
         });
     }
 
-
     public function down(): void
     {
-        //
-    }
+        Schema::table('accounts', function (Blueprint $table) {
 
+            $table->dropForeign(['customer_id']);
+
+            $table->foreignId('customer_id')
+                ->nullable(false)
+                ->change();
+
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->cascadeOnDelete();
+        });
+    }
 };

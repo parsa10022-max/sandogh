@@ -13,14 +13,20 @@ class AdminAccess
         Request $request,
         Closure $next
     ): Response {
-
         $user = $request->user();
 
         if (! $user) {
             return redirect()->route('login');
         }
 
-        if ($user->role === UserRole::CUSTOMER) {
+        $allowedRoles = [
+            UserRole::ADMIN,
+            UserRole::CEO,
+            UserRole::BOARD_MEMBER,
+            UserRole::OPERATOR,
+        ];
+
+        if (! in_array($user->role, $allowedRoles, true)) {
             abort(403);
         }
 

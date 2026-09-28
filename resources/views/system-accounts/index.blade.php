@@ -119,7 +119,7 @@
                                 <td>
 
                                     <span class="system-accounts-row-number">
-                                        {{ $loop->iteration }}
+                                        {{ fa_number($loop->iteration) }}
                                     </span>
 
                                 </td>
@@ -156,7 +156,7 @@
                                     <div class="system-account-balance">
 
                                         <strong>
-                                            {{ number_format($account->balance) }}
+                                            {{ fa_money($account->balance) }}
                                         </strong>
 
                                         <small>

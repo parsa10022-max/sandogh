@@ -2,7 +2,7 @@
 'label',
 'name',
 'value' => '',
-'placeholder' => '1,000,000',
+'placeholder' => '۱٬۰۰۰٬۰۰۰',
 'required' => false,
 'readonly' => false,
 'disabled' => false,
@@ -63,3 +63,4 @@
     <x-form.error :name="$name"/>
 
 </x-form.group>
+

@@ -7,15 +7,11 @@
     <div class="customer-dashboard">
 
 
-
-
-
         {{-- =========================================================
              وضعیت مالی من
         ========================================================= --}}
         <section class="customer-financial-section">
 
-            {{-- Header --}}
             <div class="customer-financial-section-header">
 
                 <div>
@@ -24,14 +20,14 @@
                     </h2>
 
                     <span>
-                خلاصه حساب و وام
-            </span>
+                        خلاصه حساب و وام
+                    </span>
                 </div>
 
                 <span class="customer-financial-section-status">
-            <i class="bi bi-check-circle-fill"></i>
-            فعال
-        </span>
+                    <i class="bi bi-check-circle-fill"></i>
+                    فعال
+                </span>
 
             </div>
 
@@ -48,12 +44,12 @@
 
                     <div class="customer-financial-card-content">
 
-                <span class="customer-financial-card-label">
-                    مجموع موجودی
-                </span>
+                        <span class="customer-financial-card-label">
+                            مجموع موجودی
+                        </span>
 
                         <strong class="customer-financial-card-value">
-                            {{ number_format($totalBalance) }}
+                            {{ fa_money($totalBalance) }}
 
                             <small>
                                 ریال
@@ -69,7 +65,7 @@
                 @foreach($accounts as $account)
 
                     <div class="customer-financial-card-item
-                @if($account->account_type === \App\Enums\AccountType::SAVING)
+                        @if($account->account_type === \App\Enums\AccountType::SAVING)
                         savings
 @elseif($account->account_type === \App\Enums\AccountType::CURRENT)
                         current
@@ -99,27 +95,27 @@
 
                         <div class="customer-financial-card-content">
 
-                    <span class="customer-financial-card-label">
+                            <span class="customer-financial-card-label">
 
-                        @if($account->account_type === \App\Enums\AccountType::SAVING)
+                                @if($account->account_type === \App\Enums\AccountType::SAVING)
 
-                            پس‌انداز
+                                    پس‌انداز
 
-                        @elseif($account->account_type === \App\Enums\AccountType::CURRENT)
+                                @elseif($account->account_type === \App\Enums\AccountType::CURRENT)
 
-                            حساب جاری
+                                    حساب جاری
 
-                        @else
+                                @else
 
-                            حساب
+                                    حساب
 
-                        @endif
+                                @endif
 
-                    </span>
+                            </span>
 
 
                             <strong class="customer-financial-card-value">
-                                {{ number_format($account->balance) }}
+                                {{ fa_money($account->balance) }}
 
                                 <small>
                                     ریال
@@ -127,9 +123,12 @@
                             </strong>
 
 
-                            <span class="customer-financial-card-meta">
-                        حساب {{ $account->account_number }}
-                    </span>
+                            <span
+                                class="customer-financial-card-meta"
+                                dir="ltr"
+                            >
+                                حساب {{ $account->account_number }}
+                            </span>
 
                         </div>
 
@@ -147,15 +146,15 @@
 
                     <div class="customer-financial-card-content">
 
-                <span class="customer-financial-card-label">
-                    وام فعال
-                </span>
+                        <span class="customer-financial-card-label">
+                            وام فعال
+                        </span>
 
                         @if($activeLoan)
 
                             <strong class="customer-financial-card-value">
 
-                                {{ number_format($activeLoan->remainingAmount()) }}
+                                {{ fa_money($activeLoan->remainingAmount()) }}
 
                                 <small>
                                     ریال باقی‌مانده
@@ -163,9 +162,12 @@
 
                             </strong>
 
-                            <span class="customer-financial-card-meta">
-                        وام {{ $activeLoan->full_loan_number }}
-                    </span>
+                            <span
+                                class="customer-financial-card-meta"
+                                dir="ltr"
+                            >
+                                وام {{ $activeLoan->full_loan_number }}
+                            </span>
 
                         @else
 
@@ -189,15 +191,15 @@
 
                     <div class="customer-financial-card-content">
 
-                <span class="customer-financial-card-label">
-                    اقساط معوق
-                </span>
+                        <span class="customer-financial-card-label">
+                            اقساط معوق
+                        </span>
 
                         @if($overdueInstallmentsCount > 0)
 
                             <strong class="customer-financial-card-value danger">
 
-                                {{ $overdueInstallmentsCount }}
+                                {{ fa_number($overdueInstallmentsCount) }}
 
                                 <small>
                                     قسط
@@ -206,8 +208,8 @@
                             </strong>
 
                             <span class="customer-financial-card-meta danger-text">
-                        نیاز به پرداخت
-                    </span>
+                                نیاز به پرداخت
+                            </span>
 
                         @else
 
@@ -216,8 +218,8 @@
                             </strong>
 
                             <span class="customer-financial-card-meta success-text">
-                        پرداخت منظم است
-                    </span>
+                                پرداخت منظم است
+                            </span>
 
                         @endif
 
@@ -230,17 +232,11 @@
         </section>
 
 
-
-
-
         {{-- =====================================================
              عملیات سریع
-             مرحله بعد تکمیل می‌شود
-             ===================================================== --}}
-
+        ===================================================== --}}
 
         <section class="customer-quick-actions-section">
-
 
             <div class="customer-quick-actions-title">
                 <h2>عملیات سریع</h2>
@@ -249,19 +245,18 @@
 
             <div class="customer-quick-actions">
 
-
                 {{-- 1. واریز به پس‌انداز --}}
                 <a href="{{ route('customer.savings.deposit.create') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-plus-circle-fill"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            واریز به
-            پس‌انداز
-        </span>
+                        واریز به
+                        پس‌انداز
+                    </span>
 
                 </a>
 
@@ -270,14 +265,14 @@
                 <a href="{{ route('customer.savings.withdrawal.create') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-arrow-return-left"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-arrow-return-left"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            برداشت از
-            پس‌انداز
-        </span>
+                        برداشت از
+                        پس‌انداز
+                    </span>
 
                 </a>
 
@@ -286,14 +281,14 @@
                 <a href="{{ route('customer.savings.transactions') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-receipt"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-receipt"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            گردش
-            حساب
-        </span>
+                        گردش
+                        حساب
+                    </span>
 
                 </a>
 
@@ -302,14 +297,14 @@
                 <a href="{{ route('customer.loan-request.create') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-folder-plus"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-folder-plus"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            درخواست
-            وام
-        </span>
+                        درخواست
+                        وام
+                    </span>
 
                 </a>
 
@@ -318,14 +313,14 @@
                 <a href="{{ url('/customer/loan-requests') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-list-check"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-list-check"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            درخواست‌های
-            وام من
-        </span>
+                        درخواست‌های
+                        وام من
+                    </span>
 
                 </a>
 
@@ -334,14 +329,14 @@
                 <a href="{{ route('customer.installments.index') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-journal-text"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-journal-text"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            پرداخت
-            قسط
-        </span>
+                        پرداخت
+                        قسط
+                    </span>
 
                 </a>
 
@@ -350,14 +345,14 @@
                 <a href="{{ route('customer.installments.others.create') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-people-fill"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            پرداخت قسط
-            دیگران
-        </span>
+                        پرداخت قسط
+                        دیگران
+                    </span>
 
                 </a>
 
@@ -366,33 +361,29 @@
                 <a href="{{ route('customer.savings-transfer.create') }}"
                    class="customer-quick-action">
 
-        <span class="customer-quick-action-icon">
-            <i class="bi bi-person-plus-fill"></i>
-        </span>
+                    <span class="customer-quick-action-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </span>
 
                     <span class="customer-quick-action-text">
-            واریز به
-            پس‌انداز دیگران
-        </span>
+                        واریز به
+                        پس‌انداز دیگران
+                    </span>
 
                 </a>
 
-
             </div>
-
 
         </section>
 
 
         {{-- =========================================================
-     DASHBOARD - LOAN & TRANSACTIONS
-     ========================================================= --}}
+             DASHBOARD - LOAN & TRANSACTIONS
+        ========================================================= --}}
 
         <div class="customer-dashboard-bottom-grid">
 
-            {{-- =====================================================
-                 آخرین تراکنش‌ها
-                 ===================================================== --}}
+            {{-- آخرین تراکنش‌ها --}}
             <section class="customer-transactions-section">
 
                 <div class="customer-transactions-header">
@@ -403,8 +394,10 @@
 
                     <a href="{{ route('customer.savings.transactions') }}"
                        class="customer-transactions-all">
+
                         مشاهده همه
                         <i class="bi bi-arrow-left"></i>
+
                     </a>
 
                 </div>
@@ -457,20 +450,20 @@
                                 <tr>
 
                                     <td>
-                                        {{ $transaction->jalali_transaction_date }}
+                                        {{ fa_number($transaction->jalali_transaction_date) }}
                                     </td>
 
                                     <td>
 
                                         <div class="customer-transaction-type">
 
-                                <span class="customer-transaction-icon {{ $iconClass }}">
-                                    <i class="bi {{ $icon }}"></i>
-                                </span>
+                                            <span class="customer-transaction-icon {{ $iconClass }}">
+                                                <i class="bi {{ $icon }}"></i>
+                                            </span>
 
                                             <span>
-                                    {{ $transaction->transaction_type->label() }}
-                                </span>
+                                                {{ $transaction->transaction_type->label() }}
+                                            </span>
 
                                         </div>
 
@@ -478,7 +471,7 @@
 
                                     <td class="customer-transaction-amount {{ $isPositive ? 'positive' : 'negative' }}">
 
-                                        {{ number_format($transaction->amount) }}
+                                        {{ fa_money($transaction->amount) }}
 
                                         ریال
 
@@ -486,9 +479,9 @@
 
                                     <td>
 
-                            <span class="customer-transaction-status success">
-                                موفق
-                            </span>
+                                        <span class="customer-transaction-status success">
+                                            موفق
+                                        </span>
 
                                     </td>
 
@@ -507,8 +500,8 @@
                             <i class="bi bi-receipt"></i>
 
                             <span>
-                    هنوز تراکنشی ثبت نشده است.
-                </span>
+                                هنوز تراکنشی ثبت نشده است.
+                            </span>
 
                         </div>
 
@@ -519,19 +512,16 @@
             </section>
 
 
-
-            {{-- =====================================================
-     وام فعال شما
-     ===================================================== --}}
+            {{-- وام فعال شما --}}
             <section class="customer-active-loan-card">
 
                 <div class="customer-active-loan-header">
 
                     <div class="customer-active-loan-title">
 
-            <span class="customer-active-loan-title-icon">
-                <i class="bi bi-cash-coin"></i>
-            </span>
+                        <span class="customer-active-loan-title-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </span>
 
                         <h2>
                             وام فعال شما
@@ -542,8 +532,8 @@
                     @if($activeLoan)
 
                         <span class="customer-active-loan-status">
-                فعال
-            </span>
+                            فعال
+                        </span>
 
                     @endif
 
@@ -593,8 +583,8 @@
                         </div>
 
                         <span class="customer-loan-progress-value">
-                {{ $progress }}٪
-            </span>
+                            {{ fa_number($progress) }}٪
+                        </span>
 
                     </div>
 
@@ -605,12 +595,12 @@
                         {{-- مبلغ وام --}}
                         <div class="customer-loan-info-row">
 
-                <span class="customer-loan-info-label">
-                    مبلغ وام
-                </span>
+                            <span class="customer-loan-info-label">
+                                مبلغ وام
+                            </span>
 
                             <strong class="customer-loan-info-value">
-                                {{ number_format($activeLoan->loan_amount) }}
+                                {{ fa_money($activeLoan->loan_amount) }}
                                 ریال
                             </strong>
 
@@ -620,12 +610,12 @@
                         {{-- باقی مانده --}}
                         <div class="customer-loan-info-row">
 
-                <span class="customer-loan-info-label">
-                    باقی‌مانده
-                </span>
+                            <span class="customer-loan-info-label">
+                                باقی‌مانده
+                            </span>
 
                             <strong class="customer-loan-info-value">
-                                {{ number_format($remainingAmount) }}
+                                {{ fa_money($remainingAmount) }}
                                 ریال
                             </strong>
 
@@ -635,12 +625,12 @@
                         {{-- اقساط باقی مانده --}}
                         <div class="customer-loan-info-row">
 
-                <span class="customer-loan-info-label">
-                    اقساط باقی‌مانده
-                </span>
+                            <span class="customer-loan-info-label">
+                                اقساط باقی‌مانده
+                            </span>
 
                             <strong class="customer-loan-info-value">
-                                {{ $remainingInstallments }}
+                                {{ fa_number($remainingInstallments) }}
                                 قسط
                             </strong>
 
@@ -650,14 +640,14 @@
                         {{-- قسط بعدی --}}
                         <div class="customer-loan-info-row">
 
-                <span class="customer-loan-info-label">
-                    قسط بعدی
-                </span>
+                            <span class="customer-loan-info-label">
+                                قسط بعدی
+                            </span>
 
                             @if($nextInstallment)
 
                                 <strong class="customer-loan-info-value">
-                                    {{ jdate($nextInstallment->due_date)->format('Y/m/d') }}
+                                    {{ fa_number(jdate($nextInstallment->due_date)->format('Y/m/d')) }}
                                 </strong>
 
                             @else
@@ -674,11 +664,14 @@
                         {{-- شماره وام --}}
                         <div class="customer-loan-info-row">
 
-                <span class="customer-loan-info-label">
-                    شماره وام
-                </span>
+                            <span class="customer-loan-info-label">
+                                شماره وام
+                            </span>
 
-                            <strong class="customer-loan-info-value" dir="ltr">
+                            <strong
+                                class="customer-loan-info-value"
+                                dir="ltr"
+                            >
                                 {{ $activeLoan->full_loan_number }}
                             </strong>
 
@@ -701,9 +694,11 @@
                 @else
 
                     <div class="text-muted text-center py-4">
+
                         <i class="bi bi-cash-stack fs-2 d-block mb-2"></i>
 
                         در حال حاضر وام فعالی ندارید.
+
                     </div>
 
                 @endif
@@ -714,8 +709,8 @@
 
 
         {{-- =========================================================
-     کمک‌ها
-     ========================================================= --}}
+             کمک‌ها
+        ========================================================= --}}
         <section class="customer-donations-section">
 
             <div class="customer-donations-title">
@@ -730,18 +725,13 @@
                     <a href="{{ route('customer.donations.create', ['account_id' => $account->id]) }}"
                        class="customer-donation-action text-decoration-none">
 
-                <span class="customer-donation-action-icon">
-
-                    <i class="bi bi-heart-fill"></i>
-
-                </span>
-
+                        <span class="customer-donation-action-icon">
+                            <i class="bi bi-heart-fill"></i>
+                        </span>
 
                         <span class="customer-donation-action-text">
-
-                    {{ $account->name }}
-
-                </span>
+                            {{ $account->name }}
+                        </span>
 
                     </a>
 
@@ -752,8 +742,8 @@
                         <i class="bi bi-heart"></i>
 
                         <span>
-                    در حال حاضر گزینه‌ای برای کمک فعال نیست.
-                </span>
+                            در حال حاضر گزینه‌ای برای کمک فعال نیست.
+                        </span>
 
                     </div>
 
@@ -767,3 +757,4 @@
     </div>
 
 @endsection
+

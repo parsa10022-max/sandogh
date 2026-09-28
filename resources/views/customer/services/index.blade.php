@@ -1,4 +1,3 @@
-
 @extends('customer.layouts.app')
 
 @section('title', 'خدمات')
@@ -9,8 +8,12 @@
 
         {{-- Header --}}
         <div class="services-header">
+
             <div>
-                <h1 class="services-title">خدمات</h1>
+                <h1 class="services-title">
+                    خدمات
+                </h1>
+
                 <p class="services-subtitle">
                     خدمات و امکانات حساب کاربری شما
                 </p>
@@ -19,6 +22,7 @@
             <div class="services-header-icon">
                 <i class="bi bi-grid-1x2"></i>
             </div>
+
         </div>
 
 
@@ -26,14 +30,21 @@
         <section class="services-section">
 
             <div class="services-section-title">
+
                 <div class="section-title-icon">
                     <i class="bi bi-wallet2"></i>
                 </div>
 
                 <div>
-                    <h2>حساب‌های من</h2>
-                    <span>مدیریت حساب‌ها و موجودی</span>
+                    <h2>
+                        حساب‌های من
+                    </h2>
+
+                    <span>
+                        مدیریت حساب‌ها و موجودی
+                    </span>
                 </div>
+
             </div>
 
 
@@ -51,40 +62,56 @@
                             </div>
 
                             <span class="service-badge">
-                            {{ $savingsAccount->status->label() }}
-                        </span>
+                                {{ $savingsAccount->status->label() }}
+                            </span>
 
                         </div>
 
                         <div class="service-card-body">
 
-                            <h3>حساب پس‌انداز</h3>
+                            <h3>
+                                حساب پس‌انداز
+                            </h3>
 
-                            <div class="account-number">
+                            <div
+                                class="account-number"
+                                dir="ltr"
+                            >
                                 {{ $savingsAccount->account_number }}
                             </div>
 
                             <div class="account-balance">
-                                <span>موجودی</span>
+
+                                <span>
+                                    موجودی
+                                </span>
 
                                 <strong>
-                                    {{ number_format($savingsAccount->balance) }}
-                                    <small>ریال</small>
+                                    {{ fa_money($savingsAccount->balance) }}
+
+                                    <small>
+                                        ریال
+                                    </small>
                                 </strong>
+
                             </div>
 
                         </div>
 
                         <div class="service-card-actions">
 
-                            <a href="{{ route('customer.savings.transactions') }}"
-                               class="service-action primary">
+                            <a
+                                href="{{ route('customer.savings.transactions') }}"
+                                class="service-action primary"
+                            >
                                 <i class="bi bi-arrow-left"></i>
                                 تراکنش‌ها
                             </a>
 
-                            <a href="{{ route('customer.savings.deposit.create') }}"
-                               class="service-action">
+                            <a
+                                href="{{ route('customer.savings.deposit.create') }}"
+                                class="service-action"
+                            >
                                 واریز
                             </a>
 
@@ -107,40 +134,56 @@
                             </div>
 
                             <span class="service-badge">
-                            {{ $currentAccount->status->label() }}
-                        </span>
+                                {{ $currentAccount->status->label() }}
+                            </span>
 
                         </div>
 
                         <div class="service-card-body">
 
-                            <h3>حساب جاری</h3>
+                            <h3>
+                                حساب جاری
+                            </h3>
 
-                            <div class="account-number">
+                            <div
+                                class="account-number"
+                                dir="ltr"
+                            >
                                 {{ $currentAccount->account_number }}
                             </div>
 
                             <div class="account-balance">
-                                <span>موجودی</span>
+
+                                <span>
+                                    موجودی
+                                </span>
 
                                 <strong>
-                                    {{ number_format($currentAccount->balance) }}
-                                    <small>ریال</small>
+                                    {{ fa_money($currentAccount->balance) }}
+
+                                    <small>
+                                        ریال
+                                    </small>
                                 </strong>
+
                             </div>
 
                         </div>
 
                         <div class="service-card-actions">
 
-                            <a href="{{ route('accounts.show', $currentAccount) }}"
-                               class="service-action primary">
+                            <a
+                                href="{{ route('accounts.show', $currentAccount) }}"
+                                class="service-action primary"
+                            >
                                 <i class="bi bi-arrow-left"></i>
                                 مشاهده حساب
                             </a>
 
-                            <a href="{{ route('accounts.transactions', $currentAccount) }}"
-                               class="service-action">
+                            <a
+                                href="{{ route('accounts.transactions', $currentAccount) }}"
+                                class="service-action"
+                            >
                                 تراکنش‌ها
                             </a>
 
@@ -165,8 +208,13 @@
                 </div>
 
                 <div>
-                    <h2>وام و اقساط</h2>
-                    <span>مدیریت و پرداخت تسهیلات</span>
+                    <h2>
+                        وام و اقساط
+                    </h2>
+
+                    <span>
+                        مدیریت و پرداخت تسهیلات
+                    </span>
                 </div>
 
             </div>
@@ -176,8 +224,10 @@
 
 
                 {{-- My Loans --}}
-                <a href="{{ route('customer.loans.index') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.loans.index') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-cash-stack"></i>
@@ -185,10 +235,12 @@
 
                     <div class="feature-content">
 
-                        <h3>وام‌های من</h3>
+                        <h3>
+                            وام‌های من
+                        </h3>
 
                         <p>
-                             مدیریت وام‌های فعال و گذشته
+                            مدیریت وام‌های فعال و گذشته
                         </p>
 
                     </div>
@@ -199,8 +251,10 @@
 
 
                 {{-- Loan Requests --}}
-                <a href="{{ route('customer.loan-requests.index') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.loan-requests.index') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-file-earmark-text"></i>
@@ -208,10 +262,12 @@
 
                     <div class="feature-content">
 
-                        <h3>درخواست‌های وام</h3>
+                        <h3>
+                            درخواست‌های وام
+                        </h3>
 
                         <p>
-                             وضعیت درخواست‌های وام
+                            وضعیت درخواست‌های وام
                         </p>
 
                     </div>
@@ -222,8 +278,10 @@
 
 
                 {{-- Installments --}}
-                <a href="{{ route('customer.installments.index') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.installments.index') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-calendar-check"></i>
@@ -231,10 +289,12 @@
 
                     <div class="feature-content">
 
-                        <h3>اقساط من</h3>
+                        <h3>
+                            اقساط من
+                        </h3>
 
                         <p>
-                             اقساط و پرداخت‌های انجام‌شده
+                            اقساط و پرداخت‌های انجام‌شده
                         </p>
 
                     </div>
@@ -245,8 +305,10 @@
 
 
                 {{-- Pay Other Installment --}}
-                <a href="{{ route('customer.installments.others.create') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.installments.others.create') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-person-check"></i>
@@ -254,7 +316,9 @@
 
                     <div class="feature-content">
 
-                        <h3>پرداخت قسط دیگران</h3>
+                        <h3>
+                            پرداخت قسط دیگران
+                        </h3>
 
                         <p>
                             پرداخت قسط با شماره وام
@@ -281,8 +345,13 @@
                 </div>
 
                 <div>
-                    <h2>خدمات مالی</h2>
-                    <span>واریز، برداشت و انتقال</span>
+                    <h2>
+                        خدمات مالی
+                    </h2>
+
+                    <span>
+                        واریز، برداشت و انتقال
+                    </span>
                 </div>
 
             </div>
@@ -292,8 +361,10 @@
 
 
                 {{-- Deposit --}}
-                <a href="{{ route('customer.savings.deposit.create') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.savings.deposit.create') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-plus-circle"></i>
@@ -301,7 +372,9 @@
 
                     <div class="feature-content">
 
-                        <h3>واریز به حساب</h3>
+                        <h3>
+                            واریز به حساب
+                        </h3>
 
                         <p>
                             واریز وجه به حساب پس‌انداز
@@ -315,8 +388,10 @@
 
 
                 {{-- Withdrawal --}}
-                <a href="{{ route('customer.savings.withdrawal.create') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.savings.withdrawal.create') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-dash-circle"></i>
@@ -324,7 +399,9 @@
 
                     <div class="feature-content">
 
-                        <h3>برداشت از حساب</h3>
+                        <h3>
+                            برداشت از حساب
+                        </h3>
 
                         <p>
                             درخواست برداشت از حساب پس‌انداز
@@ -338,8 +415,10 @@
 
 
                 {{-- Transfer --}}
-                <a href="{{ route('customer.savings-transfer.create') }}"
-                   class="service-card feature-card">
+                <a
+                    href="{{ route('customer.savings-transfer.create') }}"
+                    class="service-card feature-card"
+                >
 
                     <div class="feature-icon">
                         <i class="bi bi-send"></i>
@@ -347,7 +426,9 @@
 
                     <div class="feature-content">
 
-                        <h3>انتقال وجه</h3>
+                        <h3>
+                            انتقال وجه
+                        </h3>
 
                         <p>
                             انتقال وجه به حساب پس‌انداز دیگران

@@ -8,30 +8,26 @@ use App\Enums\PaymentMethod;
 use App\Enums\TransactionSource;
 use App\Enums\TransactionType;
 use App\Models\Account;
-use App\Models\AccountTransaction;
 use App\Models\Customer;
 use App\Models\Notification;
 use App\Models\SavingsTransfer;
+use App\Models\User;
 use App\Services\Account\AccountService;
 use App\Services\Account\AccountTransactionService;
 use App\Services\Payment\Gateways\GatewayInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class SavingsTransferService
 {
     public function __construct(
-
         private readonly GatewayInterface $gateway,
-
         private readonly SavingsTransferTrackingCodeService $trackingService,
-
         private readonly AccountTransactionService $accountTransactionService,
-
         private readonly AccountService $accountService,
-
     ) {
     }
-
 
     /**
      * شروع فرآیند پرداخت
@@ -40,19 +36,24 @@ class SavingsTransferService
         Customer $receiver,
         int $amount
     ): array {
+        $senderUser = auth()->user();
+
+        if (! $senderUser) {
+            throw new \DomainException(
+                'کاربر وارد سیستم نشده است.'
+            );
+        }
 
         if ($amount <= 0) {
-
             throw new \DomainException(
                 'مبلغ واریز باید بیشتر از صفر باشد.'
             );
-
         }
 
-
+   
         /*
         |--------------------------------------------------------------------------
-        | پیدا کردن حساب پس‌انداز مقصد
+        | حساب پس‌انداز مقصد
         |--------------------------------------------------------------------------
         */
 
@@ -68,15 +69,11 @@ class SavingsTransferService
             )
             ->first();
 
-
         if (! $account) {
-
             throw new \DomainException(
                 'حساب پس‌انداز فعال برای این عضو پیدا نشد.'
             );
-
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -87,7 +84,6 @@ class SavingsTransferService
         $trackingCode =
             $this->trackingService->generate();
 
-
         /*
         |--------------------------------------------------------------------------
         | ایجاد انتقال
@@ -95,21 +91,15 @@ class SavingsTransferService
         */
 
         $transfer = DB::transaction(function () use (
-
+            $senderUser,
             $receiver,
-
             $account,
-
             $amount,
-
             $trackingCode
-
         ) {
-
             return SavingsTransfer::create([
-
                 'sender_user_id' =>
-                    auth()->id(),
+                    $senderUser->id,
 
                 'receiver_customer_id' =>
                     $receiver->id,
@@ -128,11 +118,8 @@ class SavingsTransferService
 
                 'status' =>
                     'pending',
-
             ]);
-
         });
-
 
         /*
         |--------------------------------------------------------------------------
@@ -140,9 +127,8 @@ class SavingsTransferService
         |--------------------------------------------------------------------------
         */
 
-        $gatewayResponse =
-            $this->gateway->request([
-
+        try {
+            $gatewayResponse = $this->gateway->request([
                 'payment_type' =>
                     'savings_transfer',
 
@@ -157,41 +143,40 @@ class SavingsTransferService
 
                 'callback_url' =>
                     route('payments.callback'),
-
             ]);
-
-
-        if (! $gatewayResponse['success']) {
+        } catch (\Throwable $e) {
+            report($e);
 
             $transfer->update([
-
                 'status' =>
                     'failed',
-
             ]);
 
             throw new \DomainException(
-
-                $gatewayResponse['message']
-                ??
                 'خطا در اتصال به درگاه پرداخت.'
-
             );
-
         }
 
+        if (! ($gatewayResponse['success'] ?? false)) {
+            $transfer->update([
+                'status' =>
+                    'failed',
+            ]);
+
+            throw new \DomainException(
+                $gatewayResponse['message']
+                ?? 'خطا در اتصال به درگاه پرداخت.'
+            );
+        }
 
         return [
-
             'transfer' =>
                 $transfer,
 
             'gateway' =>
                 $gatewayResponse,
-
         ];
     }
-
 
     /**
      * تایید پرداخت و افزایش موجودی حساب مقصد
@@ -199,7 +184,6 @@ class SavingsTransferService
     public function verifyPayment(
         array $callbackData
     ): SavingsTransfer {
-
         /*
         |--------------------------------------------------------------------------
         | تایید پرداخت توسط درگاه
@@ -211,37 +195,72 @@ class SavingsTransferService
                 $callbackData
             );
 
-
-        if (! $gatewayResponse['success']) {
-
+        if (! ($gatewayResponse['success'] ?? false)) {
             throw new \DomainException(
                 $gatewayResponse['message']
                 ?? 'پرداخت ناموفق بود.'
             );
-
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | شناسه انتقال
+        |--------------------------------------------------------------------------
+        */
+
+        $referenceId =
+            $callbackData['reference_id']
+            ?? $gatewayResponse['reference_id']
+            ?? null;
+
+        if (! $referenceId) {
+            throw new \DomainException(
+                'شناسه انتقال در پاسخ درگاه وجود ندارد.'
+            );
+        }
 
         return DB::transaction(function () use (
-
             $callbackData,
-
-            $gatewayResponse
-
+            $gatewayResponse,
+            $referenceId
         ) {
-
             /*
             |--------------------------------------------------------------------------
-            | دریافت انتقال
+            | قفل انتقال
             |--------------------------------------------------------------------------
             */
 
             $transfer = SavingsTransfer::query()
                 ->lockForUpdate()
-                ->findOrFail(
-                    $callbackData['reference_id']
-                );
+                ->find($referenceId);
 
+            if (! $transfer) {
+                throw new \DomainException(
+                    'تراکنش واریز موردنظر پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Callback تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            if ($transfer->status === 'paid') {
+                return $transfer;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | فقط انتقال pending قابل تایید است
+            |--------------------------------------------------------------------------
+            */
+
+            if ($transfer->status !== 'pending') {
+                throw new \DomainException(
+                    'این تراکنش در وضعیت قابل پرداخت نیست.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -249,33 +268,20 @@ class SavingsTransferService
             |--------------------------------------------------------------------------
             */
 
+            $callbackAmount =
+                $callbackData['amount']
+                ?? $gatewayResponse['amount']
+                ?? null;
+
             if (
-                isset($callbackData['amount'])
-                &&
-                (int) $callbackData['amount']
-                !==
+                $callbackAmount !== null &&
+                (int) $callbackAmount !==
                 (int) $transfer->amount
             ) {
-
                 throw new \DomainException(
                     'مبلغ پرداخت نامعتبر است.'
                 );
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | جلوگیری از Callback تکراری
-            |--------------------------------------------------------------------------
-            */
-
-            if ($transfer->status === 'paid') {
-
-                return $transfer;
-
-            }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -286,10 +292,46 @@ class SavingsTransferService
             $account = Account::query()
                 ->with('customer.user')
                 ->lockForUpdate()
-                ->findOrFail(
-                    $transfer->account_id
-                );
+                ->find($transfer->account_id);
 
+            if (! $account) {
+                throw new \DomainException(
+                    'حساب مقصد پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | تطبیق حساب و عضو مقصد
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                (int) $account->customer_id !==
+                (int) $transfer->receiver_customer_id
+            ) {
+                throw new \DomainException(
+                    'حساب مقصد با عضو دریافت‌کننده مطابقت ندارد.'
+                );
+            }
+
+            if (
+                $account->account_type !==
+                AccountType::SAVING
+            ) {
+                throw new \DomainException(
+                    'حساب مقصد، حساب پس‌انداز معتبر نیست.'
+                );
+            }
+
+            if (
+                $account->status !==
+                AccountStatus::ACTIVE
+            ) {
+                throw new \DomainException(
+                    'حساب مقصد فعال نیست.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -301,10 +343,8 @@ class SavingsTransferService
                 $account->balance;
 
             $balanceAfter =
-                $balanceBefore
-                +
+                $balanceBefore +
                 $transfer->amount;
-
 
             /*
             |--------------------------------------------------------------------------
@@ -317,7 +357,6 @@ class SavingsTransferService
                 $transfer->amount
             );
 
-
             /*
             |--------------------------------------------------------------------------
             | ثبت تراکنش حساب
@@ -325,35 +364,16 @@ class SavingsTransferService
             */
 
             $this->accountTransactionService->create(
-
                 account: $account,
-
-                type:
-                TransactionType::DEPOSIT,
-
-                source:
-                TransactionSource::ONLINE,
-
-                paymentMethod:
-                PaymentMethod::GATEWAY,
-
-                amount:
-                $transfer->amount,
-
-                balanceBefore:
-                $balanceBefore,
-
-                balanceAfter:
-                $balanceAfter,
-
-                createdBy:
-                null,
-
-                description:
-                'واریز آنلاین به حساب پس‌انداز'
-
+                type: TransactionType::DEPOSIT,
+                source: TransactionSource::ONLINE,
+                paymentMethod: PaymentMethod::GATEWAY,
+                amount: $transfer->amount,
+                balanceBefore: $balanceBefore,
+                balanceAfter: $balanceAfter,
+                createdBy: null,
+                description: 'واریز آنلاین به حساب پس‌انداز',
             );
-
 
             /*
             |--------------------------------------------------------------------------
@@ -362,25 +382,20 @@ class SavingsTransferService
             */
 
             $transfer->update([
-
                 'status' =>
                     'paid',
 
                 'bank_transaction_id' =>
                     $gatewayResponse['transaction_id']
-                    ??
-                    null,
+                    ?? null,
 
                 'bank_reference_number' =>
                     $gatewayResponse['reference_number']
-                    ??
-                    null,
+                    ?? null,
 
                 'paid_at' =>
                     now(),
-
             ]);
-
 
             /*
             |--------------------------------------------------------------------------
@@ -394,34 +409,26 @@ class SavingsTransferService
             $receiverUser =
                 $receiverCustomer?->user;
 
-
             /*
             |--------------------------------------------------------------------------
             | اطلاعات پرداخت‌کننده
             |--------------------------------------------------------------------------
             */
 
-            $senderUser =
-                $transfer->sender_user_id
-                    ? \App\Models\User::find(
+            $senderUser = $transfer->sender_user_id
+                ? User::query()->find(
                     $transfer->sender_user_id
                 )
-                    : null;
-
+                : null;
 
             /*
             |--------------------------------------------------------------------------
-            | اعلان برای گیرنده
+            | اعلان گیرنده
             |--------------------------------------------------------------------------
-            |
-            | شخصی که پول به حساب او واریز شده است.
-            |
             */
 
             if ($receiverUser) {
-
                 Notification::create([
-
                     'user_id' =>
                         $receiverUser->id,
 
@@ -433,12 +440,11 @@ class SavingsTransferService
 
                     'message' =>
                         'مبلغ ' .
-                        number_format($transfer->amount) .
+                        fa_money($transfer->amount) .
                         ' ریال توسط یکی از اعضای صندوق به حساب پس‌انداز شما واریز شد. کد پیگیری: ' .
                         $transfer->tracking_code,
 
                     'data' => [
-
                         'amount' =>
                             $transfer->amount,
 
@@ -456,39 +462,28 @@ class SavingsTransferService
 
                         'paid_at' =>
                             $transfer->paid_at,
-
                     ],
 
                     'read_at' =>
                         null,
-
                 ]);
             }
 
-
             /*
             |--------------------------------------------------------------------------
-            | اعلان برای پرداخت‌کننده
+            | اعلان پرداخت‌کننده
             |--------------------------------------------------------------------------
-            |
-            | شخصی که پول را پرداخت کرده است.
-            |
             */
 
             if (
-                $senderUser
-                &&
+                $senderUser &&
                 $senderUser->id !== $receiverUser?->id
             ) {
-
                 $receiverName =
                     $receiverCustomer?->full_name
-                    ??
-                    'عضو صندوق';
-
+                    ?? 'عضو صندوق';
 
                 Notification::create([
-
                     'user_id' =>
                         $senderUser->id,
 
@@ -500,14 +495,13 @@ class SavingsTransferService
 
                     'message' =>
                         'مبلغ ' .
-                        number_format($transfer->amount) .
+                        fa_money($transfer->amount) .
                         ' ریال به حساب پس‌انداز ' .
                         $receiverName .
                         ' واریز شد. کد پیگیری: ' .
                         $transfer->tracking_code,
 
                     'data' => [
-
                         'amount' =>
                             $transfer->amount,
 
@@ -528,81 +522,65 @@ class SavingsTransferService
 
                         'paid_at' =>
                             $transfer->paid_at,
-
                     ],
 
                     'read_at' =>
                         null,
-
                 ]);
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | بازگرداندن انتقال کامل
-            |--------------------------------------------------------------------------
-            */
-
             return $transfer->fresh();
-
         });
     }
-
 
     /**
      * نمایش رسید موفقیت انتقال
      */
     public function success(
         SavingsTransfer $transfer
-    ) {
-
-        /*
-        |--------------------------------------------------------------------------
-        | فقط پرداخت‌کننده اجازه مشاهده رسید را دارد
-        |--------------------------------------------------------------------------
-        */
-
+    ): View {
         abort_if(
-
-            $transfer->sender_user_id
-            !==
-            auth()->id(),
-
+            (int) $transfer->sender_user_id !==
+            (int) auth()->id(),
             403
-
         );
-
 
         return view(
             'customer.savings-transfer.success',
             compact('transfer')
         );
-
     }
-
 
     /**
      * نمایش صفحه خطای انتقال
      */
-    public function failed()
+    public function failed(): View
     {
-
         return view(
             'customer.savings-transfer.failed'
         );
-
     }
-
 
     /**
      * تراکنش‌های حساب پس‌انداز
      */
-    public function transactions()
+    public function transactions(): LengthAwarePaginator
     {
-        $customer =
-            auth()->user()->customer;
+        $user = auth()->user();
 
+        if (! $user) {
+            throw new \DomainException(
+                'کاربر وارد سیستم نشده است.'
+            );
+        }
+
+        $customer = $user->customer;
+
+        if (! $customer) {
+            throw new \DomainException(
+                'عضو صندوق یافت نشد.'
+            );
+        }
 
         $account = $customer
             ->accounts()
@@ -614,22 +592,17 @@ class SavingsTransferService
                 'status',
                 AccountStatus::ACTIVE->value
             )
-            ->firstOrFail();
+            ->first();
 
+        if (! $account) {
+            throw new \DomainException(
+                'حساب پس‌انداز فعال برای شما پیدا نشد.'
+            );
+        }
 
-        $transactions = $account
+        return $account
             ->transactions()
             ->latest('transaction_date')
             ->paginate(20);
-
-
-        return view(
-            'customer.savings.transactions',
-            compact(
-                'account',
-                'transactions'
-            )
-        );
     }
 }
-

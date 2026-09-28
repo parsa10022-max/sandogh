@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AccountingStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
         Schema::table('savings_transfers', function (Blueprint $table) {
 
             $table->unsignedTinyInteger('accounting_status')
-                ->default(0)
+                ->default(AccountingStatus::PENDING->value)
                 ->after('status');
 
             $table->foreignId('accounting_confirmed_by')
@@ -32,7 +33,6 @@ return new class extends Migration
 
             $table->index('accounting_status');
         });
-
 
         /*
         |--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ return new class extends Migration
         Schema::table('withdrawals', function (Blueprint $table) {
 
             $table->unsignedTinyInteger('accounting_status')
-                ->default(0)
+                ->default(AccountingStatus::PENDING->value)
                 ->after('status');
 
             $table->foreignId('accounting_confirmed_by')
@@ -59,7 +59,6 @@ return new class extends Migration
             $table->index('accounting_status');
         });
 
-
         /*
         |--------------------------------------------------------------------------
         | Loan Payments
@@ -69,7 +68,7 @@ return new class extends Migration
         Schema::table('loan_payments', function (Blueprint $table) {
 
             $table->unsignedTinyInteger('accounting_status')
-                ->default(0)
+                ->default(AccountingStatus::PENDING->value)
                 ->after('paid_at');
 
             $table->foreignId('accounting_confirmed_by')
@@ -90,7 +89,7 @@ return new class extends Migration
     {
         Schema::table('savings_transfers', function (Blueprint $table) {
             $table->dropForeign(['accounting_confirmed_by']);
-            $table->dropIndex(['accounting_status']);
+            $table->dropIndex(['savings_transfers_accounting_status_index']);
             $table->dropColumn([
                 'accounting_status',
                 'accounting_confirmed_by',
@@ -100,7 +99,7 @@ return new class extends Migration
 
         Schema::table('withdrawals', function (Blueprint $table) {
             $table->dropForeign(['accounting_confirmed_by']);
-            $table->dropIndex(['accounting_status']);
+            $table->dropIndex(['withdrawals_accounting_status_index']);
             $table->dropColumn([
                 'accounting_status',
                 'accounting_confirmed_by',
@@ -110,7 +109,7 @@ return new class extends Migration
 
         Schema::table('loan_payments', function (Blueprint $table) {
             $table->dropForeign(['accounting_confirmed_by']);
-            $table->dropIndex(['accounting_status']);
+            $table->dropIndex(['loan_payments_accounting_status_index']);
             $table->dropColumn([
                 'accounting_status',
                 'accounting_confirmed_by',

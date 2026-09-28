@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Requests\LoanRequest;
@@ -12,11 +11,16 @@ class StoreCustomerLoanRequestRequest extends FormRequest
         return auth()->check();
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'requested_amount' => clean_money($this->requested_amount),
+        ]);
+    }
 
     public function rules(): array
     {
         return [
-
             'requested_amount' => [
                 'required',
                 'integer',
@@ -29,29 +33,20 @@ class StoreCustomerLoanRequestRequest extends FormRequest
                 'string',
                 'max:1000',
             ],
-
         ];
     }
-
 
     public function attributes(): array
     {
         return [
-
-            'requested_amount' =>
-                'مبلغ درخواستی',
-
-            'description' =>
-                'توضیحات',
-
+            'requested_amount' => 'مبلغ درخواستی',
+            'description' => 'توضیحات',
         ];
     }
-
 
     public function messages(): array
     {
         return [
-
             'requested_amount.required' =>
                 'مبلغ وام را وارد کنید.',
 
@@ -59,15 +54,16 @@ class StoreCustomerLoanRequestRequest extends FormRequest
                 'مبلغ وام باید عددی باشد.',
 
             'requested_amount.min' =>
-                'حداقل مبلغ درخواست وام ۱۰,۰۰۰,۰۰۰ ریال است.',
+                'حداقل مبلغ درخواست وام ۱۰٬۰۰۰٬۰۰۰ ریال است.',
 
             'requested_amount.max' =>
-                'حداکثر مبلغ درخواست وام ۲۰۰,۰۰۰,۰۰۰ ریال است.',
+                'حداکثر مبلغ درخواست وام ۲۰۰٬۰۰۰٬۰۰۰ ریال است.',
+
+            'description.string' =>
+                'توضیحات باید به صورت متن وارد شود.',
 
             'description.max' =>
                 'توضیحات نمی‌تواند بیشتر از ۱۰۰۰ کاراکتر باشد.',
-
         ];
     }
 }
-

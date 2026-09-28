@@ -52,6 +52,9 @@ class CreateAccountRequest extends FormRequest
             'username.required' =>
                 'نام کاربری را وارد کنید.',
 
+            'username.string' =>
+                'نام کاربری باید به صورت متن وارد شود.',
+
             'username.min' =>
                 'نام کاربری باید حداقل ۴ کاراکتر باشد.',
 
@@ -67,8 +70,14 @@ class CreateAccountRequest extends FormRequest
             'password.required' =>
                 'رمز عبور را وارد کنید.',
 
+            'password.string' =>
+                'رمز عبور باید به صورت متن وارد شود.',
+
             'password.confirmed' =>
                 'تکرار رمز عبور با رمز عبور یکسان نیست.',
+
+            'password.min' =>
+                'رمز عبور باید حداقل ۸ کاراکتر باشد.',
         ];
     }
 }

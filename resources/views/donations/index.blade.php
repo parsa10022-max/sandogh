@@ -8,7 +8,6 @@
 
 @section('content')
 
-
     <div class="donation-list-page">
 
         {{-- Header --}}
@@ -76,22 +75,22 @@
 
                                     <div class="donation-account-card__name">
 
-                                    <span class="donation-account-card__icon">
-                                        <i class="bi bi-wallet2"></i>
-                                    </span>
+                                        <span class="donation-account-card__icon">
+                                            <i class="bi bi-wallet2"></i>
+                                        </span>
 
                                         <span>
-                                        {{ $account->name }}
-                                    </span>
+                                            {{ $account->name }}
+                                        </span>
 
                                     </div>
 
                                     <span class="donation-account-card__number"
                                           dir="ltr">
 
-                                    {{ $account->account_number }}
+                                        {{ $account->account_number }}
 
-                                </span>
+                                    </span>
 
                                 </div>
 
@@ -101,13 +100,13 @@
 
                                 <div class="donation-account-card__bottom">
 
-                                <span class="donation-account-card__balance-label">
-                                    موجودی
-                                </span>
+                                    <span class="donation-account-card__balance-label">
+                                        موجودی
+                                    </span>
 
                                     <strong class="donation-account-card__balance">
 
-                                        {{ number_format($account->balance) }}
+                                        {{ fa_money($account->balance) }}
 
                                         <small>ریال</small>
 
@@ -133,8 +132,8 @@
                             <i class="bi bi-bank"></i>
 
                             <span>
-                            حساب سیستمی ثبت نشده است.
-                        </span>
+                                حساب سیستمی ثبت نشده است.
+                            </span>
 
                         </div>
 
@@ -221,81 +220,83 @@
 
                                 <td>
 
-                                <span class="donation-date">
+                                    <span class="donation-date">
 
-                                    <i class="bi bi-calendar3"></i>
+                                        <i class="bi bi-calendar3"></i>
 
-                                    {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                        $transaction->transaction_date
-                                    )->format('Y/m/d') }}
+                                        {{ fa_number(
+                                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                                $transaction->transaction_date
+                                            )->format('Y/m/d')
+                                        ) }}
 
-                                </span>
-
-                                </td>
-
-
-                                <td>
-
-                                <span class="donation-transaction-account">
-
-                                    <span class="donation-transaction-account__icon">
-                                        <i class="bi bi-wallet2"></i>
                                     </span>
 
-                                    <strong>
-                                        {{ $transaction->account->name ?? '-' }}
-                                    </strong>
+                                </td>
 
-                                </span>
+
+                                <td>
+
+                                    <span class="donation-transaction-account">
+
+                                        <span class="donation-transaction-account__icon">
+                                            <i class="bi bi-wallet2"></i>
+                                        </span>
+
+                                        <strong>
+                                            {{ $transaction->account->name ?? '-' }}
+                                        </strong>
+
+                                    </span>
 
                                 </td>
 
 
                                 <td>
 
-                                <span class="donation-transaction-number"
-                                      dir="ltr">
+                                    <span class="donation-transaction-number"
+                                          dir="ltr">
 
-                                    {{ $transaction->account->account_number ?? '-' }}
+                                        {{ $transaction->account->account_number ?? '-' }}
 
-                                </span>
-
-                                </td>
-
-
-                                <td>
-
-                                <span class="donation-transaction-amount">
-
-                                    {{ number_format($transaction->amount) }}
-
-                                    <small>ریال</small>
-
-                                </span>
+                                    </span>
 
                                 </td>
 
 
                                 <td>
 
-                                <span class="donation-creator">
+                                    <span class="donation-transaction-amount">
 
-                                    <i class="bi bi-person"></i>
+                                        {{ fa_money($transaction->amount) }}
 
-                                    {{ $transaction->creator->name ?? '-' }}
+                                        <small>ریال</small>
 
-                                </span>
+                                    </span>
 
                                 </td>
 
 
                                 <td>
 
-                                <span class="donation-description">
+                                    <span class="donation-creator">
 
-                                    {{ $transaction->description ?? '-' }}
+                                        <i class="bi bi-person"></i>
 
-                                </span>
+                                        {{ $transaction->creator->name ?? '-' }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="donation-description">
+
+                                        {{ $transaction->description ?? '-' }}
+
+                                    </span>
 
                                 </td>
 
@@ -318,8 +319,8 @@
                                         </strong>
 
                                         <span>
-                                        هنوز تراکنشی برای نمایش وجود ندارد.
-                                    </span>
+                                            هنوز تراکنشی برای نمایش وجود ندارد.
+                                        </span>
 
                                     </div>
 
@@ -352,5 +353,5 @@
 
     </div>
 
-
 @endsection
+

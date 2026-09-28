@@ -13,17 +13,14 @@ use App\Models\Notification;
 use App\Services\Date\JalaliDateService;
 use App\Services\LoanType\LoanTypeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoanRequestController extends Controller
 {
-    private LoanTypeService $loanTypeService;
-
     public function __construct(
-        LoanTypeService $loanTypeService
+        private readonly LoanTypeService $loanTypeService
     ) {
-        $this->loanTypeService = $loanTypeService;
     }
-
 
     /**
      * لیست درخواست‌ها
@@ -31,19 +28,9 @@ class LoanRequestController extends Controller
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
-
         $status = $request->input('status');
-
         $fromDate = $request->input('from_date');
-
         $toDate = $request->input('to_date');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Query
-        |--------------------------------------------------------------------------
-        */
 
         $query = LoanRequest::query()
             ->with([
@@ -51,22 +38,16 @@ class LoanRequestController extends Controller
                 'loan',
             ]);
 
-
         /*
         |--------------------------------------------------------------------------
         | جستجو
         |--------------------------------------------------------------------------
-        |
-        | نام، نام خانوادگی، کد ملی و شماره درخواست
-        |
         */
 
         if ($search !== '') {
-
             $query->where(function ($q) use ($search) {
 
                 $q->where('id', $search)
-
                     ->orWhereHas('customer', function ($customerQuery) use ($search) {
 
                         $customerQuery
@@ -85,7 +66,6 @@ class LoanRequestController extends Controller
             });
         }
 
-
         /*
         |--------------------------------------------------------------------------
         | فیلتر وضعیت
@@ -103,25 +83,18 @@ class LoanRequestController extends Controller
                 true
             )
         ) {
-
-            $query->where(
-                'status',
-                $status
-            );
+            $query->where('status', $status);
         }
-
 
         /*
         |--------------------------------------------------------------------------
-        | فیلتر تاریخ درخواست
+        | فیلتر تاریخ
         |--------------------------------------------------------------------------
         */
 
         if ($fromDate) {
-
-            $fromDateGregorian =
-                app(JalaliDateService::class)
-                    ->toGregorian($fromDate);
+            $fromDateGregorian = app(JalaliDateService::class)
+                ->toGregorian($fromDate);
 
             $query->whereDate(
                 'created_at',
@@ -130,12 +103,9 @@ class LoanRequestController extends Controller
             );
         }
 
-
         if ($toDate) {
-
-            $toDateGregorian =
-                app(JalaliDateService::class)
-                    ->toGregorian($toDate);
+            $toDateGregorian = app(JalaliDateService::class)
+                ->toGregorian($toDate);
 
             $query->whereDate(
                 'created_at',
@@ -144,18 +114,10 @@ class LoanRequestController extends Controller
             );
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | دریافت درخواست‌ها
-        |--------------------------------------------------------------------------
-        */
-
         $loanRequests = $query
             ->latest()
             ->paginate(15)
             ->withQueryString();
-
 
         return view(
             'loan_requests.index',
@@ -226,8 +188,7 @@ class LoanRequestController extends Controller
             'loan',
         ]);
 
-        $loanTypes =
-            $this->loanTypeService->getActive();
+        $loanTypes = $this->loanTypeService->getActive();
 
         return view(
             'loan_requests.show',
@@ -251,8 +212,7 @@ class LoanRequestController extends Controller
             'loan',
         ]);
 
-        $loanTypes =
-            $this->loanTypeService->getActive();
+        $loanTypes = $this->loanTypeService->getActive();
 
         return view(
             'loan_requests.edit',
@@ -264,21 +224,65 @@ class LoanRequestController extends Controller
     }
 
     /**
-     * بروزرسانی درخواست توسط مدیر
+     * بروزرسانی اطلاعات درخواست
+     *
+     * نکته مهم:
+     * تغییر وضعیت از این مسیر ممنوع است.
+     *
+     * وضعیت فقط از مسیرهای:
+     * approve()
+     * reject()
+     *
+     * تغییر می‌کند.
      */
     public function update(
         Request $request,
         LoanRequest $loanRequest
     ) {
+        /*
+        |--------------------------------------------------------------------------
+        | اگر درخواست قبلاً به وام متصل شده، اطلاعات تأییدشده
+        | دیگر نباید تغییر کند.
+        |--------------------------------------------------------------------------
+        */
+
+        if ($loanRequest->loan_id) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'این درخواست به وام متصل شده و امکان ویرایش آن وجود ندارد.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        */
+
+        $request->merge([
+            'requested_amount' => clean_money(
+                $request->input('requested_amount')
+            ),
+
+            'approved_amount' => clean_money(
+                $request->input('approved_amount')
+            ),
+        ]);
+
         $validated = $request->validate([
 
-            'status' => [
+            'requested_amount' => [
                 'required',
-                'in:' . implode(',', [
-                    LoanRequestStatus::PENDING->value,
-                    LoanRequestStatus::APPROVED->value,
-                    LoanRequestStatus::REJECTED->value,
-                ]),
+                'integer',
+                'min:1',
+            ],
+
+            'description' => [
+                'nullable',
+                'string',
+                'max:2000',
             ],
 
             'approved_amount' => [
@@ -318,83 +322,106 @@ class LoanRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | تبدیل تاریخ شمسی به میلادی
+        | قفل درخواست و بررسی مجدد
         |--------------------------------------------------------------------------
         */
 
-        $nextReviewDate = null;
-
-        if (
-            !empty($validated['next_review_date'])
+        DB::transaction(function () use (
+            $loanRequest,
+            $validated
         ) {
-            $nextReviewDate =
-                app(JalaliDateService::class)
+
+            $lockedLoanRequest = LoanRequest::query()
+                ->lockForUpdate()
+                ->findOrFail($loanRequest->id);
+
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از تغییر همزمان بعد از ایجاد وام
+            |--------------------------------------------------------------------------
+            */
+
+            if ($lockedLoanRequest->loan_id) {
+                throw new \RuntimeException(
+                    'این درخواست به وام متصل شده و امکان ویرایش آن وجود ندارد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | تبدیل تاریخ شمسی
+            |--------------------------------------------------------------------------
+            */
+
+            $nextReviewDate = null;
+
+            if (!empty($validated['next_review_date'])) {
+                $nextReviewDate = app(JalaliDateService::class)
                     ->toGregorian(
                         $validated['next_review_date']
                     );
-        }
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | تایید شده → تاریخ مراجعه مجدد حذف شود
-        |--------------------------------------------------------------------------
-        */
+            /*
+            |--------------------------------------------------------------------------
+            | وضعیت فعلی حفظ می‌شود.
+            | این متد اجازه تغییر وضعیت ندارد.
+            |--------------------------------------------------------------------------
+            */
 
-        if (
-            $validated['status'] ===
-            LoanRequestStatus::APPROVED->value
-        ) {
-            $nextReviewDate = null;
-        }
+            if (
+                $lockedLoanRequest->status ===
+                LoanRequestStatus::APPROVED
+            ) {
+                $nextReviewDate = null;
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pending → تاریخ مراجعه مجدد حذف شود
-        |--------------------------------------------------------------------------
-        */
+            if (
+                $lockedLoanRequest->status ===
+                LoanRequestStatus::PENDING
+            ) {
+                $nextReviewDate = null;
+            }
 
-        if (
-            $validated['status'] ===
-            LoanRequestStatus::PENDING->value
-        ) {
-            $nextReviewDate = null;
-        }
+            /*
+            |--------------------------------------------------------------------------
+            | بروزرسانی
+            |--------------------------------------------------------------------------
+            */
 
-        /*
-        |--------------------------------------------------------------------------
-        | بروزرسانی
-        |--------------------------------------------------------------------------
-        */
+            $lockedLoanRequest->update([
 
-        $loanRequest->update([
+                'requested_amount' =>
+                    $validated['requested_amount'],
 
-            'status' =>
-                $validated['status'],
+                'description' =>
+                    $validated['description'] ?? null,
 
-            'approved_amount' =>
-                $validated['approved_amount'] ?? null,
+                'approved_amount' =>
+                    $validated['approved_amount'] ?? null,
 
-            'loan_type_id' =>
-                $validated['loan_type_id'] ?? null,
+                'loan_type_id' =>
+                    $validated['loan_type_id'] ?? null,
 
-            'approved_installment_count' =>
-                $validated['approved_installment_count'] ?? null,
+                'approved_installment_count' =>
+                    $validated['approved_installment_count'] ?? null,
 
-            'approved_installment_interval' =>
-                $validated['approved_installment_interval'] ?? null,
+                'approved_installment_interval' =>
+                    $validated['approved_installment_interval'] ?? null,
 
-            'review_note' =>
-                $validated['review_note'] ?? null,
+                'review_note' =>
+                    $validated['review_note'] ?? null,
 
-            'next_review_date' =>
-                $nextReviewDate,
+                'next_review_date' =>
+                    $nextReviewDate,
 
-            'reviewed_by' =>
-                auth()->id(),
+                'reviewed_by' =>
+                    auth()->id(),
 
-            'reviewed_at' =>
-                now(),
-        ]);
+                'reviewed_at' =>
+                    now(),
+            ]);
+        });
 
         return redirect()
             ->route(
@@ -410,185 +437,143 @@ class LoanRequestController extends Controller
     /**
      * تایید درخواست
      */
-    /**
-     * تایید درخواست
-     */
     public function approve(
         ApproveLoanRequestRequest $request,
         LoanRequest $loanRequest
     ) {
-        /*
-        |--------------------------------------------------------------------------
-        | فقط درخواست Pending قابل تایید است
-        |--------------------------------------------------------------------------
-        */
+        $notificationData = null;
+        $userId = null;
 
-        if (
-            $loanRequest->status !==
-            LoanRequestStatus::PENDING
+        DB::transaction(function () use (
+            $request,
+            $loanRequest,
+            &$notificationData,
+            &$userId
         ) {
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
+            $loanRequest = LoanRequest::query()
+                ->lockForUpdate()
+                ->with('customer.user')
+                ->findOrFail($loanRequest->id);
+
+            if (
+                $loanRequest->status !==
+                LoanRequestStatus::PENDING
+            ) {
+                abort(
+                    422,
                     'این درخواست قبلاً بررسی شده است.'
                 );
-        }
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | دریافت اطلاعات مشتری و User
-        |--------------------------------------------------------------------------
-        */
+            if ($loanRequest->loan_id) {
+                abort(
+                    422,
+                    'برای این درخواست قبلاً وام ایجاد شده است.'
+                );
+            }
 
-        $loanRequest->load([
-            'customer.user',
-        ]);
+            $user = $loanRequest->customer?->user;
 
-        $user = $loanRequest->customer?->user;
+            $approvedAmount =
+                $request->validated('approved_amount');
 
-        /*
-        |--------------------------------------------------------------------------
-        | دریافت اطلاعات تایید
-        |--------------------------------------------------------------------------
-        */
+            $loanTypeId =
+                $request->validated('loan_type_id');
 
-        $approvedAmount =
-            $request->validated('approved_amount');
+            $approvedInstallmentCount =
+                $request->validated(
+                    'approved_installment_count'
+                );
 
-        $loanTypeId =
-            $request->validated('loan_type_id');
+            $approvedInstallmentInterval =
+                $request->validated(
+                    'approved_installment_interval'
+                );
 
-        $approvedInstallmentCount =
-            $request->validated(
-                'approved_installment_count'
-            );
+            $reviewNote =
+                $request->validated('review_note');
 
-        $approvedInstallmentInterval =
-            $request->validated(
-                'approved_installment_interval'
-            );
+            $loanRequest->update([
 
-        $reviewNote =
-            $request->validated('review_note');
+                'status' =>
+                    LoanRequestStatus::APPROVED,
 
-        /*
-        |--------------------------------------------------------------------------
-        | تایید درخواست
-        |--------------------------------------------------------------------------
-        */
+                'approved_amount' =>
+                    $approvedAmount,
 
-        $loanRequest->update([
+                'loan_type_id' =>
+                    $loanTypeId,
 
-            'status' =>
-                LoanRequestStatus::APPROVED,
+                'approved_installment_count' =>
+                    $approvedInstallmentCount,
 
-            'approved_amount' =>
-                $approvedAmount,
+                'approved_installment_interval' =>
+                    $approvedInstallmentInterval,
 
-            'loan_type_id' =>
-                $loanTypeId,
+                'review_note' =>
+                    $reviewNote,
 
-            'approved_installment_count' =>
-                $approvedInstallmentCount,
+                'reviewed_by' =>
+                    auth()->id(),
 
-            'approved_installment_interval' =>
-                $approvedInstallmentInterval,
+                'reviewed_at' =>
+                    now(),
 
-            'review_note' =>
-                $reviewNote,
+                'next_review_date' =>
+                    null,
+            ]);
 
-            'reviewed_by' =>
-                auth()->id(),
+            if ($user) {
+                $userId = $user->id;
 
-            'reviewed_at' =>
-                now(),
+                $notificationData = [
+                    'type' =>
+                        'loan_request_approved',
 
-            /*
-            |--------------------------------------------------------------------------
-            | درخواست تایید شده دیگر تاریخ مراجعه ندارد
-            |--------------------------------------------------------------------------
-            */
+                    'title' =>
+                        'درخواست وام تأیید شد',
 
-            'next_review_date' =>
-                null,
-        ]);
+                    'message' =>
+                        'درخواست وام شما با مبلغ ' .
+                        number_format($approvedAmount) .
+                        ' ریال تأیید شد.',
 
-        /*
-        |--------------------------------------------------------------------------
-        | ایجاد اعلان برای مشتری
-        |--------------------------------------------------------------------------
-        |
-        | اطلاعات مهم نتیجه تایید داخل data ذخیره می‌شود
-        | تا اعلان مستقل از تغییرات بعدی LoanRequest باشد.
-        |
-        */
+                    'data' => [
+                        'loan_request_id' =>
+                            $loanRequest->id,
 
-        if ($user) {
+                        'approved_amount' =>
+                            $approvedAmount,
 
+                        'approved_installment_count' =>
+                            $approvedInstallmentCount,
+
+                        'approved_installment_interval' =>
+                            $approvedInstallmentInterval,
+
+                        'review_note' =>
+                            $reviewNote,
+                    ],
+                ];
+            }
+        });
+
+        if ($userId && $notificationData) {
             Notification::create([
-
                 'user_id' =>
-                    $user->id,
+                    $userId,
 
                 'type' =>
-                    'loan_request_approved',
+                    $notificationData['type'],
 
                 'title' =>
-                    'درخواست وام تأیید شد',
+                    $notificationData['title'],
 
                 'message' =>
-                    'درخواست وام شما با مبلغ ' .
-                    number_format($approvedAmount) .
-                    ' ریال تأیید شد.',
+                    $notificationData['message'],
 
-                'data' => [
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | شناسه درخواست
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'loan_request_id' =>
-                        $loanRequest->id,
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | مبلغ تایید شده
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'approved_amount' =>
-                        $approvedAmount,
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | تعداد اقساط
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'approved_installment_count' =>
-                        $approvedInstallmentCount,
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | دوره بازپرداخت
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'approved_installment_interval' =>
-                        $approvedInstallmentInterval,
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | پیام مدیر
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'review_note' =>
-                        $reviewNote,
-                ],
+                'data' =>
+                    $notificationData['data'],
             ]);
         }
 
@@ -600,10 +585,6 @@ class LoanRequestController extends Controller
             );
     }
 
-
-    /**
-     * رد درخواست
-     */
     /**
      * رد درخواست
      */
@@ -611,249 +592,129 @@ class LoanRequestController extends Controller
         RejectLoanRequestRequest $request,
         LoanRequest $loanRequest
     ) {
-        /*
-        |--------------------------------------------------------------------------
-        | فقط درخواست Pending قابل رد است
-        |--------------------------------------------------------------------------
-        */
+        $notificationData = null;
+        $userId = null;
 
-        if (
-            $loanRequest->status !==
-            LoanRequestStatus::PENDING
+        DB::transaction(function () use (
+            $request,
+            $loanRequest,
+            &$notificationData,
+            &$userId
         ) {
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
+            $loanRequest = LoanRequest::query()
+                ->lockForUpdate()
+                ->with('customer.user')
+                ->findOrFail($loanRequest->id);
+
+            if (
+                $loanRequest->status !==
+                LoanRequestStatus::PENDING
+            ) {
+                abort(
+                    422,
                     'این درخواست قبلاً بررسی شده است.'
                 );
-        }
+            }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | دریافت اطلاعات مشتری و User
-        |--------------------------------------------------------------------------
-        */
-
-        $loanRequest->load([
-            'customer.user',
-        ]);
-
-        $user = $loanRequest->customer?->user;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | ذخیره اطلاعات قبل از تغییر
-        |--------------------------------------------------------------------------
-        */
-
-        $requestedAmount =
-            $loanRequest->requested_amount;
-
-        $reviewNote =
-            $request->validated('review_note');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | تاریخ مراجعه مجدد
-        |--------------------------------------------------------------------------
-        |
-        | nextReviewDateJalali:
-        | همان تاریخ شمسی که مدیر وارد کرده
-        |
-        | nextReviewDate:
-        | تبدیل شده به میلادی برای ذخیره در LoanRequest
-        |
-        */
-
-        $nextReviewDate = null;
-
-        $nextReviewDateJalali = null;
-
-
-        if (
-            $request->filled('next_review_date')
-        ) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | تاریخ شمسی اصلی
-            |--------------------------------------------------------------------------
-            */
-
-            $nextReviewDateJalali =
-                $request->validated(
-                    'next_review_date'
+            if ($loanRequest->loan_id) {
+                abort(
+                    422,
+                    'برای این درخواست قبلاً وام ایجاد شده است.'
                 );
+            }
 
+            $user = $loanRequest->customer?->user;
 
-            /*
-            |--------------------------------------------------------------------------
-            | تبدیل تاریخ شمسی به میلادی
-            |--------------------------------------------------------------------------
-            */
+            $requestedAmount =
+                $loanRequest->requested_amount;
 
-            $nextReviewDate =
-                app(JalaliDateService::class)
-                    ->toGregorian(
-                        $nextReviewDateJalali
+            $reviewNote =
+                $request->validated('review_note');
+
+            $nextReviewDate = null;
+            $nextReviewDateJalali = null;
+
+            if ($request->filled('next_review_date')) {
+                $nextReviewDateJalali =
+                    $request->validated(
+                        'next_review_date'
                     );
-        }
 
+                $nextReviewDate =
+                    app(JalaliDateService::class)
+                        ->toGregorian(
+                            $nextReviewDateJalali
+                        );
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | رد درخواست
-        |--------------------------------------------------------------------------
-        */
+            $loanRequest->update([
 
-        $loanRequest->update([
+                'status' =>
+                    LoanRequestStatus::REJECTED,
 
-            'status' =>
-                LoanRequestStatus::REJECTED,
+                'review_note' =>
+                    $reviewNote,
 
-            'review_note' =>
-                $reviewNote,
+                'next_review_date' =>
+                    $nextReviewDate,
 
-            /*
-            |--------------------------------------------------------------------------
-            | در LoanRequest تاریخ میلادی ذخیره می‌شود
-            |--------------------------------------------------------------------------
-            */
+                'reviewed_by' =>
+                    auth()->id(),
 
-            'next_review_date' =>
-                $nextReviewDate,
+                'reviewed_at' =>
+                    now(),
+            ]);
 
-            'reviewed_by' =>
-                auth()->id(),
+            if ($user) {
+                $userId = $user->id;
 
-            'reviewed_at' =>
-                now(),
-        ]);
+                $notificationData = [
 
+                    'type' =>
+                        'loan_request_rejected',
 
-        /*
-        |--------------------------------------------------------------------------
-        | ایجاد اعلان برای مشتری
-        |--------------------------------------------------------------------------
-        |
-        | اعلان مستقل از LoanRequest ذخیره می‌شود.
-        |
-        | تاریخ داخل Notification عمداً شمسی ذخیره می‌شود
-        | تا مشکل اختلاف یک روز به دلیل Timezone ایجاد نشود.
-        |
-        */
+                    'title' =>
+                        'درخواست وام تأیید نشد',
 
-        if ($user) {
+                    'message' =>
+                        'درخواست وام شما پس از بررسی مورد موافقت قرار نگرفت.',
 
+                    'data' => [
+
+                        'loan_request_id' =>
+                            $loanRequest->id,
+
+                        'requested_amount' =>
+                            $requestedAmount,
+
+                        'review_note' =>
+                            $reviewNote,
+
+                        'next_review_date' =>
+                            $nextReviewDateJalali,
+                    ],
+                ];
+            }
+        });
+
+        if ($userId && $notificationData) {
             Notification::create([
-
-                /*
-                |--------------------------------------------------------------------------
-                | User مشتری
-                |--------------------------------------------------------------------------
-                */
-
                 'user_id' =>
-                    $user->id,
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | نوع اعلان
-                |--------------------------------------------------------------------------
-                */
+                    $userId,
 
                 'type' =>
-                    'loan_request_rejected',
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | عنوان
-                |--------------------------------------------------------------------------
-                */
+                    $notificationData['type'],
 
                 'title' =>
-                    'درخواست وام تأیید نشد',
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | پیام عمومی سیستم
-                |--------------------------------------------------------------------------
-                |
-                | پیام مدیر در این قسمت قرار نمی‌گیرد
-                | تا در داشبورد دوبار نمایش داده نشود.
-                |
-                */
+                    $notificationData['title'],
 
                 'message' =>
-                    'درخواست وام شما پس از بررسی مورد موافقت قرار نگرفت.',
+                    $notificationData['message'],
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | اطلاعات کامل اعلان
-                |--------------------------------------------------------------------------
-                */
-
-                'data' => [
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | شناسه درخواست
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'loan_request_id' =>
-                        $loanRequest->id,
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | مبلغ درخواستی
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'requested_amount' =>
-                        $requestedAmount,
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | پیام مدیر
-                    |--------------------------------------------------------------------------
-                    */
-
-                    'review_note' =>
-                        $reviewNote,
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | تاریخ مراجعه مجدد
-                    |--------------------------------------------------------------------------
-                    |
-                    | اینجا تاریخ شمسی ذخیره می‌شود.
-                    |
-                    */
-
-                    'next_review_date' =>
-                        $nextReviewDateJalali,
-                ],
+                'data' =>
+                    $notificationData['data'],
             ]);
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | بازگشت به صفحه مدیریت
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->back()
@@ -863,191 +724,120 @@ class LoanRequestController extends Controller
             );
     }
 
-/**
- * تغییر تاریخ مراجعه مجدد
- */
-public function updateReviewDate(
-    Request $request,
-    LoanRequest $loanRequest
-) {
-    /*
-    |--------------------------------------------------------------------------
-    | فقط درخواست رد شده
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        $loanRequest->status !==
-        LoanRequestStatus::REJECTED
+    /**
+     * تغییر تاریخ مراجعه مجدد
+     */
+    public function updateReviewDate(
+        Request $request,
+        LoanRequest $loanRequest
     ) {
-        return redirect()
-            ->back()
-            ->with(
-                'error',
-                'فقط درخواست رد شده امکان تغییر تاریخ مراجعه مجدد دارد.'
-            );
-    }
+        if (
+            $loanRequest->status !==
+            LoanRequestStatus::REJECTED
+        ) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'فقط درخواست رد شده امکان تغییر تاریخ مراجعه مجدد دارد.'
+                );
+        }
 
+        $validated = $request->validate([
 
-    /*
-    |--------------------------------------------------------------------------
-    | Validation
-    |--------------------------------------------------------------------------
-    */
+            'next_review_date' => [
+                'required',
+                'string',
+            ],
 
-    $validated = $request->validate([
+        ]);
 
-        'next_review_date' => [
-            'required',
-            'string',
-        ],
+        $nextReviewDateJalali =
+            $validated['next_review_date'];
 
-    ]);
+        DB::transaction(function () use (
+            $loanRequest,
+            $nextReviewDateJalali
+        ) {
+            $lockedLoanRequest = LoanRequest::query()
+                ->lockForUpdate()
+                ->findOrFail($loanRequest->id);
 
+            if (
+                $lockedLoanRequest->status !==
+                LoanRequestStatus::REJECTED
+            ) {
+                abort(
+                    422,
+                    'فقط درخواست رد شده امکان تغییر تاریخ مراجعه مجدد دارد.'
+                );
+            }
 
-    /*
-    |--------------------------------------------------------------------------
-    | تاریخ شمسی جدید
-    |--------------------------------------------------------------------------
-    |
-    | مثال:
-    | 1405/09/30
-    |
-    */
+            $nextReviewDate =
+                app(JalaliDateService::class)
+                    ->toGregorian(
+                        $nextReviewDateJalali
+                    );
 
-    $nextReviewDateJalali =
-        $validated['next_review_date'];
+            $lockedLoanRequest->update([
 
+                'next_review_date' =>
+                    $nextReviewDate,
 
-    /*
-    |--------------------------------------------------------------------------
-    | تبدیل تاریخ شمسی به میلادی
-    |--------------------------------------------------------------------------
-    |
-    | برای ذخیره در LoanRequest
-    |
-    */
+                'reviewed_by' =>
+                    auth()->id(),
 
-    $nextReviewDate =
-        app(JalaliDateService::class)
-            ->toGregorian(
-                $nextReviewDateJalali
-            );
+                'reviewed_at' =>
+                    now(),
 
+            ]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | ذخیره تاریخ جدید در LoanRequest
-    |--------------------------------------------------------------------------
-    */
+            $lockedLoanRequest->load([
+                'customer.user',
+            ]);
 
-    $loanRequest->update([
+            $user =
+                $lockedLoanRequest->customer?->user;
 
-        'next_review_date' =>
-            $nextReviewDate,
+            if (!$user) {
+                return;
+            }
 
-        'reviewed_by' =>
-            auth()->id(),
+            $notification =
+                Notification::query()
+                    ->where(
+                        'user_id',
+                        $user->id
+                    )
+                    ->where(
+                        'type',
+                        'loan_request_rejected'
+                    )
+                    ->whereJsonContains(
+                        'data->loan_request_id',
+                        $lockedLoanRequest->id
+                    )
+                    ->latest('id')
+                    ->first();
 
-        'reviewed_at' =>
-            now(),
-
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | دریافت User مشتری
-    |--------------------------------------------------------------------------
-    */
-
-    $loanRequest->load([
-        'customer.user',
-    ]);
-
-    $user =
-        $loanRequest->customer?->user;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | به‌روزرسانی Notification قبلی
-    |--------------------------------------------------------------------------
-    |
-    | اعلان جدید ایجاد نمی‌کنیم.
-    |
-    | همان اعلان رد درخواست را پیدا می‌کنیم.
-    |
-    */
-
-    if ($user) {
-
-        $notification =
-            Notification::query()
-                ->where(
-                    'user_id',
-                    $user->id
-                )
-                ->where(
-                    'type',
-                    'loan_request_rejected'
-                )
-                ->whereJsonContains(
-                    'data->loan_request_id',
-                    $loanRequest->id
-                )
-                ->latest('id')
-                ->first();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | اعلان پیدا شد
-        |--------------------------------------------------------------------------
-        */
-
-        if ($notification) {
+            if (!$notification) {
+                return;
+            }
 
             $data =
                 $notification->data ?? [];
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | اطلاعات Notification
-            |--------------------------------------------------------------------------
-            */
-
             $data['loan_request_id'] =
-                $loanRequest->id;
+                $lockedLoanRequest->id;
 
             $data['requested_amount'] =
-                $loanRequest->requested_amount;
+                $lockedLoanRequest->requested_amount;
 
             $data['review_note'] =
-                $loanRequest->review_note;
-
-            /*
-            |--------------------------------------------------------------------------
-            | تاریخ جدید به صورت شمسی
-            |--------------------------------------------------------------------------
-            */
+                $lockedLoanRequest->review_note;
 
             $data['next_review_date'] =
                 $nextReviewDateJalali;
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ذخیره Notification
-            |--------------------------------------------------------------------------
-            |
-            | read_at = null
-            |
-            | یعنی این تغییر برای مشتری یک اعلان
-            | جدید محسوب می‌شود و دوباره نمایش داده خواهد شد.
-            |
-            */
 
             $notification->update([
 
@@ -1058,27 +848,15 @@ public function updateReviewDate(
                     null,
 
             ]);
+        });
 
-        }
-
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'تاریخ مراجعه مجدد با موفقیت تغییر کرد.'
+            );
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | بازگشت به صفحه مدیریت
-    |--------------------------------------------------------------------------
-    */
-
-    return redirect()
-        ->back()
-        ->with(
-            'success',
-            'تاریخ مراجعه مجدد با موفقیت تغییر کرد.'
-        );
-}
-
-
 
     /**
      * حذف درخواست
@@ -1086,15 +864,7 @@ public function updateReviewDate(
     public function destroy(
         LoanRequest $loanRequest
     ) {
-        /*
-        |--------------------------------------------------------------------------
-        | اگر برای درخواست وام ساخته شده باشد،
-        | حذف درخواست خطرناک است.
-        |--------------------------------------------------------------------------
-        */
-
         if ($loanRequest->loan_id) {
-
             return redirect()
                 ->back()
                 ->with(

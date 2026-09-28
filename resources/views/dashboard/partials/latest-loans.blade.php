@@ -24,7 +24,7 @@
         <span class="dashboard-latest-loans-count">
             <i class="bi bi-list-check"></i>
 
-            {{ $dashboard['latestLoans']->count() }}
+            {{ fa_number($dashboard['latestLoans']->count()) }}
 
             وام
         </span>
@@ -56,16 +56,14 @@
 
                     {{-- Loan Number --}}
                     <td>
-                        <div class="dashboard-loan-number">
+                        <div class="dashboard-loan-number" dir="ltr">
                             <span>
                                 {{ $loan->loan_number }}
                             </span>
+
                             <span class="dashboard-loan-prefix">
                                 {{ $loan->loanType->prefix }}
                             </span>
-
-
-
                         </div>
                     </td>
 
@@ -98,7 +96,7 @@
                     <td>
                         <span class="dashboard-loan-amount">
 
-                            {{ number_format($loan->loan_amount) }}
+                            {{ fa_money($loan->loan_amount) }}
 
                             <small>ریال</small>
 
@@ -122,8 +120,10 @@
                     {{-- Action --}}
                     <td class="text-center">
 
-                        <a href="{{ route('loans.show', $loan) }}"
-                           class="btn btn-sm dashboard-loan-action">
+                        <a
+                            href="{{ route('loans.show', $loan) }}"
+                            class="btn btn-sm dashboard-loan-action"
+                        >
 
                             <i class="bi bi-eye"></i>
 

@@ -7,10 +7,10 @@ use App\Http\Requests\Customer\StoreCustomerRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Services\Customer\CustomerService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
-
 
 class CustomerController extends Controller
 {
@@ -18,7 +18,6 @@ class CustomerController extends Controller
         private readonly CustomerService $customerService
     ) {
     }
-
 
     public function index(Request $request): View
     {
@@ -29,8 +28,6 @@ class CustomerController extends Controller
         return view('customer.index', compact('customers'));
     }
 
-
-
     public function create(): View
     {
         return view('customer.create', [
@@ -38,9 +35,7 @@ class CustomerController extends Controller
         ]);
     }
 
-
-
-    public function store(StoreCustomerRequest $request)
+    public function store(StoreCustomerRequest $request): RedirectResponse
     {
         $this->customerService->create(
             $request->validated()
@@ -51,20 +46,15 @@ class CustomerController extends Controller
             ->with('success', 'مشتری با موفقیت ثبت شد.');
     }
 
-
-
     public function edit(Customer $customer): View
     {
         return view('customer.edit', compact('customer'));
     }
 
-
-
     public function update(
         UpdateCustomerRequest $request,
         Customer $customer
-    ) {
-
+    ): RedirectResponse {
         $this->customerService->update(
             $customer,
             $request->validated()
@@ -75,9 +65,7 @@ class CustomerController extends Controller
             ->with('success', 'اطلاعات مشتری با موفقیت بروزرسانی شد.');
     }
 
-
-
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): RedirectResponse
     {
         $this->customerService->delete($customer);
 
@@ -86,19 +74,14 @@ class CustomerController extends Controller
             ->with('success', 'مشتری با موفقیت حذف شد.');
     }
 
-
-
     public function show(Customer $customer): View
     {
         return view('customer.show', compact('customer'));
     }
 
-
-
     public function archive(): View
     {
-        $customers = $this->customerService
-            ->getArchived();
+        $customers = $this->customerService->getArchived();
 
         return view(
             'customer.archive',
@@ -106,12 +89,9 @@ class CustomerController extends Controller
         );
     }
 
-
-
-    public function restore(int $id)
+    public function restore(int $id): RedirectResponse
     {
-        $this->customerService
-            ->restore($id);
+        $this->customerService->restore($id);
 
         return redirect()
             ->route('customers.archive')
@@ -124,15 +104,17 @@ class CustomerController extends Controller
     /**
      * جستجوی مشتری بر اساس کد
      */
-    public function searchByCode(Request $request)
+    public function searchByCode(Request $request): JsonResponse
     {
-        $request->validate([
-            'code' => ['required', 'string'],
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:50'],
         ]);
+
+        $code = trim($validated['code']);
 
         $customer = Customer::query()
             ->active()
-            ->where('customer_code', $request->code)
+            ->where('customer_code', $code)
             ->first();
 
         if (! $customer) {
@@ -152,7 +134,4 @@ class CustomerController extends Controller
             ],
         ]);
     }
-
-
-
 }

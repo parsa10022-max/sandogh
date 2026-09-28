@@ -14,7 +14,7 @@ class DepositRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'amount' => str_replace(',', '', $this->amount),
+            'amount' => clean_money($this->amount),
         ]);
     }
 

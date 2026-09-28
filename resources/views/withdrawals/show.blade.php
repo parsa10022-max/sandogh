@@ -206,7 +206,7 @@
                         <div class="withdrawal-amount-value">
 
                             <strong>
-                                {{ number_format($withdrawal->amount) }}
+                                {{ fa_money($withdrawal->amount) }}
                             </strong>
 
                             <span>
@@ -289,9 +289,11 @@
 
                         <strong dir="ltr">
 
-                            {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                $withdrawal->created_at
-                            )->format('Y/m/d H:i') }}
+                            {{ fa_number(
+                                \Morilog\Jalali\Jalalian::fromDateTime(
+                                    $withdrawal->created_at
+                                )->format('Y/m/d H:i')
+                            ) }}
 
                         </strong>
 
@@ -427,9 +429,11 @@
 
                                 @if($withdrawal->paid_at)
 
-                                    {{ \Morilog\Jalali\Jalalian::fromDateTime(
-                                        $withdrawal->paid_at
-                                    )->format('Y/m/d H:i') }}
+                                    {{ fa_number(
+                                        \Morilog\Jalali\Jalalian::fromDateTime(
+                                            $withdrawal->paid_at
+                                        )->format('Y/m/d H:i')
+                                    ) }}
 
                                 @else
 
@@ -695,4 +699,3 @@
     </div>
 
 @endsection
-

@@ -31,6 +31,12 @@ class RejectLoanRequestRequest extends FormRequest
         return [
             'review_note.required' =>
                 'پیام رد درخواست را وارد کنید.',
+
+            'review_note.string' =>
+                'پیام رد درخواست باید به صورت متن وارد شود.',
+
+            'next_review_date.string' =>
+                'تاریخ بررسی بعدی معتبر نیست.',
         ];
     }
 }

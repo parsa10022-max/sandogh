@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Customer;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Support\Iban;
 
@@ -19,27 +18,18 @@ class StoreCustomerRequest extends FormRequest
             'iban' => Iban::normalize($this->iban),
 
             'account_number_suffix' => str_replace(
-                ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
-                ['0','1','2','3','4','5','6','7','8','9'],
+                ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'],
+                ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
                 $this->account_number_suffix
             ),
 
-            'initial_balance' => str_replace(
-                ',',
-                '',
-                $this->initial_balance
-            ),
+            'initial_balance' => clean_money($this->initial_balance),
         ]);
     }
 
     public function rules(): array
     {
         return [
-
-            // -------------------------
-            // اطلاعات مشتری
-            // -------------------------
-
             'customer_code' => [
                 'required',
                 'integer',
@@ -84,18 +74,11 @@ class StoreCustomerRequest extends FormRequest
             'iban' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-
-                    if ($value && !\App\Support\Iban::isValid($value)) {
+                    if ($value && !Iban::isValid($value)) {
                         $fail('شماره شبا معتبر نیست.');
                     }
-
                 },
             ],
-
-
-            // -------------------------
-            // حساب مشتری
-            // -------------------------
 
             'account_type' => [
                 'required',
@@ -113,70 +96,50 @@ class StoreCustomerRequest extends FormRequest
                 'integer',
                 'min:0',
             ],
-
         ];
     }
 
     public function messages(): array
     {
         return [
+            'customer_code.required' => 'کد مشتری الزامی است.',
+            'customer_code.integer' => 'کد مشتری باید به صورت عدد صحیح باشد.',
+            'customer_code.unique' => 'این کد مشتری قبلاً ثبت شده است.',
 
-            'customer_code.required' =>
-                'کد مشتری الزامی است.',
+            'first_name.required' => 'نام الزامی است.',
+            'first_name.string' => 'نام باید به صورت متن وارد شود.',
+            'first_name.max' => 'نام نمی‌تواند بیشتر از ۵۰ کاراکتر باشد.',
 
-            'customer_code.unique' =>
-                'این کد مشتری قبلاً ثبت شده است.',
+            'last_name.required' => 'نام خانوادگی الزامی است.',
+            'last_name.string' => 'نام خانوادگی باید به صورت متن وارد شود.',
+            'last_name.max' => 'نام خانوادگی نمی‌تواند بیشتر از ۵۰ کاراکتر باشد.',
 
+            'father_name.string' => 'نام پدر باید به صورت متن وارد شود.',
+            'father_name.max' => 'نام پدر نمی‌تواند بیشتر از ۵۰ کاراکتر باشد.',
 
-            'first_name.required' =>
-                'نام الزامی است.',
+            'national_code.required' => 'کد ملی الزامی است.',
+            'national_code.digits' => 'کد ملی باید ۱۰ رقم باشد.',
+            'national_code.unique' => 'این کد ملی قبلاً ثبت شده است.',
 
-            'last_name.required' =>
-                'نام خانوادگی الزامی است.',
+            'mobile.required' => 'شماره موبایل الزامی است.',
+            'mobile.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'mobile.unique' => 'این شماره موبایل قبلاً ثبت شده است.',
 
+            'mobile_second.digits' => 'شماره موبایل دوم باید ۱۱ رقم باشد.',
 
-            'national_code.required' =>
-                'کد ملی الزامی است.',
+            'iban.required' => 'شماره شبا الزامی است.',
 
-            'national_code.digits' =>
-                'کد ملی باید ۱۰ رقم باشد.',
+            'account_type.required' => 'نوع حساب را انتخاب کنید.',
+            'account_type.integer' => 'نوع حساب انتخاب‌شده معتبر نیست.',
+            'account_type.in' => 'نوع حساب انتخاب‌شده معتبر نیست.',
 
-            'national_code.unique' =>
-                'این کد ملی قبلاً ثبت شده است.',
+            'account_number_suffix.required' => 'شماره حساب الزامی است.',
+            'account_number_suffix.digits_between' =>
+                'بخش شماره حساب باید بین ۱ تا ۱۶ رقم باشد.',
 
-
-            'mobile.required' =>
-                'شماره موبایل الزامی است.',
-
-            'mobile.digits' =>
-                'شماره موبایل باید ۱۱ رقم باشد.',
-
-            'mobile.unique' =>
-                'این شماره موبایل قبلاً ثبت شده است.',
-
-
-            'account_type.required' =>
-                'نوع حساب را انتخاب کنید.',
-
-            'account_type.in' =>
-                'نوع حساب انتخاب‌شده معتبر نیست.',
-
-
-            'account_number.required' =>
-                'شماره حساب الزامی است.',
-
-            'account_number.unique' =>
-                'این شماره حساب قبلاً ثبت شده است.',
-
-
-            'balance.required' =>
-                'موجودی اولیه الزامی است.',
-
-            'balance.integer' =>
-                'موجودی اولیه باید عدد صحیح باشد.',
-
-            'balance.min' =>
-                'موجودی اولیه نمی‌تواند منفی باشد.',
+            'initial_balance.required' => 'موجودی اولیه الزامی است.',
+            'initial_balance.integer' => 'موجودی اولیه باید عدد صحیح باشد.',
+            'initial_balance.min' => 'موجودی اولیه نمی‌تواند منفی باشد.',
         ];
     }
 }

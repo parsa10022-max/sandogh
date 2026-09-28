@@ -11,6 +11,13 @@ class ApproveLoanRequestRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'approved_amount' => clean_money($this->approved_amount),
+        ]);
+    }
+
     public function rules(): array
     {
         return [
@@ -48,19 +55,19 @@ class ApproveLoanRequestRequest extends FormRequest
     {
         return [
             'approved_amount.required' =>
-                'مبلغ تایید شده الزامی است.',
+                'مبلغ تأییدشده الزامی است.',
 
             'approved_amount.integer' =>
-                'مبلغ تایید شده باید عدد صحیح باشد.',
+                'مبلغ تأییدشده باید عدد صحیح باشد.',
 
             'approved_amount.min' =>
-                'مبلغ تایید شده باید بیشتر از صفر باشد.',
+                'مبلغ تأییدشده باید بیشتر از صفر باشد.',
 
             'loan_type_id.required' =>
                 'نوع وام را انتخاب کنید.',
 
             'loan_type_id.exists' =>
-                'نوع وام انتخاب شده معتبر نیست.',
+                'نوع وام انتخاب‌شده معتبر نیست.',
 
             'approved_installment_count.required' =>
                 'تعداد اقساط را وارد کنید.',
@@ -74,11 +81,17 @@ class ApproveLoanRequestRequest extends FormRequest
             'approved_installment_interval.required' =>
                 'دوره بازپرداخت را انتخاب کنید.',
 
+            'approved_installment_interval.integer' =>
+                'دوره بازپرداخت باید عدد صحیح باشد.',
+
             'approved_installment_interval.in' =>
-                'دوره بازپرداخت انتخاب شده معتبر نیست.',
+                'دوره بازپرداخت انتخاب‌شده معتبر نیست.',
 
             'review_note.required' =>
-                'پیام تایید را وارد کنید.',
+                'پیام تأیید را وارد کنید.',
+
+            'review_note.string' =>
+                'پیام تأیید باید به صورت متن وارد شود.',
         ];
     }
 }

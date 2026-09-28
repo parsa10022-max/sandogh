@@ -18,22 +18,10 @@ class StoreLoanGuarantorRequest extends FormRequest
     {
         return [
 
-            /*
-            |--------------------------------------------------------------------------
-            | وام
-            |--------------------------------------------------------------------------
-            */
-
             'loan_id' => [
                 'required',
                 'exists:loans,id',
             ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | اطلاعات ضامن
-            |--------------------------------------------------------------------------
-            */
 
             'guarantor_order' => [
                 'required',
@@ -46,22 +34,10 @@ class StoreLoanGuarantorRequest extends FormRequest
                 new Enum(GuarantorType::class),
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | عضو صندوق
-            |--------------------------------------------------------------------------
-            */
-
             'customer_id' => [
                 'nullable',
                 'exists:customers,id',
             ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | ضامن غیر عضو
-            |--------------------------------------------------------------------------
-            */
 
             'first_name' => [
                 'nullable',
@@ -85,17 +61,28 @@ class StoreLoanGuarantorRequest extends FormRequest
                 'digits:11',
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | مدرک ضمانت
-            |--------------------------------------------------------------------------
-            */
-
             'guarantee_type' => [
                 'required',
                 new Enum(GuaranteeType::class),
             ],
 
+            'guarantee_amount' => [
+                'nullable',
+                'integer',
+                'min:1',
+            ],
+
+            'guarantee_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'guarantee_account_number' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
         ];
     }
 
@@ -105,8 +92,11 @@ class StoreLoanGuarantorRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
-            | ضامن اول باید عضو صندوق باشد
+            | ضامن اول
             |--------------------------------------------------------------------------
+            |
+            | ضامن اول حتماً باید عضو صندوق باشد.
+            |
             */
 
             if (
@@ -137,12 +127,44 @@ class StoreLoanGuarantorRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
-            | غیر عضو صندوق
+            | خود وام‌گیرنده
+            |--------------------------------------------------------------------------
+            |
+            | فقط ضامن دوم و فقط با چک صیادی.
+            |
+            */
+
+            if (
+                $this->guarantor_type === GuarantorType::BORROWER->value
+            ) {
+                if ($this->guarantor_order != 2) {
+                    $validator->errors()->add(
+                        'guarantor_order',
+                        'خود وام‌گیرنده فقط می‌تواند به عنوان ضامن دوم ثبت شود.'
+                    );
+                }
+
+                if (
+                    $this->guarantee_type !==
+                    GuaranteeType::CHECK->value
+                ) {
+                    $validator->errors()->add(
+                        'guarantee_type',
+                        'خود وام‌گیرنده فقط با چک صیادی می‌تواند به عنوان ضامن دوم ثبت شود.'
+                    );
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | ضامن خارج از صندوق
             |--------------------------------------------------------------------------
             */
 
-            if ($this->guarantor_type === GuarantorType::OTHER->value) {
-
+            if (
+                $this->guarantor_type ===
+                GuarantorType::EXTERNAL->value
+            ) {
                 if (empty($this->first_name)) {
                     $validator->errors()->add(
                         'first_name',
@@ -171,24 +193,71 @@ class StoreLoanGuarantorRequest extends FormRequest
     {
         return [
 
-            'loan_id.required' => 'انتخاب وام الزامی است.',
-            'loan_id.exists' => 'وام انتخاب شده معتبر نیست.',
+            'loan_id.required' =>
+                'انتخاب وام الزامی است.',
 
-            'guarantor_order.required' => 'ترتیب ضامن الزامی است.',
-            'guarantor_order.in' => 'ترتیب ضامن باید ۱ یا ۲ باشد.',
+            'loan_id.exists' =>
+                'وام انتخاب‌شده معتبر نیست.',
 
-            'guarantor_type.required' => 'نوع ضامن الزامی است.',
+            'guarantor_order.required' =>
+                'ترتیب ضامن الزامی است.',
 
-            'customer_id.exists' => 'عضو صندوق انتخاب شده معتبر نیست.',
+            'guarantor_order.integer' =>
+                'ترتیب ضامن باید عدد صحیح باشد.',
 
-            'first_name.max' => 'نام حداکثر ۱۰۰ کاراکتر است.',
-            'last_name.max' => 'نام خانوادگی حداکثر ۱۰۰ کاراکتر است.',
+            'guarantor_order.in' =>
+                'ترتیب ضامن باید ۱ یا ۲ باشد.',
 
-            'national_code.digits' => 'کد ملی باید ۱۰ رقم باشد.',
+            'guarantor_type.required' =>
+                'نوع ضامن الزامی است.',
 
-            'mobile.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'guarantor_type.enum' =>
+                'نوع ضامن انتخاب‌شده معتبر نیست.',
 
-            'guarantee_type.required' => 'نوع مدرک ضمانت الزامی است.',
+            'customer_id.exists' =>
+                'عضو صندوق انتخاب‌شده معتبر نیست.',
+
+            'first_name.string' =>
+                'نام ضامن باید به صورت متن وارد شود.',
+
+            'first_name.max' =>
+                'نام ضامن نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'last_name.string' =>
+                'نام خانوادگی ضامن باید به صورت متن وارد شود.',
+
+            'last_name.max' =>
+                'نام خانوادگی ضامن نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'national_code.digits' =>
+                'کد ملی باید ۱۰ رقم باشد.',
+
+            'mobile.digits' =>
+                'شماره موبایل باید ۱۱ رقم باشد.',
+
+            'guarantee_type.required' =>
+                'نوع مدرک ضمانت الزامی است.',
+
+            'guarantee_type.enum' =>
+                'نوع مدرک ضمانت انتخاب‌شده معتبر نیست.',
+
+            'guarantee_amount.integer' =>
+                'مبلغ ضمانت باید عدد صحیح باشد.',
+
+            'guarantee_amount.min' =>
+                'مبلغ ضمانت باید بیشتر از صفر باشد.',
+
+            'guarantee_number.string' =>
+                'شماره مدرک ضمانت باید به صورت متن وارد شود.',
+
+            'guarantee_number.max' =>
+                'شماره مدرک ضمانت نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+
+            'guarantee_account_number.string' =>
+                'شماره حساب ضمانت باید به صورت متن وارد شود.',
+
+            'guarantee_account_number.max' =>
+                'شماره حساب ضمانت نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
         ];
     }
 }

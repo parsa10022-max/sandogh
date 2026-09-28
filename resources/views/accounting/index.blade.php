@@ -35,7 +35,9 @@
 
                 <i class="bi bi-hourglass-split"></i>
 
-                <span>{{ $totalCount }} عملیات در انتظار</span>
+                <span>
+                    {{ fa_number($totalCount) }} عملیات در انتظار
+                </span>
 
             </div>
 
@@ -62,7 +64,9 @@
                         </div>
 
                         <div class="accounting-stat-value">
-                            {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
+                            {{ fa_number(
+                                $savingsTransfersOwnCount + $savingsTransfersOtherCount
+                            ) }}
                         </div>
 
                     </div>
@@ -96,7 +100,7 @@
                         </div>
 
                         <div class="accounting-stat-value">
-                            {{ $withdrawalsCount }}
+                            {{ fa_number($withdrawalsCount) }}
                         </div>
 
                     </div>
@@ -130,7 +134,9 @@
                         </div>
 
                         <div class="accounting-stat-value">
-                            {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
+                            {{ fa_number(
+                                $loanPaymentsOwnCount + $loanPaymentsOtherCount
+                            ) }}
                         </div>
 
                     </div>
@@ -164,7 +170,7 @@
                         </div>
 
                         <div class="accounting-stat-value">
-                            {{ $totalCount }}
+                            {{ fa_number($totalCount) }}
                         </div>
 
                     </div>
@@ -232,7 +238,9 @@
                         </div>
 
                         <div class="accounting-operation-count accounting-operation-count-primary">
-                            {{ $savingsTransfersOwnCount + $savingsTransfersOtherCount }}
+                            {{ fa_number(
+                                $savingsTransfersOwnCount + $savingsTransfersOtherCount
+                            ) }}
                         </div>
 
                         <i class="bi bi-chevron-left accounting-operation-arrow"></i>
@@ -261,7 +269,7 @@
                         </div>
 
                         <div class="accounting-operation-count accounting-operation-count-danger">
-                            {{ $withdrawalsCount }}
+                            {{ fa_number($withdrawalsCount) }}
                         </div>
 
                         <i class="bi bi-chevron-left accounting-operation-arrow"></i>
@@ -290,7 +298,9 @@
                         </div>
 
                         <div class="accounting-operation-count accounting-operation-count-success">
-                            {{ $loanPaymentsOwnCount + $loanPaymentsOtherCount }}
+                            {{ fa_number(
+                                $loanPaymentsOwnCount + $loanPaymentsOtherCount
+                            ) }}
                         </div>
 
                         <i class="bi bi-chevron-left accounting-operation-arrow"></i>

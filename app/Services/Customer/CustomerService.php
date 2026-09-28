@@ -3,23 +3,17 @@
 namespace App\Services\Customer;
 
 use App\Enums\AccountStatus;
+use App\Enums\AccountType;
 use App\Enums\CustomerStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionSource;
-
+use App\Enums\TransactionType;
 use App\Models\Customer;
 use App\Services\Account\AccountService;
+use App\Services\Account\AccountTransactionService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-
-use App\Enums\AccountType;
-
-use App\Enums\TransactionType;
-use App\Models\Account;
-use App\Models\AccountTransaction;
-use App\Services\Account\AccountTransactionService;
-
 
 class CustomerService
 {
@@ -33,7 +27,6 @@ class CustomerService
         int $perPage = 15,
         ?string $search = null
     ): LengthAwarePaginator {
-
         return Customer::query()
             ->search($search)
             ->latest()
@@ -41,17 +34,12 @@ class CustomerService
             ->withQueryString();
     }
 
-
     /**
      * ایجاد مشتری به همراه حساب
      */
     public function create(array $data): Customer
     {
         return DB::transaction(function () use ($data) {
-
-            // -------------------------
-            // اطلاعات مشتری
-            // -------------------------
 
             $customerData = [
                 'customer_code' => $data['customer_code'],
@@ -67,92 +55,50 @@ class CustomerService
 
             $customer = Customer::create($customerData);
 
-
-            // -------------------------
-            // اطلاعات حساب
-            // -------------------------
-
             $accountType = AccountType::from(
                 (int) $data['account_type']
             );
 
-            $prefix = $accountType->prefix();
-
-            $suffix = $data['account_number_suffix'];
-
-            $accountNumber = $prefix . '-' . $suffix;
-
-
-            // -------------------------
-            // ایجاد حساب
-            // -------------------------
+            $accountNumber = $accountType->prefix()
+                . '-'
+                . $data['account_number_suffix'];
 
             $account = $customer->accounts()->create([
-
                 'account_number' => $accountNumber,
-
                 'account_type' => $accountType,
-
                 'balance' => 0,
-
                 'status' => AccountStatus::ACTIVE,
-
                 'opened_date' => now(),
-
             ]);
-
-
-            // -------------------------
-            // موجودی اولیه
-            // -------------------------
 
             $initialBalance = (int) $data['initial_balance'];
 
-
             if ($initialBalance > 0) {
+                $balanceBefore = $account->balance;
 
-                $balanceBefore = 0;
+                $this->accountService->depositBalance(
+                    account: $account,
+                    amount: $initialBalance,
+                );
 
-                $balanceAfter = $initialBalance;
-
-
-                $account->update([
-                    'balance' => $balanceAfter,
-                ]);
-
-
-                // -------------------------
-                // ثبت تراکنش اولیه
-                // -------------------------
+                $balanceAfter = $balanceBefore + $initialBalance;
 
                 $this->accountTransactionService->create(
-
-                    account: $account,
-
+                    account: $account->fresh(),
                     type: TransactionType::DEPOSIT,
-
                     source: TransactionSource::OPERATOR,
-
                     paymentMethod: PaymentMethod::BANK_TRANSFER,
-
                     amount: $initialBalance,
-
                     balanceBefore: $balanceBefore,
-
                     balanceAfter: $balanceAfter,
-
                     createdBy: auth()->id(),
-
                     description: 'موجودی اولیه هنگام افتتاح حساب',
-
                 );
             }
-
 
             return $customer;
         });
     }
-
 
     /**
      * بروزرسانی اطلاعات مشتری
@@ -161,12 +107,10 @@ class CustomerService
         Customer $customer,
         array $data
     ): Customer {
-
         $customer->update($data);
 
         return $customer->fresh();
     }
-
 
     /**
      * حذف مشتری
@@ -176,7 +120,6 @@ class CustomerService
         return $customer->delete();
     }
 
-
     /**
      * دریافت مشتری
      */
@@ -185,7 +128,6 @@ class CustomerService
         return Customer::find($id);
     }
 
-
     /**
      * تغییر وضعیت مشتری
      */
@@ -193,7 +135,6 @@ class CustomerService
         Customer $customer,
         CustomerStatus $status
     ): Customer {
-
         $customer->update([
             'status' => $status,
         ]);
@@ -201,16 +142,13 @@ class CustomerService
         return $customer->fresh();
     }
 
-
     public function getArchived(
         int $perPage = 15
     ): LengthAwarePaginator {
-
         return Customer::onlyTrashed()
             ->latest()
             ->paginate($perPage);
     }
-
 
     public function restore(int $id): void
     {
@@ -218,7 +156,6 @@ class CustomerService
             ->findOrFail($id)
             ->restore();
     }
-
 
     public function getActive(): Collection
     {

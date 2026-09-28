@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     <div class="container-fluid daily-operations-report">
 
         @php
@@ -22,36 +23,27 @@
 
                 try {
 
-                    return \Morilog\Jalali\Jalalian::fromCarbon($date)
-                        ->format(
-                            $withTime
-                                ? 'Y/m/d H:i'
-                                : 'Y/m/d'
-                        );
+                    return fa_number(
+                        \Morilog\Jalali\Jalalian::fromCarbon($date)
+                            ->format(
+                                $withTime
+                                    ? 'Y/m/d H:i'
+                                    : 'Y/m/d'
+                            )
+                    );
 
                 } catch (\Throwable $e) {
 
                     return '—';
 
                 }
+
             };
 
 
             /*
             |--------------------------------------------------------------------------
             | فرمت شماره حساب
-            |--------------------------------------------------------------------------
-            |
-            | استفاده از Non-Breaking Hyphen باعث می‌شود:
-            |
-            | 6111-000005
-            |
-            | در چاپ به:
-            |
-            | 6111-
-            | 000005
-            |
-            | شکسته نشود.
             |--------------------------------------------------------------------------
             */
 
@@ -422,7 +414,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($counts['customers']) }}
+                            {{ fa_number($counts['customers']) }}
 
                             نفر
 
@@ -449,7 +441,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['own_savings_transfers']) }}
+                            {{ fa_money($totals['own_savings_transfers']) }}
 
                             ریال
 
@@ -476,7 +468,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['other_savings_transfers']) }}
+                            {{ fa_money($totals['other_savings_transfers']) }}
 
                             ریال
 
@@ -503,7 +495,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['own_loan_payments']) }}
+                            {{ fa_money($totals['own_loan_payments']) }}
 
                             ریال
 
@@ -530,7 +522,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['other_loan_payments']) }}
+                            {{ fa_money($totals['other_loan_payments']) }}
 
                             ریال
 
@@ -557,7 +549,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totals['donations']) }}
+                            {{ fa_money($totals['donations']) }}
 
                             ریال
 
@@ -592,7 +584,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totalOperations) }}
+                            {{ fa_number($totalOperations) }}
 
                         </div>
 
@@ -609,7 +601,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format(
+                            {{ fa_money(
                                 $totals['own_savings_transfers']
                                 + $totals['other_savings_transfers']
                             ) }}
@@ -631,7 +623,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format(
+                            {{ fa_money(
                                 $totals['own_loan_payments']
                                 + $totals['other_loan_payments']
                             ) }}
@@ -653,7 +645,7 @@
 
                         <div class="summary-value">
 
-                            {{ number_format($totalReceived) }}
+                            {{ fa_money($totalReceived) }}
 
                             ریال
 
@@ -688,11 +680,11 @@
 
                     <span class="text-muted small">
 
-                        {{ number_format($totalOperations) }}
+                    {{ fa_number($totalOperations) }}
 
-                        عملیات
+                    عملیات
 
-                    </span>
+                </span>
 
                 </div>
 
@@ -744,33 +736,29 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-primary-subtle text-primary">
+                            <span class="badge bg-primary-subtle text-primary">
 
-                                    <i class="bi bi-person-plus me-1"></i>
+                                <i class="bi bi-person-plus me-1"></i>
 
-                                    ثبت‌نام مشتری
+                                ثبت‌نام مشتری
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td dir="ltr">
-
                                 {{ $customer->customer_code ?? '—' }}
-
                             </td>
 
                             <td>
 
                                 <div class="fw-semibold">
-
                                     {{ $customerName($customer) }}
-
                                 </div>
 
                                 @if($customer->mobile)
@@ -787,21 +775,12 @@
 
                             </td>
 
-                            <td>
-                                —
-                            </td>
+                            <td>—</td>
+
+                            <td>—</td>
 
                             <td>
-                                —
-                            </td>
-
-                            <td>
-
-                                {{ $jalaliDate(
-                                    $customer->created_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($customer->created_at, true) }}
                             </td>
 
                             <td>
@@ -822,25 +801,23 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-success-subtle text-success">
+                            <span class="badge bg-success-subtle text-success">
 
-                                    <i class="bi bi-wallet2 me-1"></i>
+                                <i class="bi bi-wallet2 me-1"></i>
 
-                                    واریز به پس‌انداز خود
+                                واریز به پس‌انداز خود
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td dir="ltr">
-
                                 {{ $transfer->receiver?->customer_code ?? '—' }}
-
                             </td>
 
                             <td>
@@ -872,31 +849,26 @@
                                 class="account-number"
                             >
 
-                                <span dir="ltr">
+                            <span dir="ltr">
 
-                                    {{ $formatAccountNumber(
-                                        $transfer->account?->account_number
-                                    ) }}
+                                {{ $formatAccountNumber(
+                                    $transfer->account?->account_number
+                                ) }}
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($transfer->amount) }}
+                                {{ fa_money($transfer->amount) }}
 
                                 ریال
 
                             </td>
 
                             <td>
-
-                                {{ $jalaliDate(
-                                    $transfer->paid_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($transfer->paid_at, true) }}
                             </td>
 
                             <td>
@@ -917,18 +889,18 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-info-subtle text-info-emphasis">
+                            <span class="badge bg-info-subtle text-info-emphasis">
 
-                                    <i class="bi bi-person-plus me-1"></i>
+                                <i class="bi bi-person-plus me-1"></i>
 
-                                    واریز به پس‌انداز دیگران
+                                واریز به پس‌انداز دیگران
 
-                                </span>
+                            </span>
 
                             </td>
 
@@ -940,9 +912,9 @@
 
                                     <span dir="ltr">
 
-                                        {{ $transfer->sender?->customer?->customer_code ?? '—' }}
+                                    {{ $transfer->sender?->customer?->customer_code ?? '—' }}
 
-                                    </span>
+                                </span>
 
                                 </div>
 
@@ -952,9 +924,9 @@
 
                                     <span dir="ltr">
 
-                                        {{ $transfer->receiver?->customer_code ?? '—' }}
+                                    {{ $transfer->receiver?->customer_code ?? '—' }}
 
-                                    </span>
+                                </span>
 
                                 </div>
 
@@ -989,39 +961,32 @@
                                 class="account-number"
                             >
 
-                                <span dir="ltr">
+                            <span dir="ltr">
 
-                                    {{ $formatAccountNumber(
-                                        $transfer->account?->account_number
-                                    ) }}
+                                {{ $formatAccountNumber(
+                                    $transfer->account?->account_number
+                                ) }}
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($transfer->amount) }}
+                                {{ fa_money($transfer->amount) }}
 
                                 ریال
 
                             </td>
 
                             <td>
-
-                                {{ $jalaliDate(
-                                    $transfer->paid_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($transfer->paid_at, true) }}
                             </td>
 
                             <td>
 
                                 واریز به حساب پس‌انداز
-                                {{ $customerName(
-                                    $transfer->receiver
-                                ) }}
+                                {{ $customerName($transfer->receiver) }}
 
                                 <div class="small text-muted mt-1">
 
@@ -1049,25 +1014,23 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-warning-subtle text-warning-emphasis">
+                            <span class="badge bg-warning-subtle text-warning-emphasis">
 
-                                    <i class="bi bi-credit-card me-1"></i>
+                                <i class="bi bi-credit-card me-1"></i>
 
-                                    پرداخت قسط خود
+                                پرداخت قسط خود
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td dir="ltr">
-
                                 {{ $payment->loan?->customer?->customer_code ?? '—' }}
-
                             </td>
 
                             <td>
@@ -1101,10 +1064,8 @@
                                     وام شماره:
 
                                     <span dir="ltr">
-
-                                        {{ $payment->loan?->loan_number ?? '—' }}
-
-                                    </span>
+                                    {{ $payment->loan?->loan_number ?? '—' }}
+                                </span>
 
                                 </div>
 
@@ -1112,7 +1073,9 @@
 
                                     قسط شماره:
 
-                                    {{ $payment->installment?->installment_number ?? '—' }}
+                                    {{ fa_number(
+                                        $payment->installment?->installment_number ?? '—'
+                                    ) }}
 
                                 </div>
 
@@ -1120,34 +1083,29 @@
 
                             <td class="fw-semibold">
 
-                                {{ number_format($payment->amount) }}
+                                {{ fa_money($payment->amount) }}
 
                                 ریال
 
                             </td>
 
                             <td>
-
-                                {{ $jalaliDate(
-                                    $payment->paid_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($payment->paid_at, true) }}
                             </td>
 
                             <td>
 
                                 پرداخت قسط شماره
 
-                                {{ $payment->installment?->installment_number ?? '—' }}
+                                {{ fa_number(
+                                    $payment->installment?->installment_number ?? '—'
+                                ) }}
 
                                 از وام
 
                                 <span dir="ltr">
-
-                                    {{ $payment->loan?->loan_number ?? '—' }}
-
-                                </span>
+                                {{ $payment->loan?->loan_number ?? '—' }}
+                            </span>
 
                                 <div class="small text-muted mt-1">
 
@@ -1175,18 +1133,18 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-warning-subtle text-warning-emphasis">
+                            <span class="badge bg-warning-subtle text-warning-emphasis">
 
-                                    <i class="bi bi-people me-1"></i>
+                                <i class="bi bi-people me-1"></i>
 
-                                    پرداخت قسط دیگران
+                                پرداخت قسط دیگران
 
-                                </span>
+                            </span>
 
                             </td>
 
@@ -1198,9 +1156,9 @@
 
                                     <span dir="ltr">
 
-                                        {{ $payment->user?->customer?->customer_code ?? '—' }}
+                                    {{ $payment->user?->customer?->customer_code ?? '—' }}
 
-                                    </span>
+                                </span>
 
                                 </div>
 
@@ -1210,9 +1168,9 @@
 
                                     <span dir="ltr">
 
-                                        {{ $payment->loan?->customer?->customer_code ?? '—' }}
+                                    {{ $payment->loan?->customer?->customer_code ?? '—' }}
 
-                                    </span>
+                                </span>
 
                                 </div>
 
@@ -1249,10 +1207,8 @@
                                     وام شماره:
 
                                     <span dir="ltr">
-
-                                        {{ $payment->loan?->loan_number ?? '—' }}
-
-                                    </span>
+                                    {{ $payment->loan?->loan_number ?? '—' }}
+                                </span>
 
                                 </div>
 
@@ -1260,7 +1216,9 @@
 
                                     قسط شماره:
 
-                                    {{ $payment->installment?->installment_number ?? '—' }}
+                                    {{ fa_number(
+                                        $payment->installment?->installment_number ?? '—'
+                                    ) }}
 
                                 </div>
 
@@ -1268,34 +1226,29 @@
 
                             <td class="fw-semibold">
 
-                                {{ number_format($payment->amount) }}
+                                {{ fa_money($payment->amount) }}
 
                                 ریال
 
                             </td>
 
                             <td>
-
-                                {{ $jalaliDate(
-                                    $payment->paid_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($payment->paid_at, true) }}
                             </td>
 
                             <td>
 
                                 پرداخت قسط شماره
 
-                                {{ $payment->installment?->installment_number ?? '—' }}
+                                {{ fa_number(
+                                    $payment->installment?->installment_number ?? '—'
+                                ) }}
 
                                 از وام
 
                                 <span dir="ltr">
-
-                                    {{ $payment->loan?->loan_number ?? '—' }}
-
-                                </span>
+                                {{ $payment->loan?->loan_number ?? '—' }}
+                            </span>
 
                                 <div class="small text-muted mt-1">
 
@@ -1331,25 +1284,23 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-secondary-subtle text-secondary-emphasis">
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis">
 
-                                    <i class="bi bi-heart me-1"></i>
+                                <i class="bi bi-heart me-1"></i>
 
-                                    کمک / صدقه
+                                کمک / صدقه
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td dir="ltr">
-
                                 {{ $donation->customer?->customer_code ?? '—' }}
-
                             </td>
 
                             <td>
@@ -1391,31 +1342,26 @@
                                 class="account-number"
                             >
 
-                                <span dir="ltr">
+                            <span dir="ltr">
 
-                                    {{ $formatAccountNumber(
-                                        $donation->account?->account_number
-                                    ) }}
+                                {{ $formatAccountNumber(
+                                    $donation->account?->account_number
+                                ) }}
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td class="fw-semibold">
 
-                                {{ number_format($donation->amount) }}
+                                {{ fa_money($donation->amount) }}
 
                                 ریال
 
                             </td>
 
                             <td>
-
-                                {{ $jalaliDate(
-                                    $donation->created_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($donation->created_at, true) }}
                             </td>
 
                             <td>
@@ -1429,10 +1375,8 @@
                                         پیگیری:
 
                                         <span dir="ltr">
-
-                                            {{ $donation->tracking_code }}
-
-                                        </span>
+                                        {{ $donation->tracking_code }}
+                                    </span>
 
                                     </div>
 
@@ -1454,25 +1398,23 @@
                         <tr>
 
                             <td>
-                                {{ $row++ }}
+                                {{ fa_number($row++) }}
                             </td>
 
                             <td>
 
-                                <span class="badge bg-dark-subtle text-dark">
+                            <span class="badge bg-dark-subtle text-dark">
 
-                                    <i class="bi bi-file-earmark-text me-1"></i>
+                                <i class="bi bi-file-earmark-text me-1"></i>
 
-                                    درخواست وام
+                                درخواست وام
 
-                                </span>
+                            </span>
 
                             </td>
 
                             <td dir="ltr">
-
                                 {{ $loanRequest->customer?->customer_code ?? '—' }}
-
                             </td>
 
                             <td>
@@ -1489,21 +1431,12 @@
 
                             </td>
 
-                            <td>
-                                —
-                            </td>
+                            <td>—</td>
+
+                            <td>—</td>
 
                             <td>
-                                —
-                            </td>
-
-                            <td>
-
-                                {{ $jalaliDate(
-                                    $loanRequest->created_at,
-                                    true
-                                ) }}
-
+                                {{ $jalaliDate($loanRequest->created_at, true) }}
                             </td>
 
                             <td>
@@ -1557,7 +1490,6 @@
 
         </div>
 
-
     </div>
 
 
@@ -1567,474 +1499,202 @@
 
     <style>
 
-        /*
-        |--------------------------------------------------------------------------
-        | LTR
-        |--------------------------------------------------------------------------
-        |
-        | فقط span را inline-block می‌کنیم.
-        | خود td نباید inline-block شود.
-        |--------------------------------------------------------------------------
-        */
-
         .daily-operations-report .operations-table span[dir="ltr"] {
             direction: ltr;
             unicode-bidi: embed;
             display: inline-block;
         }
 
-
         .daily-operations-report .operations-table td[dir="ltr"] {
             direction: ltr;
             unicode-bidi: embed;
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | شماره حساب
-        |--------------------------------------------------------------------------
-        */
-
         .daily-operations-report .operations-table td.account-number,
         .daily-operations-report .operations-table td.account-number span {
-
             white-space: nowrap !important;
-
             word-break: keep-all !important;
-
             overflow-wrap: normal !important;
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | کدها و شماره‌های LTR
-        |--------------------------------------------------------------------------
-        */
 
         .daily-operations-report .operations-table td[dir="ltr"] {
-
             white-space: nowrap;
-
             word-break: keep-all;
-
             overflow-wrap: normal;
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | جدول
-        |--------------------------------------------------------------------------
-        */
 
         .daily-operations-report .operations-table {
-
             min-width: 1050px;
-
             width: 100%;
-
             color: #334155;
-
             font-size: .87rem;
-
         }
-
 
         .daily-operations-report .operations-table th {
-
             font-weight: 700;
-
             white-space: nowrap;
-
         }
-
 
         .daily-operations-report .operations-table td {
-
             vertical-align: middle;
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Summary
-        |--------------------------------------------------------------------------
-        */
 
         .daily-operations-report .summary-card {
-
             border: 0;
-
             border-radius: 1rem;
-
             box-shadow: 0 .125rem .5rem rgba(15, 23, 42, .06);
-
         }
-
 
         .daily-operations-report .summary-label {
-
             color: #64748b;
-
             font-size: .82rem;
-
             margin-bottom: .35rem;
-
         }
-
 
         .daily-operations-report .summary-value {
-
             color: #1e293b;
-
             font-weight: 700;
-
             font-size: 1rem;
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PRINT
-        |--------------------------------------------------------------------------
-        */
 
         @media print {
 
             @page {
-
                 size: A4 landscape;
-
                 margin: 8mm;
-
             }
-
 
             html,
             body {
-
                 width: 100% !important;
-
                 margin: 0 !important;
-
                 padding: 0 !important;
-
                 background: #fff !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | حذف اجزای غیرقابل چاپ
-            |--------------------------------------------------------------------------
-            */
 
             .no-print,
             .navbar,
             .sidebar,
             footer {
-
                 display: none !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | گزارش
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report {
-
                 width: 100% !important;
-
                 max-width: none !important;
-
                 margin: 0 !important;
-
                 padding: 0 !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | کارت‌ها
-            |--------------------------------------------------------------------------
-            */
 
             .report-header,
             .summary-card {
-
                 break-inside: avoid !important;
-
                 page-break-inside: avoid !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | کارت جدول
-            |--------------------------------------------------------------------------
-            */
 
             .operations-card {
-
                 box-shadow: none !important;
-
                 border: 1px solid #ddd !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | جدول چاپ
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table {
-
                 width: 100% !important;
-
                 min-width: 0 !important;
-
                 table-layout: fixed !important;
-
                 border-collapse: collapse !important;
-
                 font-size: 8.5pt !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Header جدول در صفحات بعدی
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table thead {
-
                 display: table-header-group !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | جلوگیری از شکستن ردیف
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table tbody tr {
-
                 break-inside: avoid !important;
-
                 page-break-inside: avoid !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | سلول‌ها
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table th,
             .daily-operations-report .operations-table td {
-
                 padding: 4px 5px !important;
-
                 vertical-align: middle !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | عرض ستون‌ها
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table th:nth-child(1),
             .daily-operations-report .operations-table td:nth-child(1) {
-
                 width: 4% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(2),
             .daily-operations-report .operations-table td:nth-child(2) {
-
                 width: 12% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(3),
             .daily-operations-report .operations-table td:nth-child(3) {
-
                 width: 10% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(4),
             .daily-operations-report .operations-table td:nth-child(4) {
-
                 width: 20% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(5),
             .daily-operations-report .operations-table td:nth-child(5) {
-
                 width: 18% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(6),
             .daily-operations-report .operations-table td:nth-child(6) {
-
                 width: 11% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(7),
             .daily-operations-report .operations-table td:nth-child(7) {
-
                 width: 11% !important;
-
             }
-
 
             .daily-operations-report .operations-table th:nth-child(8),
             .daily-operations-report .operations-table td:nth-child(8) {
-
                 width: 14% !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | LTR در چاپ
-            |--------------------------------------------------------------------------
-            |
-            | مهم:
-            | display:inline-block فقط روی span اعمال می‌شود.
-            | روی td اعمال نمی‌شود.
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table span[dir="ltr"] {
-
                 direction: ltr !important;
-
                 unicode-bidi: embed !important;
-
                 display: inline-block !important;
-
             }
-
 
             .daily-operations-report .operations-table td[dir="ltr"] {
-
                 direction: ltr !important;
-
                 unicode-bidi: embed !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | شماره حساب در چاپ
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table td.account-number,
             .daily-operations-report .operations-table td.account-number span {
-
                 white-space: nowrap !important;
-
                 word-break: keep-all !important;
-
                 overflow-wrap: normal !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | کد مشتری و سایر اعداد LTR
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table td[dir="ltr"] {
-
                 white-space: nowrap !important;
-
                 word-break: keep-all !important;
-
                 overflow-wrap: normal !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | جلوگیری از نمایش کنترل‌های Bootstrap در چاپ
-            |--------------------------------------------------------------------------
-            */
 
             .table-responsive {
-
                 overflow: visible !important;
-
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | رنگ‌ها در چاپ
-            |--------------------------------------------------------------------------
-            */
 
             .daily-operations-report .operations-table th {
-
                 background: #f3f4f6 !important;
-
                 color: #111827 !important;
-
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | حذف سایه
-            |--------------------------------------------------------------------------
-            */
-
             .daily-operations-report .card {
-
                 box-shadow: none !important;
-
             }
 
         }

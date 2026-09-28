@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\InstallmentStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,42 +18,26 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-
             // شماره قسط
-            $table->unsignedSmallInteger(
-                'installment_number'
-            );
-
+            $table->unsignedSmallInteger('installment_number');
 
             // مبلغ قسط (ریال)
-            $table->unsignedBigInteger(
-                'amount'
-            );
-
+            $table->unsignedBigInteger('amount');
 
             // تاریخ سررسید (میلادی)
-            $table->date(
-                'due_date'
-            );
-
+            $table->date('due_date');
 
             // وضعیت قسط
-            $table->unsignedTinyInteger(
-                'status'
-            )->default(0);
-
+            $table->unsignedTinyInteger('status')
+                ->default(InstallmentStatus::PENDING->value);
 
             // زمان پرداخت
-            $table->dateTime(
-                'paid_at'
-            )->nullable();
-
+            $table->dateTime('paid_at')
+                ->nullable();
 
             // توضیحات
-            $table->text(
-                'description'
-            )->nullable();
-
+            $table->text('description')
+                ->nullable();
 
             // ثبت کننده
             $table->foreignId('created_by')
@@ -60,27 +45,21 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
 
-
             // ویرایش کننده
             $table->foreignId('updated_by')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
 
-
             $table->timestamps();
-
-
 
             // جلوگیری از شماره قسط تکراری برای یک وام
             $table->unique([
                 'loan_id',
-                'installment_number'
+                'installment_number',
             ]);
-
         });
     }
-
 
     public function down(): void
     {

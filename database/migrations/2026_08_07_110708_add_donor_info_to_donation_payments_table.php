@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('donor_mobile')
                 ->nullable()
                 ->after('donor_name');
-
         });
     }
 
@@ -30,7 +29,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('donation_payments', function (Blueprint $table) {
-            //
+
+            $table->dropColumn([
+                'donor_name',
+                'donor_mobile',
+            ]);
         });
     }
 };

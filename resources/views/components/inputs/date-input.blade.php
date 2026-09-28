@@ -5,7 +5,7 @@
 'required' => false,
 'readonly' => false,
 'disabled' => false,
-'placeholder' => '1405/04/28',
+'placeholder' => '۱۴۰۵/۰۴/۲۸',
 'col' => null,
 ])
 
@@ -22,6 +22,7 @@
         id="{{ $name }}"
         name="{{ $name }}"
         value="{{ old($name, $value) }}"
+        placeholder="{{ $placeholder }}"
         data-jdp
         autocomplete="off"
 
@@ -38,3 +39,4 @@
     <x-form.error :name="$name"/>
 
 </x-form.group>
+

@@ -5,6 +5,7 @@ namespace App\Services\Installment;
 use App\Enums\InstallmentStatus;
 use App\Models\Installment;
 use App\Models\Loan;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class InstallmentService
@@ -16,33 +17,16 @@ class InstallmentService
         Loan $loan,
         array $schedule
     ): void {
-
-        DB::transaction(function () use ($loan, $schedule) {
-
-
-            foreach ($schedule as $item) {
-
-                Installment::create(array(
-
-                    'loan_id' => $loan->id,
-
-                    'installment_number' => $item['number'],
-
-                    'amount' => (int) $item['amount'],
-
-
-                    'due_date' => $item['gregorian_date'],
-
-                    'status' => InstallmentStatus::PENDING,
-
-                    'created_by' => auth()->id(),
-
-                ));
-
-            }
-
-        });
-
+        foreach ($schedule as $item) {
+            Installment::create([
+                'loan_id' => $loan->id,
+                'installment_number' => $item['number'],
+                'amount' => (int) $item['amount'],
+                'due_date' => $item['gregorian_date'],
+                'status' => InstallmentStatus::PENDING,
+                'created_by' => auth()->id(),
+            ]);
+        }
     }
 
     /**
@@ -50,33 +34,41 @@ class InstallmentService
      */
     public function getByLoan(
         Loan $loan
-    ) {
-
+    ): Collection {
         return $loan->installments()
             ->orderBy('installment_number')
             ->get();
-
     }
 
     /**
      * پرداخت قسط
+     *
+     * این متد برای تغییر مستقیم وضعیت قسط است.
+     * پرداخت واقعی آنلاین در PaymentService کنترل می‌شود.
      */
     public function pay(
         Installment $installment
     ): Installment {
+        return DB::transaction(function () use ($installment) {
 
-        $installment->update([
+            $installment = Installment::query()
+                ->lockForUpdate()
+                ->findOrFail($installment->id);
 
-            'status' => InstallmentStatus::PAID,
+            if ($installment->status === InstallmentStatus::PAID) {
+                throw new \DomainException(
+                    'این قسط قبلاً پرداخت شده است.'
+                );
+            }
 
-            'paid_at' => now(),
+            $installment->update([
+                'status' => InstallmentStatus::PAID,
+                'paid_at' => now(),
+                'updated_by' => auth()->id(),
+            ]);
 
-            'updated_by' => auth()->id(),
-
-        ]);
-
-        return $installment->fresh();
-
+            return $installment->fresh();
+        });
     }
 
     /**
@@ -85,19 +77,26 @@ class InstallmentService
     public function cancelPayment(
         Installment $installment
     ): Installment {
+        return DB::transaction(function () use ($installment) {
 
-        $installment->update([
+            $installment = Installment::query()
+                ->lockForUpdate()
+                ->findOrFail($installment->id);
 
-            'status' => InstallmentStatus::PENDING,
+            if ($installment->status !== InstallmentStatus::PAID) {
+                throw new \DomainException(
+                    'این قسط پرداخت نشده است.'
+                );
+            }
 
-            'paid_at' => null,
+            $installment->update([
+                'status' => InstallmentStatus::PENDING,
+                'paid_at' => null,
+                'updated_by' => auth()->id(),
+            ]);
 
-            'updated_by' => auth()->id(),
-
-        ]);
-
-        return $installment->fresh();
-
+            return $installment->fresh();
+        });
     }
 
     /**
@@ -106,11 +105,9 @@ class InstallmentService
     public function pendingCount(
         Loan $loan
     ): int {
-
         return $loan->installments()
             ->where('status', InstallmentStatus::PENDING)
             ->count();
-
     }
 
     /**
@@ -119,23 +116,25 @@ class InstallmentService
     public function paidAmount(
         Loan $loan
     ): int {
-
         return (int) $loan->installments()
             ->where('status', InstallmentStatus::PAID)
             ->sum('amount');
-
     }
+
     /**
      * اقساط معوق داشبورد
      */
-    public function overdue(int $limit = 5)
+    public function overdue(int $limit = 5): Collection
     {
-        return \App\Models\Installment::query()
+        return Installment::query()
             ->with([
                 'loan.customer',
                 'loan.loanType',
             ])
-            ->where('status', \App\Enums\InstallmentStatus::PENDING)
+            ->where(
+                'status',
+                InstallmentStatus::PENDING
+            )
             ->whereDate('due_date', '<', today())
             ->orderBy('due_date')
             ->limit($limit)
@@ -145,14 +144,17 @@ class InstallmentService
     /**
      * سررسیدهای 7 روز آینده
      */
-    public function upcoming(int $limit = 5)
+    public function upcoming(int $limit = 5): Collection
     {
         return Installment::query()
             ->with([
                 'loan.customer',
                 'loan.loanType',
             ])
-            ->where('status', InstallmentStatus::PENDING)
+            ->where(
+                'status',
+                InstallmentStatus::PENDING
+            )
             ->whereBetween('due_date', [
                 today(),
                 today()->addDays(7),

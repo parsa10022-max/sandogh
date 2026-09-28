@@ -103,7 +103,7 @@
                         <span>مبلغ وام</span>
 
                         <strong>
-                            {{ number_format($loan->loan_amount) }}
+                            {{ fa_money($loan->loan_amount) }}
                             ریال
                         </strong>
 
@@ -116,7 +116,7 @@
                         <span>مبلغ هر قسط</span>
 
                         <strong>
-                            {{ number_format($loan->installment_amount) }}
+                            {{ fa_money($loan->installment_amount) }}
                             ریال
                         </strong>
 
@@ -180,11 +180,11 @@
                                     <div class="customer-installment-heading">
 
                                         <div class="customer-installment-number">
-                                            {{ $item->installment_number }}
+                                            {{ fa_number($item->installment_number) }}
                                         </div>
 
                                         <div class="customer-installment-title">
-                                            قسط {{ $item->installment_number }}
+                                            قسط {{ fa_number($item->installment_number) }}
                                         </div>
 
                                     </div>
@@ -195,7 +195,7 @@
                                         <i class="bi bi-calendar3"></i>
 
                                         <span>
-                                            {{ $item->due_date_jalali }}
+                                            {{ fa_number($item->due_date_jalali) }}
                                         </span>
 
                                     </div>
@@ -212,7 +212,7 @@
                                     <div class="customer-installment-amount">
 
                                         <strong>
-                                            {{ number_format($item->amount) }}
+                                            {{ fa_money($item->amount) }}
                                             <small>ریال</small>
                                         </strong>
 
@@ -265,7 +265,7 @@
                                                 <span>موجودی:</span>
 
                                                 <strong>
-                                                    {{ number_format($savingsAccount?->balance ?? 0) }}
+                                                    {{ fa_money($savingsAccount?->balance ?? 0) }}
                                                     <small>ریال</small>
                                                 </strong>
 
@@ -355,7 +355,7 @@
                                         <i class="bi bi-check2-circle"></i>
 
                                         پرداخت در
-                                        {{ $item->paid_at_jalali }}
+                                        {{ fa_number($item->paid_at_jalali) }}
 
                                     </div>
 
@@ -383,7 +383,7 @@
                         تعداد اقساط:
 
                         <strong>
-                            {{ $loan->installments->count() }}
+                            {{ fa_number($loan->installments->count()) }}
                         </strong>
 
                     </span>
@@ -394,7 +394,7 @@
                         مجموع:
 
                         <strong>
-                            {{ number_format($loan->installments->sum('amount')) }}
+                            {{ fa_money($loan->installments->sum('amount')) }}
                             ریال
                         </strong>
 

@@ -5,11 +5,11 @@
         {{-- اطلاعات صفحات --}}
         <div class="app-pagination__info">
             نمایش
-            <strong>{{ $paginator->firstItem() }}</strong>
+            <strong>{{ fa_number($paginator->firstItem()) }}</strong>
             تا
-            <strong>{{ $paginator->lastItem() }}</strong>
+            <strong>{{ fa_number($paginator->lastItem()) }}</strong>
             از
-            <strong>{{ $paginator->total() }}</strong>
+            <strong>{{ fa_number($paginator->total()) }}</strong>
             نتیجه
         </div>
 
@@ -66,7 +66,7 @@
                                 aria-current="page"
                             >
                                 <span class="page-link">
-                                    {{ $page }}
+                                    {{ fa_number($page) }}
                                 </span>
                             </li>
 
@@ -78,7 +78,7 @@
                                     class="page-link"
                                     href="{{ $url }}"
                                 >
-                                    {{ $page }}
+                                    {{ fa_number($page) }}
                                 </a>
 
                             </li>
@@ -125,3 +125,6 @@
     </div>
 
 @endif
+
+
+

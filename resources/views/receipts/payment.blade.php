@@ -28,14 +28,14 @@
             <div class="receipt-payment-item">
                 <span>شماره قسط</span>
                 <strong>
-                    {{ $payment->installment->installment_number }}
+                    {{ fa_number($payment->installment->installment_number) }}
                 </strong>
             </div>
 
             <div class="receipt-payment-item receipt-payment-amount">
                 <span>مبلغ پرداخت</span>
                 <strong>
-                    {{ number_format($payment->amount) }}
+                    {{ fa_money($payment->amount) }}
                     <small>ریال</small>
                 </strong>
             </div>
@@ -43,7 +43,7 @@
             <div class="receipt-payment-item">
                 <span>تاریخ پرداخت</span>
                 <strong>
-                    {{ $payment->paid_at_jalali }}
+                    {{ fa_number($payment->paid_at_jalali) }}
                 </strong>
             </div>
 
@@ -87,3 +87,4 @@
     </div>
 
 @endsection
+

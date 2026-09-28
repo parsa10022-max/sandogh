@@ -1,4 +1,3 @@
-
 @extends('customer.layouts.app')
 
 @section('title', 'گردش حساب پس‌انداز')
@@ -78,7 +77,7 @@
                         </span>
 
                         <strong>
-                            {{ number_format($account->balance) }}
+                            {{ fa_money($account->balance) }}
                             <small>ریال</small>
                         </strong>
 
@@ -93,7 +92,7 @@
                         </span>
 
                         <strong>
-                            {{ $transactions->total() }}
+                            {{ fa_number($transactions->total()) }}
                         </strong>
 
                     </div>
@@ -128,8 +127,8 @@
                 </div>
 
                 {{-- =================================================
-     FILTERS
-================================================== --}}
+                     FILTERS
+                ================================================== --}}
 
                 <div class="customer-savings-transactions-filter-box">
 
@@ -140,19 +139,19 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#transactionsFilter"
                         aria-expanded="{{ request()->hasAny([
-        'transaction_no',
-        'transaction_type',
-        'from_date',
-        'to_date',
-        'amount'
-    ]) ? 'true' : 'false' }}"
+                            'transaction_no',
+                            'transaction_type',
+                            'from_date',
+                            'to_date',
+                            'amount'
+                        ]) ? 'true' : 'false' }}"
                         aria-controls="transactionsFilter"
                     >
 
-        <span>
-            <i class="bi bi-funnel"></i>
-            فیلتر گردش حساب
-        </span>
+                        <span>
+                            <i class="bi bi-funnel"></i>
+                            فیلتر گردش حساب
+                        </span>
 
                         <i class="bi bi-chevron-down filter-toggle-icon"></i>
 
@@ -162,12 +161,12 @@
                     {{-- محتوای فیلتر --}}
                     <div
                         class="collapse {{ request()->hasAny([
-                       'transaction_no',
-                                'transaction_type',
-                                'from_date',
-                                'to_date',
-                                'amount'
-                            ]) ? 'show' : '' }}"
+                            'transaction_no',
+                            'transaction_type',
+                            'from_date',
+                            'to_date',
+                            'amount'
+                        ]) ? 'show' : '' }}"
                         id="transactionsFilter"
                     >
 
@@ -241,7 +240,6 @@
 
 
                                     {{-- از تاریخ --}}
-                                    {{-- از تاریخ --}}
                                     <div class="customer-savings-filter-item">
 
                                         <x-inputs.date-input
@@ -278,7 +276,7 @@
                                             id="amount"
                                             name="amount"
                                             value="{{ request('amount') }}"
-                                            placeholder="مثلاً 50,000,000"
+                                            placeholder="مثلاً ۵۰٬۰۰۰٬۰۰۰"
                                             inputmode="numeric"
                                             autocomplete="off"
                                             dir="ltr"
@@ -320,6 +318,7 @@
 
                 </div>
 
+
                 {{-- =================================================
                      MOBILE
                      نمایش تراکنش‌ها به صورت کارت
@@ -355,7 +354,13 @@
 
                                 <span class="customer-savings-transaction-date">
 
-                                    {{ \Morilog\Jalali\Jalalian::fromDateTime($transaction->transaction_date)->format('Y/m/d') }}
+                                    {{
+                                        fa_number(
+                                            \Morilog\Jalali\Jalalian::fromDateTime(
+                                                $transaction->transaction_date
+                                            )->format('Y/m/d')
+                                        )
+                                    }}
 
                                 </span>
 
@@ -383,7 +388,7 @@
 
                                         <strong class="deposit">
                                             +
-                                            {{ number_format($transaction->amount) }}
+                                            {{ fa_money($transaction->amount) }}
                                             <small>ریال</small>
                                         </strong>
 
@@ -391,7 +396,7 @@
 
                                         <strong class="withdrawal">
                                             -
-                                            {{ number_format($transaction->amount) }}
+                                            {{ fa_money($transaction->amount) }}
                                             <small>ریال</small>
                                         </strong>
 
@@ -411,7 +416,7 @@
                                     </span>
 
                                     <strong>
-                                        {{ number_format($transaction->balance_after) }}
+                                        {{ fa_money($transaction->balance_after) }}
                                         <small>ریال</small>
                                     </strong>
 
@@ -517,7 +522,13 @@
 
                                     <td>
 
-                                        {{ \Morilog\Jalali\Jalalian::fromDateTime($transaction->transaction_date)->format('Y/m/d') }}
+                                        {{
+                                            fa_number(
+                                                \Morilog\Jalali\Jalalian::fromDateTime(
+                                                    $transaction->transaction_date
+                                                )->format('Y/m/d')
+                                            )
+                                        }}
 
                                     </td>
 
@@ -556,7 +567,7 @@
                                             <strong class="customer-savings-amount deposit">
 
                                                 +
-                                                {{ number_format($transaction->amount) }}
+                                                {{ fa_money($transaction->amount) }}
 
                                             </strong>
 
@@ -565,7 +576,7 @@
                                             <strong class="customer-savings-amount withdrawal">
 
                                                 -
-                                                {{ number_format($transaction->amount) }}
+                                                {{ fa_money($transaction->amount) }}
 
                                             </strong>
 
@@ -582,7 +593,7 @@
 
                                         <strong class="customer-savings-balance">
 
-                                            {{ number_format($transaction->balance_after) }}
+                                            {{ fa_money($transaction->balance_after) }}
 
                                         </strong>
 

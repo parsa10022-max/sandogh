@@ -130,7 +130,9 @@
 
                     <strong class="loan-system-value loan-system-date">
 
-                        {{ $loan->created_at_jalali ?? '-' }}
+                        {{ !empty($loan->created_at_jalali)
+                            ? fa_number($loan->created_at_jalali)
+                            : '-' }}
 
                     </strong>
 
@@ -154,7 +156,9 @@
 
                     <strong class="loan-system-value loan-system-date">
 
-                        {{ $loan->updated_at_jalali ?? '-' }}
+                        {{ !empty($loan->updated_at_jalali)
+                            ? fa_number($loan->updated_at_jalali)
+                            : '-' }}
 
                     </strong>
 
@@ -191,3 +195,4 @@
     </div>
 
 </div>
+

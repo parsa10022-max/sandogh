@@ -31,8 +31,8 @@
 
         </div>
 
-        @if (isset($searchError))
 
+        @if (isset($searchError))
 
             <div class="customer-other-installment-search-error-box">
 
@@ -42,9 +42,9 @@
 
                 <div class="customer-other-installment-search-error-content">
 
-        <span class="customer-other-installment-search-error-label">
-            نتیجه جستجو
-        </span>
+                    <span class="customer-other-installment-search-error-label">
+                        نتیجه جستجو
+                    </span>
 
                     <strong>
                         {{ $searchError }}
@@ -53,7 +53,6 @@
                 </div>
 
             </div>
-
 
         @endif
 
@@ -68,20 +67,21 @@
 
                 <div class="customer-other-installment-card-title">
 
-                <span class="customer-other-installment-card-title-icon">
-                    <i class="bi bi-search"></i>
-                </span>
+                    <span class="customer-other-installment-card-title-icon">
+                        <i class="bi bi-search"></i>
+                    </span>
 
                     <span>
-                    جستجوی قسط
-                </span>
+                        جستجوی قسط
+                    </span>
 
                 </div>
 
 
                 <form
                     method="GET"
-                    action="{{ route('customer.installments.others.create') }}">
+                    action="{{ route('customer.installments.others.create') }}"
+                >
 
                     <div class="customer-other-installment-search-row">
 
@@ -89,18 +89,17 @@
 
                             <label
                                 for="loan_number"
-                                class="customer-other-installment-search-label">
-
+                                class="customer-other-installment-search-label"
+                            >
                                 شماره وام
-
                             </label>
 
 
                             <div class="customer-other-installment-search-input">
 
-                            <span class="customer-other-installment-search-icon">
-                                <i class="bi bi-credit-card-2-front"></i>
-                            </span>
+                                <span class="customer-other-installment-search-icon">
+                                    <i class="bi bi-credit-card-2-front"></i>
+                                </span>
 
                                 <input
                                     id="loan_number"
@@ -110,7 +109,8 @@
                                     placeholder="شماره وام را وارد کنید"
                                     inputmode="numeric"
                                     autocomplete="off"
-                                    required>
+                                    required
+                                >
 
                             </div>
 
@@ -132,13 +132,14 @@
 
                         <button
                             type="submit"
-                            class="customer-other-installment-search-button">
+                            class="customer-other-installment-search-button"
+                        >
 
                             <i class="bi bi-search"></i>
 
                             <span>
-                            جستجوی قسط
-                        </span>
+                                جستجوی قسط
+                            </span>
 
                         </button>
 
@@ -164,13 +165,13 @@
                 ================================================== --}}
                 <div class="customer-other-installment-card-title">
 
-                <span class="customer-other-installment-card-title-icon">
-                    <i class="bi bi-file-earmark-text"></i>
-                </span>
+                    <span class="customer-other-installment-card-title-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </span>
 
                     <span>
-                    اطلاعات قسط
-                </span>
+                        اطلاعات قسط
+                    </span>
 
                 </div>
 
@@ -183,9 +184,9 @@
                     {{-- نام عضو --}}
                     <div class="customer-other-installment-info-item">
 
-                    <span class="customer-other-installment-info-label">
-                        نام عضو
-                    </span>
+                        <span class="customer-other-installment-info-label">
+                            نام عضو
+                        </span>
 
                         <strong>
                             {{ $loan->customer->full_name }}
@@ -197,9 +198,9 @@
                     {{-- شماره وام --}}
                     <div class="customer-other-installment-info-item">
 
-                    <span class="customer-other-installment-info-label">
-                        شماره وام
-                    </span>
+                        <span class="customer-other-installment-info-label">
+                            شماره وام
+                        </span>
 
                         <strong dir="ltr">
                             {{ $loan->full_loan_number }}
@@ -211,9 +212,9 @@
                     {{-- نوع وام --}}
                     <div class="customer-other-installment-info-item">
 
-                    <span class="customer-other-installment-info-label">
-                        نوع وام
-                    </span>
+                        <span class="customer-other-installment-info-label">
+                            نوع وام
+                        </span>
 
                         <strong>
                             {{ $loan->loanType->name }}
@@ -225,12 +226,12 @@
                     {{-- شماره قسط --}}
                     <div class="customer-other-installment-info-item">
 
-                    <span class="customer-other-installment-info-label">
-                        شماره قسط
-                    </span>
+                        <span class="customer-other-installment-info-label">
+                            شماره قسط
+                        </span>
 
                         <strong>
-                            {{ $installment->installment_number }}
+                            {{ fa_number($installment->installment_number) }}
                         </strong>
 
                     </div>
@@ -268,44 +269,47 @@
                 ================================================== --}}
                 <form
                     method="POST"
-                    action="{{ route('customer.installments.others.pay') }}">
+                    action="{{ route('customer.installments.others.pay') }}"
+                >
 
                     @csrf
 
                     <input
                         type="hidden"
                         name="installment_id"
-                        value="{{ $installment->id }}">
+                        value="{{ $installment->id }}"
+                    >
 
 
                     <button
                         type="submit"
-                        class="customer-other-installment-pay-button">
+                        class="customer-other-installment-pay-button"
+                    >
 
-                    <span class="customer-other-installment-pay-icon">
+                        <span class="customer-other-installment-pay-icon">
 
-                        <i class="bi bi-credit-card-fill"></i>
+                            <i class="bi bi-credit-card-fill"></i>
 
-                    </span>
+                        </span>
 
 
                         <span class="customer-other-installment-pay-content">
 
-                        <strong>
-                            پرداخت قسط
-                        </strong>
+                            <strong>
+                                پرداخت قسط
+                            </strong>
 
-                        <span class="customer-other-installment-pay-amount">
+                            <span class="customer-other-installment-pay-amount">
 
-                            {{ number_format($installment->amount) }}
+                                {{ fa_money($installment->amount) }}
 
-                            <small>
-                                ریال
-                            </small>
+                                <small>
+                                    ریال
+                                </small>
+
+                            </span>
 
                         </span>
-
-                    </span>
 
 
                         <i class="bi bi-arrow-left customer-other-installment-pay-arrow"></i>
@@ -320,5 +324,5 @@
 
     </div>
 
-
 @endsection
+

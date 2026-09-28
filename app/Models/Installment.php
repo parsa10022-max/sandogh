@@ -7,45 +7,31 @@ use App\Models\Concerns\HasJalaliDates;
 use App\Services\Date\JalaliDateService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Installment extends Model
 {
     use HasJalaliDates;
 
     protected $fillable = [
-
         'loan_id',
-
         'installment_number',
-
         'amount',
-
         'due_date',
-
         'status',
-
         'paid_at',
-
         'description',
-
         'created_by',
-
         'updated_by',
-
     ];
 
     protected function casts(): array
     {
         return [
-
             'amount' => 'integer',
-
             'status' => InstallmentStatus::class,
-
             'due_date' => 'date',
-
             'paid_at' => 'datetime',
-
         ];
     }
 
@@ -76,7 +62,7 @@ class Installment extends Model
         );
     }
 
-    public function payment()
+    public function payment(): HasOne
     {
         return $this->hasOne(
             LoanPayment::class,
@@ -95,7 +81,7 @@ class Installment extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return number_format($this->amount);
+        return fa_money($this->amount);
     }
 
     /**

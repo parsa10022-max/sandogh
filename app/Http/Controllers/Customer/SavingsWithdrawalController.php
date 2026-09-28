@@ -2,28 +2,34 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
-use App\Models\Account;
-use App\Services\Account\AccountService;
-use App\Enums\AccountType;
 use App\Enums\AccountStatus;
+use App\Enums\AccountType;
 use App\Enums\PaymentMethod;
-use Illuminate\Http\Request;
-use App\Models\Withdrawal;
+use App\Http\Controllers\Controller;
 use App\Models\Notification;
+use App\Models\Withdrawal;
+use App\Services\Account\AccountService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SavingsWithdrawalController extends Controller
 {
-
     public function __construct(
         private readonly AccountService $accountService
     ) {
     }
 
-
-    public function create()
+    /**
+     * فرم درخواست برداشت
+     */
+    public function create(): View
     {
         $customer = auth()->user()->customer;
+
+        if (! $customer) {
+            abort(403);
+        }
 
         $account = $customer->accounts()
             ->where(
@@ -45,9 +51,21 @@ class SavingsWithdrawalController extends Controller
         );
     }
 
-
-    public function store(Request $request)
+    /**
+     * ثبت درخواست برداشت
+     */
+    public function store(Request $request): RedirectResponse
     {
+        /*
+        |--------------------------------------------------------------------------
+        | پاکسازی مبلغ
+        |--------------------------------------------------------------------------
+        */
+
+        $request->merge([
+            'amount' => clean_money($request->amount),
+        ]);
+
         $request->validate([
             'amount' => [
                 'required',
@@ -57,6 +75,16 @@ class SavingsWithdrawalController extends Controller
         ]);
 
         $customer = auth()->user()->customer;
+
+        if (! $customer) {
+            abort(403);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | حساب پس‌انداز فعال مشتری
+        |--------------------------------------------------------------------------
+        */
 
         $account = $customer->accounts()
             ->where(
@@ -70,69 +98,71 @@ class SavingsWithdrawalController extends Controller
             ->firstOrFail();
 
         try {
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت درخواست برداشت
+            |--------------------------------------------------------------------------
+            |
+            | موجودی در AccountService رزرو/کسر می‌شود
+            | و درخواست با وضعیت PENDING ایجاد می‌شود.
+            |
+            */
 
             $withdrawal = $this->accountService->withdraw(
-
                 account: $account,
-
                 amount: (int) $request->amount,
-
                 paymentMethod: PaymentMethod::BANK_TRANSFER,
-
                 description: 'درخواست برداشت مشتری',
-
                 createdBy: auth()->id(),
-
-        );
-
+            );
 
             /*
             |--------------------------------------------------------------------------
-            | اعلان برداشت موفق
+            | اعلان ثبت درخواست
             |--------------------------------------------------------------------------
             */
 
             Notification::create([
-
                 'user_id' => auth()->id(),
 
-                'type' => 'savings_withdrawal_success',
+                'type' => 'savings_withdrawal_request',
 
-                'title' => 'برداشت با موفقیت ثبت شد.',
+                'title' => 'درخواست برداشت ثبت شد.',
 
                 'message' =>
-                    'مبلغ ' .
-                    number_format($withdrawal->amount) .
-                    ' ریال از حساب پس‌انداز شما برداشت شد.',
+                    'درخواست برداشت مبلغ ' .
+                    fa_money($withdrawal->amount) .
+                    ' ریال از حساب پس‌انداز شما ثبت شد و در انتظار بررسی است.',
 
                 'data' => [
+                    'amount' => $withdrawal->amount,
 
-                    'amount' =>
-                        $withdrawal->amount,
+                    'withdrawal_id' => $withdrawal->id,
 
-                    'withdrawal_id' =>
-                        $withdrawal->id,
+                    'account_id' => $account->id,
 
-                    'account_id' =>
-                        $account->id,
+                    'account_number' => $account->account_number,
 
-                    'account_number' =>
-                        $account->account_number,
-
+                    'status' => $withdrawal->status->value,
                 ],
 
                 'read_at' => null,
-
             ]);
 
+            /*
+            |--------------------------------------------------------------------------
+            | بازگشت به فرم با پیام ثبت موفق درخواست
+            |--------------------------------------------------------------------------
+            */
 
-            return redirect()->route(
-                'customer.savings.withdrawal.success',
-                $withdrawal
-            );
+            return redirect()
+                ->route('customer.savings.withdrawal.create')
+                ->with(
+                    'success',
+                    'درخواست برداشت شما با موفقیت ثبت شد و در انتظار بررسی است.'
+                );
 
         } catch (\InvalidArgumentException $e) {
-
             return back()
                 ->withInput()
                 ->withErrors([
@@ -141,18 +171,40 @@ class SavingsWithdrawalController extends Controller
         }
     }
 
-    public function success(Withdrawal $withdrawal)
+    /**
+     * نمایش نتیجه برداشت
+     */
+    public function success(Withdrawal $withdrawal): View
     {
         $customer = auth()->user()->customer;
 
-        abort_if(
-            ! $customer,
-            403
-        );
+        if (! $customer) {
+            abort(403);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | مالکیت درخواست برداشت
+        |--------------------------------------------------------------------------
+        */
 
         abort_if(
             $withdrawal->account->customer_id !== $customer->id,
             403
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | نمایش رسید فقط برای برداشت پرداخت‌شده
+        |--------------------------------------------------------------------------
+        |
+        | درخواست‌های PENDING نباید به عنوان برداشت موفق نمایش داده شوند.
+        |
+        */
+
+        abort_unless(
+            $withdrawal->status->value === 'paid',
+            404
         );
 
         return view(
@@ -163,5 +215,4 @@ class SavingsWithdrawalController extends Controller
             )
         );
     }
-
 }

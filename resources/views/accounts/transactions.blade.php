@@ -46,17 +46,17 @@
 
                 <div class="account-summary-title">
 
-                <span class="account-summary-icon">
-                    <i class="bi bi-wallet2"></i>
-                </span>
+                    <span class="account-summary-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </span>
 
                     <span>خلاصه حساب</span>
 
                 </div>
 
                 <span class="account-number-badge" dir="ltr">
-                {{ $account->account_number }}
-            </span>
+                    {{ $account->account_number }}
+                </span>
 
             </div>
 
@@ -68,10 +68,10 @@
                     {{-- عنوان حساب --}}
                     <div class="account-summary-item">
 
-                    <span class="account-summary-label">
-                        <i class="bi bi-card-heading"></i>
-                        عنوان حساب
-                    </span>
+                        <span class="account-summary-label">
+                            <i class="bi bi-card-heading"></i>
+                            عنوان حساب
+                        </span>
 
                         <strong>
                             {{ $account->name ?? 'حساب مشتری' }}
@@ -83,10 +83,10 @@
                     {{-- مالک حساب --}}
                     <div class="account-summary-item">
 
-                    <span class="account-summary-label">
-                        <i class="bi bi-person"></i>
-                        مالک حساب
-                    </span>
+                        <span class="account-summary-label">
+                            <i class="bi bi-person"></i>
+                            مالک حساب
+                        </span>
 
                         <strong>
 
@@ -109,15 +109,15 @@
                     {{-- موجودی --}}
                     <div class="account-summary-item account-current-balance">
 
-                    <span class="account-summary-label">
-                        <i class="bi bi-cash-stack"></i>
-                        موجودی فعلی
-                    </span>
+                        <span class="account-summary-label">
+                            <i class="bi bi-cash-stack"></i>
+                            موجودی فعلی
+                        </span>
 
                         <div class="account-balance-value">
 
                             <strong>
-                                {{ number_format($account->balance) }}
+                                {{ fa_money($account->balance) }}
                             </strong>
 
                             <span>ریال</span>
@@ -140,9 +140,9 @@
 
                 <div class="account-transactions-card-title">
 
-                <span class="account-transactions-card-icon">
-                    <i class="bi bi-list-ul"></i>
-                </span>
+                    <span class="account-transactions-card-icon">
+                        <i class="bi bi-list-ul"></i>
+                    </span>
 
                     <div>
 
@@ -199,10 +199,10 @@
                                 {{-- تاریخ --}}
                                 <td>
 
-                                <span class="transaction-date">
-                                    {{ app(\App\Services\Date\JalaliDateService::class)
-                                        ->toJalali($transaction->transaction_date) }}
-                                </span>
+                                    <span class="transaction-date">
+                                        {{ app(\App\Services\Date\JalaliDateService::class)
+                                            ->toJalali($transaction->transaction_date) }}
+                                    </span>
 
                                 </td>
 
@@ -210,9 +210,9 @@
                                 {{-- شماره تراکنش --}}
                                 <td>
 
-                                <span class="transaction-number" dir="ltr">
-                                    {{ $transaction->transaction_no }}
-                                </span>
+                                    <span class="transaction-number" dir="ltr">
+                                        {{ $transaction->transaction_no }}
+                                    </span>
 
                                 </td>
 
@@ -220,9 +220,9 @@
                                 {{-- روش پرداخت --}}
                                 <td>
 
-                                <span class="transaction-payment-method">
-                                    {{ $transaction->payment_method?->label() ?? '-' }}
-                                </span>
+                                    <span class="transaction-payment-method">
+                                        {{ $transaction->payment_method?->label() ?? '-' }}
+                                    </span>
 
                                 </td>
 
@@ -233,34 +233,34 @@
                                     @if($transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT)
 
                                         <span class="transaction-type deposit">
-                                        <span class="transaction-type-dot"></span>
-                                        <i class="bi bi-arrow-down-circle"></i>
-                                        {{ $transaction->transaction_type->label() }}
-                                    </span>
+                                            <span class="transaction-type-dot"></span>
+                                            <i class="bi bi-arrow-down-circle"></i>
+                                            {{ $transaction->transaction_type->label() }}
+                                        </span>
 
                                     @elseif($transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL)
 
                                         <span class="transaction-type withdrawal">
-                                        <span class="transaction-type-dot"></span>
-                                        <i class="bi bi-arrow-up-circle"></i>
-                                        {{ $transaction->transaction_type->label() }}
-                                    </span>
+                                            <span class="transaction-type-dot"></span>
+                                            <i class="bi bi-arrow-up-circle"></i>
+                                            {{ $transaction->transaction_type->label() }}
+                                        </span>
 
                                     @elseif($transaction->transaction_type === \App\Enums\TransactionType::ADJUSTMENT)
 
                                         <span class="transaction-type adjustment">
-                                        <span class="transaction-type-dot"></span>
-                                        <i class="bi bi-pencil-square"></i>
-                                        {{ $transaction->transaction_type->label() }}
-                                    </span>
+                                            <span class="transaction-type-dot"></span>
+                                            <i class="bi bi-pencil-square"></i>
+                                            {{ $transaction->transaction_type->label() }}
+                                        </span>
 
                                     @else
 
                                         <span class="transaction-type other">
-                                        <span class="transaction-type-dot"></span>
-                                        <i class="bi bi-arrow-left-right"></i>
-                                        {{ $transaction->transaction_type->label() }}
-                                    </span>
+                                            <span class="transaction-type-dot"></span>
+                                            <i class="bi bi-arrow-left-right"></i>
+                                            {{ $transaction->transaction_type->label() }}
+                                        </span>
 
                                     @endif
 
@@ -273,7 +273,7 @@
                                     <div class="transaction-amount">
 
                                         <strong>
-                                            {{ number_format($transaction->amount) }}
+                                            {{ fa_money($transaction->amount) }}
                                         </strong>
 
                                         <span>ریال</span>
@@ -289,7 +289,7 @@
                                     <div class="transaction-balance">
 
                                         <strong>
-                                            {{ number_format($transaction->balance_after) }}
+                                            {{ fa_money($transaction->balance_after) }}
                                         </strong>
 
                                         <span>ریال</span>
@@ -302,9 +302,9 @@
                                 {{-- توضیح --}}
                                 <td>
 
-                                <span class="transaction-description">
-                                    {{ $transaction->description ?? '-' }}
-                                </span>
+                                    <span class="transaction-description">
+                                        {{ $transaction->description ?? '-' }}
+                                    </span>
 
                                 </td>
 
@@ -364,3 +364,5 @@
 
 
 @endsection
+
+

@@ -2,7 +2,7 @@
 
 namespace App\Services\Account;
 
-use App\Models\AccountTransaction;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
 class AccountTransactionNoService
@@ -15,26 +15,59 @@ class AccountTransactionNoService
     {
         $today = Jalalian::now()->format('Ymd');
 
-        $last = AccountTransaction::query()
-            ->where(
-                'transaction_no',
-                'like',
-                self::PREFIX . $today . '%'
-            )
-            ->latest('id')
-            ->first();
+        $sequence = DB::transaction(function () use ($today): int {
 
-        $sequence = 1;
+            /*
+            |--------------------------------------------------------------------------
+            | ایجاد رکورد روز در صورت نبودن
+            |--------------------------------------------------------------------------
+            |
+            | insertOrIgnore باعث می‌شود اگر درخواست دیگری همزمان
+            | همین تاریخ را ایجاد کرده باشد، خطای Duplicate نگیریم.
+            |
+            */
 
-        if ($last) {
+            DB::table('account_transaction_sequences')->insertOrIgnore([
+                'jalali_date' => $today,
+                'sequence' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-            $sequence =
-                (int) substr(
-                    $last->transaction_no,
-                    -self::SEQUENCE_LENGTH
-                ) + 1;
+            /*
+            |--------------------------------------------------------------------------
+            | قفل رکورد روز
+            |--------------------------------------------------------------------------
+            */
 
-        }
+            $record = DB::table('account_transaction_sequences')
+                ->where('jalali_date', $today)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $record) {
+                throw new \RuntimeException(
+                    'رکورد شمارنده تراکنش پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | افزایش شماره
+            |--------------------------------------------------------------------------
+            */
+
+            $nextSequence = $record->sequence + 1;
+
+            DB::table('account_transaction_sequences')
+                ->where('id', $record->id)
+                ->update([
+                    'sequence' => $nextSequence,
+                    'updated_at' => now(),
+                ]);
+
+            return $nextSequence;
+        });
 
         return sprintf(
             '%s%s%0' . self::SEQUENCE_LENGTH . 'd',

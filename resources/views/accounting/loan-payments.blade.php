@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="loan-payments-count">
-                    {{ $payments->total() }} مورد
+                    {{ fa_number($payments->total()) }} مورد
                 </div>
 
             </div>
@@ -114,7 +114,7 @@
                                 <td>
 
                                     <span class="loan-payment-row-number">
-                                        {{ $payments->firstItem() + $loop->index }}
+                                        {{ fa_number($payments->firstItem() + $loop->index) }}
                                     </span>
 
                                 </td>
@@ -124,7 +124,7 @@
                                 <td>
 
                                     <span class="loan-payment-loan-number" dir="ltr">
-                                        {{ $payment->loan?->loan_number ?? '---' }}
+                                        {{ fa_number($payment->loan?->loan_number ?? '---') }}
                                     </span>
 
                                 </td>
@@ -168,9 +168,11 @@
 
                                         <span class="loan-payment-installment">
 
-                                            {{ $payment->installment->installment_number
+                                            {{ fa_number(
+                                                $payment->installment->installment_number
                                                 ?? $payment->installment->number
-                                                ?? 0 }}
+                                                ?? 0
+                                            ) }}
 
                                         </span>
 
@@ -191,7 +193,7 @@
                                     <div class="loan-payment-amount">
 
                                         <strong>
-                                            {{ number_format($payment->amount ?? 0) }}
+                                            {{ fa_money($payment->amount ?? 0) }}
                                         </strong>
 
                                         <small>
@@ -209,8 +211,11 @@
                                     @if($payment->user)
 
                                         <span class="loan-payment-user">
+
                                             <i class="bi bi-person-check"></i>
+
                                             {{ $payment->user->name }}
+
                                         </span>
 
                                     @else
@@ -232,11 +237,11 @@
                                         <div class="loan-payment-date">
 
                                             <span>
-                                                {{ $payment->paid_at->format('Y/m/d') }}
+                                                {{ fa_number($payment->paid_at->format('Y/m/d')) }}
                                             </span>
 
                                             <small>
-                                                {{ $payment->paid_at->format('H:i') }}
+                                                {{ fa_number($payment->paid_at->format('H:i')) }}
                                             </small>
 
                                         </div>

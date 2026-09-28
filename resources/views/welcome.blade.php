@@ -130,10 +130,10 @@
 
             <div class="home-hero-content">
 
-                    <h3 class="home-hero-badge">
-                        <i class="bi bi-heart-fill"></i>
-                        صندوق قرض‌الحسنه
-                    </h3>
+                <h3 class="home-hero-badge">
+                    <i class="bi bi-heart-fill"></i>
+                    صندوق قرض‌الحسنه
+                </h3>
 
                 <h2>
                     شهید مطهری شیراز- داریون
@@ -180,8 +180,8 @@
                         <div>
                             <strong>پس‌انداز و سرمایه‌گذاری</strong>
                             <span>
-                    همراهی امروز، آرامش فردا
-                </span>
+                                همراهی امروز، آرامش فردا
+                            </span>
                         </div>
 
                     </div>
@@ -473,16 +473,20 @@
         <div class="home-container">
 
             <div class="home-section-header">
+
                 <span>آمار صندوق</span>
+
                 <h2>صندوق در یک نگاه</h2>
+
                 <h6>
                     فعالیت صندوق تا تاریخ
                     @if(!empty($stats['statistics_date']))
-                        {{ \Morilog\Jalali\Jalalian::fromCarbon($stats['statistics_date'])->format('Y/m/d') }}
+                        {{ fa_number(\Morilog\Jalali\Jalalian::fromCarbon($stats['statistics_date'])->format('Y/m/d')) }}
                     @else
                         ---
                     @endif
                 </h6>
+
             </div>
 
             <div class="home-stats-grid">
@@ -495,7 +499,7 @@
                     </div>
 
                     <strong>
-                        {{ number_format($stats['members'] ?? 0) }}
+                        {{ fa_number($stats['members'] ?? 0) }}
                     </strong>
 
                     <span>عضو صندوق</span>
@@ -511,7 +515,7 @@
                     </div>
 
                     <strong>
-                        {{ number_format($stats['paid_loans'] ?? 0) }}
+                        {{ fa_number($stats['paid_loans'] ?? 0) }}
                     </strong>
 
                     <span>وام پرداخت‌شده</span>
@@ -527,7 +531,7 @@
                     </div>
 
                     <strong>
-                        {{ number_format($stats['paid_loan_amount'] ?? 0) }}
+                        {{ fa_money($stats['paid_loan_amount'] ?? 0) }}
                     </strong>
 
                     <span>مبلغ وام‌های پرداختی</span>
@@ -545,7 +549,7 @@
                     </div>
 
                     <strong>
-                        {{ number_format($stats['donations'] ?? 0) }}
+                        {{ fa_number($stats['donations'] ?? 0) }}
                     </strong>
 
                     <span>کمک‌های ثبت‌شده</span>
@@ -584,8 +588,8 @@
                     </strong>
 
                     <span>
-                    شهید مطهری شیراز- داریون
-                </span>
+                        شهید مطهری شیراز- داریون
+                    </span>
 
                     <div class="home-about-mini-stats">
 
@@ -614,9 +618,9 @@
             {{-- محتوای درباره صندوق --}}
             <div class="home-about-content">
 
-            <span class="home-section-label">
-                درباره صندوق
-            </span>
+                <span class="home-section-label">
+                    درباره صندوق
+                </span>
 
                 <h2>
                     همراهی اعضا،
@@ -655,9 +659,6 @@
         </div>
 
     </section>
-
-
-
 
 
 
@@ -715,9 +716,9 @@
                         </p>
 
                         <span class="home-news-link text-muted">
-                        به‌زودی
-                        <i class="bi bi-clock"></i>
-                    </span>
+                            به‌زودی
+                            <i class="bi bi-clock"></i>
+                        </span>
 
                     </div>
 
@@ -749,9 +750,9 @@
                         </p>
 
                         <span class="home-news-link text-muted">
-                        به‌زودی
-                        <i class="bi bi-clock"></i>
-                    </span>
+                            به‌زودی
+                            <i class="bi bi-clock"></i>
+                        </span>
 
                     </div>
 
@@ -783,24 +784,19 @@
                         </p>
 
                         <span class="home-news-link text-muted">
-                        به‌زودی
-                        <i class="bi bi-clock"></i>
-                    </span>
+                            به‌زودی
+                            <i class="bi bi-clock"></i>
+                        </span>
 
                     </div>
 
                 </article>
-
 
             </div>
 
         </div>
 
     </section>
-
-
-
-
 
 </main>
 
@@ -925,8 +921,6 @@
     </div>
 </footer>
 
-
-
-
 </body>
 </html>
+

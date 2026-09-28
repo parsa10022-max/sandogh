@@ -2,10 +2,7 @@
 
 @section('title', 'پرداخت موفق کمک')
 
-
-
 @section('content')
-
 
     <div class="donation-success-page">
 
@@ -40,13 +37,13 @@
 
                     <div class="donation-success-detail__content">
 
-                    <span class="donation-success-detail__label">
-                        مبلغ پرداختی
-                    </span>
+                        <span class="donation-success-detail__label">
+                            مبلغ پرداختی
+                        </span>
 
                         <strong class="donation-success-detail__value">
 
-                            {{ number_format($donationPayment->amount) }}
+                            {{ fa_money($donationPayment->amount) }}
 
                             <small>
                                 ریال
@@ -67,13 +64,13 @@
 
                     <div class="donation-success-detail__content">
 
-                    <span class="donation-success-detail__label">
-                        کد پیگیری
-                    </span>
+                        <span class="donation-success-detail__label">
+                            کد پیگیری
+                        </span>
 
                         <strong
                             class="donation-success-detail__value
-                               donation-success-detail__value--tracking"
+                                   donation-success-detail__value--tracking"
                             dir="ltr"
                         >
                             {{ $donationPayment->tracking_code }}

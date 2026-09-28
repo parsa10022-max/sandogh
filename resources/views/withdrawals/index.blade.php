@@ -76,7 +76,7 @@
                 @if($withdrawals->count())
 
                     <span class="withdrawals-count">
-                        {{ $withdrawals->total() }}
+                        {{ fa_number($withdrawals->total()) }}
                         درخواست
                     </span>
 
@@ -170,7 +170,7 @@
                                         <div class="withdrawal-amount">
 
                                             <strong>
-                                                {{ number_format($withdrawal->amount) }}
+                                                {{ fa_money($withdrawal->amount) }}
                                             </strong>
 
                                             <span>
@@ -253,9 +253,9 @@
                                             </span>
 
                                             <span>
-                                                {{ \Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('Y/m/d') }}
+                                                {{ fa_number(\Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('Y/m/d')) }}
                                                 <small>
-                                                    {{ \Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('H:i') }}
+                                                    {{ fa_number(\Morilog\Jalali\Jalalian::fromDateTime($withdrawal->created_at)->format('H:i')) }}
                                                 </small>
                                             </span>
 

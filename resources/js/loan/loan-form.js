@@ -13,6 +13,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /*
     |--------------------------------------------------------------------------
+    | ابزارهای نمایش اعداد فارسی
+    |--------------------------------------------------------------------------
+    */
+
+    function faNumber(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return '';
+        }
+
+        return String(value).replace(
+            /\d/g,
+            digit => '۰۱۲۳۴۵۶۷۸۹'[digit]
+        );
+    }
+
+
+    function faMoney(value) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ''
+        ) {
+            return '';
+        }
+
+        const number =
+            Number(
+                String(value)
+                    .replace(/,/g, '')
+                    .replace(/[۰-۹]/g, digit =>
+                        '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)
+                    )
+            );
+
+        if (!Number.isFinite(number)) {
+            return '';
+        }
+
+        return number.toLocaleString('fa-IR');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | پیش شماره وام
     |--------------------------------------------------------------------------
     */
@@ -869,7 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         return number.toLocaleString(
-            'en-US'
+            'fa-IR'
         );
     }
 
@@ -918,11 +967,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const loanAmount =
             form.elements.loan_amount.value
-                .replace(/,/g, '');
+                .replace(/,/g, '')
+                .replace(/[۰-۹]/g, digit =>
+                    '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)
+                );
 
 
         const installmentCount =
-            form.elements.installment_count.value;
+            form.elements.installment_count.value
+                .replace(/[۰-۹]/g, digit =>
+                    '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)
+                );
 
 
         const interval =
@@ -1067,35 +1122,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startDate) {
 
             startDate.textContent =
-                data.start_date ?? '-';
+                faNumber(
+                    data.start_date ?? '-'
+                );
         }
 
 
         if (firstDate) {
 
             firstDate.textContent =
-                data.first_due_date ?? '-';
+                faNumber(
+                    data.first_due_date ?? '-'
+                );
         }
 
 
         if (lastDate) {
 
             lastDate.textContent =
-                data.last_due_date ?? '-';
+                faNumber(
+                    data.last_due_date ?? '-'
+                );
         }
 
 
         if (count) {
 
             count.textContent =
-                data.installment_count ?? '-';
+                faNumber(
+                    data.installment_count ?? '-'
+                );
         }
 
 
         if (installment) {
 
             installment.textContent =
-                `${data.installment_amount ?? '-'} ریال`;
+                `${faMoney(
+                    data.installment_amount
+                ) || '-'} ریال`;
         }
 
 
@@ -1220,15 +1285,15 @@ document.addEventListener('DOMContentLoaded', () => {
 <tr>
 
 <td class="text-center fw-bold">
-    ${item.number}
+    ${faNumber(item.number)}
     </td>
 
 <td class="text-center">
-    ${item.date}
+    ${faNumber(item.date)}
 </td>
 
 <td class="text-center fw-bold">
-    ${item.amount} ریال
+    ${faMoney(item.amount)} ریال
 </td>
 
 </tr>
@@ -1253,7 +1318,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (totalCount) {
 
                 totalCount.textContent =
-                    schedule.length;
+                    faNumber(
+                        schedule.length
+                    );
             }
 
 
@@ -1274,6 +1341,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             item.amount ?? '0'
                         )
                             .replace(/,/g, '')
+                            .replace(/[۰-۹]/g, digit =>
+                                '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)
+                            )
                     );
                 }
             );
@@ -1288,8 +1358,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (totalAmount) {
 
                 totalAmount.textContent =
-                    total.toLocaleString('en-US')
-                    + ' ریال';
+                    `${faMoney(total)} ریال`;
             }
 
 

@@ -33,8 +33,8 @@
                     </h1>
 
                     <span>
-                    واریز به حساب پس‌انداز با موفقیت انجام شد
-                </span>
+                        واریز به حساب پس‌انداز با موفقیت انجام شد
+                    </span>
 
                 </div>
 
@@ -56,8 +56,8 @@
                     </strong>
 
                     <span>
-                    مبلغ با موفقیت به حساب پس‌انداز شما اضافه شد.
-                </span>
+                        مبلغ با موفقیت به حساب پس‌انداز شما اضافه شد.
+                    </span>
 
                 </div>
 
@@ -77,13 +77,13 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-receipt"></i>
+                        <i class="bi bi-receipt"></i>
 
-                    کد رهگیری صندوق
+                        کد رهگیری صندوق
 
-                </span>
+                    </span>
 
                     <strong
                         dir="ltr"
@@ -101,17 +101,17 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-cash-stack"></i>
+                        <i class="bi bi-cash-stack"></i>
 
-                    مبلغ واریز
+                        مبلغ واریز
 
-                </span>
+                    </span>
 
                     <strong class="customer-savings-success-amount">
 
-                        {{ number_format($transfer->amount) }}
+                        {{ fa_money($transfer->amount) }}
 
                         <small>
                             ریال
@@ -128,19 +128,22 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-calendar3"></i>
+                        <i class="bi bi-calendar3"></i>
 
-                    تاریخ پرداخت
+                        تاریخ پرداخت
 
-                </span>
+                    </span>
 
-                    <strong dir="ltr">
+                    <strong>
 
                         @if($transfer->paid_at)
 
-                            {{ \Morilog\Jalali\Jalalian::fromDateTime($transfer->paid_at)->format('Y/m/d H:i') }}
+                            {{ fa_number(
+                                \Morilog\Jalali\Jalalian::fromDateTime($transfer->paid_at)
+                                    ->format('Y/m/d H:i')
+                            ) }}
 
                         @else
 
@@ -159,13 +162,13 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-credit-card-2-front"></i>
+                        <i class="bi bi-credit-card-2-front"></i>
 
-                    شناسه تراکنش بانکی
+                        شناسه تراکنش بانکی
 
-                </span>
+                    </span>
 
                     <strong dir="ltr">
 
@@ -182,13 +185,13 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-upc-scan"></i>
+                        <i class="bi bi-upc-scan"></i>
 
-                    شماره مرجع بانکی
+                        شماره مرجع بانکی
 
-                </span>
+                    </span>
 
                     <strong dir="ltr">
 
@@ -205,13 +208,13 @@
 
                 <div class="customer-savings-success-info-item">
 
-                <span class="customer-savings-success-label">
+                    <span class="customer-savings-success-label">
 
-                    <i class="bi bi-info-circle"></i>
+                        <i class="bi bi-info-circle"></i>
 
-                    وضعیت پرداخت
+                        وضعیت پرداخت
 
-                </span>
+                    </span>
 
 
                     @if($transfer->status === 'paid')
@@ -261,8 +264,8 @@
                 <i class="bi bi-shield-check"></i>
 
                 <span>
-                این پرداخت با موفقیت ثبت و در سوابق حساب شما ذخیره شد.
-            </span>
+                    این پرداخت با موفقیت ثبت و در سوابق حساب شما ذخیره شد.
+                </span>
 
             </div>
 
@@ -281,8 +284,8 @@
                     <i class="bi bi-house"></i>
 
                     <span>
-                    بازگشت به پنل
-                </span>
+                        بازگشت به پنل
+                    </span>
 
                     <i class="bi bi-arrow-left"></i>
 
@@ -297,3 +300,4 @@
 
 
 @endsection
+

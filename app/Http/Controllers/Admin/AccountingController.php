@@ -244,7 +244,6 @@ class AccountingController extends Controller
         string $type,
         int $id
     ): RedirectResponse {
-
         $model = match ($type) {
 
             'savings-transfer' =>
@@ -261,19 +260,18 @@ class AccountingController extends Controller
         };
 
         try {
-
             $this->service->confirm($model);
 
             return back()->with(
                 'success',
                 'عملیات با موفقیت به عنوان ثبت‌شده در حسابداری تأیید شد.'
             );
-
         } catch (\Throwable $e) {
+            report($e);
 
             return back()->with(
                 'error',
-                $e->getMessage()
+                'تأیید عملیات انجام نشد. لطفاً دوباره تلاش کنید.'
             );
         }
     }

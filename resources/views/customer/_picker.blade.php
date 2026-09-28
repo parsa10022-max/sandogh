@@ -38,7 +38,8 @@
             class="form-control customer-code"
             placeholder="کد مشتری را وارد کنید"
             autocomplete="off"
-            value="{{ $selectedCustomer?->customer_code ?? '' }}">
+            value="{{ $selectedCustomer?->customer_code ?? '' }}"
+            dir="ltr">
 
 
         <button
@@ -78,7 +79,9 @@
 
             کد مشتری:
 
-            <span class="customer-code-view">
+            <span
+                class="customer-code-view"
+                dir="ltr">
 
                 {{ $selectedCustomer?->customer_code }}
 
@@ -92,7 +95,9 @@
 
             موبایل:
 
-            <span class="customer-mobile">
+            <span
+                class="customer-mobile"
+                dir="ltr">
 
                 {{ $selectedCustomer?->mobile }}
 
@@ -112,3 +117,4 @@
 
 
 </div>
+

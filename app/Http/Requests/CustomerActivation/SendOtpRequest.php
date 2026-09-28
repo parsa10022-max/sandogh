@@ -46,6 +46,7 @@ class SendOtpRequest extends FormRequest
     {
         return [
             'mobile.required' => 'شماره موبایل را وارد کنید.',
+            'mobile.string' => 'شماره موبایل باید به صورت متن وارد شود.',
             'mobile.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
             'mobile.starts_with' => 'شماره موبایل باید با ۰۹ شروع شود.',
         ];

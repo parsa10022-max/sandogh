@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Models\LoanPayment;
+use App\Models\PaymentIntent;
 use Morilog\Jalali\Jalalian;
 
 class TrackingCodeService
@@ -32,22 +33,47 @@ class TrackingCodeService
     {
         $today = Jalalian::now()->format('Ymd');
 
-        $lastPayment = LoanPayment::query()
-            ->where('tracking_code', 'like', self::PREFIX . $today . '%')
+        $lastLoanPayment = LoanPayment::query()
+            ->where(
+                'tracking_code',
+                'like',
+                self::PREFIX . $today . '%'
+            )
             ->latest('id')
             ->first();
 
-        $sequence = 1;
+        $lastPaymentIntent = PaymentIntent::query()
+            ->where(
+                'tracking_code',
+                'like',
+                self::PREFIX . $today . '%'
+            )
+            ->latest('id')
+            ->first();
 
-        if ($lastPayment) {
+        $lastSequence = 0;
 
-            $lastSequence = (int) substr(
-                $lastPayment->tracking_code,
-                -self::SEQUENCE_LENGTH
+        if ($lastLoanPayment) {
+            $lastSequence = max(
+                $lastSequence,
+                (int) substr(
+                    $lastLoanPayment->tracking_code,
+                    -self::SEQUENCE_LENGTH
+                )
             );
-
-            $sequence = $lastSequence + 1;
         }
+
+        if ($lastPaymentIntent) {
+            $lastSequence = max(
+                $lastSequence,
+                (int) substr(
+                    $lastPaymentIntent->tracking_code,
+                    -self::SEQUENCE_LENGTH
+                )
+            );
+        }
+
+        $sequence = $lastSequence + 1;
 
         return sprintf(
             '%s%s%0' . self::SEQUENCE_LENGTH . 'd',

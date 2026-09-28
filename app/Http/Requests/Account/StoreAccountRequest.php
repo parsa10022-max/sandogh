@@ -14,7 +14,7 @@ class StoreAccountRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'balance' => str_replace(',', '', $this->balance),
+            'balance' => clean_money($this->balance),
         ]);
     }
 
@@ -46,9 +46,12 @@ class StoreAccountRequest extends FormRequest
     {
         return [
             'account_number.required' => 'شماره حساب الزامی است.',
+            'account_number.string' => 'شماره حساب باید به صورت متن وارد شود.',
+            'account_number.max' => 'شماره حساب نمی‌تواند بیشتر از ۲۰ کاراکتر باشد.',
             'account_number.unique' => 'این شماره حساب قبلاً ثبت شده است.',
 
             'account_type.required' => 'نوع حساب را انتخاب کنید.',
+            'account_type.integer' => 'نوع حساب انتخاب‌شده معتبر نیست.',
             'account_type.in' => 'نوع حساب انتخاب‌شده معتبر نیست.',
 
             'balance.required' => 'مبلغ الزامی است.',

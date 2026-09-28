@@ -79,7 +79,10 @@ class CustomerActivationOtp extends Model
         Builder $query,
         int $customerId
     ): Builder {
-        return $query->where('customer_id', $customerId);
+        return $query->where(
+            'customer_id',
+            $customerId
+        );
     }
 
     /*
@@ -90,7 +93,8 @@ class CustomerActivationOtp extends Model
 
     public function getIsExpiredAttribute(): bool
     {
-        return $this->expires_at->isPast();
+        return $this->expires_at !== null
+            && $this->expires_at->isPast();
     }
 
     public function getIsVerifiedAttribute(): bool

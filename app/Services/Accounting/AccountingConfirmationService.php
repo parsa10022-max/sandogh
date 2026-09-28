@@ -3,7 +3,6 @@
 namespace App\Services\Accounting;
 
 use App\Enums\AccountingStatus;
-use App\Enums\WithdrawalStatus;
 use App\Models\LoanPayment;
 use App\Models\SavingsTransfer;
 use App\Models\Withdrawal;
@@ -19,7 +18,10 @@ class AccountingConfirmationService
     {
         return DB::transaction(function () use ($operation) {
 
-            $operation->refresh();
+            $operation = $operation->newQuery()
+                ->whereKey($operation->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
 
             /*
             |--------------------------------------------------------------------------

@@ -15,22 +15,14 @@ use App\Services\Payment\Gateways\GatewayInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-
 class DonationPaymentService
 {
-
     public function __construct(
-
         private readonly GatewayInterface $gateway,
-
         private readonly AccountTransactionService $accountTransactionService,
-
         private readonly AccountService $accountService,
-
     ) {
     }
-
-
 
     /**
      * شروع پرداخت کمک
@@ -43,231 +35,131 @@ class DonationPaymentService
         ?string $donorMobile = null,
         string $paymentType = 'donation_customer'
     ): array {
-
-
         if ($amount <= 0) {
-
             throw new \DomainException(
                 'مبلغ کمک باید بیشتر از صفر باشد.'
             );
-
         }
 
-
-
-        if (
-            $account->status !== AccountStatus::ACTIVE
-        ) {
-
+        if ($account->status !== AccountStatus::ACTIVE) {
             throw new \DomainException(
                 'حساب مقصد فعال نیست.'
             );
-
         }
 
-
-
-        $trackingCode =
-            'DON-' . strtoupper(
-                Str::random(10)
-            );
-
-
-
+        $trackingCode = 'DON-' . strtoupper(Str::random(10));
 
         $payment = DB::transaction(function () use (
-
             $customer,
-
             $account,
-
             $amount,
-
             $trackingCode,
-
             $donorName,
-
             $donorMobile
-
         ) {
-
-
             return DonationPayment::create([
-
-                'customer_id' =>
-                    $customer?->id,
-
-
-                'donor_name' =>
-                    $donorName,
-
-
-                'donor_mobile' =>
-                    $donorMobile,
-
-
-                'account_id' =>
-                    $account->id,
-
-
-                'amount' =>
-                    $amount,
-
-
-                'tracking_code' =>
-                    $trackingCode,
-
-
-                'gateway' =>
-                    config('payment.gateway'),
-
-
+                'customer_id' => $customer?->id,
+                'donor_name' => $donorName,
+                'donor_mobile' => $donorMobile,
+                'account_id' => $account->id,
+                'amount' => $amount,
+                'tracking_code' => $trackingCode,
+                'gateway' => config('payment.gateway'),
                 'status' => 0,
-
-
             ]);
-
-
         });
 
+        $gatewayResponse = $this->gateway->request([
+            'payment_type' => $paymentType,
+            'reference_id' => $payment->id,
+            'amount' => $amount,
+            'tracking_code' => $trackingCode,
+            'callback_url' => route('payments.callback'),
+        ]);
 
-
-
-
-        $gatewayResponse =
-            $this->gateway->request([
-
-                'payment_type' =>
-                    $paymentType,
-
-
-                'reference_id' =>
-                    $payment->id,
-
-
-                'amount' =>
-                    $amount,
-
-
-                'tracking_code' =>
-                    $trackingCode,
-
-
-                'callback_url' =>
-                    route('payments.callback'),
-
-
-            ]);
-
-
-
-
-
-        if (! $gatewayResponse['success']) {
-
-
+        if (! ($gatewayResponse['success'] ?? false)) {
             $payment->update([
-
                 'status' => 2,
-
             ]);
-
 
             throw new \DomainException(
-
                 $gatewayResponse['message']
-                ??
-                'خطا در اتصال به درگاه'
-
+                ?? 'خطا در اتصال به درگاه.'
             );
-
         }
 
-
-
-
-
         return [
-
-            'payment' =>
-                $payment,
-
-
-            'gateway' =>
-                $gatewayResponse,
-
-
+            'payment' => $payment,
+            'gateway' => $gatewayResponse,
         ];
-
     }
 
-
-
-
-
     /**
-     * تایید پرداخت
+     * تأیید پرداخت
      */
     public function verifyPayment(
         array $callbackData
     ): DonationPayment {
-
-        $gatewayResponse =
-            $this->gateway->verify(
-                $callbackData
-            );
-
-
-        if (! $gatewayResponse['success']) {
-
+        if (empty($callbackData['reference_id'])) {
             throw new \DomainException(
-                $gatewayResponse['message']
-                ??
-                'پرداخت ناموفق بود.'
+                'شناسه پرداخت نامعتبر است.'
             );
-
         }
 
+        $gatewayResponse = $this->gateway->verify($callbackData);
 
+        if (! ($gatewayResponse['success'] ?? false)) {
+            throw new \DomainException(
+                $gatewayResponse['message']
+                ?? 'پرداخت ناموفق بود.'
+            );
+        }
 
         return DB::transaction(function () use (
-
             $callbackData,
-
             $gatewayResponse
-
         ) {
+            $payment = DonationPayment::query()
+                ->lockForUpdate()
+                ->findOrFail($callbackData['reference_id']);
 
-
-            $payment =
-                DonationPayment::query()
-
-                    ->lockForUpdate()
-
-                    ->findOrFail(
-                        $callbackData['reference_id']
-                    );
-
-
+            /*
+            |--------------------------------------------------------------------------
+            | قبلاً پرداخت شده؟
+            |--------------------------------------------------------------------------
+            */
 
             if ($payment->status === 1) {
-
                 return $payment;
-
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | پرداخت لغو شده یا نامعتبر؟
+            |--------------------------------------------------------------------------
+            */
 
+            if ($payment->status !== 0) {
+                throw new \DomainException(
+                    'وضعیت این پرداخت قابل تأیید نیست.'
+                );
+            }
 
-            $account =
-                Account::query()
+            /*
+            |--------------------------------------------------------------------------
+            | حساب مقصد
+            |--------------------------------------------------------------------------
+            */
 
-                    ->lockForUpdate()
+            $account = Account::query()
+                ->lockForUpdate()
+                ->findOrFail($payment->account_id);
 
-                    ->findOrFail(
-                        $payment->account_id
-                    );
-
-
+            if ($account->status !== AccountStatus::ACTIVE) {
+                throw new \DomainException(
+                    'حساب مقصد فعال نیست.'
+                );
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -276,92 +168,64 @@ class DonationPaymentService
             */
 
             if ($payment->customer_id) {
-
-                $description =
-                    'کمک آنلاین عضو صندوق';
-
+                $description = 'کمک آنلاین عضو صندوق';
             } else {
-
-                $description =
-                    'کمک آنلاین از طرف '
-                    .
-                    ($payment->donor_name ?: 'فرد خارج از صندوق');
-
+                $description = 'کمک آنلاین از طرف '
+                    . ($payment->donor_name ?: 'فرد خارج از صندوق');
             }
 
+            $balanceBefore = $account->balance;
 
+            $balanceAfter = $balanceBefore + $payment->amount;
 
-            $balanceBefore =
-                $account->balance;
-
-
-
-            $balanceAfter =
-                $balanceBefore
-                +
-                $payment->amount;
-
-
+            /*
+            |--------------------------------------------------------------------------
+            | افزایش موجودی
+            |--------------------------------------------------------------------------
+            */
 
             $this->accountService->depositBalance(
-
                 $account,
-
                 $payment->amount
-
             );
 
-
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت تراکنش حساب
+            |--------------------------------------------------------------------------
+            */
 
             $this->accountTransactionService->create(
-
                 account: $account,
-
                 type: TransactionType::DEPOSIT,
-
                 source: TransactionSource::ONLINE,
-
                 paymentMethod: PaymentMethod::GATEWAY,
-
                 amount: $payment->amount,
-
                 balanceBefore: $balanceBefore,
-
                 balanceAfter: $balanceAfter,
-
                 createdBy: null,
-
                 description: $description
-
             );
 
-
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت پرداخت موفق
+            |--------------------------------------------------------------------------
+            */
 
             $payment->update([
-
                 'status' => 1,
-
                 'bank_transaction_id' =>
-                    $gatewayResponse['transaction_id']
-                    ?? null,
-
+                    $gatewayResponse['transaction_id'] ?? null,
                 'bank_reference_number' =>
-                    $gatewayResponse['reference_number']
-                    ?? null,
-
-                'paid_at' =>
-                    now(),
-
+                    $gatewayResponse['reference_number'] ?? null,
+                'paid_at' => now(),
             ]);
 
-
-
             return $payment->fresh();
-
-
         });
-
     }
+
     /**
      * ارسال پرداخت موجود به درگاه
      */
@@ -369,25 +233,18 @@ class DonationPaymentService
         DonationPayment $payment,
         string $paymentType = 'donation_customer'
     ): array {
+        if ($payment->status !== 0) {
+            throw new \DomainException(
+                'این پرداخت دیگر قابل ارسال به درگاه نیست.'
+            );
+        }
 
         return $this->gateway->request([
-
-            'payment_type' =>
-                $paymentType,
-
-            'reference_id' =>
-                $payment->id,
-
-            'amount' =>
-                $payment->amount,
-
-            'tracking_code' =>
-                $payment->tracking_code,
-
-            'callback_url' =>
-                route('payments.callback'),
-
+            'payment_type' => $paymentType,
+            'reference_id' => $payment->id,
+            'amount' => $payment->amount,
+            'tracking_code' => $payment->tracking_code,
+            'callback_url' => route('payments.callback'),
         ]);
     }
-
 }

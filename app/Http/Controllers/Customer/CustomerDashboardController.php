@@ -61,7 +61,6 @@ class CustomerDashboardController extends Controller
             ->map(function (AccountTransaction $transaction) use ($jalaliDateService) {
 
                 if ($transaction->transaction_date) {
-
                     $transaction->jalali_transaction_date =
                         $jalaliDateService->fromDatabase(
                             $transaction->transaction_date->toDateString()
@@ -101,7 +100,6 @@ class CustomerDashboardController extends Controller
         $overdueInstallments = collect();
 
         if ($activeLoan) {
-
             $overdueInstallments = $activeLoan
                 ->installments()
                 ->where(
@@ -122,73 +120,70 @@ class CustomerDashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | ایجاد اعلان برای اقساط معوق
+        | اعلان اقساط معوق
         |--------------------------------------------------------------------------
-        |
-        | برای هر قسط فقط یک اعلان معوق ایجاد می‌شود.
-        | شناسه قسط داخل data ذخیره می‌شود تا اعلان تکراری ساخته نشود.
-        |
         */
 
-        foreach ($overdueInstallments as $installment) {
+        if ($overdueInstallments->isNotEmpty()) {
 
-            $alreadyNotified = Notification::query()
-                ->where(
-                    'user_id',
-                    $user->id
-                )
-                ->where(
-                    'type',
-                    'overdue_installment'
-                )
-                ->where(
-                    'data->installment_id',
-                    $installment->id
-                )
-                ->exists();
+            $installmentIds = $overdueInstallments
+                ->pluck('id')
+                ->values();
 
-            if ($alreadyNotified) {
-                continue;
+            $notifiedInstallmentIds = Notification::query()
+                ->where('user_id', $user->id)
+                ->where('type', 'overdue_installment')
+                ->whereIn('data->installment_id', $installmentIds)
+                ->get()
+                ->pluck('data.installment_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+
+            foreach ($overdueInstallments as $installment) {
+
+                if (in_array(
+                    $installment->id,
+                    $notifiedInstallmentIds,
+                    true
+                )) {
+                    continue;
+                }
+
+                Notification::create([
+                    'user_id' => $user->id,
+
+                    'type' => 'overdue_installment',
+
+                    'title' => 'قسط شما معوق شده است.',
+
+                    'message' =>
+                        'قسط شماره ' .
+                        $installment->installment_number .
+                        ' وام شما از تاریخ سررسید گذشته و هنوز پرداخت نشده است.',
+
+                    'data' => [
+                        'amount' =>
+                            $installment->amount,
+
+                        'loan_id' =>
+                            $installment->loan_id,
+
+                        'installment_id' =>
+                            $installment->id,
+
+                        'installment_number' =>
+                            $installment->installment_number,
+
+                        'due_date' =>
+                            $installment->due_date?->toDateString(),
+
+                        'overdue_days' =>
+                            $installment->overdue_days,
+                    ],
+
+                    'read_at' => null,
+                ]);
             }
-
-            Notification::create([
-
-                'user_id' => $user->id,
-
-                'type' => 'overdue_installment',
-
-                'title' => 'قسط شما معوق شده است.',
-
-                'message' =>
-                    'قسط شماره ' .
-                    $installment->installment_number .
-                    ' وام شما از تاریخ سررسید گذشته و هنوز پرداخت نشده است.',
-
-                'data' => [
-
-                    'amount' =>
-                        $installment->amount,
-
-                    'loan_id' =>
-                        $installment->loan_id,
-
-                    'installment_id' =>
-                        $installment->id,
-
-                    'installment_number' =>
-                        $installment->installment_number,
-
-                    'due_date' =>
-                        $installment->due_date?->toDateString(),
-
-                    'overdue_days' =>
-                        $installment->overdue_days,
-
-                ],
-
-                'read_at' => null,
-
-            ]);
         }
 
         /*
@@ -222,10 +217,6 @@ class CustomerDashboardController extends Controller
             )
             ->latest('id')
             ->first();
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------

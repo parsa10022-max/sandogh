@@ -54,8 +54,8 @@
                 </div>
 
                 <span>
-                اطلاعات پرداخت
-            </span>
+                    اطلاعات پرداخت
+                </span>
 
             </div>
 
@@ -64,11 +64,12 @@
 
             <div class="customer-other-installment-success-info-grid">
 
+                {{-- شماره وام --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    شماره وام
-                </span>
+                    <span>
+                        شماره وام
+                    </span>
 
                     <strong dir="ltr">
                         {{ $payment->loan->full_loan_number }}
@@ -77,24 +78,26 @@
                 </div>
 
 
+                {{-- شماره قسط --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    شماره قسط
-                </span>
+                    <span>
+                        شماره قسط
+                    </span>
 
                     <strong>
-                        {{ $payment->installment->installment_number }}
+                        {{ fa_number($payment->installment->installment_number) }}
                     </strong>
 
                 </div>
 
 
+                {{-- نام صاحب وام --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    نام صاحب وام
-                </span>
+                    <span>
+                        نام صاحب وام
+                    </span>
 
                     <strong>
                         {{ $payment->loan->customer->full_name }}
@@ -103,11 +106,12 @@
                 </div>
 
 
+                {{-- کد رهگیری --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    کد رهگیری
-                </span>
+                    <span>
+                        کد رهگیری
+                    </span>
 
                     <strong dir="ltr">
                         {{ $payment->tracking_code }}
@@ -116,14 +120,15 @@
                 </div>
 
 
+                {{-- تاریخ پرداخت --}}
                 <div class="customer-other-installment-success-info-item">
 
-                <span>
-                    تاریخ پرداخت
-                </span>
+                    <span>
+                        تاریخ پرداخت
+                    </span>
 
                     <strong>
-                        {{ $payment->paid_at_jalali }}
+                        {{ fa_number($payment->paid_at_jalali) }}
                     </strong>
 
                 </div>
@@ -145,12 +150,12 @@
 
                 <div class="customer-other-installment-success-amount-content">
 
-                <span>
-                    مبلغ پرداخت
-                </span>
+                    <span>
+                        مبلغ پرداخت
+                    </span>
 
                     <strong>
-                        {{ number_format($payment->amount) }}
+                        {{ fa_money($payment->amount) }}
 
                         <small>
                             ریال
@@ -203,8 +208,8 @@
                     <i class="bi bi-receipt"></i>
 
                     <span>
-                    مشاهده و چاپ رسید
-                </span>
+                        مشاهده و چاپ رسید
+                    </span>
 
                 </a>
 
@@ -217,8 +222,8 @@
                     <i class="bi bi-arrow-right"></i>
 
                     <span>
-                    بازگشت به اقساط
-                </span>
+                        بازگشت به اقساط
+                    </span>
 
                 </a>
 
@@ -231,8 +236,8 @@
                     <i class="bi bi-house"></i>
 
                     <span>
-                    بازگشت به خانه
-                </span>
+                        بازگشت به خانه
+                    </span>
 
                 </a>
 
@@ -243,3 +248,4 @@
     </div>
 
 @endsection
+

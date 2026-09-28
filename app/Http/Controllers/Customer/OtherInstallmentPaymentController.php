@@ -99,7 +99,6 @@ class OtherInstallmentPaymentController extends Controller
                     'loans.loan_type_id'
                 )
                 ->where(function ($query) use ($input) {
-
                     $query
                         ->whereRaw(
                             "CONCAT(loan_types.prefix, loans.loan_number) = ?",
@@ -193,6 +192,19 @@ class OtherInstallmentPaymentController extends Controller
             ->findOrFail(
                 $request->installment_id
             );
+
+        /*
+        |--------------------------------------------------------------------------
+        | بررسی وضعیت قسط
+        |--------------------------------------------------------------------------
+        */
+
+        if ($installment->status !== InstallmentStatus::PENDING) {
+            return back()->with(
+                'error',
+                'این قسط در وضعیت قابل پرداخت نیست.'
+            );
+        }
 
         /*
         |--------------------------------------------------------------------------

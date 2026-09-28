@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DonationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -30,11 +31,8 @@ return new class extends Migration
             $table->unsignedTinyInteger('payment_method');
 
             // وضعیت
-            // 0 = ناموفق
-            // 1 = موفق
-            // 2 = در انتظار پرداخت
             $table->unsignedTinyInteger('status')
-                ->default(2);
+                ->default(DonationStatus::PENDING->value);
 
             // شماره پیگیری بانک
             $table->string('tracking_code')

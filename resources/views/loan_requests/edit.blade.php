@@ -111,7 +111,7 @@
                                     <i class="bi bi-cash-stack"></i>
 
                                     <span>
-                                        {{ number_format($loanRequest->requested_amount) }}
+                                        {{ fa_money($loanRequest->requested_amount) }}
                                         ریال
                                     </span>
 
@@ -221,14 +221,13 @@
 
                             <div class="loan-request-money-input">
 
-                                <input type="number"
+                                <input type="text"
                                        id="approved_amount"
                                        name="approved_amount"
-                                       min="0"
                                        inputmode="numeric"
                                        class="form-control @error('approved_amount') is-invalid @enderror"
                                        value="{{ old('approved_amount', $loanRequest->approved_amount) }}"
-                                       placeholder="مثلاً 10000000">
+                                       placeholder="مثلاً ۱۰٬۰۰۰٬۰۰۰">
 
                                 <span>ریال</span>
 
@@ -305,7 +304,7 @@
                                        'approved_installment_count',
                                        $loanRequest->approved_installment_count
                                    ) }}"
-                                   placeholder="مثلاً 10">
+                                   placeholder="مثلاً ۱۰">
 
                             @error('approved_installment_count')
                             <div class="invalid-feedback">
@@ -387,7 +386,7 @@
                                    value="{{ old(
                                        'next_review_date',
                                        $loanRequest->next_review_date
-                                           ? jdate($loanRequest->next_review_date)->format('Y/m/d')
+                                           ? fa_number(jdate($loanRequest->next_review_date)->format('Y/m/d'))
                                            : ''
                                    ) }}">
 

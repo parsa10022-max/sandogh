@@ -15,12 +15,13 @@
             <i class="bi bi-exclamation-triangle-fill"></i>
 
             <span>
-            {{ session('error') }}
-        </span>
+                {{ session('error') }}
+            </span>
 
         </div>
 
     @endif
+
 
     @if(session('success'))
 
@@ -29,8 +30,8 @@
             <i class="bi bi-check-circle-fill"></i>
 
             <span>
-            {{ session('success') }}
-        </span>
+                {{ session('success') }}
+            </span>
 
         </div>
 
@@ -39,9 +40,11 @@
 
     <div class="customer-dashboard customer-loan-request-page">
 
+
         {{-- =========================================================
              شرایط وام
         ========================================================== --}}
+
         <section class="loan-request-info-card loan-request-info-card-blue">
 
             <div class="loan-request-info-header">
@@ -51,11 +54,19 @@
                 </div>
 
                 <div>
-                    <h2>شرایط وام</h2>
-                    <span>قبل از ثبت درخواست، شرایط را مطالعه کنید</span>
+
+                    <h2>
+                        شرایط وام
+                    </h2>
+
+                    <span>
+                        قبل از ثبت درخواست، شرایط را مطالعه کنید
+                    </span>
+
                 </div>
 
             </div>
+
 
             <ul class="loan-request-info-list">
 
@@ -84,6 +95,7 @@
         {{-- =========================================================
              شرایط ضامن
         ========================================================== --}}
+
         <section class="loan-request-info-card loan-request-info-card-purple">
 
             <div class="loan-request-info-header">
@@ -93,11 +105,19 @@
                 </div>
 
                 <div>
-                    <h2>شرایط ضامن</h2>
-                    <span>مدارک مورد نیاز برای ضمانت</span>
+
+                    <h2>
+                        شرایط ضامن
+                    </h2>
+
+                    <span>
+                        مدارک مورد نیاز برای ضمانت
+                    </span>
+
                 </div>
 
             </div>
+
 
             <ul class="loan-request-info-list">
 
@@ -122,6 +142,7 @@
         {{-- =========================================================
              فرم درخواست وام
         ========================================================== --}}
+
         <section class="loan-request-form-card">
 
             <div class="loan-request-form-header">
@@ -131,27 +152,38 @@
                 </div>
 
                 <div>
-                    <h2>ثبت درخواست وام</h2>
+
+                    <h2>
+                        ثبت درخواست وام
+                    </h2>
+
                     <span>
-                    مبلغ موردنظر خود را وارد کنید
-                </span>
+                        مبلغ موردنظر خود را وارد کنید
+                    </span>
+
                 </div>
 
             </div>
 
 
-            <form method="POST"
-                  action="{{ route('customer.loan-request.store') }}">
+            <form
+                method="POST"
+                action="{{ route('customer.loan-request.store') }}"
+            >
 
                 @csrf
 
 
-                {{-- مبلغ --}}
+                {{-- =================================================
+                     مبلغ
+                ================================================== --}}
+
                 <div class="loan-request-field">
 
                     <label for="requested_amount">
                         مبلغ درخواستی
                     </label>
+
 
                     <div class="loan-request-amount-wrapper">
 
@@ -165,35 +197,52 @@
                             class="money-input @error('requested_amount') is-invalid @enderror"
                             data-min="10000000"
                             data-max="200000000"
-                            placeholder="مثلاً ۵۰,۰۰۰,۰۰۰"
+                            placeholder="مثلاً ۵۰٬۰۰۰٬۰۰۰"
                         >
 
                         <span>
-                        ریال
-                    </span>
+                            ریال
+                        </span>
 
                     </div>
 
+
                     @error('requested_amount')
+
                     <div class="loan-request-error">
                         {{ $message }}
                     </div>
+
                     @enderror
 
+
                     <div class="loan-request-field-help">
-                        مبلغ درخواست باید بین ۱۰,۰۰۰,۰۰۰ تا ۲۰۰,۰۰۰,۰۰۰ ریال باشد.
+                        مبلغ درخواست باید بین
+                        <strong>۱۰٬۰۰۰٬۰۰۰</strong>
+                        تا
+                        <strong>۲۰۰٬۰۰۰٬۰۰۰</strong>
+                        ریال باشد.
                     </div>
 
                 </div>
 
 
-                {{-- توضیحات --}}
+                {{-- =================================================
+                     توضیحات
+                ================================================== --}}
+
                 <div class="loan-request-field">
 
                     <label for="description">
+
                         توضیحات
-                        <span>اختیاری</span>
+
+                        <span>
+                            اختیاری
+                        </span>
+
                     </label>
+
 
                     <textarea
                         id="description"
@@ -204,20 +253,28 @@
                         placeholder="در صورت نیاز توضیحات خود را وارد کنید..."
                     >{{ old('description') }}</textarea>
 
+
                     @error('description')
+
                     <div class="loan-request-error">
                         {{ $message }}
                     </div>
+
                     @enderror
 
                 </div>
 
 
-                {{-- دکمه‌ها --}}
+                {{-- =================================================
+                     دکمه‌ها
+                ================================================== --}}
+
                 <div class="loan-request-actions">
 
-                    <a href="{{ route('customer.loan-requests.index') }}"
-                       class="loan-request-cancel-button">
+                    <a
+                        href="{{ route('customer.loan-requests.index') }}"
+                        class="loan-request-cancel-button"
+                    >
 
                         <i class="bi bi-arrow-right"></i>
 
@@ -226,8 +283,10 @@
                     </a>
 
 
-                    <button type="submit"
-                            class="loan-request-submit-button">
+                    <button
+                        type="submit"
+                        class="loan-request-submit-button"
+                    >
 
                         <i class="bi bi-send-fill"></i>
 
@@ -242,6 +301,5 @@
         </section>
 
     </div>
-
 
 @endsection

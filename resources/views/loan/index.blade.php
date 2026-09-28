@@ -216,13 +216,15 @@
 
                         <tr>
 
+                            {{-- شماره ردیف --}}
                             <td data-label="#">
 
-                                {{ $loans->firstItem() + $loop->index }}
+                                {{ fa_number($loans->firstItem() + $loop->index) }}
 
                             </td>
 
 
+                            {{-- شماره وام --}}
                             <td data-label="شماره وام">
 
                                 <span class="loan-number">
@@ -232,6 +234,7 @@
                             </td>
 
 
+                            {{-- مشتری --}}
                             <td data-label="مشتری">
 
                                 <span class="loan-customer-name">
@@ -244,6 +247,7 @@
                             </td>
 
 
+                            {{-- نوع وام --}}
                             <td data-label="نوع وام">
 
                                 {{ $loan->loanType->name }}
@@ -251,11 +255,12 @@
                             </td>
 
 
+                            {{-- مبلغ وام --}}
                             <td data-label="مبلغ وام">
 
                                 <span class="loan-amount">
 
-                                    {{ number_format($loan->loan_amount) }}
+                                    {{ fa_money($loan->loan_amount) }}
 
                                     <small>
                                         ریال
@@ -266,13 +271,15 @@
                             </td>
 
 
+                            {{-- تعداد اقساط --}}
                             <td data-label="تعداد اقساط">
 
-                                {{ $loan->installment_count }}
+                                {{ fa_number($loan->installment_count) }}
 
                             </td>
 
 
+                            {{-- وضعیت --}}
                             <td data-label="وضعیت">
 
                                 @if($loan->status === \App\Enums\LoanStatus::ACTIVE)
@@ -304,6 +311,7 @@
                             </td>
 
 
+                            {{-- عملیات --}}
                             <td
                                 data-label="عملیات"
                                 class="loans-actions-column"
@@ -368,4 +376,3 @@
     </div>
 
 @endsection
-
