@@ -43,11 +43,13 @@ class LoanStatisticsService
             */
 
             'overdue_installments_count' => Installment::query()
-                ->where('status', InstallmentStatus::OVERDUE)
+                ->where('status', InstallmentStatus::PENDING)
+                ->whereDate('due_date', '<', today())
                 ->count(),
 
             'overdue_installments_amount' => Installment::query()
-                ->where('status', InstallmentStatus::OVERDUE)
+                ->where('status', InstallmentStatus::PENDING)
+                ->whereDate('due_date', '<', today())
                 ->sum('amount'),
 
             /*

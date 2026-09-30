@@ -4,17 +4,20 @@ namespace App\Services\Savings;
 
 use App\Enums\AccountStatus;
 use App\Enums\AccountType;
+use App\Enums\PaymentGateway;
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionSource;
 use App\Enums\TransactionType;
 use App\Models\Account;
 use App\Models\Customer;
 use App\Models\Notification;
+use App\Models\PaymentIntent;
 use App\Models\SavingsTransfer;
 use App\Models\User;
 use App\Services\Account\AccountService;
 use App\Services\Account\AccountTransactionService;
 use App\Services\Payment\Gateways\GatewayInterface;
+use App\Services\Payment\PaymentIntentService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -24,6 +27,7 @@ class SavingsTransferService
     public function __construct(
         private readonly GatewayInterface $gateway,
         private readonly SavingsTransferTrackingCodeService $trackingService,
+        private readonly PaymentIntentService $paymentIntentService,
         private readonly AccountTransactionService $accountTransactionService,
         private readonly AccountService $accountService,
     ) {
@@ -50,7 +54,6 @@ class SavingsTransferService
             );
         }
 
-   
         /*
         |--------------------------------------------------------------------------
         | حساب پس‌انداز مقصد
@@ -77,6 +80,16 @@ class SavingsTransferService
 
         /*
         |--------------------------------------------------------------------------
+        | درگاه
+        |--------------------------------------------------------------------------
+        */
+
+        $gateway = PaymentGateway::from(
+            config('payment.gateway')
+        );
+
+        /*
+        |--------------------------------------------------------------------------
         | تولید کد پیگیری
         |--------------------------------------------------------------------------
         */
@@ -95,7 +108,8 @@ class SavingsTransferService
             $receiver,
             $account,
             $amount,
-            $trackingCode
+            $trackingCode,
+            $gateway
         ) {
             return SavingsTransfer::create([
                 'sender_user_id' =>
@@ -114,12 +128,27 @@ class SavingsTransferService
                     $trackingCode,
 
                 'gateway' =>
-                    config('payment.gateway'),
+                    $gateway,
 
                 'status' =>
                     'pending',
             ]);
         });
+
+        /*
+        |--------------------------------------------------------------------------
+        | ایجاد Payment Intent
+        |--------------------------------------------------------------------------
+        */
+
+        $paymentIntent = $this->paymentIntentService->create(
+            paymentType: 'savings_transfer',
+            referenceId: $transfer->id,
+            amount: $amount,
+            trackingCode: $trackingCode,
+            gateway: $gateway,
+            payerUserId: $senderUser->id,
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -132,6 +161,9 @@ class SavingsTransferService
                 'payment_type' =>
                     'savings_transfer',
 
+                'payment_intent_id' =>
+                    $paymentIntent->id,
+
                 'reference_id' =>
                     $transfer->id,
 
@@ -141,11 +173,18 @@ class SavingsTransferService
                 'tracking_code' =>
                     $trackingCode,
 
+                'payer_user_id' =>
+                    $senderUser->id,
+
                 'callback_url' =>
                     route('payments.callback'),
             ]);
         } catch (\Throwable $e) {
             report($e);
+
+            $this->paymentIntentService->markFailed(
+                $paymentIntent
+            );
 
             $transfer->update([
                 'status' =>
@@ -158,6 +197,10 @@ class SavingsTransferService
         }
 
         if (! ($gatewayResponse['success'] ?? false)) {
+            $this->paymentIntentService->markFailed(
+                $paymentIntent
+            );
+
             $transfer->update([
                 'status' =>
                     'failed',
@@ -169,9 +212,48 @@ class SavingsTransferService
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | ثبت توکن در Payment Intent
+        |--------------------------------------------------------------------------
+        */
+
+        $gatewayToken =
+            $gatewayResponse['token']
+            ?? null;
+
+        if (! $gatewayToken) {
+            $this->paymentIntentService->markFailed(
+                $paymentIntent
+            );
+
+            $transfer->update([
+                'status' =>
+                    'failed',
+            ]);
+
+            throw new \DomainException(
+                'توکن پرداخت از درگاه دریافت نشد.'
+            );
+        }
+
+        $paymentIntent->update([
+            'gateway_token' =>
+                $gatewayToken,
+        ]);
+
+        $paymentIntent =
+            $this->paymentIntentService->markRedirected(
+                $paymentIntent,
+                $gatewayToken
+            );
+
         return [
             'transfer' =>
-                $transfer,
+                $transfer->fresh(),
+
+            'payment_intent' =>
+                $paymentIntent,
 
             'gateway' =>
                 $gatewayResponse,
@@ -186,7 +268,157 @@ class SavingsTransferService
     ): SavingsTransfer {
         /*
         |--------------------------------------------------------------------------
-        | تایید پرداخت توسط درگاه
+        | Payment Intent
+        |--------------------------------------------------------------------------
+        */
+
+        $paymentIntentId =
+            $callbackData['payment_intent_id']
+            ?? null;
+
+        if (
+            ! $paymentIntentId ||
+            ! ctype_digit((string) $paymentIntentId)
+        ) {
+            throw new \DomainException(
+                'شناسه Payment Intent نامعتبر است.'
+            );
+        }
+
+        $paymentIntent =
+            $this->paymentIntentService->findById(
+                (int) $paymentIntentId
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | بررسی توکن Callback
+        |--------------------------------------------------------------------------
+        */
+
+        $callbackToken =
+            $callbackData['token']
+            ?? null;
+
+        if (
+            ! $callbackToken ||
+            ! $paymentIntent->gateway_token ||
+            ! hash_equals(
+                (string) $paymentIntent->gateway_token,
+                (string) $callbackToken
+            )
+        ) {
+            throw new \DomainException(
+                'توکن پرداخت نامعتبر است.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Intent باید متعلق به Savings Transfer باشد
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $paymentIntent->payment_type !==
+            'savings_transfer'
+        ) {
+            throw new \DomainException(
+                'نوع Payment Intent نامعتبر است.'
+            );
+        }
+
+        $transferId =
+            (int) $paymentIntent->reference_id;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Callback نباید بتواند Reference را عوض کند
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            isset($callbackData['reference_id']) &&
+            (int) $callbackData['reference_id'] !== $transferId
+        ) {
+            throw new \DomainException(
+                'مرجع پرداخت با Payment Intent مطابقت ندارد.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | دریافت انتقال
+        |--------------------------------------------------------------------------
+        */
+
+        $transfer = SavingsTransfer::query()
+            ->find($transferId);
+
+        if (! $transfer) {
+            throw new \DomainException(
+                'تراکنش واریز موردنظر پیدا نشد.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | تطبیق مبلغ
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            (int) $paymentIntent->amount !==
+            (int) $transfer->amount
+        ) {
+            throw new \DomainException(
+                'مبلغ Payment Intent با انتقال مطابقت ندارد.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | تطبیق درگاه
+        |--------------------------------------------------------------------------
+        */
+
+        $gateway = PaymentGateway::from(
+            config('payment.gateway')
+        );
+
+        if ($paymentIntent->gateway !== $gateway) {
+            throw new \DomainException(
+                'درگاه پرداخت با Payment Intent مطابقت ندارد.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Callback تکراری
+        |--------------------------------------------------------------------------
+        */
+
+        if ($paymentIntent->isPaid()) {
+            return $transfer->fresh();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | اعتبار Payment Intent
+        |--------------------------------------------------------------------------
+        */
+
+        $this->paymentIntentService->validateForPayment(
+            intent: $paymentIntent,
+            paymentType: 'savings_transfer',
+            referenceId: $transferId,
+            amount: (int) $transfer->amount,
+            gateway: $gateway,
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | تایید توسط درگاه
         |--------------------------------------------------------------------------
         */
 
@@ -196,6 +428,10 @@ class SavingsTransferService
             );
 
         if (! ($gatewayResponse['success'] ?? false)) {
+            $this->paymentIntentService->markFailed(
+                $paymentIntent
+            );
+
             throw new \DomainException(
                 $gatewayResponse['message']
                 ?? 'پرداخت ناموفق بود.'
@@ -204,26 +440,64 @@ class SavingsTransferService
 
         /*
         |--------------------------------------------------------------------------
-        | شناسه انتقال
+        | پردازش نهایی اتمیک
         |--------------------------------------------------------------------------
         */
 
-        $referenceId =
-            $callbackData['reference_id']
-            ?? $gatewayResponse['reference_id']
-            ?? null;
-
-        if (! $referenceId) {
-            throw new \DomainException(
-                'شناسه انتقال در پاسخ درگاه وجود ندارد.'
-            );
-        }
-
         return DB::transaction(function () use (
-            $callbackData,
+            $paymentIntentId,
+            $transferId,
             $gatewayResponse,
-            $referenceId
+            $gateway
         ) {
+            /*
+            |--------------------------------------------------------------------------
+            | قفل Payment Intent
+            |--------------------------------------------------------------------------
+            */
+
+            $paymentIntent =
+                $this->paymentIntentService->findByIdForUpdate(
+                    $paymentIntentId
+                );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Callback تکراری
+            |--------------------------------------------------------------------------
+            */
+
+            if ($paymentIntent->isPaid()) {
+                $transfer = SavingsTransfer::query()
+                    ->findOrFail($transferId);
+
+                return $transfer;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | اعتبار مجدد Payment Intent
+            |--------------------------------------------------------------------------
+            */
+
+            $this->paymentIntentService->validateForPayment(
+                intent: $paymentIntent,
+                paymentType: 'savings_transfer',
+                referenceId: $transferId,
+                amount: (int) $paymentIntent->amount,
+                gateway: $gateway,
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | ورود به وضعیت verifying
+            |--------------------------------------------------------------------------
+            */
+
+            $this->paymentIntentService->markVerifying(
+                $paymentIntent
+            );
+
             /*
             |--------------------------------------------------------------------------
             | قفل انتقال
@@ -232,7 +506,7 @@ class SavingsTransferService
 
             $transfer = SavingsTransfer::query()
                 ->lockForUpdate()
-                ->find($referenceId);
+                ->find($transferId);
 
             if (! $transfer) {
                 throw new \DomainException(
@@ -242,19 +516,19 @@ class SavingsTransferService
 
             /*
             |--------------------------------------------------------------------------
-            | Callback تکراری
+            | Callback تکراری / وضعیت انتقال
             |--------------------------------------------------------------------------
             */
 
             if ($transfer->status === 'paid') {
+                $this->paymentIntentService->markPaid(
+                    $paymentIntent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
+                );
+
                 return $transfer;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | فقط انتقال pending قابل تایید است
-            |--------------------------------------------------------------------------
-            */
 
             if ($transfer->status !== 'pending') {
                 throw new \DomainException(
@@ -268,15 +542,9 @@ class SavingsTransferService
             |--------------------------------------------------------------------------
             */
 
-            $callbackAmount =
-                $callbackData['amount']
-                ?? $gatewayResponse['amount']
-                ?? null;
-
             if (
-                $callbackAmount !== null &&
-                (int) $callbackAmount !==
-                (int) $transfer->amount
+                (int) $transfer->amount !==
+                (int) $paymentIntent->amount
             ) {
                 throw new \DomainException(
                     'مبلغ پرداخت نامعتبر است.'
@@ -396,6 +664,18 @@ class SavingsTransferService
                 'paid_at' =>
                     now(),
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | تکمیل Payment Intent
+            |--------------------------------------------------------------------------
+            */
+
+            $this->paymentIntentService->markPaid(
+                $paymentIntent,
+                $gatewayResponse['transaction_id'] ?? null,
+                $gatewayResponse['reference_number'] ?? null,
+            );
 
             /*
             |--------------------------------------------------------------------------

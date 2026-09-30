@@ -2,8 +2,6 @@
 
 namespace App\Services\Payment\Gateways;
 
-use Illuminate\Http\Request;
-
 class SadadGateway implements GatewayInterface
 {
     /**
@@ -27,7 +25,7 @@ class SadadGateway implements GatewayInterface
     /**
      * تایید پرداخت
      */
-    public function verify(Request $request): array
+    public function verify(array $callbackData): array
     {
         // TODO:
         // 1. ارسال درخواست Verify به سداد

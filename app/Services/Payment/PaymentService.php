@@ -54,11 +54,6 @@ class PaymentService
             config('payment.gateway')
         );
 
-        /*
-         * ایجاد Payment Intent
-         *
-         * اطلاعات اصلی پرداخت در اینجا ثبت می‌شود.
-         */
         $paymentIntent = $this->paymentIntentService->create(
             paymentType: $paymentType,
             referenceId: $installment->id,
@@ -68,12 +63,8 @@ class PaymentService
             payerUserId: $payerUserId,
             gatewayToken: null,
             expiresInMinutes: 30,
+        );
 
-);
-
-        /*
-         * ارسال درخواست به Gateway
-         */
         $gatewayResponse = $this->gateway->request([
             'payment_intent_id' => $paymentIntent->id,
 
@@ -95,10 +86,6 @@ class PaymentService
 
             'tracking_code' => $trackingCode,
 
-            /*
-             * فقط جهت ارسال به Gateway.
-             * مرجع اصلی payer همان PaymentIntent است.
-             */
             'payer_user_id' => $payerUserId,
 
             'callback_url' =>
@@ -119,9 +106,6 @@ class PaymentService
             );
         }
 
-        /*
-         * Gateway ممکن است توکن خودش را ایجاد کند.
-         */
         $gatewayToken =
             $gatewayResponse['token']
             ?? $paymentIntent->gateway_token;
@@ -136,25 +120,16 @@ class PaymentService
             );
         }
 
-        /*
-         * ذخیره توکن Gateway در PaymentIntent
-         */
         $paymentIntent->update([
             'gateway_token' => $gatewayToken,
         ]);
 
-        /*
-         * انتقال PaymentIntent به وضعیت redirected
-         */
         $paymentIntent =
             $this->paymentIntentService->markRedirected(
                 $paymentIntent->refresh(),
                 $gatewayToken
             );
 
-        /*
-         * شناسه PaymentIntent را در پاسخ نگه می‌داریم.
-         */
         $gatewayResponse['payment_intent_id'] =
             $paymentIntent->id;
 
@@ -173,6 +148,9 @@ class PaymentService
         $paymentIntent =
             $this->resolvePaymentIntent($callbackData);
 
+        $paymentIntentId =
+            (int) $paymentIntent->id;
+
         $paymentType =
             $paymentIntent->payment_type;
 
@@ -186,7 +164,30 @@ class PaymentService
             $paymentIntent->gateway;
 
         /*
-         * اعتبارسنجی PaymentIntent
+         * Callback تکراری برای پرداخت موفق.
+         *
+         * در این حالت دیگر نباید Gateway دوباره Verify شود
+         * و نباید عملیات مالی دوباره انجام شود.
+         */
+        if ($paymentIntent->isPaid()) {
+            $existingPayment = LoanPayment::query()
+                ->where(
+                    'installment_id',
+                    $installmentId
+                )
+                ->first();
+
+            if ($existingPayment) {
+                return $existingPayment;
+            }
+
+            throw new \DomainException(
+                'Payment Intent پرداخت شده است اما رکورد پرداخت پیدا نشد.'
+            );
+        }
+
+        /*
+         * اعتبارسنجی اولیه PaymentIntent
          */
         $this->paymentIntentService->validateForPayment(
             intent: $paymentIntent,
@@ -197,15 +198,10 @@ class PaymentService
         );
 
         /*
-         * PaymentIntent وارد مرحله verifying می‌شود.
-         */
-        $paymentIntent =
-            $this->paymentIntentService->markVerifying(
-                $paymentIntent
-            );
-
-        /*
-         * اکنون Gateway را Verify می‌کنیم.
+         * تایید توسط Gateway
+         *
+         * این عملیات خارج از DB Transaction انجام می‌شود
+         * تا Transaction هنگام ارتباط با بانک باز نماند.
          */
         $gatewayResponse =
             $this->gateway->verify($callbackData);
@@ -230,183 +226,148 @@ class PaymentService
         $trackingCode =
             $paymentIntent->tracking_code;
 
-        return DB::transaction(
-            function () use (
-                $paymentIntent,
-                $installmentId,
-                $amount,
-                $gatewayResponse,
-                $payerUserId,
-                $trackingCode,
-            ) {
-                /*
-                 * پیدا کردن loan_id
-                 */
-                $loanId = Installment::query()
-                    ->whereKey($installmentId)
-                    ->value('loan_id');
-
-                if (! $loanId) {
-                    throw new \DomainException(
-                        'قسط موردنظر پیدا نشد.'
+        /*
+         * تمام عملیات مالی داخل یک Transaction.
+         */
+        return DB::transaction(function () use (
+            $paymentIntentId,
+            $installmentId,
+            $amount,
+            $gatewayResponse,
+            $payerUserId,
+            $trackingCode,
+            $paymentType,
+            $gateway,
+        ) {
+            /*
+             * PaymentIntent مشخص Callback را قفل می‌کنیم.
+             */
+            $paymentIntent =
+                $this->paymentIntentService
+                    ->findByIdForUpdate(
+                        $paymentIntentId
                     );
-                }
 
-                /*
-                 * قفل کردن وام
-                 */
-                $loan = Loan::query()
-                    ->with('customer.user')
-                    ->lockForUpdate()
-                    ->find($loanId);
-
-                if (! $loan) {
-                    throw new \DomainException(
-                        'وام مربوط به قسط پیدا نشد.'
-                    );
-                }
-
-                /*
-                 * قفل کردن قسط
-                 */
-                $installment = Installment::query()
-                    ->lockForUpdate()
-                    ->find($installmentId);
-
-                if (! $installment) {
-                    throw new \DomainException(
-                        'قسط موردنظر پیدا نشد.'
-                    );
-                }
-
-                /*
-                 * کنترل ارتباط قسط و وام
-                 */
-                if (
-                    (int) $installment->loan_id
-                    !== (int) $loan->id
-                ) {
-                    throw new \DomainException(
-                        'قسط با وام مربوطه مطابقت ندارد.'
-                    );
-                }
-
-                /*
-                 * مبلغ واقعی قسط باید با PaymentIntent
-                 * یکسان باشد.
-                 */
-                if (
-                    (int) $installment->amount
-                    !== $amount
-                ) {
-                    throw new \DomainException(
-                        'مبلغ قسط با Payment Intent مطابقت ندارد.'
-                    );
-                }
-
-                /*
-                 * پرداخت تکراری
-                 */
+            /*
+             * اگر Callback همزمان یا تکراری بوده
+             * و پرداخت قبلاً ثبت شده است،
+             * عملیات مالی دوباره انجام نمی‌شود.
+             */
+            if ($paymentIntent->isPaid()) {
                 $existingPayment =
                     LoanPayment::query()
                         ->where(
                             'installment_id',
-                            $installment->id
+                            $installmentId
                         )
                         ->first();
 
                 if ($existingPayment) {
-                    /*
-                     * اگر LoanPayment قبلاً ثبت شده،
-                     * دیگر نباید عملیات مالی دوباره انجام شود.
-                     */
-                    if (
-                        ! $paymentIntent->isPaid()
-                    ) {
-                        $this->paymentIntentService->markPaid(
-                            $paymentIntent,
-                            $gatewayResponse['transaction_id']
-                            ?? null,
-                            $gatewayResponse['reference_number']
-                            ?? null,
-                        );
-                    }
-
                     return $existingPayment;
                 }
 
-                /*
-                 * وام باید فعال باشد.
-                 */
-                if (
-                    $loan->status
-                    !== LoanStatus::ACTIVE
-                ) {
-                    throw new \DomainException(
-                        'این وام فعال نیست.'
-                    );
-                }
+                throw new \DomainException(
+                    'Payment Intent پرداخت شده است اما رکورد پرداخت پیدا نشد.'
+                );
+            }
 
-                /*
-                 * قسط نباید قبلاً پرداخت شده باشد.
-                 */
-                if (
-                    $installment->status
-                    === InstallmentStatus::PAID
-                ) {
-                    throw new \DomainException(
-                        'این قسط قبلاً پرداخت شده است.'
-                    );
-                }
+            /*
+             * اعتبارسنجی دوباره بعد از Lock.
+             */
+            $this->paymentIntentService->validateForPayment(
+                intent: $paymentIntent,
+                paymentType: $paymentType,
+                referenceId: $installmentId,
+                amount: $amount,
+                gateway: $gateway,
+            );
 
-                /*
-                 * بررسی ترتیب اقساط
-                 */
-                $previousUnpaidExists =
-                    Installment::query()
-                        ->where(
-                            'loan_id',
-                            $loan->id
-                        )
-                        ->where(
-                            'installment_number',
-                            '<',
-                            $installment->installment_number
-                        )
-                        ->whereIn('status', [
-                            InstallmentStatus::PENDING->value,
-                            InstallmentStatus::OVERDUE->value,
-                        ])
-                        ->exists();
-
-                if ($previousUnpaidExists) {
-                    throw new \DomainException(
-                        'ابتدا باید اقساط قبلی پرداخت شوند.'
-                    );
-                }
-
-                /*
-                 * ثبت LoanPayment
-                 */
-                $payment =
-                    $this->createLoanPayment(
-                        installment: $installment,
-                        paymentIntent: $paymentIntent,
-                        gatewayResponse: $gatewayResponse,
-                        trackingCode: $trackingCode,
-                        payerUserId: $payerUserId,
-                    );
-
-                /*
-                 * پرداخت شدن قسط
-                 */
-                $this->markInstallmentAsPaid(
-                    $installment
+            /*
+             * PaymentIntent فقط داخل Transaction
+             * وارد وضعیت Verifying می‌شود.
+             */
+            $paymentIntent =
+                $this->paymentIntentService->markVerifying(
+                    $paymentIntent
                 );
 
-                /*
-                 * موفق شدن PaymentIntent
-                 */
+            /*
+             * پیدا کردن loan_id
+             */
+            $loanId = Installment::query()
+                ->whereKey($installmentId)
+                ->value('loan_id');
+
+            if (! $loanId) {
+                throw new \DomainException(
+                    'قسط موردنظر پیدا نشد.'
+                );
+            }
+
+            /*
+             * قفل کردن وام
+             */
+            $loan = Loan::query()
+                ->with('customer.user')
+                ->lockForUpdate()
+                ->find($loanId);
+
+            if (! $loan) {
+                throw new \DomainException(
+                    'وام مربوط به قسط پیدا نشد.'
+                );
+            }
+
+            /*
+             * قفل کردن قسط
+             */
+            $installment = Installment::query()
+                ->lockForUpdate()
+                ->find($installmentId);
+
+            if (! $installment) {
+                throw new \DomainException(
+                    'قسط موردنظر پیدا نشد.'
+                );
+            }
+
+            /*
+             * کنترل ارتباط قسط و وام
+             */
+            if (
+                (int) $installment->loan_id
+                !== (int) $loan->id
+            ) {
+                throw new \DomainException(
+                    'قسط با وام مربوطه مطابقت ندارد.'
+                );
+            }
+
+            /*
+             * مبلغ واقعی قسط باید با PaymentIntent
+             * یکسان باشد.
+             */
+            if (
+                (int) $installment->amount
+                !== $amount
+            ) {
+                throw new \DomainException(
+                    'مبلغ قسط با Payment Intent مطابقت ندارد.'
+                );
+            }
+
+            /*
+             * کنترل پرداخت تکراری
+             */
+            $existingPayment =
+                LoanPayment::query()
+                    ->where(
+                        'installment_id',
+                        $installment->id
+                    )
+                    ->first();
+
+            if ($existingPayment) {
                 $this->paymentIntentService->markPaid(
                     $paymentIntent,
                     $gatewayResponse['transaction_id']
@@ -415,26 +376,108 @@ class PaymentService
                     ?? null,
                 );
 
-                /*
-                 * بررسی پایان وام
-                 */
-                $this->finishLoanIfNeeded(
-                    $loan
-                );
-
-                /*
-                 * ارسال اعلان
-                 */
-                $this->sendPaymentNotifications(
-                    $loan,
-                    $installment,
-                    $payment,
-                    $payerUserId
-                );
-
-                return $payment;
+                return $existingPayment;
             }
-        );
+
+            /*
+             * وام باید فعال باشد.
+             */
+            if (
+                $loan->status
+                !== LoanStatus::ACTIVE
+            ) {
+                throw new \DomainException(
+                    'این وام فعال نیست.'
+                );
+            }
+
+            /*
+             * قسط نباید قبلاً پرداخت شده باشد.
+             */
+            if (
+                $installment->status
+                === InstallmentStatus::PAID
+            ) {
+                throw new \DomainException(
+                    'این قسط قبلاً پرداخت شده است.'
+                );
+            }
+
+            /*
+             * بررسی ترتیب اقساط
+             */
+            $previousUnpaidExists =
+                Installment::query()
+                    ->where(
+                        'loan_id',
+                        $loan->id
+                    )
+                    ->where(
+                        'installment_number',
+                        '<',
+                        $installment->installment_number
+                    )
+                    ->whereIn('status', [
+                        InstallmentStatus::PENDING->value,
+                        InstallmentStatus::OVERDUE->value,
+                    ])
+                    ->exists();
+
+            if ($previousUnpaidExists) {
+                throw new \DomainException(
+                    'ابتدا باید اقساط قبلی پرداخت شوند.'
+                );
+            }
+
+            /*
+             * ثبت LoanPayment
+             */
+            $payment =
+                $this->createLoanPayment(
+                    installment: $installment,
+                    paymentIntent: $paymentIntent,
+                    gatewayResponse: $gatewayResponse,
+                    trackingCode: $trackingCode,
+                    payerUserId: $payerUserId,
+                );
+
+            /*
+             * پرداخت شدن قسط
+             */
+            $this->markInstallmentAsPaid(
+                $installment
+            );
+
+            /*
+             * موفق شدن PaymentIntent
+             */
+            $this->paymentIntentService->markPaid(
+                $paymentIntent,
+                $gatewayResponse['transaction_id']
+                ?? null,
+                $gatewayResponse['reference_number']
+                ?? null,
+            );
+
+            /*
+             * بررسی پایان وام
+             */
+            $this->finishLoanIfNeeded(
+                $loan
+            );
+
+            /*
+             * ارسال اعلان
+             */
+            $this->sendPaymentNotifications(
+                $loan,
+                $installment,
+                $payment,
+                $payerUserId
+            );
+
+            return $payment;
+        });
     }
 
     /**
@@ -519,9 +562,6 @@ class PaymentService
             'tracking_code' =>
                 $trackingCode,
 
-            /*
-             * درگاه واقعی از PaymentIntent
-             */
             'gateway' =>
                 $paymentIntent->gateway,
 

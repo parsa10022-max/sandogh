@@ -21,21 +21,29 @@ class PaymentIntentService
         ?int $payerUserId = null,
         ?string $gatewayToken = null,
         ?int $expiresInMinutes = 30,
-): PaymentIntent {
+    ): PaymentIntent {
         if ($referenceId <= 0) {
-            throw new RuntimeException('شناسه مرجع پرداخت نامعتبر است.');
+            throw new RuntimeException(
+                'شناسه مرجع پرداخت نامعتبر است.'
+            );
         }
 
         if ($amount <= 0) {
-            throw new RuntimeException('مبلغ پرداخت باید بیشتر از صفر باشد.');
+            throw new RuntimeException(
+                'مبلغ پرداخت باید بیشتر از صفر باشد.'
+            );
         }
 
         if ($trackingCode === '') {
-            throw new RuntimeException('کد پیگیری پرداخت الزامی است.');
+            throw new RuntimeException(
+                'کد پیگیری پرداخت الزامی است.'
+            );
         }
 
         if ($expiresInMinutes !== null && $expiresInMinutes <= 0) {
-            throw new RuntimeException('مدت اعتبار پرداخت نامعتبر است.');
+            throw new RuntimeException(
+                'مدت اعتبار پرداخت نامعتبر است.'
+            );
         }
 
         return PaymentIntent::create([
@@ -58,7 +66,20 @@ class PaymentIntentService
      */
     public function findById(int $id): PaymentIntent
     {
-        return PaymentIntent::query()->findOrFail($id);
+        return PaymentIntent::query()
+            ->findOrFail($id);
+    }
+
+    /**
+     * پیدا کردن Intent بر اساس ID و قفل کردن رکورد.
+     *
+     * این متد باید داخل DB::transaction() استفاده شود.
+     */
+    public function findByIdForUpdate(int $id): PaymentIntent
+    {
+        return PaymentIntent::query()
+            ->lockForUpdate()
+            ->findOrFail($id);
     }
 
     /**
@@ -75,7 +96,10 @@ class PaymentIntentService
     }
 
     /**
-     * پیدا کردن Intent و قفل کردن رکورد در تراکنش دیتابیس.
+     * پیدا کردن Intent بر اساس نوع و مرجع
+     * و قفل کردن رکورد در تراکنش دیتابیس.
+     *
+     * این متد برای سازگاری با استفاده‌های فعلی پروژه حفظ شده است.
      */
     public function findForUpdate(
         string $paymentType,
@@ -108,15 +132,20 @@ class PaymentIntentService
 
     /**
      * علامت‌گذاری Intent به عنوان Verifying.
+     *
+     * این تغییر باید داخل Transaction انجام شود.
      */
-    public function markVerifying(PaymentIntent $intent): PaymentIntent
-    {
+    public function markVerifying(
+        PaymentIntent $intent
+    ): PaymentIntent {
         $this->ensureStatus($intent, ['redirected']);
 
         if ($intent->isExpiredByTime()) {
             $this->markExpired($intent);
 
-            throw new RuntimeException('مهلت پرداخت به پایان رسیده است.');
+            throw new RuntimeException(
+                'مهلت پرداخت به پایان رسیده است.'
+            );
         }
 
         $intent->update([
@@ -149,8 +178,9 @@ class PaymentIntentService
     /**
      * ثبت شکست پرداخت.
      */
-    public function markFailed(PaymentIntent $intent): PaymentIntent
-    {
+    public function markFailed(
+        PaymentIntent $intent
+    ): PaymentIntent {
         if ($intent->isPaid()) {
             throw new RuntimeException(
                 'Payment Intent موفق را نمی‌توان ناموفق کرد.'
@@ -171,8 +201,9 @@ class PaymentIntentService
     /**
      * منقضی کردن Intent.
      */
-    public function markExpired(PaymentIntent $intent): PaymentIntent
-    {
+    public function markExpired(
+        PaymentIntent $intent
+    ): PaymentIntent {
         if ($intent->isPaid()) {
             throw new RuntimeException(
                 'Payment Intent پرداخت‌شده را نمی‌توان منقضی کرد.'
@@ -188,6 +219,8 @@ class PaymentIntentService
 
     /**
      * بررسی اینکه Intent برای پرداخت مشخص معتبر است.
+     *
+     * در زمان Verify، Intent باید در وضعیت Redirected باشد.
      */
     public function validateForPayment(
         PaymentIntent $intent,
@@ -232,19 +265,18 @@ class PaymentIntentService
             );
         }
 
-        if (! in_array(
-            $intent->status,
-            ['pending', 'redirected', 'verifying'],
-            true
-        )) {
+        if ($intent->status !== 'redirected') {
             throw new RuntimeException(
-                'وضعیت Payment Intent برای ادامه پرداخت معتبر نیست.'
+                'وضعیت Payment Intent برای تأیید پرداخت معتبر نیست.'
             );
         }
     }
 
     /**
      * اجرای عملیات با قفل روی Intent.
+     *
+     * این متد بر اساس نوع پرداخت و مرجع کار می‌کند
+     * و برای استفاده‌های فعلی پروژه حفظ شده است.
      */
     public function transaction(
         string $paymentType,
@@ -266,13 +298,39 @@ class PaymentIntentService
     }
 
     /**
+     * اجرای عملیات با قفل روی Payment Intent مشخص.
+     *
+     * این روش برای Callback و Verify دقیق‌تر است،
+     * چون مستقیماً بر اساس Payment Intent ID کار می‌کند.
+     */
+    public function transactionById(
+        int $paymentIntentId,
+        callable $callback
+    ): mixed {
+        return DB::transaction(function () use (
+            $paymentIntentId,
+            $callback
+        ) {
+            $intent = $this->findByIdForUpdate(
+                $paymentIntentId
+            );
+
+            return $callback($intent);
+        });
+    }
+
+    /**
      * بررسی وضعیت مجاز برای تغییر.
      */
     private function ensureStatus(
         PaymentIntent $intent,
         array $allowedStatuses
     ): void {
-        if (! in_array($intent->status, $allowedStatuses, true)) {
+        if (! in_array(
+            $intent->status,
+            $allowedStatuses,
+            true
+        )) {
             throw new RuntimeException(
                 sprintf(
                     'تغییر وضعیت Payment Intent از "%s" مجاز نیست.',

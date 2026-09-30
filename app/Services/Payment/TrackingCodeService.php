@@ -2,9 +2,10 @@
 
 namespace App\Services\Payment;
 
-use App\Models\LoanPayment;
-use App\Models\PaymentIntent;
+use App\Models\PaymentTrackingSequence;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
+use RuntimeException;
 
 class TrackingCodeService
 {
@@ -28,58 +29,57 @@ class TrackingCodeService
 
     /**
      * تولید کد رهگیری پرداخت وام
+     *
+     * شماره‌گذاری به صورت اتمیک و با Row Lock انجام می‌شود.
      */
     public function generateLoanPaymentCode(): string
     {
-        $today = Jalalian::now()->format('Ymd');
+        return DB::transaction(function () {
+            $today = Jalalian::now()->format('Ymd');
 
-        $lastLoanPayment = LoanPayment::query()
-            ->where(
-                'tracking_code',
-                'like',
-                self::PREFIX . $today . '%'
-            )
-            ->latest('id')
-            ->first();
+            $sequence = PaymentTrackingSequence::query()
+                ->where('jalali_date', $today)
+                ->lockForUpdate()
+                ->first();
 
-        $lastPaymentIntent = PaymentIntent::query()
-            ->where(
-                'tracking_code',
-                'like',
-                self::PREFIX . $today . '%'
-            )
-            ->latest('id')
-            ->first();
+            if (! $sequence) {
+                try {
+                    $sequence = PaymentTrackingSequence::query()->create([
+                        'jalali_date' => $today,
+                        'last_sequence' => 0,
+                    ]);
+                } catch (\Throwable $e) {
+                    /*
+                     * ممکن است درخواست همزمان دیگری
+                     * رکورد امروز را ساخته باشد.
+                     */
+                    $sequence = PaymentTrackingSequence::query()
+                        ->where('jalali_date', $today)
+                        ->lockForUpdate()
+                        ->first();
 
-        $lastSequence = 0;
+                    if (! $sequence) {
+                        throw $e;
+                    }
+                }
+            }
 
-        if ($lastLoanPayment) {
-            $lastSequence = max(
-                $lastSequence,
-                (int) substr(
-                    $lastLoanPayment->tracking_code,
-                    -self::SEQUENCE_LENGTH
-                )
+            $sequence->last_sequence++;
+
+            if ($sequence->last_sequence > 999999) {
+                throw new RuntimeException(
+                    'ظرفیت شماره‌گذاری کد رهگیری امروز به پایان رسیده است.'
+                );
+            }
+
+            $sequence->save();
+
+            return sprintf(
+                '%s%s%0' . self::SEQUENCE_LENGTH . 'd',
+                self::PREFIX,
+                $today,
+                $sequence->last_sequence
             );
-        }
-
-        if ($lastPaymentIntent) {
-            $lastSequence = max(
-                $lastSequence,
-                (int) substr(
-                    $lastPaymentIntent->tracking_code,
-                    -self::SEQUENCE_LENGTH
-                )
-            );
-        }
-
-        $sequence = $lastSequence + 1;
-
-        return sprintf(
-            '%s%s%0' . self::SEQUENCE_LENGTH . 'd',
-            self::PREFIX,
-            $today,
-            $sequence
-        );
+        });
     }
 }

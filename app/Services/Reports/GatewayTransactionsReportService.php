@@ -40,10 +40,22 @@ class GatewayTransactionsReportService
                 ->whereNotNull('gateway')
                 ->where('gateway', '!=', '')
                 ->when($from, function ($query) use ($from) {
-                    $query->whereDate('created_at', '>=', $from);
+                    $query->where(function ($q) use ($from) {
+                        $q->whereDate('paid_at', '>=', $from)
+                            ->orWhere(function ($q2) use ($from) {
+                                $q2->whereNull('paid_at')
+                                    ->whereDate('created_at', '>=', $from);
+                            });
+                    });
                 })
                 ->when($to, function ($query) use ($to) {
-                    $query->whereDate('created_at', '<=', $to);
+                    $query->where(function ($q) use ($to) {
+                        $q->whereDate('paid_at', '<=', $to)
+                            ->orWhere(function ($q2) use ($to) {
+                                $q2->whereNull('paid_at')
+                                    ->whereDate('created_at', '<=', $to);
+                            });
+                    });
                 })
                 ->get();
 
