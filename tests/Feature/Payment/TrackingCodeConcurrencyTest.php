@@ -8,9 +8,22 @@ use Tests\TestCase;
 
 class TrackingCodeConcurrencyTest extends TestCase
 {
-    /**
-     * تست Lock روی اتصال واقعی MySQL.
-     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config([
+            'database.connections.mysql.driver' => 'mysql',
+            'database.connections.mysql.host' => '127.0.0.1',
+            'database.connections.mysql.port' => 3306,
+            'database.connections.mysql.database' => 'sandogh',
+            'database.connections.mysql.username' => 'root',
+            'database.connections.mysql.password' => '',
+        ]);
+
+        DB::purge('mysql');
+    }
+
     public function test_mysql_lock_prevents_duplicate_sequence_numbers(): void
     {
         $mysql = DB::connection('mysql');
@@ -93,6 +106,7 @@ class TrackingCodeConcurrencyTest extends TestCase
                 ->first();
 
             $this->assertNotNull($finalSequence);
+
             $this->assertSame(
                 2,
                 (int) $finalSequence->last_sequence

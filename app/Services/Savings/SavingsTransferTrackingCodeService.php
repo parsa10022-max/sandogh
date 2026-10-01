@@ -3,6 +3,7 @@
 namespace App\Services\Savings;
 
 use App\Models\SavingsTransfer;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
 class SavingsTransferTrackingCodeService
@@ -11,42 +12,53 @@ class SavingsTransferTrackingCodeService
 
     private const SEQUENCE_LENGTH = 6;
 
+    private const MAX_SEQUENCE = 999999;
 
     public function generate(): string
     {
-        $today = Jalalian::now()->format('Ymd');
+        return DB::transaction(function (): string {
+            $today = Jalalian::now()->format('Ymd');
 
+            DB::table('savings_transfer_tracking_sequences')
+                ->insertOrIgnore([
+                    'jalali_date' => $today,
+                    'last_sequence' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-        $lastTransfer = SavingsTransfer::query()
-            ->where(
-                'tracking_code',
-                'like',
-                self::PREFIX . $today . '%'
-            )
-            ->latest('id')
-            ->first();
+            $sequenceRow = DB::table('savings_transfer_tracking_sequences')
+                ->where('jalali_date', $today)
+                ->lockForUpdate()
+                ->first();
 
+            if (!$sequenceRow) {
+                throw new \RuntimeException(
+                    'رکورد Sequence کد واریز پس‌انداز ایجاد نشد.'
+                );
+            }
 
-        $sequence = 1;
+            $nextSequence = ((int) $sequenceRow->last_sequence) + 1;
 
+            if ($nextSequence > self::MAX_SEQUENCE) {
+                throw new \RuntimeException(
+                    'ظرفیت کد رهگیری واریز پس‌انداز برای امروز تکمیل شده است.'
+                );
+            }
 
-        if ($lastTransfer) {
+            DB::table('savings_transfer_tracking_sequences')
+                ->where('id', $sequenceRow->id)
+                ->update([
+                    'last_sequence' => $nextSequence,
+                    'updated_at' => now(),
+                ]);
 
-            $lastSequence = (int) substr(
-                $lastTransfer->tracking_code,
-                -self::SEQUENCE_LENGTH
+            return sprintf(
+                '%s%s%0' . self::SEQUENCE_LENGTH . 'd',
+                self::PREFIX,
+                $today,
+                $nextSequence
             );
-
-
-            $sequence = $lastSequence + 1;
-        }
-
-
-        return sprintf(
-            '%s%s%0' . self::SEQUENCE_LENGTH . 'd',
-            self::PREFIX,
-            $today,
-            $sequence
-        );
+        });
     }
 }

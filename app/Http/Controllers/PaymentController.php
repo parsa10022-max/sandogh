@@ -20,28 +20,19 @@ class PaymentController extends Controller
     ) {
     }
 
-    /**
-     * شروع فرآیند پرداخت قسط خود مشتری از طریق درگاه
-     */
     public function pay(Installment $installment)
     {
         try {
-            $response = $this->paymentService->startPayment(
-                $installment
-            );
+            $response = $this->paymentService->startPayment($installment);
 
             if (!$response['success']) {
                 return back()->with(
                     'error',
-                    $response['message']
-                    ?? 'خطا در اتصال به درگاه پرداخت.'
+                    $response['message'] ?? 'خطا در اتصال به درگاه پرداخت.'
                 );
             }
 
-            return redirect()->away(
-                $response['redirect_url']
-            );
-
+            return redirect()->away($response['redirect_url']);
         } catch (\Throwable $e) {
             report($e);
 
@@ -52,26 +43,17 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * پرداخت قسط خود مشتری از موجودی حساب پس‌انداز
-     */
     public function payFromSavings(Installment $installment)
     {
         try {
-            $payment = $this->savingsInstallmentPaymentService->pay(
-                $installment
-            );
+            $payment = $this->savingsInstallmentPaymentService->pay($installment);
 
             return redirect()
-                ->route(
-                    'customer.installments.payment.success',
-                    $payment
-                )
+                ->route('customer.installments.payment.success', $payment)
                 ->with(
                     'success',
                     'قسط با موفقیت از حساب پس‌انداز پرداخت شد.'
                 );
-
         } catch (\Throwable $e) {
             report($e);
 
@@ -82,21 +64,10 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * Callback درگاه پرداخت
-     */
     public function callback(Request $request)
     {
         try {
-            $payment = $this->paymentResolver->verify(
-                $request->all()
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | واریز به حساب پس‌انداز
-            |--------------------------------------------------------------------------
-            */
+            $payment = $this->paymentResolver->verify($request->all());
 
             if ($payment instanceof SavingsTransfer) {
                 return redirect()->route(
@@ -105,16 +76,12 @@ class PaymentController extends Controller
                 );
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | پرداخت قسط وام
-            |--------------------------------------------------------------------------
-            */
-
             if ($payment instanceof LoanPayment) {
+                $loanOwnerUserId = $payment->loan->customer?->user?->id;
+
                 if (
-                    $payment->loan->customer_id ===
-                    auth()->user()->customer?->id
+                    $loanOwnerUserId !== null &&
+                    (int) $payment->user_id === (int) $loanOwnerUserId
                 ) {
                     return redirect()->route(
                         'customer.installments.payment.success',
@@ -127,12 +94,6 @@ class PaymentController extends Controller
                     $payment
                 );
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | پرداخت کمک
-            |--------------------------------------------------------------------------
-            */
 
             if ($payment instanceof DonationPayment) {
                 if ($payment->customer_id === null) {
@@ -151,15 +112,8 @@ class PaymentController extends Controller
             throw new \RuntimeException(
                 'نوع پرداخت قابل تشخیص نیست.'
             );
-
         } catch (\Throwable $e) {
             report($e);
-
-            /*
-            |--------------------------------------------------------------------------
-            | پرداخت ناموفق کمک مشتری
-            |--------------------------------------------------------------------------
-            */
 
             if ($request->payment_type === 'donation_customer') {
                 $donationPayment = DonationPayment::find(
@@ -168,13 +122,9 @@ class PaymentController extends Controller
 
                 if ($donationPayment) {
                     return redirect()
-                        ->route(
-                            'customer.donations.create',
-                            [
-                                'account_id' =>
-                                    $donationPayment->account_id,
-                            ]
-                        )
+                        ->route('customer.donations.create', [
+                            'account_id' => $donationPayment->account_id,
+                        ])
                         ->with(
                             'error',
                             'پرداخت کمک ناموفق بود.'
@@ -182,23 +132,11 @@ class PaymentController extends Controller
                 }
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | سایر پرداخت‌ها
-            |--------------------------------------------------------------------------
-            */
-
             return redirect()
-                ->route(
-                    'payments.failed',
-                    [
-                        'reference_id' =>
-                            $request->reference_id,
-
-                        'installment_id' =>
-                            $request->installment_id,
-                    ]
-                )
+                ->route('payments.failed', [
+                    'reference_id' => $request->reference_id,
+                    'installment_id' => $request->installment_id,
+                ])
                 ->with(
                     'error',
                     'پرداخت با موفقیت تکمیل نشد. لطفاً دوباره تلاش کنید.'
@@ -206,9 +144,6 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * صفحه تست درگاه Fake
-     */
     public function fake(Request $request)
     {
         $data = $request->all();
@@ -216,58 +151,32 @@ class PaymentController extends Controller
         if (
             in_array(
                 $data['payment_type'] ?? null,
-                [
-                    'donation_customer',
-                    'donation_public',
-                ]
+                ['donation_customer', 'donation_public']
             )
         ) {
-            $payment = DonationPayment::with('account')
-                ->find(
-                    $data['reference_id'] ?? null
-                );
+            $payment = DonationPayment::with('account')->find(
+                $data['reference_id'] ?? null
+            );
 
             if ($payment) {
-                $data['account_name'] =
-                    $payment->account?->name;
-
-                $data['account_number'] =
-                    $payment->account?->account_number;
+                $data['account_name'] = $payment->account?->name;
+                $data['account_number'] = $payment->account?->account_number;
             }
         }
 
-        return view(
-            'payments.fake',
-            compact('data')
-        );
+        return view('payments.fake', compact('data'));
     }
 
-    /**
-     * رسید پرداخت قسط
-     */
     public function success(LoanPayment $payment)
     {
-        return view(
-            'receipts.payment',
-            [
-                'title' =>
-                    'رسید پرداخت قسط',
-
-                'receipt_number' =>
-                    $payment->tracking_code,
-
-                'receipt_date' =>
-                    $payment->paid_at_jalali,
-
-                'payment' =>
-                    $payment,
-            ]
-        );
+        return view('receipts.payment', [
+            'title' => 'رسید پرداخت قسط',
+            'receipt_number' => $payment->tracking_code,
+            'receipt_date' => $payment->paid_at_jalali,
+            'payment' => $payment,
+        ]);
     }
 
-    /**
-     * رسید موفقیت پرداخت قسط برای مشتری
-     */
     public function customerSuccess(LoanPayment $payment)
     {
         $customer = auth()->user()->customer;
@@ -279,28 +188,14 @@ class PaymentController extends Controller
             abort(403);
         }
 
-        return view(
-            'customer.payments.success',
-            [
-                'payment' => $payment,
-            ]
-        );
+        return view('customer.payments.success', [
+            'payment' => $payment,
+        ]);
     }
 
-    /**
-     * صفحه خطای پرداخت
-     */
     public function failed(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | کمک عمومی
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            ($request->payment_type ?? null) === 'donation'
-        ) {
+        if (($request->payment_type ?? null) === 'donation') {
             return redirect()
                 ->route('donation.create')
                 ->with(
@@ -309,50 +204,28 @@ class PaymentController extends Controller
                 );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | واریز به حساب پس‌انداز
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->reference_id) {
             $transfer = SavingsTransfer::find(
                 $request->reference_id
             );
 
             if ($transfer) {
-                $customer = auth()->user()->customer;
-
-                /*
-                |--------------------------------------------------------------------------
-                | واریز به حساب خود مشتری
-                |--------------------------------------------------------------------------
-                */
+                $customer = auth()->user()?->customer;
 
                 if (
                     $customer &&
                     $transfer->receiver_customer_id === $customer->id
                 ) {
                     return redirect()
-                        ->route(
-                            'customer.savings.deposit.create'
-                        )
+                        ->route('customer.savings.deposit.create')
                         ->with(
                             'error',
                             'پرداخت انجام نشد.'
                         );
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | واریز به حساب عضو دیگر
-                |--------------------------------------------------------------------------
-                */
-
                 return redirect()
-                    ->route(
-                        'customer.savings-transfer.create'
-                    )
+                    ->route('customer.savings-transfer.create')
                     ->with(
                         'error',
                         'پرداخت انجام نشد.'
@@ -360,61 +233,33 @@ class PaymentController extends Controller
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | پرداخت قسط
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->installment_id) {
             $installment = Installment::with('loan')
                 ->find($request->installment_id);
 
             if ($installment) {
-                $customer = auth()->user()->customer;
-
-                /*
-                |--------------------------------------------------------------------------
-                | قسط وام خود مشتری
-                |--------------------------------------------------------------------------
-                */
+                $customer = auth()->user()?->customer;
 
                 if (
                     $customer &&
                     $installment->loan->customer_id === $customer->id
                 ) {
                     return redirect()
-                        ->route(
-                            'customer.installments.index'
-                        )
+                        ->route('customer.installments.index')
                         ->with(
                             'error',
                             'پرداخت قسط انجام نشد.'
                         );
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | قسط وام شخص دیگر
-                |--------------------------------------------------------------------------
-                */
-
                 return redirect()
-                    ->route(
-                        'customer.installments.others.create'
-                    )
+                    ->route('customer.installments.others.create')
                     ->with(
                         'error',
                         'پرداخت قسط انجام نشد.'
                     );
             }
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | پرداخت‌های مدیریتی
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->route('loans.index')
@@ -424,21 +269,9 @@ class PaymentController extends Controller
             );
     }
 
-    /**
-     * رسید موفقیت واریز پس‌انداز
-     */
     public function savingsTransferSuccess(SavingsTransfer $transfer)
     {
         $customer = auth()->user()->customer;
-
-        /*
-        |--------------------------------------------------------------------------
-        | بررسی دسترسی
-        |--------------------------------------------------------------------------
-        |
-        | مشتری باید یا واریزکننده باشد یا صاحب حساب مقصد.
-        |
-        */
 
         if (
             !$customer ||
@@ -451,21 +284,9 @@ class PaymentController extends Controller
             abort(403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | فقط پرداخت موفق
-        |--------------------------------------------------------------------------
-        */
-
         if ($transfer->status !== 'paid') {
             abort(404);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | نمایش رسید
-        |--------------------------------------------------------------------------
-        */
 
         $transfer->load([
             'sender',
@@ -473,21 +294,11 @@ class PaymentController extends Controller
             'account',
         ]);
 
-        return view(
-            'receipts.savings-transfer',
-            [
-                'title' =>
-                    'رسید واریز به حساب پس‌انداز',
-
-                'receipt_number' =>
-                    $transfer->tracking_code,
-
-                'receipt_date' =>
-                    $transfer->paid_at?->format('Y/m/d H:i'),
-
-                'transfer' =>
-                    $transfer,
-            ]
-        );
+        return view('receipts.savings-transfer', [
+            'title' => 'رسید واریز به حساب پس‌انداز',
+            'receipt_number' => $transfer->tracking_code,
+            'receipt_date' => $transfer->paid_at?->format('Y/m/d H:i'),
+            'transfer' => $transfer,
+        ]);
     }
 }

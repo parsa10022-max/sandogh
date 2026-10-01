@@ -1546,4 +1546,114 @@ class SuccessfulInstallmentPaymentTest extends TestCase
         );
 
     }
+
+public function test_successful_callback_works_without_authenticated_user(): void
+{
+    $user = User::factory()
+        ->customer()
+        ->create();
+
+    $this->actingAs($user);
+
+    $loanType = LoanType::create([
+        'name' => 'وام تست',
+        'prefix' => 'TEST',
+        'description' => null,
+        'status' => LoanTypeStatus::ACTIVE,
+    ]);
+
+    $loan = Loan::create([
+        'customer_id' => $user->customer_id,
+        'loan_type_id' => $loanType->id,
+        'loan_number' => 'TEST-GUEST-CALLBACK',
+        'loan_amount' => 10_000_000,
+        'installment_amount' => 1_000_000,
+        'installment_count' => 2,
+        'installment_interval' => InstallmentInterval::MONTHLY,
+        'start_date' => now()->toDateString(),
+        'first_due_date' => now()->addMonth()->toDateString(),
+        'last_due_date' => now()->addMonths(2)->toDateString(),
+        'status' => LoanStatus::ACTIVE,
+        'description' => null,
+        'created_by' => $user->id,
+        'updated_by' => $user->id,
+    ]);
+
+    $installment = Installment::create([
+        'loan_id' => $loan->id,
+        'installment_number' => 1,
+        'amount' => 1_000_000,
+        'due_date' => now()->addMonth()->toDateString(),
+        'status' => InstallmentStatus::PENDING,
+        'paid_at' => null,
+        'description' => null,
+        'created_by' => $user->id,
+        'updated_by' => $user->id,
+    ]);
+
+    $gateway = $this->mock(GatewayInterface::class);
+
+    $gateway->shouldReceive('request')
+        ->once()
+        ->andReturn([
+            'success' => true,
+            'token' => 'TEST-GUEST-CALLBACK-TOKEN',
+            'redirect_url' => '/fake-gateway/TEST-GUEST-CALLBACK-TOKEN',
+        ]);
+
+    $this->post(
+        route('payments.pay', $installment)
+    )->assertRedirect(
+        '/fake-gateway/TEST-GUEST-CALLBACK-TOKEN'
+    );
+
+    $paymentIntent = PaymentIntent::query()
+        ->where('reference_id', $installment->id)
+        ->latest('id')
+        ->firstOrFail();
+
+    $gateway->shouldReceive('verify')
+        ->once()
+        ->andReturn([
+            'success' => true,
+            'transaction_id' => 'TEST-GUEST-TRANSACTION',
+            'reference_number' => 'TEST-GUEST-REFERENCE',
+        ]);
+
+    auth()->logout();
+
+    $response = $this->post(
+        route('payments.callback'),
+        [
+            'payment_intent_id' => $paymentIntent->id,
+            'payment_type' => 'installment',
+            'token' => 'TEST-GUEST-CALLBACK-TOKEN',
+        ]
+    );
+
+    $this->assertDatabaseHas('loan_payments', [
+        'loan_id' => $loan->id,
+        'installment_id' => $installment->id,
+        'user_id' => $user->id,
+        'amount' => 1_000_000,
+        'tracking_code' => $paymentIntent->tracking_code,
+        'bank_transaction_id' => 'TEST-GUEST-TRANSACTION',
+        'bank_reference_number' => 'TEST-GUEST-REFERENCE',
+    ]);
+
+    $this->assertDatabaseHas('installments', [
+        'id' => $installment->id,
+        'status' => InstallmentStatus::PAID->value,
+    ]);
+
+    $this->assertDatabaseHas('payment_intents', [
+        'id' => $paymentIntent->id,
+        'status' => 'paid',
+    ]);
+
+    $this->assertNotNull(
+        $response->headers->get('Location')
+    );
+}
+
 }
