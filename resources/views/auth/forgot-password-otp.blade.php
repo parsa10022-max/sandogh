@@ -31,34 +31,27 @@
                         </div>
 
                         @if(session('success'))
-
                             <div class="alert alert-success small">
                                 {{ session('success') }}
                             </div>
-
                         @endif
 
                         @if($errors->any())
-
                             <div class="alert alert-danger small">
                                 {{ $errors->first() }}
                             </div>
-
                         @endif
 
                         <form
                             method="POST"
                             action="{{ route('password.otp.verify') }}"
+                            onsubmit="return validateOtpForm(this)"
                         >
 
                             @csrf
 
                             <div class="mb-3">
-
-                                <label
-                                    for="code"
-                                    class="form-label"
-                                >
+                                <label for="code" class="form-label">
                                     کد تأیید
                                 </label>
 
@@ -66,14 +59,27 @@
                                     type="text"
                                     id="code"
                                     name="code"
-                                    class="form-control text-center"
+                                    value="{{ old('code') }}"
+                                    class="form-control text-center @error('code') is-invalid @enderror"
                                     maxlength="6"
                                     inputmode="numeric"
+                                    pattern="[0-9]{6}"
                                     autocomplete="one-time-code"
+                                    placeholder="کد ۶ رقمی"
+                                    aria-describedby="code-help"
                                     required
                                     autofocus
+                                    oninvalid="this.setCustomValidity('لطفاً کد تأیید ۶ رقمی را وارد کنید.')"
+                                    oninput="this.setCustomValidity('')"
                                 >
 
+                                <div id="code-help" class="form-text">
+                                    کد تأیید باید شامل ۶ رقم باشد.
+                                </div>
+
+                                @error('code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <button
@@ -86,15 +92,13 @@
 
                         </form>
 
-                        @if(config('app.debug') && $otp)
-
+                        @if(config('app.debug') && isset($testOtp) && $testOtp)
                             <div class="alert alert-warning mt-3 mb-0 small text-center">
 
                                 کد تست:
-                                <strong>{{ $otp->code }}</strong>
+                                <strong>{{ $testOtp }}</strong>
 
                             </div>
-
                         @endif
 
                         <div class="text-center mt-3">
@@ -117,5 +121,24 @@
         </div>
 
     </div>
+    <script>
+        function validateOtpForm(form) {
+            const code = form.querySelector('#code');
 
+            if (!code.value.trim()) {
+                code.setCustomValidity('لطفاً کد تأیید ۶ رقمی را وارد کنید.');
+                code.reportValidity();
+                return false;
+            }
+
+            if (!/^[0-9]{6}$/.test(code.value)) {
+                code.setCustomValidity('کد تأیید باید شامل ۶ رقم انگلیسی باشد.');
+                code.reportValidity();
+                return false;
+            }
+
+            code.setCustomValidity('');
+            return true;
+        }
+    </script>
 @endsection

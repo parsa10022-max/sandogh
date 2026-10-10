@@ -27,7 +27,9 @@ class CustomerActivationOtpService
             $this->cancel($customer);
 
             $code = $this->generateCode();
-
+            if (config('app.debug')) {
+                session(['customer_activation_test_otp' => $code]);
+            }
             return CustomerActivationOtp::create([
                 'customer_id' => $customer->id,
                 'mobile' => $customer->mobile,

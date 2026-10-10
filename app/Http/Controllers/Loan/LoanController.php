@@ -20,9 +20,6 @@ use App\Models\Notification;
 use App\Models\LoanType;
 use Illuminate\Support\Facades\DB;
 
-
-
-
 class LoanController extends Controller
 {
     public function __construct(
@@ -31,14 +28,9 @@ class LoanController extends Controller
         private readonly LoanTypeService $loanTypeService,
         private readonly LoanCalculationService $calculator,
         private JalaliDateService $jalaliDateService,
-
     ) {
     }
 
-
-/**
- * لیست وام‌ها
- */
     /**
      * لیست وام‌ها
      */
@@ -51,7 +43,6 @@ class LoanController extends Controller
         */
 
         $search = $request->input('search');
-
 
         /*
         |--------------------------------------------------------------------------
@@ -88,7 +79,6 @@ class LoanController extends Controller
             $status = null;
         }
 
-
         /*
         |--------------------------------------------------------------------------
         | دریافت وام‌ها
@@ -99,7 +89,6 @@ class LoanController extends Controller
             search: $search,
             status: $status
         );
-
 
         /*
         |--------------------------------------------------------------------------
@@ -112,149 +101,129 @@ class LoanController extends Controller
             'status' => $status,
         ]);
 
-
         return view('loan.index', [
-
             'loans' => $loans,
-
             'search' => $search,
-
             'status' => $status,
-
         ]);
     }
-
 
     /**
      * فرم ثبت
      */
-public function create(Request $request): View
-{
-    $loanRequest = null;
+    public function create(Request $request): View
+    {
+        $loanRequest = null;
 
-    if ($request->filled('request')) {
+        if ($request->filled('request')) {
+            $loanRequest = LoanRequest::with('customer')
+                ->findOrFail($request->input('request'));
 
-        $loanRequest = LoanRequest::with('customer')
-            ->findOrFail($request->input('request'));
+            /*
+            |--------------------------------------------------------------------------
+            | فقط درخواست تایید شده می‌تواند وارد مرحله ایجاد وام شود
+            |--------------------------------------------------------------------------
+            */
 
-        /*
-        |--------------------------------------------------------------------------
-        | فقط درخواست تایید شده می‌تواند وارد مرحله ایجاد وام شود
-        |--------------------------------------------------------------------------
-        */
+            if (
+                $loanRequest->status
+                !== \App\Enums\LoanRequestStatus::APPROVED
+            ) {
+                abort(
+                    403,
+                    'این درخواست تایید نشده است.'
+                );
+            }
 
-        if (
-            $loanRequest->status
-            !== \App\Enums\LoanRequestStatus::APPROVED
-        ) {
+            /*
+            |--------------------------------------------------------------------------
+            | جلوگیری از ایجاد وام تکراری
+            |--------------------------------------------------------------------------
+            */
 
-            abort(
-                403,
-                'این درخواست تایید نشده است.'
-            );
+            if ($loanRequest->loan_id) {
+                abort(
+                    409,
+                    'برای این درخواست قبلاً وام ایجاد شده است.'
+                );
+            }
+        }
+
+        $loan = new Loan();
+
+        if ($loanRequest) {
+            $loan->customer_id =
+                $loanRequest->customer_id;
+
+            $loan->loan_amount =
+                $loanRequest->approved_amount;
+
+            $loan->loan_type_id =
+                $loanRequest->loan_type_id;
+
+            $loan->installment_count =
+                $loanRequest->approved_installment_count;
+
+            $loan->installment_interval =
+                $loanRequest->approved_installment_interval;
         }
 
         /*
         |--------------------------------------------------------------------------
-        | جلوگیری از ایجاد وام تکراری
+        | ضامن‌های وام قبلی
         |--------------------------------------------------------------------------
+        |
+        | اگر این مشتری قبلاً وام تسویه‌شده داشته باشد،
+        | ضامن‌های آخرین وام تسویه‌شده را برای فرم وام جدید
+        | به عنوان اطلاعات پیشنهادی دریافت می‌کنیم.
+        |
+        | این اطلاعات فقط برای نمایش در فرم است و هیچ رکورد
+        | جدیدی در این مرحله ایجاد نمی‌شود.
+        |
         */
 
-        if ($loanRequest->loan_id) {
+        $previousLoanGuarantors = collect();
 
-            abort(
-                409,
-                'برای این درخواست قبلاً وام ایجاد شده است.'
-            );
+        if ($loan->customer_id) {
+            $previousLoan = Loan::query()
+                ->where('customer_id', $loan->customer_id)
+                ->where('status', \App\Enums\LoanStatus::FINISHED)
+                ->with([
+                    'guarantors.customer',
+                ])
+                ->latest('id')
+                ->first();
+
+            if ($previousLoan) {
+                $previousLoanGuarantors =
+                    $previousLoan->guarantors
+                        ->sortBy('guarantor_order')
+                        ->values();
+            }
         }
+
+        return view('loan.create', [
+            'loan' => $loan,
+
+            'customers' =>
+                $this->customerService->getActive(),
+
+            'loanTypes' =>
+                $this->loanTypeService->getActive(),
+
+            'loanRequest' =>
+                $loanRequest,
+
+            /*
+            |--------------------------------------------------------------------------
+            | ضامن‌های پیشنهادی از وام قبلی
+            |--------------------------------------------------------------------------
+            */
+
+            'previousLoanGuarantors' =>
+                $previousLoanGuarantors,
+        ]);
     }
-
-
-    $loan = new Loan();
-
-
-    if ($loanRequest) {
-
-        $loan->customer_id =
-            $loanRequest->customer_id;
-
-        $loan->loan_amount =
-            $loanRequest->approved_amount;
-
-        $loan->loan_type_id =
-            $loanRequest->loan_type_id;
-
-        $loan->installment_count =
-            $loanRequest->approved_installment_count;
-
-        $loan->installment_interval =
-            $loanRequest->approved_installment_interval;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | ضامن‌های وام قبلی
-    |--------------------------------------------------------------------------
-    |
-    | اگر این مشتری قبلاً وام تسویه‌شده داشته باشد،
-    | ضامن‌های آخرین وام تسویه‌شده را برای فرم وام جدید
-    | به عنوان اطلاعات پیشنهادی دریافت می‌کنیم.
-    |
-    | این اطلاعات فقط برای نمایش در فرم است و هیچ رکورد
-    | جدیدی در این مرحله ایجاد نمی‌شود.
-    |
-    */
-
-    $previousLoanGuarantors = collect();
-
-
-    if ($loan->customer_id) {
-
-        $previousLoan = Loan::query()
-            ->where('customer_id', $loan->customer_id)
-            ->where('status', \App\Enums\LoanStatus::FINISHED)
-            ->with([
-                'guarantors.customer',
-            ])
-            ->latest('id')
-            ->first();
-
-
-        if ($previousLoan) {
-
-            $previousLoanGuarantors =
-                $previousLoan->guarantors
-                    ->sortBy('guarantor_order')
-                    ->values();
-        }
-    }
-
-
-    return view('loan.create', [
-
-        'loan' => $loan,
-
-        'customers' =>
-            $this->customerService->getActive(),
-
-        'loanTypes' =>
-            $this->loanTypeService->getActive(),
-
-        'loanRequest' =>
-            $loanRequest,
-
-        /*
-        |--------------------------------------------------------------------------
-        | ضامن‌های پیشنهادی از وام قبلی
-        |--------------------------------------------------------------------------
-        */
-
-        'previousLoanGuarantors' =>
-            $previousLoanGuarantors,
-
-    ]);
-}
 
     /**
      * دریافت ضامن‌های آخرین وام تسویه‌شده مشتری
@@ -262,7 +231,6 @@ public function create(Request $request): View
     public function previousGuarantors(
         int $customer
     ): JsonResponse {
-
         $previousLoan = Loan::query()
             ->where('customer_id', $customer)
             ->where(
@@ -282,7 +250,6 @@ public function create(Request $request): View
         */
 
         if (!$previousLoan) {
-
             return response()->json([
                 'found' => false,
                 'loan_id' => null,
@@ -300,9 +267,7 @@ public function create(Request $request): View
             ->sortBy('guarantor_order')
             ->values()
             ->map(function ($guarantor) {
-
                 return [
-
                     'guarantor_order' =>
                         $guarantor->guarantor_order,
 
@@ -371,6 +336,7 @@ public function create(Request $request): View
                         : null,
                 ];
             });
+
         /*
         |--------------------------------------------------------------------------
         | پاسخ
@@ -378,7 +344,6 @@ public function create(Request $request): View
         */
 
         return response()->json([
-
             'found' => true,
 
             'loan_id' =>
@@ -389,210 +354,185 @@ public function create(Request $request): View
 
             'guarantors' =>
                 $guarantors,
-
         ]);
     }
+
     /**
      * ذخیره
      */
+    public function store(
+        StoreLoanRequest $request
+    ): RedirectResponse {
+        try {
+            $loan = DB::transaction(function () use ($request) {
+                $loanRequest = null;
 
-public function store(
-    StoreLoanRequest $request
-): RedirectResponse {
-    try {
+                if ($request->filled('loan_request_id')) {
+                    $loanRequest = LoanRequest::query()
+                        ->whereKey($request->loan_request_id)
+                        ->lockForUpdate()
+                        ->firstOrFail();
 
-        $loan = DB::transaction(function () use ($request) {
+                    if (
+                        $loanRequest->status
+                        !== \App\Enums\LoanRequestStatus::APPROVED
+                    ) {
+                        throw new \RuntimeException(
+                            'فقط برای درخواست تایید شده می‌توان وام ایجاد کرد.'
+                        );
+                    }
 
-            $loanRequest = null;
+                    if ($loanRequest->loan_id) {
+                        throw new \RuntimeException(
+                            'برای این درخواست قبلاً وام ایجاد شده است.'
+                        );
+                    }
 
-            if ($request->filled('loan_request_id')) {
+                    $data = $request->validated();
 
-                $loanRequest = LoanRequest::query()
-                    ->whereKey($request->loan_request_id)
-                    ->lockForUpdate()
-                    ->firstOrFail();
+                    // اطلاعات تاییدشده درخواست، مرجع اصلی هستند.
+                    $data['customer_id'] =
+                        $loanRequest->customer_id;
 
-                if (
-                    $loanRequest->status
-                    !== \App\Enums\LoanRequestStatus::APPROVED
-                ) {
-                    throw new \RuntimeException(
-                        'فقط برای درخواست تایید شده می‌توان وام ایجاد کرد.'
-                    );
+                    $data['loan_amount'] =
+                        $loanRequest->approved_amount;
+
+                    $data['loan_type_id'] =
+                        $loanRequest->loan_type_id;
+
+                    $data['installment_count'] =
+                        $loanRequest->approved_installment_count;
+
+                    $data['installment_interval'] =
+                        $loanRequest->approved_installment_interval;
+                } else {
+                    $data = $request->validated();
                 }
 
-                if ($loanRequest->loan_id) {
-                    throw new \RuntimeException(
-                        'برای این درخواست قبلاً وام ایجاد شده است.'
-                    );
+                /*
+                |--------------------------------------------------------------------------
+                | ایجاد وام
+                |--------------------------------------------------------------------------
+                */
+
+                $loan = $this->loanService->create($data);
+
+                /*
+                |--------------------------------------------------------------------------
+                | اتصال اتمیک درخواست به وام
+                |--------------------------------------------------------------------------
+                */
+
+                if ($loanRequest) {
+                    $loanRequest->update([
+                        'loan_id' => $loan->id,
+                    ]);
                 }
 
-                $data = $request->validated();
+                /*
+                |--------------------------------------------------------------------------
+                | اعلان مشتری
+                |--------------------------------------------------------------------------
+                */
 
-                // اطلاعات تاییدشده درخواست، مرجع اصلی هستند.
-                $data['customer_id'] =
-                    $loanRequest->customer_id;
+                $loan->load('customer.user');
 
-                $data['loan_amount'] =
-                    $loanRequest->approved_amount;
+                $user = $loan->customer?->user;
 
-                $data['loan_type_id'] =
-                    $loanRequest->loan_type_id;
+                if ($user) {
+                    Notification::create([
+                        'user_id' => $user->id,
 
-                $data['installment_count'] =
-                    $loanRequest->approved_installment_count;
+                        'type' => 'loan_disbursed',
 
-                $data['installment_interval'] =
-                    $loanRequest->approved_installment_interval;
+                        'title' => 'واریز وام',
 
-            } else {
+                        'message' =>
+                            'مبلغ وام شما به حساب‌تان واریز شد. برای برداشت مبلغ، از بخش «برداشت از حساب پس‌انداز» اقدام کنید.',
 
-                $data = $request->validated();
-            }
+                        'data' => [
+                            'loan_id' =>
+                                $loan->id,
 
-            /*
-            |--------------------------------------------------------------------------
-            | ایجاد وام
-            |--------------------------------------------------------------------------
-            */
+                            'loan_number' =>
+                                $loan->loan_number,
 
-            $loan = $this->loanService->create($data);
+                            'loan_amount' =>
+                                $loan->loan_amount,
+                        ],
+                    ]);
+                }
 
-            /*
-            |--------------------------------------------------------------------------
-            | اتصال اتمیک درخواست به وام
-            |--------------------------------------------------------------------------
-            */
+                return $loan;
+            });
 
-            if ($loanRequest) {
-
-                $loanRequest->update([
-                    'loan_id' => $loan->id,
-                ]);
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | اعلان مشتری
-            |--------------------------------------------------------------------------
-            */
-
-            $loan->load('customer.user');
-
-            $user = $loan->customer?->user;
-
-            if ($user) {
-
-                Notification::create([
-
-                    'user_id' => $user->id,
-
-                    'type' => 'loan_disbursed',
-
-                    'title' => 'واریز وام',
-
-                    'message' =>
-                        'مبلغ وام شما به حساب‌تان واریز شد. برای برداشت مبلغ، از بخش «برداشت از حساب پس‌انداز» اقدام کنید.',
-
-                    'data' => [
-
-                        'loan_id' =>
-                            $loan->id,
-
-                        'loan_number' =>
-                            $loan->loan_number,
-
-                        'loan_amount' =>
-                            $loan->loan_amount,
-                    ],
-                ]);
-            }
-
-            return $loan;
-        });
-
-        return redirect()
-            ->route('loans.index')
-            ->with(
-                'success',
-                'وام با موفقیت ثبت شد.'
-            );
-
-    } catch (\RuntimeException $e) {
-
-        return back()
-            ->withInput()
-            ->with(
-                'error',
-                $e->getMessage()
-            );
+            return redirect()
+                ->route('loans.index')
+                ->with(
+                    'success',
+                    'وام با موفقیت ثبت شد.'
+                );
+        } catch (\RuntimeException $e) {
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
     }
-}
 
-
-
-    /**
-     * نمایش
     /**
      * نمایش وام
      */
     public function show(
         Loan $loan
     ): View {
-
         $loan->load([
-
             'customer',
-
             'loanType',
-
             'installments.payment',
-
             'guarantors.customer',
-
             'creator',
-
             'updater',
-
             'loanRequest',
-
         ]);
-
-
 
         $paidInstallments = $loan->installments
             ->where('status', \App\Enums\InstallmentStatus::PAID);
 
         $summary = [
+            'paid_count' =>
+                $paidInstallments->count(),
 
-            'paid_count' => $paidInstallments->count(),
+            'remaining_count' =>
+                $loan->installments->count() -
+                $paidInstallments->count(),
 
-            'remaining_count' => $loan->installments->count() - $paidInstallments->count(),
+            'paid_amount' =>
+                $paidInstallments->sum('amount'),
 
-            'paid_amount' => $paidInstallments->sum('amount'),
+            'remaining_amount' =>
+                $loan->installments->sum('amount') -
+                $paidInstallments->sum('amount'),
 
-            'remaining_amount' => $loan->installments->sum('amount') - $paidInstallments->sum('amount'),
-
-            'progress' => $loan->installments->count() == 0
-                ? 0
-                : round(
+            'progress' =>
+                $loan->installments->count() == 0
+                    ? 0
+                    : round(
                     ($paidInstallments->count() / $loan->installments->count()) * 100
                 ),
-
         ];
 
         return view('loan.show', [
-
             'loan' => $loan,
-
             'summary' => $summary,
-
         ]);
     }
+
     /**
      * فرم ویرایش
      */
-
     public function edit(Loan $loan): View
     {
         $loan->load([
@@ -614,10 +554,8 @@ public function store(
     public function update(
         UpdateLoanRequest $request,
         Loan $loan
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         try {
-
             $this->loanService->update(
                 $loan,
                 $request->validated()
@@ -629,9 +567,7 @@ public function store(
                     'success',
                     'وام با موفقیت بروزرسانی شد.'
                 );
-
         } catch (\RuntimeException $e) {
-
             return back()
                 ->withInput()
                 ->withErrors([
@@ -639,13 +575,13 @@ public function store(
                 ]);
         }
     }
+
     /**
      * حذف
      */
     public function destroy(
         Loan $loan
     ): RedirectResponse {
-
         $this->loanService->delete($loan);
 
         return redirect()
@@ -659,52 +595,45 @@ public function store(
     public function calculate(Request $request): JsonResponse
     {
         $request->validate([
-
             'loan_amount' => ['required', 'numeric'],
-
             'installment_count' => ['required', 'integer', 'min:1'],
-
             'installment_interval' => ['required', 'integer', 'min:1'],
-
             'start_date' => ['required', 'string'],
-
         ]);
 
         $result = $this->calculator->generate(
-
             loanAmount: (int) $request->loan_amount,
-
             installmentCount: (int) $request->installment_count,
-
             startDate: $request->start_date,
-
             interval: (int) $request->installment_interval,
-
         );
 
         return response()->json([
-
             'success' => true,
 
             'data' => [
-
                 /*
                 |--------------------------------------------------------------------------
                 | نمایش
                 |--------------------------------------------------------------------------
                 */
 
-                'start_date' => $result['start_date_jalali'],
+                'start_date' =>
+                    $result['start_date_jalali'],
 
-                'first_due_date' => $result['first_due_date_jalali'],
+                'first_due_date' =>
+                    $result['first_due_date_jalali'],
 
-                'last_due_date' => $result['last_due_date_jalali'],
+                'last_due_date' =>
+                    $result['last_due_date_jalali'],
 
-                'installment_count' => $result['installment_count'],
+                'installment_count' =>
+                    $result['installment_count'],
 
-                'installment_amount' => number_format(
-                    $result['base_installment_amount']
-                ),
+                'installment_amount' =>
+                    fa_number(
+                        $result['base_installment_amount']
+                    ),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -712,29 +641,29 @@ public function store(
                 |--------------------------------------------------------------------------
                 */
 
-                'schedule' => collect($result['schedule'])->map(function ($item) {
+                'schedule' =>
+                    collect($result['schedule'])
+                        ->map(function ($item) {
+                            return [
+                                'number' =>
+                                    $item['number'],
 
-                    return [
+                                'amount' =>
+                                    fa_number($item['amount']),
 
-                        'number' => $item['number'],
+                                // فقط نمایش
+                                'date' =>
+                                    $item['jalali_date'],
 
-                        'amount' => number_format($item['amount']),
-
-                        // فقط نمایش
-                        'date' => $item['jalali_date'],
-
-                        // فقط جهت ذخیره
-                        'gregorian_date' => $item['gregorian_date'],
-
-                    ];
-
-                }),
-
+                                // فقط جهت ذخیره
+                                'gregorian_date' =>
+                                    $item['gregorian_date'],
+                            ];
+                        }),
             ],
-
         ]);
-
     }
+
     public function overdue(Request $request)
     {
         $loans = $this->loanService->overdue(
@@ -750,27 +679,22 @@ public function store(
             ->get();
 
         return view('loan.overdue', [
-
             'loans' => $loans,
 
             'loanTypes' => $loanTypes,
 
             'statistics' => [
-
-                'loan_count' => $loans->count(),
+                'loan_count' =>
+                    $loans->count(),
 
                 'installment_count' =>
                     $loans->sum('overdue_count'),
 
                 'amount' =>
                     $loans->sum(function ($loan) {
-
                         return $loan->installments->sum('amount');
-
                     }),
-
             ],
-
         ]);
     }
 }

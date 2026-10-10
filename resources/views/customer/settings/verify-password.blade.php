@@ -3,7 +3,6 @@
 @section('title', 'تأیید تغییر رمز عبور')
 
 @section('content')
-
     <div class="container-fluid px-0 customer-settings">
 
         <div class="customer-settings-header">
@@ -42,7 +41,6 @@
                 </div>
 
                 @if(session('password_otp_success'))
-
                     <div class="alert alert-success customer-settings-alert">
 
                         <i class="bi bi-check-circle"></i>
@@ -50,25 +48,32 @@
                         {{ session('password_otp_success') }}
 
                     </div>
+                @endif
 
+                @if(config('app.debug') && isset($testOtp) && $testOtp)
+                    <div class="alert alert-warning customer-settings-alert">
+                        <i class="bi bi-bug"></i>
+
+                        <strong>کد OTP آزمایشی:</strong>
+
+                        <span class="fs-5 fw-bold">
+                            {{ $testOtp }}
+                        </span>
+                    </div>
                 @endif
 
                 @if($errors->otp->any())
-
                     <div class="alert alert-danger customer-settings-alert customer-settings-errors">
 
                         <ul class="mb-0">
 
                             @foreach($errors->otp->all() as $error)
-
                                 <li>{{ $error }}</li>
-
                             @endforeach
 
                         </ul>
 
                     </div>
-
                 @endif
 
                 <div class="customer-settings-otp-mobile">
@@ -83,8 +88,10 @@
 
                 </div>
 
-                <form method="POST"
-                      action="{{ route('customer.settings.password.verify.submit') }}">
+                <form
+                    method="POST"
+                    action="{{ route('customer.settings.password.verify.submit') }}"
+                >
 
                     @csrf
 
@@ -110,13 +117,12 @@
 
                     <div class="mt-2">
 
-                        <button type="submit"
-                                class="customer-settings-submit">
-
+                        <button
+                            type="submit"
+                            class="customer-settings-submit"
+                        >
                             <i class="bi bi-check-lg"></i>
-
                             تأیید و تغییر رمز عبور
-
                         </button>
 
                     </div>
@@ -125,13 +131,12 @@
 
                 <div class="mt-2">
 
-                    <a href="{{ route('customer.settings.index') }}"
-                       class="customer-settings-back-link">
-
+                    <a
+                        href="{{ route('customer.settings.index') }}"
+                        class="customer-settings-back-link"
+                    >
                         <i class="bi bi-arrow-right"></i>
-
                         بازگشت به تنظیمات
-
                     </a>
 
                 </div>
@@ -141,6 +146,4 @@
         </div>
 
     </div>
-
 @endsection
-

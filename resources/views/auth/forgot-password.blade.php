@@ -46,28 +46,34 @@
                             @csrf
 
                             <div class="mb-3">
-
-                                <label
-                                    for="mobile"
-                                    class="form-label"
-                                >
-                                    شماره موبایل
-                                </label>
+                                <label for="mobile" class="form-label">شماره موبایل</label>
 
                                 <input
                                     type="text"
                                     id="mobile"
                                     name="mobile"
                                     value="{{ old('mobile') }}"
-                                    class="form-control"
+                                    class="form-control @error('mobile') is-invalid @enderror"
                                     placeholder="مثلاً 09123456789"
                                     maxlength="20"
                                     inputmode="numeric"
+                                    autocomplete="tel"
+                                    aria-describedby="mobile-help"
                                     required
+                                    oninvalid="this.setCustomValidity('لطفاً شماره موبایل خود را وارد کنید.')"
+                                    oninput="this.setCustomValidity('')"
                                     autofocus
                                 >
 
+                                <div id="mobile-help" class="form-text">
+                                    شماره موبایلی را وارد کنید که با حساب شما ثبت شده است.
+                                </div>
+
+                                @error('mobile')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
+
 
                             <button
                                 type="submit"

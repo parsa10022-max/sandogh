@@ -535,8 +535,8 @@ class LoanRequestController extends Controller
 
                     'message' =>
                         'درخواست وام شما با مبلغ ' .
-                        number_format($approvedAmount) .
-                        ' ریال تأیید شد.',
+                        fa_money($approvedAmount) .
+                        ' تأیید شد.',
 
                     'data' => [
                         'loan_request_id' =>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
@@ -25,15 +25,14 @@
         rel="stylesheet"
     >
 
-    {{-- Vazirmatn --}}
+    {{-- فونت محلی وزیرمتن --}}
     <link
-        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap"
+        href="{{ asset('auth.css') }}"
         rel="stylesheet"
     >
 
     <style>
         body {
-            font-family: 'Vazirmatn', sans-serif;
             background-color: #f5f7fb;
             min-height: 100vh;
         }
@@ -44,11 +43,10 @@
 
 <body>
 
-@yield('content')
+    @yield('content')
 
-@stack('scripts')
+    @stack('scripts')
 
 </body>
 
 </html>
-

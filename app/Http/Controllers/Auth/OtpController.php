@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\OtpRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\UserOtpType;
 
 class OtpController extends Controller
 {
@@ -28,15 +29,22 @@ class OtpController extends Controller
                 ->route('login');
         }
 
-        $otp = null;
+        $testOtp = null;
 
         if (config('app.debug')) {
-            $otp = $this->otpService->getLastPendingOtp($user);
+            $otp = $this->otpService->getLastPendingOtp(
+                $user,
+                UserOtpType::LOGIN
+            );
+
+            if ($otp) {
+                $testOtp = session('test_otp');
+            }
         }
 
         return view(
             'auth.otp',
-            compact('otp')
+            compact('testOtp')
         );
     }
 

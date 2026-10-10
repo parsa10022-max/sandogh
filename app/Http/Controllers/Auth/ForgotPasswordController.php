@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\UserOtpType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\OtpRequest;
+use App\Http\Requests\Auth\OtpRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
@@ -93,12 +93,10 @@ class ForgotPasswordController extends Controller
                 ->withInput();
         }
 
-        $otp = $this->otpService->generate(
+        $this->otpService->generate(
             $user,
             UserOtpType::PASSWORD_RESET,
-            $user->mobile,
-            $request
-        );
+            $user->mobile,     $request );
 
         session([
             'forgot_password_user_id' => $user->id,
@@ -124,21 +122,15 @@ class ForgotPasswordController extends Controller
                 ->route('password.request');
         }
 
-        $otp = null;
-
-        if (config('app.debug')) {
-            $otp = $this->otpService->getLastPendingOtp(
-                $user,
-                UserOtpType::PASSWORD_RESET
-            );
-        }
-
         return view(
             'auth.forgot-password-otp',
-            compact('otp')
+            [
+                'testOtp' => config('app.debug')
+                    ? session('test_otp')
+                    : null,
+            ]
         );
     }
-
     /**
      * تأیید OTP
      */

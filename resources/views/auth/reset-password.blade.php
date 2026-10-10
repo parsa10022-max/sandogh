@@ -43,16 +43,14 @@
                         <form
                             method="POST"
                             action="{{ route('password.reset.update') }}"
+                            novalidate
+                            onsubmit="return validatePasswordForm(this)"
                         >
                             @csrf
                             @method('PUT')
 
                             <div class="mb-3">
-
-                                <label
-                                    for="password"
-                                    class="form-label fw-semibold"
-                                >
+                                <label for="password" class="form-label fw-semibold">
                                     رمز عبور جدید
                                 </label>
 
@@ -60,20 +58,21 @@
                                     type="password"
                                     id="password"
                                     name="password"
-                                    class="form-control"
+                                    class="form-control @error('password') is-invalid @enderror"
                                     minlength="8"
+                                    autocomplete="new-password"
                                     required
                                     autofocus
+                                    oninput="this.setCustomValidity('')"
                                 >
 
+                                @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="mb-4">
-
-                                <label
-                                    for="password_confirmation"
-                                    class="form-label fw-semibold"
-                                >
+                                <label for="password_confirmation" class="form-label fw-semibold">
                                     تکرار رمز عبور جدید
                                 </label>
 
@@ -83,24 +82,57 @@
                                     name="password_confirmation"
                                     class="form-control"
                                     minlength="8"
+                                    autocomplete="new-password"
                                     required
+                                    oninput="this.setCustomValidity('')"
                                 >
 
                                 <div class="form-text">
                                     رمز عبور باید حداقل ۸ کاراکتر باشد.
                                 </div>
-
                             </div>
 
-                            <button
-                                type="submit"
-                                class="btn btn-primary w-100"
-                            >
+                            <button type="submit" class="btn btn-primary w-100">
                                 <i class="bi bi-check-circle me-1"></i>
                                 ذخیره رمز جدید
                             </button>
-
                         </form>
+
+                        <script>
+                            function validatePasswordForm(form) {
+                                const password = form.querySelector('#password');
+                                const confirmation = form.querySelector('#password_confirmation');
+
+                                if (!password.value) {
+                                    password.setCustomValidity('لطفاً رمز عبور جدید را وارد کنید.');
+                                    password.reportValidity();
+                                    return false;
+                                }
+
+                                if (password.value.length < 8) {
+                                    password.setCustomValidity('رمز عبور باید حداقل ۸ کاراکتر باشد.');
+                                    password.reportValidity();
+                                    return false;
+                                }
+
+                                if (!confirmation.value) {
+                                    confirmation.setCustomValidity('لطفاً تکرار رمز عبور را وارد کنید.');
+                                    confirmation.reportValidity();
+                                    return false;
+                                }
+
+                                if (password.value !== confirmation.value) {
+                                    confirmation.setCustomValidity('تکرار رمز عبور با رمز جدید مطابقت ندارد.');
+                                    confirmation.reportValidity();
+                                    return false;
+                                }
+
+                                password.setCustomValidity('');
+                                confirmation.setCustomValidity('');
+
+                                return true;
+                            }
+                        </script>
 
                         <div class="text-center mt-3">
 

@@ -35,7 +35,9 @@ class OtpService
             $this->cancel($user, $type);
 
             $code = $this->generateCode();
-
+            if (config('app.debug')) {
+                session(['test_otp' => $code]);
+            }
             return $this->createOtp(
                 $user,
                 $code,

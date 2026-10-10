@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerActivation\CreateAccountRequest;
-use App\Http\Requests\CustomerActivation\OtpRequest;
+use App\Http\Requests\Auth\OtpRequest;
 use App\Http\Requests\CustomerActivation\SendOtpRequest;
 use App\Models\Customer;
 use App\Services\CustomerAccountActivationService;
@@ -55,7 +55,7 @@ class CustomerActivationController extends Controller
                 );
         }
 
-        $otp = $this->otpService->generate(
+        $this->otpService->generate(
             $customer,
             $request
         );
@@ -63,7 +63,6 @@ class CustomerActivationController extends Controller
         session([
             'customer_activation_id' => $customer->id,
             'customer_activation_mobile' => $customer->mobile,
-            'customer_activation_test_otp' => $otp->code,
         ]);
 
         return redirect()
@@ -119,7 +118,9 @@ class CustomerActivationController extends Controller
 
         return view('auth.customer-activation-otp', [
             'mobile' => $customer->mobile,
-            'testOtp' => $otp->code,
+            'testOtp' => config('app.debug')
+                ? session('customer_activation_test_otp')
+                : null,
         ]);
     }
 

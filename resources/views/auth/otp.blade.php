@@ -41,20 +41,16 @@
                         @endif
 
 
-                        @if(config('app.debug') && isset($otp) && $otp)
-
+                        @if(config('app.debug') && $testOtp)
                             <div class="alert alert-warning small">
-
                                 <strong>
                                     کد تست OTP:
                                 </strong>
 
                                 <span class="fs-5 fw-bold">
-                                {{ $otp->code }}
-                            </span>
-
+            {{ $testOtp }}
+        </span>
                             </div>
-
                         @endif
 
 
@@ -63,11 +59,7 @@
                             @csrf
 
                             <div class="mb-3">
-
-                                <label
-                                    for="code"
-                                    class="form-label"
-                                >
+                                <label for="code" class="form-label">
                                     کد تأیید
                                 </label>
 
@@ -76,15 +68,28 @@
                                     id="code"
                                     name="code"
                                     value="{{ old('code') }}"
-                                    class="form-control text-center"
+                                    class="form-control text-center @error('code') is-invalid @enderror"
                                     maxlength="6"
                                     inputmode="numeric"
+                                    pattern="[0-9]{6}"
                                     autocomplete="one-time-code"
                                     placeholder="کد ۶ رقمی"
+                                    aria-describedby="code-help"
                                     required
+                                    oninvalid="this.setCustomValidity('لطفاً کد تأیید ۶ رقمی را وارد کنید.')"
+                                    oninput="this.setCustomValidity('')"
                                     autofocus
                                 >
 
+                                <div id="code-help" class="form-text">
+                                    کد ۶ رقمی ارسال‌شده را وارد کنید.
+                                </div>
+
+                                @error('code')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
 
 
@@ -102,20 +107,7 @@
                         </form>
 
 
-                        <div class="text-center mt-3">
 
-                            <a
-                                href="{{ url('/forgot-password') }}"
-                                class="text-decoration-none small"
-                            >
-
-                                <i class="bi bi-arrow-right me-1"></i>
-
-                                تغییر شماره موبایل
-
-                            </a>
-
-                        </div>
 
                     </div>
 

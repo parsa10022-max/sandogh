@@ -20,10 +20,11 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         rel="stylesheet"
     >
+    <link rel="stylesheet" href="{{ asset('auth.css') }}">
 
     <style>
         body {
-            font-family: Vazirmatn, Tahoma, sans-serif;
+            font-family: 'Vazirmatn', Tahoma, sans-serif !important;
         }
 
         .login-icon {

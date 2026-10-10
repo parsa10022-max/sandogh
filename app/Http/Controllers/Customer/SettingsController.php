@@ -149,7 +149,13 @@ class SettingsController extends Controller
 
         return view(
             'customer.settings.verify-mobile',
-            compact('user', 'pending', 'otp')
+            [
+                'user' => $user,
+                'pending' => $pending,
+                'testOtp' => config('app.debug')
+                    ? session('test_otp')
+                    : null,
+            ]
         );
     }
 
@@ -336,7 +342,13 @@ class SettingsController extends Controller
 
         return view(
             'customer.settings.verify-password',
-            compact('user', 'pending', 'otp')
+            [
+                'user' => $user,
+                'pending' => $pending,
+                'testOtp' => config('app.debug')
+                    ? session('test_otp')
+                    : null,
+            ]
         );
     }
 

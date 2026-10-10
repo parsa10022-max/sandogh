@@ -15,7 +15,6 @@ use App\Enums\UserRole;
 use App\Models\Notification;
 use App\Models\User;
 
-
 class LoanRequestController extends Controller
 {
     /**
@@ -42,7 +41,6 @@ class LoanRequestController extends Controller
         return view('customer.loan_requests.create');
     }
 
-
     /**
      * ثبت درخواست وام
      */
@@ -65,7 +63,6 @@ class LoanRequestController extends Controller
                 ->with('error', $restriction);
         }
 
-
         /*
         |--------------------------------------------------------------------------
         | ثبت درخواست
@@ -73,7 +70,6 @@ class LoanRequestController extends Controller
         */
 
         $loanRequest = LoanRequest::create([
-
             'customer_id' =>
                 $customer->id,
 
@@ -88,10 +84,10 @@ class LoanRequestController extends Controller
         ]);
 
         /*
-|--------------------------------------------------------------------------
-| اعلان درخواست وام برای کاربران مدیریتی
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | اعلان درخواست وام برای کاربران مدیریتی
+        |--------------------------------------------------------------------------
+        */
 
         $managerUsers = User::query()
             ->whereIn('role', [
@@ -103,9 +99,7 @@ class LoanRequestController extends Controller
             ->get();
 
         foreach ($managerUsers as $managerUser) {
-
             Notification::create([
-
                 'user_id' =>
                     $managerUser->id,
 
@@ -119,11 +113,10 @@ class LoanRequestController extends Controller
                     'عضو «' .
                     $customer->full_name .
                     '» درخواست وامی به مبلغ ' .
-                    number_format($loanRequest->requested_amount) .
-                    ' ریال ثبت کرده است.',
+                    fa_money($loanRequest->requested_amount) .
+                    ' ثبت کرده است.',
 
                 'data' => [
-
                     'loan_request_id' =>
                         $loanRequest->id,
 
@@ -135,15 +128,12 @@ class LoanRequestController extends Controller
 
                     'requested_amount' =>
                         $loanRequest->requested_amount,
-
                 ],
 
                 'read_at' =>
                     null,
-
             ]);
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -159,14 +149,12 @@ class LoanRequestController extends Controller
             );
     }
 
-
     /**
      * لیست درخواست‌های وام مشتری
      */
     public function index(): View
     {
         $customer = auth()->user()->customer;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -183,7 +171,6 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-
         /*
         |--------------------------------------------------------------------------
         | وضعیت وام فعال
@@ -193,7 +180,6 @@ class LoanRequestController extends Controller
         $hasActiveLoan = $customer->loans()
             ->active()
             ->exists();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -208,7 +194,6 @@ class LoanRequestController extends Controller
                 LoanRequestStatus::PENDING->value
             )
             ->exists();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -225,7 +210,6 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-
         /*
         |--------------------------------------------------------------------------
         | بررسی امکان ثبت درخواست جدید
@@ -235,7 +219,6 @@ class LoanRequestController extends Controller
         $restriction = $this->getLoanRequestRestriction($customer);
 
         $canCreateNewRequest = $restriction === null;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -255,7 +238,6 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->paginate(10);
 
-
         return view(
             'customer.loan_requests.index',
             compact(
@@ -269,7 +251,6 @@ class LoanRequestController extends Controller
         );
     }
 
-
     /**
      * نمایش جزئیات درخواست
      */
@@ -277,7 +258,6 @@ class LoanRequestController extends Controller
         LoanRequest $loanRequest
     ): View {
         $customer = auth()->user()->customer;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -290,7 +270,6 @@ class LoanRequestController extends Controller
             403
         );
 
-
         /*
         |--------------------------------------------------------------------------
         | روابط
@@ -302,13 +281,11 @@ class LoanRequestController extends Controller
             'loan',
         ]);
 
-
         return view(
             'customer.loan_requests.show',
             compact('loanRequest')
         );
     }
-
 
     /**
      * بررسی امکان ثبت درخواست وام جدید
@@ -337,7 +314,6 @@ class LoanRequestController extends Controller
             return 'شما در حال حاضر یک وام فعال دارید و امکان ثبت درخواست وام جدید وجود ندارد.';
         }
 
-
         /*
         |--------------------------------------------------------------------------
         | 2. آخرین درخواست مشتری
@@ -350,7 +326,6 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-
         /*
         |--------------------------------------------------------------------------
         | هنوز هیچ درخواستی ثبت نشده
@@ -360,7 +335,6 @@ class LoanRequestController extends Controller
         if (!$latestRequest) {
             return null;
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -375,7 +349,6 @@ class LoanRequestController extends Controller
             return 'شما یک درخواست وام در حال بررسی دارید و امکان ثبت درخواست جدید وجود ندارد.';
         }
 
-
         /*
         |--------------------------------------------------------------------------
         | 4. درخواست تایید شده
@@ -386,7 +359,6 @@ class LoanRequestController extends Controller
             $latestRequest->status ===
             LoanRequestStatus::APPROVED
         ) {
-
             /*
             |--------------------------------------------------------------------------
             | تایید شده ولی هنوز Loan ساخته نشده
@@ -397,10 +369,8 @@ class LoanRequestController extends Controller
             */
 
             if (!$latestRequest->loan_id) {
-
                 return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -410,7 +380,6 @@ class LoanRequestController extends Controller
 
             $loan = $latestRequest->loan;
 
-
             /*
             |--------------------------------------------------------------------------
             | اگر Loan پیدا نشد
@@ -418,10 +387,8 @@ class LoanRequestController extends Controller
             */
 
             if (!$loan) {
-
                 return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -433,10 +400,8 @@ class LoanRequestController extends Controller
                 $loan->status ===
                 LoanStatus::ACTIVE
             ) {
-
                 return 'درخواست وام شما تأیید شده و وام شما فعال است؛ تا زمان تسویه وام امکان ثبت درخواست جدید وجود ندارد.';
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -448,10 +413,8 @@ class LoanRequestController extends Controller
                 $loan->status ===
                 LoanStatus::FINISHED
             ) {
-
                 return null;
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -461,7 +424,6 @@ class LoanRequestController extends Controller
 
             return 'درخواست وام قبلی شما هنوز در وضعیت نهایی قابل ثبت درخواست جدید نیست.';
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -473,7 +435,6 @@ class LoanRequestController extends Controller
             $latestRequest->status ===
             LoanRequestStatus::REJECTED
         ) {
-
             /*
             |--------------------------------------------------------------------------
             | تاریخ مراجعه بعدی
@@ -481,18 +442,14 @@ class LoanRequestController extends Controller
             */
 
             if (!$latestRequest->next_review_date) {
-
                 return 'درخواست وام قبلی شما رد شده است و هنوز تاریخ مجاز برای درخواست مجدد تعیین نشده است.';
             }
-
 
             $nextReviewDate = Carbon::parse(
                 $latestRequest->next_review_date
             )->startOfDay();
 
-
             $today = now()->startOfDay();
-
 
             /*
             |--------------------------------------------------------------------------
@@ -501,12 +458,10 @@ class LoanRequestController extends Controller
             */
 
             if ($today->lt($nextReviewDate)) {
-
                 return 'امکان ثبت درخواست جدید تا تاریخ ' .
                     jdate($nextReviewDate)->format('Y/m/d') .
                     ' وجود ندارد.';
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -516,7 +471,6 @@ class LoanRequestController extends Controller
 
             return null;
         }
-
 
         /*
         |--------------------------------------------------------------------------
