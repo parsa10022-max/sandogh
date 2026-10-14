@@ -127,7 +127,15 @@
                                 class="customer-financial-card-meta"
                                 dir="ltr"
                             >
-                                حساب {{ $account->account_number }}
+                                حساب
+@php
+    $accountNumber = (string) $account->account_number;
+@endphp
+
+<span dir="ltr" class="d-inline-block">
+    {{ fa_number(substr($accountNumber, 0, 4) . ' - ' . substr($accountNumber, 4)) }}
+</span>
+
                             </span>
 
                         </div>
@@ -166,7 +174,9 @@
                                 class="customer-financial-card-meta"
                                 dir="ltr"
                             >
-                                وام {{ $activeLoan->full_loan_number }}
+                                وام <span dir="ltr" class="d-inline-block">
+    {{ fa_number($activeLoan->full_loan_number) }}
+</span>
                             </span>
 
                         @else
@@ -384,6 +394,7 @@
         <div class="customer-dashboard-bottom-grid">
 
             {{-- آخرین تراکنش‌ها --}}
+
             <section class="customer-transactions-section">
 
                 <div class="customer-transactions-header">
@@ -402,10 +413,9 @@
 
                 </div>
 
-
                 <div class="customer-transactions-table-wrapper">
 
-                    @if($latestTransactions->isNotEmpty())
+                    @if ($latestTransactions->isNotEmpty())
 
                         <table class="customer-transactions-table">
 
@@ -420,14 +430,17 @@
 
                             <tbody>
 
-                            @foreach($latestTransactions as $transaction)
+                            @foreach ($latestTransactions as $transaction)
 
                                 @php
-                                    $isDeposit = $transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT;
+                                    $isDeposit = $transaction->transaction_type
+                                        === \App\Enums\TransactionType::DEPOSIT;
 
-                                    $isWithdrawal = $transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL;
+                                    $isWithdrawal = $transaction->transaction_type
+                                        === \App\Enums\TransactionType::WITHDRAWAL;
 
-                                    $isInstallment = $transaction->transaction_type === \App\Enums\TransactionType::INSTALLMENT_PAYMENT;
+                                    $isInstallment = $transaction->transaction_type
+                                        === \App\Enums\TransactionType::INSTALLMENT_PAYMENT;
 
                                     $isPositive = $isDeposit;
 
@@ -445,6 +458,22 @@
                                         \App\Enums\TransactionType::TRANSFER => 'bi-arrow-left-right',
                                         \App\Enums\TransactionType::ADJUSTMENT => 'bi-pencil',
                                     };
+
+                                    $methodLabel = match ($transaction->payment_method) {
+                                        \App\Enums\PaymentMethod::CASH => 'نقدی',
+                                        \App\Enums\PaymentMethod::POS => 'دستگاه پوز',
+                                        \App\Enums\PaymentMethod::GATEWAY => 'درگاه پرداخت',
+                                        \App\Enums\PaymentMethod::LOAN_DISBURSEMENT => 'وام',
+                                        \App\Enums\PaymentMethod::BANK_TRANSFER => 'انتقال بانکی',
+                                        \App\Enums\PaymentMethod::ACCOUNT_BALANCE => 'موجودی حساب',
+                                        default => null,
+                                    };
+
+                                    $transactionTitle = $transaction->transaction_type->label();
+
+                                    if ($isDeposit && $methodLabel) {
+                                        $transactionTitle .= ' - ' . $methodLabel;
+                                    }
                                 @endphp
 
                                 <tr>
@@ -457,13 +486,13 @@
 
                                         <div class="customer-transaction-type">
 
-                                            <span class="customer-transaction-icon {{ $iconClass }}">
-                                                <i class="bi {{ $icon }}"></i>
-                                            </span>
+                                    <span class="customer-transaction-icon {{ $iconClass }}">
+                                        <i class="bi {{ $icon }}"></i>
+                                    </span>
 
                                             <span>
-                                                {{ $transaction->transaction_type->label() }}
-                                            </span>
+                                        {{ $transactionTitle }}
+                                    </span>
 
                                         </div>
 
@@ -479,9 +508,9 @@
 
                                     <td>
 
-                                        <span class="customer-transaction-status success">
-                                            موفق
-                                        </span>
+                                <span class="customer-transaction-status success">
+                                    موفق
+                                </span>
 
                                     </td>
 
@@ -500,8 +529,8 @@
                             <i class="bi bi-receipt"></i>
 
                             <span>
-                                هنوز تراکنشی ثبت نشده است.
-                            </span>
+                    هنوز تراکنشی ثبت نشده است.
+                </span>
 
                         </div>
 
@@ -510,6 +539,7 @@
                 </div>
 
             </section>
+
 
 
             {{-- وام فعال شما --}}

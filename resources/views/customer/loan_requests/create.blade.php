@@ -40,104 +40,112 @@
 
     <div class="customer-dashboard customer-loan-request-page">
 
-
-        {{-- =========================================================
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-lg-6">
+                {{-- =========================================================
              شرایط وام
         ========================================================== --}}
 
-        <section class="loan-request-info-card loan-request-info-card-blue">
+                <section class="loan-request-info-card loan-request-info-card-blue">
 
-            <div class="loan-request-info-header">
+                    <div class="loan-request-info-header">
 
-                <div class="loan-request-info-icon">
-                    <i class="bi bi-info-circle-fill"></i>
-                </div>
+                        <div class="loan-request-info-icon">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </div>
 
-                <div>
+                        <div>
 
-                    <h2>
-                        شرایط وام
-                    </h2>
+                            <h2>
+                                شرایط وام
+                            </h2>
 
-                    <span>
+                            <span>
                         قبل از ثبت درخواست، شرایط را مطالعه کنید
                     </span>
 
-                </div>
+                        </div>
 
+                    </div>
+
+
+                    <ul class="loan-request-info-list">
+
+                        <li>
+                            وام تا سقف ۴ میلیون تومان با بازپرداخت ۱۰ ماهه.
+                        </li>
+
+                        <li>
+                            وام از ۵ تا ۲۰ میلیون تومان با بازپرداخت ۵ ماهه.
+                        </li>
+
+                        <li>
+                            وام‌های بیشتر از ۱۰ میلیون تومان پس از بررسی وضعیت مالی،
+                            سابقه بازپرداخت و منابع صندوق توسط مدیریت بررسی و تصمیم‌گیری خواهد شد.
+                        </li>
+
+                        <li>
+                            وام ازدواج ۱۰ میلیون تومان با بازپرداخت ۲۰ ماهه.
+                        </li>
+
+                    </ul>
+
+                </section>
             </div>
 
+            <div class="col-12 col-lg-6">
+                {{-- =========================================================
+                             شرایط ضامن
+                        ========================================================== --}}
 
-            <ul class="loan-request-info-list">
+                <section class="loan-request-info-card loan-request-info-card-purple">
 
-                <li>
-                    وام تا سقف ۴ میلیون تومان با بازپرداخت ۱۰ ماهه.
-                </li>
+                    <div class="loan-request-info-header">
 
-                <li>
-                    وام از ۵ تا ۲۰ میلیون تومان با بازپرداخت ۵ ماهه.
-                </li>
+                        <div class="loan-request-info-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
 
-                <li>
-                    وام‌های بیشتر از ۱۰ میلیون تومان پس از بررسی وضعیت مالی،
-                    سابقه بازپرداخت و منابع صندوق توسط مدیریت بررسی و تصمیم‌گیری خواهد شد.
-                </li>
+                        <div>
 
-                <li>
-                    وام ازدواج ۱۰ میلیون تومان با بازپرداخت ۲۰ ماهه.
-                </li>
+                            <h2>
+                                شرایط ضامن
+                            </h2>
 
-            </ul>
-
-        </section>
-
-
-        {{-- =========================================================
-             شرایط ضامن
-        ========================================================== --}}
-
-        <section class="loan-request-info-card loan-request-info-card-purple">
-
-            <div class="loan-request-info-header">
-
-                <div class="loan-request-info-icon">
-                    <i class="bi bi-shield-check"></i>
-                </div>
-
-                <div>
-
-                    <h2>
-                        شرایط ضامن
-                    </h2>
-
-                    <span>
+                            <span>
                         مدارک مورد نیاز برای ضمانت
                     </span>
 
-                </div>
+                        </div>
+
+                    </div>
+
+
+                    <ul class="loan-request-info-list">
+
+                        <li>
+                            تمام وام‌ها نیازمند ارائه دو ضامن می‌باشند.
+                        </li>
+
+                        <li>
+                            تا سقف ۱۰ میلیون: دو سفته یا دو چک صیادی
+                            یا یک سفته و یک چک صیادی.
+                        </li>
+
+                        <li>
+                            بالاتر از ۱۰ میلیون: ارائه حداقل یک چک صیادی معتبر الزامی است.
+                        </li>
+                        <li>
+                            در صورت ارائه سفته به عنوان ضمانت ، اعضای خانواده مورد قبول نمی باشد
+                        </li>
+
+                    </ul>
+
+                </section>
 
             </div>
 
-
-            <ul class="loan-request-info-list">
-
-                <li>
-                    تمام وام‌ها نیازمند ارائه دو ضامن می‌باشند.
-                </li>
-
-                <li>
-                    تا سقف ۱۰ میلیون: دو سفته یا دو چک صیادی
-                    یا یک سفته و یک چک صیادی.
-                </li>
-
-                <li>
-                    بالاتر از ۱۰ میلیون: ارائه حداقل یک چک صیادی معتبر الزامی است.
-                </li>
-
-            </ul>
-
-        </section>
-
+        </div>
 
         {{-- =========================================================
              فرم درخواست وام
@@ -173,128 +181,142 @@
 
                 @csrf
 
-
-                {{-- =================================================
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-lg-6">
+                        {{-- =================================================
                      مبلغ
                 ================================================== --}}
 
-                <div class="loan-request-field">
+                        <div class="loan-request-field">
 
-                    <label for="requested_amount">
-                        مبلغ درخواستی
-                    </label>
+                            <label for="requested_amount">
+                                مبلغ درخواستی
+                            </label>
 
 
-                    <div class="loan-request-amount-wrapper">
+                            <div class="loan-request-amount-wrapper">
 
-                        <input
-                            type="text"
-                            id="requested_amount"
-                            name="requested_amount"
-                            value="{{ old('requested_amount') }}"
-                            inputmode="numeric"
-                            autocomplete="off"
-                            class="money-input @error('requested_amount') is-invalid @enderror"
-                            data-min="10000000"
-                            data-max="200000000"
-                            placeholder="مثلاً ۵۰٬۰۰۰٬۰۰۰"
-                        >
+                                <input
+                                    type="text"
+                                    id="requested_amount"
+                                    name="requested_amount"
+                                    value="{{ old('requested_amount') }}"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    class="money-input @error('requested_amount') is-invalid @enderror"
+                                    data-min="10000000"
+                                    data-max="200000000"
+                                    placeholder="مثلاً ۵۰٬۰۰۰٬۰۰۰"
+                                >
 
-                        <span>
+                                <span>
                             ریال
                         </span>
 
+                            </div>
+
+
+                            @error('requested_amount')
+
+                            <div class="loan-request-error">
+                                {{ $message }}
+                            </div>
+
+                            @enderror
+
+
+                            <div class="loan-request-field-help">
+                                مبلغ درخواست باید بین
+                                <strong>۱۰٬۰۰۰٬۰۰۰</strong>
+                                تا
+                                <strong>۲۰۰٬۰۰۰٬۰۰۰</strong>
+                                ریال باشد.
+                            </div>
+
+                        </div>
+
                     </div>
+                    <div class="col-12 col-lg-6">
+                        {{-- =================================================
+                       دکمه‌ها
+                  ================================================== --}}
+
+                        <div class="loan-request-actions">
+
+                            <a
+                                href="{{ route('customer.loan-requests.index') }}"
+                                class="loan-request-cancel-button"
+                            >
+
+                                <i class="bi bi-arrow-right"></i>
+
+                                انصراف
+
+                            </a>
 
 
-                    @error('requested_amount')
+                            <button
+                                type="submit"
+                                class="loan-request-submit-button"
+                            >
 
-                    <div class="loan-request-error">
-                        {{ $message }}
+                                <i class="bi bi-send-fill"></i>
+
+                                ثبت درخواست
+
+                            </button>
+
+                        </div>
                     </div>
-
-                    @enderror
-
-
-                    <div class="loan-request-field-help">
-                        مبلغ درخواست باید بین
-                        <strong>۱۰٬۰۰۰٬۰۰۰</strong>
-                        تا
-                        <strong>۲۰۰٬۰۰۰٬۰۰۰</strong>
-                        ریال باشد.
-                    </div>
-
                 </div>
 
 
-                {{-- =================================================
-                     توضیحات
-                ================================================== --}}
 
-                <div class="loan-request-field">
 
-                    <label for="description">
 
-                        توضیحات
 
-                        <span>
+               <div class="row g-3 mb-4">
+                <div class="col-12 col-lg-6">
+                    {{-- =================================================
+                   توضیحات
+              ================================================== --}}
+
+                    <div class="loan-request-field">
+
+                        <label for="description">
+
+                            توضیحات
+
+                            <span>
                             اختیاری
                         </span>
 
-                    </label>
+                        </label>
 
 
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows="4"
-                        maxlength="1000"
-                        class="@error('description') is-invalid @enderror"
-                        placeholder="در صورت نیاز توضیحات خود را وارد کنید..."
-                    >{{ old('description') }}</textarea>
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            maxlength="1000"
+                            class="@error('description') is-invalid @enderror"
+                            placeholder="در صورت نیاز توضیحات خود را وارد کنید..."
+                        >{{ old('description') }}</textarea>
 
 
-                    @error('description')
+                        @error('description')
 
-                    <div class="loan-request-error">
-                        {{ $message }}
+                        <div class="loan-request-error">
+                            {{ $message }}
+                        </div>
+
+                        @enderror
+
                     </div>
 
-                    @enderror
-
                 </div>
 
-
-                {{-- =================================================
-                     دکمه‌ها
-                ================================================== --}}
-
-                <div class="loan-request-actions">
-
-                    <a
-                        href="{{ route('customer.loan-requests.index') }}"
-                        class="loan-request-cancel-button"
-                    >
-
-                        <i class="bi bi-arrow-right"></i>
-
-                        انصراف
-
-                    </a>
-
-
-                    <button
-                        type="submit"
-                        class="loan-request-submit-button"
-                    >
-
-                        <i class="bi bi-send-fill"></i>
-
-                        ثبت درخواست
-
-                    </button>
-
-                </div>
+             </div>
 
             </form>
 

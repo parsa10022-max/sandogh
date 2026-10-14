@@ -2,9 +2,7 @@
 
 @section('title', 'حسابداری')
 
-@push('styles')
-    @vite('resources/css/admin/accounting/index.css')
-@endpush
+
 
 @section('content')
 

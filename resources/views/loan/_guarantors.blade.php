@@ -379,7 +379,7 @@
                             @include('customer._picker', [
                                 'name' => 'guarantor2_customer_id',
                                 'label' => 'کد مشتری',
-                                'required' => false,
+                                'required' => true,
                                 'value' => old(
                                     'guarantor2_customer_id',
                                     $guarantor2?->customer_id

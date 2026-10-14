@@ -8,131 +8,80 @@
 
     <div class="container-fluid customer-savings-transactions-page">
 
-        @if(!$account)
+        @if (!$account)
 
             <div class="customer-savings-transactions-empty">
-
                 <div class="customer-savings-transactions-empty-icon">
                     <i class="bi bi-wallet2"></i>
                 </div>
 
-                <h5>
-                    حساب پس‌اندازی ندارید
-                </h5>
+                <h5>حساب پس‌اندازی ندارید</h5>
 
                 <p>
                     در حال حاضر حساب پس‌انداز فعالی برای شما ثبت نشده است.
                 </p>
-
             </div>
 
         @else
 
-            {{-- =====================================================
-                 خلاصه حساب
-            ====================================================== --}}
-
+            {{-- خلاصه حساب --}}
             <section class="customer-savings-account-summary">
 
                 <div class="customer-savings-section-title">
-
                     <div class="customer-savings-section-icon">
                         <i class="bi bi-wallet2"></i>
                     </div>
 
                     <div>
-                        <h2>
-                            حساب پس‌انداز
-                        </h2>
-
-                        <span>
-                            اطلاعات و وضعیت حساب شما
-                        </span>
+                        <h2>حساب پس‌انداز</h2>
+                        <span>اطلاعات و وضعیت حساب شما</span>
                     </div>
-
                 </div>
-
 
                 <div class="customer-savings-account-grid">
 
-                    {{-- شماره حساب --}}
                     <div class="customer-savings-account-item">
-
-                        <span>
-                            شماره حساب
-                        </span>
-
+                        <span>شماره حساب</span>
                         <strong dir="ltr">
                             {{ $account->account_number }}
                         </strong>
-
                     </div>
 
-
-                    {{-- موجودی --}}
                     <div class="customer-savings-account-item balance">
-
-                        <span>
-                            موجودی فعلی
-                        </span>
-
+                        <span>موجودی فعلی</span>
                         <strong>
                             {{ fa_money($account->balance) }}
                             <small>ریال</small>
                         </strong>
-
                     </div>
 
-
-                    {{-- تعداد تراکنش --}}
                     <div class="customer-savings-account-item">
-
-                        <span>
-                            تعداد تراکنش‌ها
-                        </span>
-
+                        <span>تعداد تراکنش‌ها</span>
                         <strong>
                             {{ fa_number($transactions->total()) }}
                         </strong>
-
                     </div>
 
                 </div>
-
             </section>
 
-
-            {{-- =====================================================
-                 گردش حساب
-            ====================================================== --}}
-
+            {{-- گردش حساب --}}
             <section class="customer-savings-transactions-section">
 
                 <div class="customer-savings-section-title">
-
                     <div class="customer-savings-section-icon">
                         <i class="bi bi-arrow-left-right"></i>
                     </div>
 
                     <div>
-                        <h2>
-                            گردش حساب
-                        </h2>
-
-                        <span>
-                            آخرین تراکنش‌های حساب پس‌انداز
-                        </span>
+                        <h2>گردش حساب</h2>
+                        <span>آخرین تراکنش‌های حساب پس‌انداز</span>
                     </div>
-
                 </div>
 
-                {{-- =================================================
-                     FILTERS
-                ================================================== --}}
-
+                {{-- فیلترها --}}
                 <div class="customer-savings-transactions-filter-box">
 
-                    {{-- عنوان فیلتر --}}
                     <button
                         type="button"
                         class="customer-savings-filter-toggle"
@@ -147,18 +96,14 @@
                         ]) ? 'true' : 'false' }}"
                         aria-controls="transactionsFilter"
                     >
-
                         <span>
                             <i class="bi bi-funnel"></i>
                             فیلتر گردش حساب
                         </span>
 
                         <i class="bi bi-chevron-down filter-toggle-icon"></i>
-
                     </button>
 
-
-                    {{-- محتوای فیلتر --}}
                     <div
                         class="collapse {{ request()->hasAny([
                             'transaction_no',
@@ -169,7 +114,6 @@
                         ]) ? 'show' : '' }}"
                         id="transactionsFilter"
                     >
-
                         <div class="customer-savings-transactions-filter-content">
 
                             <form
@@ -177,12 +121,9 @@
                                 action="{{ route('customer.savings.transactions') }}"
                                 class="customer-savings-transactions-filters"
                             >
-
                                 <div class="customer-savings-filter-grid">
 
-                                    {{-- شماره تراکنش --}}
                                     <div class="customer-savings-filter-item">
-
                                         <label for="transaction_no">
                                             <i class="bi bi-search"></i>
                                             شماره تراکنش
@@ -196,13 +137,9 @@
                                             placeholder="شماره تراکنش"
                                             dir="ltr"
                                         >
-
                                     </div>
 
-
-                                    {{-- نوع تراکنش --}}
                                     <div class="customer-savings-filter-item">
-
                                         <label for="transaction_type">
                                             <i class="bi bi-arrow-left-right"></i>
                                             نوع تراکنش
@@ -212,7 +149,6 @@
                                             id="transaction_type"
                                             name="transaction_type"
                                         >
-
                                             <option
                                                 value="all"
                                                 {{ request('transaction_type', 'all') === 'all' ? 'selected' : '' }}
@@ -233,39 +169,26 @@
                                             >
                                                 برداشت
                                             </option>
-
                                         </select>
-
                                     </div>
 
-
-                                    {{-- از تاریخ --}}
                                     <div class="customer-savings-filter-item">
-
                                         <x-inputs.date-input
                                             name="from_date"
                                             label="از تاریخ"
                                             :value="request('from_date')"
                                         />
-
                                     </div>
 
-
-                                    {{-- تا تاریخ --}}
                                     <div class="customer-savings-filter-item">
-
                                         <x-inputs.date-input
                                             name="to_date"
                                             label="تا تاریخ"
                                             :value="request('to_date')"
                                         />
-
                                     </div>
 
-
-                                    {{-- مبلغ --}}
                                     <div class="customer-savings-filter-item">
-
                                         <label for="amount">
                                             <i class="bi bi-cash-stack"></i>
                                             مبلغ
@@ -282,13 +205,9 @@
                                             dir="ltr"
                                             class="js-money-input"
                                         >
-
                                     </div>
 
-
-                                    {{-- دکمه‌ها --}}
                                     <div class="customer-savings-filter-actions">
-
                                         <button
                                             type="submit"
                                             class="customer-savings-filter-submit"
@@ -297,7 +216,6 @@
                                             اعمال فیلتر
                                         </button>
 
-
                                         <a
                                             href="{{ route('customer.savings.transactions') }}"
                                             class="customer-savings-filter-reset"
@@ -305,55 +223,59 @@
                                             <i class="bi bi-x-circle"></i>
                                             حذف فیلتر
                                         </a>
-
                                     </div>
 
                                 </div>
-
                             </form>
 
                         </div>
-
                     </div>
-
                 </div>
 
-
-                {{-- =================================================
-                     MOBILE
-                     نمایش تراکنش‌ها به صورت کارت
-                ================================================== --}}
-
+                {{-- نمایش موبایل --}}
                 <div class="customer-savings-transactions-mobile">
 
-                    @forelse($transactions as $transaction)
+                    @forelse ($transactions as $transaction)
+
+                        @php
+                            $isDeposit = $transaction->transaction_type->value == 1;
+
+                            $methodLabel = match ($transaction->payment_method) {
+                                \App\Enums\PaymentMethod::CASH => 'نقدی',
+                                \App\Enums\PaymentMethod::POS => 'دستگاه پوز',
+                                \App\Enums\PaymentMethod::GATEWAY => 'درگاه پرداخت',
+                                \App\Enums\PaymentMethod::LOAN_DISBURSEMENT => 'وام',
+                                \App\Enums\PaymentMethod::BANK_TRANSFER => 'انتقال بانکی',
+                                \App\Enums\PaymentMethod::ACCOUNT_BALANCE => 'موجودی حساب',
+                                default => null,
+                            };
+
+                            $transactionTitle = $isDeposit ? 'واریز' : 'برداشت';
+
+                            if ($methodLabel) {
+                                $transactionTitle .= ' - ' . $methodLabel;
+                            }
+                        @endphp
 
                         <article class="customer-savings-transaction-card">
 
                             <div class="customer-savings-transaction-top">
 
                                 <div class="customer-savings-transaction-type">
-
-                                    @if($transaction->transaction_type->value == 1)
-
+                                    @if ($isDeposit)
                                         <span class="deposit">
                                             <i class="bi bi-arrow-down-circle"></i>
-                                            واریز
+                                            {{ $transactionTitle }}
                                         </span>
-
                                     @else
-
                                         <span class="withdrawal">
                                             <i class="bi bi-arrow-up-circle"></i>
-                                            برداشت
+                                            {{ $transactionTitle }}
                                         </span>
-
                                     @endif
-
                                 </div>
 
                                 <span class="customer-savings-transaction-date">
-
                                     {{
                                         fa_number(
                                             \Morilog\Jalali\Jalalian::fromDateTime(
@@ -361,16 +283,13 @@
                                             )->format('Y/m/d')
                                         )
                                     }}
-
                                 </span>
 
                             </div>
 
-
                             <div class="customer-savings-transaction-middle">
 
                                 <div>
-
                                     <span class="transaction-label">
                                         شماره تراکنش
                                     </span>
@@ -378,39 +297,27 @@
                                     <strong dir="ltr">
                                         {{ $transaction->transaction_no }}
                                     </strong>
-
                                 </div>
 
-
                                 <div class="transaction-amount">
-
-                                    @if($transaction->transaction_type->value == 1)
-
+                                    @if ($isDeposit)
                                         <strong class="deposit">
-                                            +
-                                            {{ fa_money($transaction->amount) }}
+                                            + {{ fa_money($transaction->amount) }}
                                             <small>ریال</small>
                                         </strong>
-
                                     @else
-
                                         <strong class="withdrawal">
-                                            -
-                                            {{ fa_money($transaction->amount) }}
+                                            - {{ fa_money($transaction->amount) }}
                                             <small>ریال</small>
                                         </strong>
-
                                     @endif
-
                                 </div>
 
                             </div>
 
-
                             <div class="customer-savings-transaction-bottom">
 
                                 <div>
-
                                     <span class="transaction-label">
                                         مانده حساب
                                     </span>
@@ -419,12 +326,9 @@
                                         {{ fa_money($transaction->balance_after) }}
                                         <small>ریال</small>
                                     </strong>
-
                                 </div>
 
-
                                 <div class="transaction-description">
-
                                     <span class="transaction-label">
                                         توضیحات
                                     </span>
@@ -432,7 +336,6 @@
                                     <span>
                                         {{ $transaction->description ?? '-' }}
                                     </span>
-
                                 </div>
 
                             </div>
@@ -442,30 +345,22 @@
                     @empty
 
                         <div class="customer-savings-transactions-empty">
-
                             <div class="customer-savings-transactions-empty-icon">
                                 <i class="bi bi-receipt"></i>
                             </div>
 
-                            <h5>
-                                تراکنشی ثبت نشده است
-                            </h5>
+                            <h5>تراکنشی ثبت نشده است</h5>
 
                             <p>
                                 هنوز تراکنشی برای حساب پس‌انداز شما ثبت نشده است.
                             </p>
-
                         </div>
 
                     @endforelse
 
                 </div>
 
-
-                {{-- =================================================
-                     TABLET / DESKTOP
-                ================================================== --}}
-
+                {{-- نمایش تبلت و دسکتاپ --}}
                 <div class="customer-savings-transactions-table">
 
                     <div class="table-responsive">
@@ -473,55 +368,49 @@
                         <table class="table align-middle mb-0">
 
                             <thead>
-
                             <tr>
-
-                                <th>
-                                    شماره تراکنش
-                                </th>
-
-                                <th>
-                                    تاریخ
-                                </th>
-
-                                <th>
-                                    نوع
-                                </th>
-
-                                <th class="text-center">
-                                    مبلغ
-                                </th>
-
-                                <th class="text-center">
-                                    مانده
-                                </th>
-
-                                <th>
-                                    توضیحات
-                                </th>
-
+                                <th>شماره تراکنش</th>
+                                <th>تاریخ</th>
+                                <th>نوع</th>
+                                <th class="text-center">مبلغ</th>
+                                <th class="text-center">مانده</th>
+                                <th>توضیحات</th>
                             </tr>
-
                             </thead>
-
 
                             <tbody>
 
-                            @forelse($transactions as $transaction)
+                            @forelse ($transactions as $transaction)
+
+                                @php
+                                    $isDeposit = $transaction->transaction_type->value == 1;
+
+                                    $methodLabel = match ($transaction->payment_method) {
+                                        \App\Enums\PaymentMethod::CASH => 'نقدی',
+                                        \App\Enums\PaymentMethod::POS => 'دستگاه پوز',
+                                        \App\Enums\PaymentMethod::GATEWAY => 'درگاه پرداخت',
+                                        \App\Enums\PaymentMethod::LOAN_DISBURSEMENT => 'وام',
+                                        \App\Enums\PaymentMethod::BANK_TRANSFER => 'انتقال بانکی',
+                                        \App\Enums\PaymentMethod::ACCOUNT_BALANCE => 'موجودی حساب',
+                                        default => null,
+                                    };
+
+                                    $transactionTitle = $isDeposit ? 'واریز' : 'برداشت';
+
+                                    if ($methodLabel) {
+                                        $transactionTitle .= ' - ' . $methodLabel;
+                                    }
+                                @endphp
 
                                 <tr>
 
                                     <td>
-
-                                        <span dir="ltr">
-                                            {{ $transaction->transaction_no }}
-                                        </span>
-
+                                            <span dir="ltr">
+                                                {{ $transaction->transaction_no }}
+                                            </span>
                                     </td>
 
-
                                     <td>
-
                                         {{
                                             fa_number(
                                                 \Morilog\Jalali\Jalalian::fromDateTime(
@@ -529,85 +418,46 @@
                                                 )->format('Y/m/d')
                                             )
                                         }}
-
                                     </td>
-
 
                                     <td>
-
-                                        @if($transaction->transaction_type->value == 1)
-
+                                        @if ($isDeposit)
                                             <span class="customer-savings-transaction-badge deposit">
-
-                                                <i class="bi bi-arrow-down-circle"></i>
-
-                                                واریز
-
-                                            </span>
-
+                                                    <i class="bi bi-arrow-down-circle"></i>
+                                                    {{ $transactionTitle }}
+                                                </span>
                                         @else
-
                                             <span class="customer-savings-transaction-badge withdrawal">
-
-                                                <i class="bi bi-arrow-up-circle"></i>
-
-                                                برداشت
-
-                                            </span>
-
+                                                    <i class="bi bi-arrow-up-circle"></i>
+                                                    {{ $transactionTitle }}
+                                                </span>
                                         @endif
-
                                     </td>
 
-
                                     <td class="text-center">
-
-                                        @if($transaction->transaction_type->value == 1)
-
+                                        @if ($isDeposit)
                                             <strong class="customer-savings-amount deposit">
-
-                                                +
-                                                {{ fa_money($transaction->amount) }}
-
+                                                + {{ fa_money($transaction->amount) }}
                                             </strong>
-
                                         @else
-
                                             <strong class="customer-savings-amount withdrawal">
-
-                                                -
-                                                {{ fa_money($transaction->amount) }}
-
+                                                - {{ fa_money($transaction->amount) }}
                                             </strong>
-
                                         @endif
 
-                                        <small>
-                                            ریال
-                                        </small>
-
+                                        <small>ریال</small>
                                     </td>
 
-
                                     <td class="text-center">
-
                                         <strong class="customer-savings-balance">
-
                                             {{ fa_money($transaction->balance_after) }}
-
                                         </strong>
 
-                                        <small>
-                                            ریال
-                                        </small>
-
+                                        <small>ریال</small>
                                     </td>
 
-
                                     <td>
-
                                         {{ $transaction->description ?? '-' }}
-
                                     </td>
 
                                 </tr>
@@ -615,18 +465,10 @@
                             @empty
 
                                 <tr>
-
-                                    <td
-                                        colspan="6"
-                                        class="customer-savings-table-empty"
-                                    >
-
+                                    <td colspan="6" class="customer-savings-table-empty">
                                         <i class="bi bi-receipt"></i>
-
                                         تراکنشی ثبت نشده است.
-
                                     </td>
-
                                 </tr>
 
                             @endforelse
@@ -636,22 +478,13 @@
                         </table>
 
                     </div>
-
                 </div>
 
-
-                {{-- =================================================
-                     PAGINATION
-                ================================================== --}}
-
-                @if($transactions->hasPages())
-
+                {{-- صفحه‌بندی --}}
+                @if ($transactions->hasPages())
                     <div class="customer-savings-transactions-pagination">
-
                         {{ $transactions->links() }}
-
                     </div>
-
                 @endif
 
             </section>
@@ -661,4 +494,3 @@
     </div>
 
 @endsection
-

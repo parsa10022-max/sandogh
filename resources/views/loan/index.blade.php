@@ -198,6 +198,10 @@
                         </th>
 
                         <th>
+                            شماره حساب
+                        </th>
+
+                        <th>
                             وضعیت
                         </th>
 
@@ -278,6 +282,24 @@
 
                             </td>
 
+                            {{-- شماره حساب --}}
+                            <td data-label="شماره حساب پس‌انداز">
+                                @php
+                                    $savingAccount = $loan->customer->accounts
+                                        ->firstWhere('account_type', \App\Enums\AccountType::SAVING);
+                                @endphp
+
+                                @if($savingAccount)
+                                    <a href="{{ url('/accounts/' . $savingAccount->id . '/deposit') }}"
+                                       class="text-decoration-none fw-bold"
+                                       dir="ltr">
+                                        {{ fa_number(substr((string) $savingAccount->account_number, 0, 4) . ' - ' . substr((string) $savingAccount->account_number, 4)) }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">ندارد</span>
+                                @endif
+
+                            </td>
 
                             {{-- وضعیت --}}
                             <td data-label="وضعیت">

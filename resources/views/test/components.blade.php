@@ -58,7 +58,7 @@
             name="money"
             required
         />
-        <x-inputs.sheba-input
+        <x-inputs.iban-input
             label="  شبا "
             name="sheba"
             required

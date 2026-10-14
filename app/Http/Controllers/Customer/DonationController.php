@@ -76,23 +76,13 @@ class DonationController extends Controller
 
         $validated = $request->validate(
             [
-                'account_id' => [
-                    'required',
-                    'integer',
-                    'exists:accounts,id',
-                ],
-
-                'amount' => [
-                    'required',
-                    'integer',
-                    'min:50000',
-                ],
+                'account_id' => ['required', 'integer', 'exists:accounts,id'],
+                'amount' => ['required', 'integer', 'min:50000'],
             ],
             [
                 'account_id.required' => 'انتخاب حساب مقصد الزامی است.',
                 'account_id.integer' => 'حساب مقصد انتخاب‌شده معتبر نیست.',
                 'account_id.exists' => 'حساب مقصد انتخاب‌شده وجود ندارد.',
-
                 'amount.required' => 'مبلغ کمک الزامی است.',
                 'amount.integer' => 'مبلغ کمک باید به‌صورت عدد وارد شود.',
                 'amount.min' => 'حداقل مبلغ کمک ۵۰٬۰۰۰ ریال است.',
@@ -107,37 +97,20 @@ class DonationController extends Controller
             'دسترسی به اطلاعات مشتری امکان‌پذیر نیست.'
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | حساب مقصد
-        |--------------------------------------------------------------------------
-        | فقط حساب سیستمی فعال قابل انتخاب است.
-        */
-
         $account = Account::query()
-            ->where(
-                'account_type',
-                AccountType::SYSTEM
-            )
-            ->where(
-                'status',
-                AccountStatus::ACTIVE
-            )
-            ->findOrFail(
-                $validated['account_id']
-            );
+            ->where('account_type', AccountType::SYSTEM)
+            ->where('status', AccountStatus::ACTIVE)
+            ->findOrFail($validated['account_id']);
 
         $result = $this->donationPaymentService->startPayment(
             customer: $customer,
             account: $account,
             amount: (int) $validated['amount'],
-        );
+    );
 
-        return redirect()
-            ->route(
-                'customer.donations.payment',
-                $result['payment']->id
-            );
+        return redirect()->away(
+            $result['gateway']['redirect_url']
+        );
     }
 
     /**

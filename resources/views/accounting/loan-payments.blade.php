@@ -4,9 +4,7 @@
 
 @section('content')
 
-    @push('styles')
-        @vite('resources/css/admin/accounting/loan-payments.css')
-    @endpush
+
 
     <div class="container-fluid loan-payments-page">
 

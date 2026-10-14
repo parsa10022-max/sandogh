@@ -49,7 +49,14 @@ class DonationPaymentService
 
         $gateway = PaymentGateway::from(config('payment.gateway'));
 
-        $trackingCode = 'DON-' . strtoupper(Str::random(10));
+
+        do {
+            $trackingCode = 'DON-' . strtoupper((string) Str::ulid());
+        } while (
+            \App\Models\PaymentIntent::where('tracking_code', $trackingCode)->exists()
+            || DonationPayment::where('tracking_code', $trackingCode)->exists()
+        );
+
 
         [$payment, $paymentIntent] = DB::transaction(function () use (
             $customer,
