@@ -11,6 +11,7 @@ use App\Models\Withdrawal;
 use App\Services\Accounting\AccountingConfirmationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Models\PaymentIntent;
 
 class AccountingController extends Controller
 {
@@ -234,6 +235,19 @@ class AccountingController extends Controller
         return view(
             'accounting.loan-payments',
             compact('payments')
+        );
+    }
+
+    public function reviewRequired(): View
+    {
+        $intents = PaymentIntent::query()
+            ->where('status', 'review_required')
+            ->latest('updated_at')
+            ->paginate(20);
+
+        return view(
+            'accounting.review-required',
+            compact('intents')
         );
     }
 

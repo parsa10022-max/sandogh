@@ -549,6 +549,13 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
                 [AccountingController::class, 'loanPayments']
             )->name('loan-payments');
 
+
+            Route::get(
+                '/review-required',
+                [AccountingController::class, 'reviewRequired']
+            )->name('review-required');
+
+
             Route::post(
                 '/{type}/{id}/confirm',
                 [AccountingController::class, 'confirm']

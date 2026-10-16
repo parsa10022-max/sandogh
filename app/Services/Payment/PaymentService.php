@@ -177,9 +177,17 @@ class PaymentService
                 )
                 ->first();
 
+
             if ($existingPayment) {
+                $this->paymentIntentService->markReviewRequired(
+                    $paymentIntent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
+                );
+
                 return $existingPayment;
             }
+
 
             throw new \DomainException(
                 'Payment Intent پرداخت شده است اما رکورد پرداخت پیدا نشد.'

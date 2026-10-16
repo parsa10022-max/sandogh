@@ -2,36 +2,35 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
-use App\Services\Payment\Gateways\GatewayInterface;
 use App\Services\Payment\Gateways\FakeGateway;
+use App\Services\Payment\Gateways\GatewayInterface;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\ServiceProvider;
+use LogicException;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         $this->app->bind(GatewayInterface::class, function () {
+            $gateway = config('payment.gateway');
 
-            return match (config('payment.gateway')) {
+            if ($gateway === 'fake') {
+                if (! app()->environment(['local', 'testing'])) {
+                    throw new LogicException(
+                        'Fake payment gateway is only allowed in local and testing environments.'
+                    );
+                }
 
-                'fake' => new FakeGateway(),
+                return new FakeGateway();
+            }
 
-                // 'sadad' => new SadadGateway(),
-
-                default => new FakeGateway(),
-
-            };
-
+            throw new LogicException(
+                'Payment gateway is not implemented or configured correctly.'
+            );
         });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Paginator::useBootstrapFive();

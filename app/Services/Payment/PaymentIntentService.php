@@ -176,6 +176,25 @@ class PaymentIntentService
     }
 
     /**
+     * ثبت پرداخت موفقی که نیازمند بررسی مالی است.
+     */
+    public function markReviewRequired(
+        PaymentIntent $intent,
+        ?string $transactionId = null,
+        ?string $referenceNumber = null,
+    ): PaymentIntent {
+        $this->ensureStatus($intent, ['verifying']);
+
+        $intent->update([
+            'status' => 'review_required',
+            'gateway_transaction_id' => $transactionId,
+            'gateway_reference_number' => $referenceNumber,
+        ]);
+
+        return $intent->refresh();
+    }
+
+    /**
      * ثبت شکست پرداخت.
      */
     public function markFailed(

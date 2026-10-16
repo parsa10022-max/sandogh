@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\UserOtpType;
+use App\Enums\UserStatus;
 
 class OtpController extends Controller
 {
@@ -58,6 +59,15 @@ class OtpController extends Controller
         if (! $user) {
             return redirect()
                 ->route('login');
+        }
+        if ($user->status !== UserStatus::ACTIVE) {
+            $request->session()->forget('login_user_id');
+
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'username' => 'حساب کاربری شما غیرفعال یا مسدود است.',
+                ]);
         }
 
         $data = $request->validated();

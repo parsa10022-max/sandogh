@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\UserStatus;
 
 class LoginController extends Controller
 {
@@ -39,6 +40,10 @@ class LoginController extends Controller
         }
 
         if (! Hash::check($data['password'], $user->password)) {
+            return $this->invalidCredentials();
+        }
+
+        if ($user->status !== UserStatus::ACTIVE) {
             return $this->invalidCredentials();
         }
 
