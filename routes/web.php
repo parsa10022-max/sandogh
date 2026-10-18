@@ -65,7 +65,9 @@ Route::get(
 Route::post(
     '/login',
     [LoginController::class, 'login']
-)->name('login.store');
+)
+    ->middleware('throttle:5,1')
+    ->name('login.store');
 
 Route::get(
     '/otp',
@@ -154,8 +156,8 @@ Route::get(
 Route::put(
     '/reset-password',
     [\App\Http\Controllers\Auth\ResetPasswordController::class, 'update']
-)->name('password.reset.update');
-
+)->middleware('throttle:5,1')
+    ->name('password.reset.update');
 /*
 --------------------------------------------------------------------------
  Public Donation

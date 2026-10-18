@@ -51,17 +51,27 @@ class OtpService
     /**
      * تأیید OTP
      */
+
+    /**
+     * تأیید OTP
+     */
     public function verify(
         User $user,
         string $code,
-        UserOtpType $type = UserOtpType::LOGIN
+        UserOtpType $type = UserOtpType::LOGIN,
+        ?int $otpId = null
     ): bool {
-        return DB::transaction(function () use ($user, $code, $type) {
-
-            $otp = UserOtp::query()
+        return DB::transaction(function () use ($user, $code, $type, $otpId) {
+            $query = UserOtp::query()
                 ->forUser($user->id)
                 ->where('type', $type)
-                ->valid()
+                ->valid();
+
+            if ($otpId !== null) {
+                $query->where('id', $otpId);
+            }
+
+            $otp = $query
                 ->latest('id')
                 ->lockForUpdate()
                 ->first();
@@ -69,12 +79,6 @@ class OtpService
             if (! $otp) {
                 return false;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | محدودیت تعداد تلاش
-            |--------------------------------------------------------------------------
-            */
 
             if ($otp->attempts >= self::MAX_ATTEMPTS) {
                 $otp->update([
@@ -85,29 +89,18 @@ class OtpService
                 return false;
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | ثبت تلاش
-            |--------------------------------------------------------------------------
-            */
-
-            $otp->increment('attempts');
-
-            /*
-            |--------------------------------------------------------------------------
-            | بررسی کد
-            |--------------------------------------------------------------------------
-            */
-
             if (! Hash::check($code, $otp->code)) {
+                $otp->attempts++;
+
+                if ($otp->attempts >= self::MAX_ATTEMPTS) {
+                    $otp->status = UserOtpStatus::CANCELLED;
+                    $otp->cancelled_at = now();
+                }
+
+                $otp->save();
+
                 return false;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | تأیید موفق
-            |--------------------------------------------------------------------------
-            */
 
             $otp->update([
                 'status' => UserOtpStatus::VERIFIED,
