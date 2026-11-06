@@ -411,7 +411,7 @@
                                 <div class="small text-muted mt-1">وام‌گیرنده: {{ $customerName($payment->loan?->customer) }}</div>
                             </td>
                             <td>
-                                <div>وام: <span dir="ltr">{{ $payment->loan?->loan_number ?? '—' }}</span></div>
+                                <div>وام: <span dir="ltr">{{ $payment->loan?->full_loan_number ?? '—' }}</span></div>
                                 <div class="small text-muted mt-1">قسط: {{ fa_number($payment->installment?->installment_number ?? '—') }}</div>
                             </td>
                             <td class="fw-semibold">{{ fa_money($payment->amount) }} ریال</td>
@@ -437,7 +437,7 @@
                                 <div class="small text-muted mt-1">وام‌گیرنده: {{ $customerName($payment->loan?->customer) }}</div>
                             </td>
                             <td>
-                                <div>وام: <span dir="ltr">{{ $payment->loan?->loan_number ?? '—' }}</span></div>
+                                <div>وام: <span dir="ltr">{{ $payment->loan?->full_loan_number ?? '—' }}</span></div>
                                 <div class="small text-muted mt-1">قسط: {{ fa_number($payment->installment?->installment_number ?? '—') }}</div>
                             </td>
                             <td class="fw-semibold">{{ fa_money($payment->amount) }} ریال</td>
