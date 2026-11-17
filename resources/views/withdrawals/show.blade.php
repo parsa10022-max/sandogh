@@ -3,12 +3,16 @@
 
 @section('content')
 
+    @php
+        $paymentMethod = $withdrawal->transaction?->payment_method;
+
+        $isBankTransfer = $paymentMethod === \App\Enums\PaymentMethod::BANK_TRANSFER;
+        $isCash = $paymentMethod === \App\Enums\PaymentMethod::CASH;
+    @endphp
+
     <div class="container-fluid withdrawal-show-page">
 
-        {{-- =========================================================
-             HEADER
-        ========================================================== --}}
-
+        {{-- HEADER --}}
         <div class="withdrawal-show-header">
 
             <div class="withdrawal-show-title-wrapper">
@@ -18,7 +22,6 @@
                 </div>
 
                 <div>
-
                     <h5 class="withdrawal-show-title">
                         جزئیات درخواست برداشت
                     </h5>
@@ -26,7 +29,6 @@
                     <p class="withdrawal-show-subtitle">
                         مشاهده و مدیریت درخواست برداشت مشتری
                     </p>
-
                 </div>
 
             </div>
@@ -42,10 +44,7 @@
         </div>
 
 
-        {{-- =========================================================
-             ALERTS
-        ========================================================== --}}
-
+        {{-- ALERTS --}}
         @if(session('success'))
 
             <div class="withdrawal-alert withdrawal-alert-success">
@@ -54,9 +53,7 @@
                     <i class="bi bi-check-circle-fill"></i>
                 </span>
 
-                <span>
-                    {{ session('success') }}
-                </span>
+                <span>{{ session('success') }}</span>
 
             </div>
 
@@ -71,9 +68,7 @@
                     <i class="bi bi-exclamation-triangle-fill"></i>
                 </span>
 
-                <span>
-                    {{ session('error') }}
-                </span>
+                <span>{{ session('error') }}</span>
 
             </div>
 
@@ -97,11 +92,7 @@
                     <ul class="withdrawal-error-list">
 
                         @foreach($errors->all() as $error)
-
-                            <li>
-                                {{ $error }}
-                            </li>
-
+                            <li>{{ $error }}</li>
                         @endforeach
 
                     </ul>
@@ -113,10 +104,7 @@
         @endif
 
 
-        {{-- =========================================================
-             WITHDRAWAL INFORMATION
-        ========================================================== --}}
-
+        {{-- WITHDRAWAL INFORMATION --}}
         <div class="card withdrawal-info-card">
 
             <div class="withdrawal-card-header">
@@ -128,28 +116,17 @@
                     </span>
 
                     <div>
-
-                        <h6>
-                            اطلاعات درخواست
-                        </h6>
-
-                        <small>
-                            مشخصات اصلی درخواست برداشت
-                        </small>
-
+                        <h6>اطلاعات درخواست</h6>
+                        <small>مشخصات اصلی درخواست برداشت</small>
                     </div>
 
                 </div>
 
-
                 @if($withdrawal->status instanceof \App\Enums\WithdrawalStatus)
 
                     <span class="withdrawal-status-badge">
-
                         <span class="withdrawal-status-dot"></span>
-
                         {{ $withdrawal->status->label() }}
-
                     </span>
 
                 @endif
@@ -185,10 +162,7 @@
                             شماره حساب
                         </span>
 
-                        <strong
-                            dir="ltr"
-                            class="withdrawal-ltr-value"
-                        >
+                        <strong dir="ltr" class="withdrawal-ltr-value">
                             {{ $withdrawal->account->account_number }}
                         </strong>
 
@@ -209,9 +183,7 @@
                                 {{ fa_money($withdrawal->amount) }}
                             </strong>
 
-                            <span>
-                                ریال
-                            </span>
+                            <span>ریال</span>
 
                         </div>
 
@@ -229,11 +201,8 @@
                         @if($withdrawal->status instanceof \App\Enums\WithdrawalStatus)
 
                             <span class="withdrawal-status-badge">
-
                                 <span class="withdrawal-status-dot"></span>
-
                                 {{ $withdrawal->status->label() }}
-
                             </span>
 
                         @else
@@ -247,36 +216,56 @@
                     </div>
 
 
-                    {{-- شبا --}}
-                    <div class="withdrawal-info-item withdrawal-info-item-wide">
-
-                        <span class="withdrawal-info-label">
-                            <i class="bi bi-bank"></i>
-                            شماره شبا
-                        </span>
-
-                        <div class="withdrawal-copy-value" dir="ltr">
-
-                            {{ \App\Support\Iban::format($withdrawal->iban) }}
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- بانک مقصد --}}
+                    {{-- روش پرداخت --}}
                     <div class="withdrawal-info-item">
 
                         <span class="withdrawal-info-label">
-                            <i class="bi bi-building"></i>
-                            بانک مقصد
+                            <i class="bi bi-wallet2"></i>
+                            روش پرداخت
                         </span>
 
                         <strong>
-                            {{ \App\Support\Iban::bankName($withdrawal->iban) }}
+                            {{ $paymentMethod?->label() ?? 'نامشخص' }}
                         </strong>
 
                     </div>
+
+
+                    {{-- شبا و بانک مقصد --}}
+                    @if($isBankTransfer)
+
+                        <div class="withdrawal-info-item withdrawal-info-item-wide">
+
+                            <span class="withdrawal-info-label">
+                                <i class="bi bi-bank"></i>
+                                شماره شبا
+                            </span>
+
+                            <div class="withdrawal-copy-value" dir="ltr">
+                                {{ $withdrawal->iban
+                                    ? \App\Support\Iban::format($withdrawal->iban)
+                                    : '-' }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="withdrawal-info-item">
+
+                            <span class="withdrawal-info-label">
+                                <i class="bi bi-building"></i>
+                                بانک مقصد
+                            </span>
+
+                            <strong>
+                                {{ $withdrawal->iban
+                                    ? \App\Support\Iban::bankName($withdrawal->iban)
+                                    : '-' }}
+                            </strong>
+
+                        </div>
+
+                    @endif
 
 
                     {{-- تاریخ درخواست --}}
@@ -321,10 +310,7 @@
         </div>
 
 
-        {{-- =========================================================
-             PAID INFORMATION
-        ========================================================== --}}
-
+        {{-- PAID INFORMATION --}}
         @if($withdrawal->status === \App\Enums\WithdrawalStatus::PAID)
 
             <div class="card withdrawal-paid-card">
@@ -338,15 +324,8 @@
                         </span>
 
                         <div>
-
-                            <h6>
-                                اطلاعات پرداخت
-                            </h6>
-
-                            <small>
-                                جزئیات پرداخت انجام‌شده
-                            </small>
-
+                            <h6>اطلاعات پرداخت</h6>
+                            <small>جزئیات پرداخت انجام‌شده</small>
                         </div>
 
                     </div>
@@ -362,44 +341,52 @@
 
                     <div class="withdrawal-info-grid">
 
-                        {{-- بانک پرداخت --}}
+                        {{-- روش پرداخت --}}
                         <div class="withdrawal-info-item">
 
                             <span class="withdrawal-info-label">
-                                <i class="bi bi-bank"></i>
-                                بانک پرداخت‌کننده
+                                <i class="bi bi-wallet2"></i>
+                                روش پرداخت
                             </span>
 
                             <strong>
-
-                                @if($withdrawal->payment_bank instanceof \App\Enums\PaymentBank)
-
-                                    {{ $withdrawal->payment_bank->label() }}
-
-                                @else
-
-                                    -
-
-                                @endif
-
+                                {{ $paymentMethod?->label() ?? '-' }}
                             </strong>
 
                         </div>
 
 
-                        {{-- کد پیگیری --}}
-                        <div class="withdrawal-info-item">
+                        {{-- بانک و کد پیگیری --}}
+                        @if($isBankTransfer)
 
-                            <span class="withdrawal-info-label">
-                                <i class="bi bi-upc-scan"></i>
-                                کد پیگیری پرداخت
-                            </span>
+                            <div class="withdrawal-info-item">
 
-                            <strong dir="ltr">
-                                {{ $withdrawal->payment_tracking_code ?? '-' }}
-                            </strong>
+                                <span class="withdrawal-info-label">
+                                    <i class="bi bi-bank"></i>
+                                    بانک پرداخت‌کننده
+                                </span>
 
-                        </div>
+                                <strong>
+                                    {{ $withdrawal->payment_bank?->label() ?? '-' }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="withdrawal-info-item">
+
+                                <span class="withdrawal-info-label">
+                                    <i class="bi bi-upc-scan"></i>
+                                    کد پیگیری پرداخت
+                                </span>
+
+                                <strong dir="ltr">
+                                    {{ $withdrawal->payment_tracking_code ?? '-' }}
+                                </strong>
+
+                            </div>
+
+                        @endif
 
 
                         {{-- ثبت‌کننده --}}
@@ -436,9 +423,7 @@
                                     ) }}
 
                                 @else
-
                                     -
-
                                 @endif
 
                             </strong>
@@ -448,10 +433,7 @@
                     </div>
 
 
-                    {{-- =================================================
-                         RECEIPT ACTION
-                    ================================================== --}}
-
+                    {{-- RECEIPT ACTION --}}
                     <div class="withdrawal-paid-actions">
 
                         <a
@@ -459,13 +441,9 @@
                             class="withdrawal-action-btn withdrawal-action-btn-success"
                             target="_blank"
                         >
-
                             <i class="bi bi-receipt"></i>
 
-                            <span>
-                                مشاهده و چاپ رسید
-                            </span>
-
+                            <span>مشاهده و چاپ رسید</span>
                         </a>
 
                     </div>
@@ -477,10 +455,7 @@
         @endif
 
 
-        {{-- =========================================================
-             PENDING ACTIONS
-        ========================================================== --}}
-
+        {{-- PENDING ACTIONS --}}
         @if($withdrawal->status === \App\Enums\WithdrawalStatus::PENDING)
 
             <div class="card withdrawal-actions-card">
@@ -494,15 +469,8 @@
                         </span>
 
                         <div>
-
-                            <h6>
-                                مدیریت درخواست
-                            </h6>
-
-                            <small>
-                                ثبت پرداخت یا رد درخواست برداشت
-                            </small>
-
+                            <h6>مدیریت درخواست</h6>
+                            <small>ثبت پرداخت یا رد درخواست برداشت</small>
                         </div>
 
                     </div>
@@ -523,12 +491,16 @@
 
                             <div>
 
-                                <strong>
-                                    ثبت پرداخت
-                                </strong>
+                                <strong>ثبت پرداخت</strong>
 
                                 <small>
-                                    پس از انجام انتقال وجه، اطلاعات پرداخت را ثبت کنید.
+                                    @if($isCash)
+                                        پس از تحویل وجه نقد به مشتری، پرداخت را تأیید کنید.
+                                    @elseif($isBankTransfer)
+                                        پس از انجام انتقال وجه، اطلاعات پرداخت را ثبت کنید.
+                                    @else
+                                        روش پرداخت این درخواست مشخص نیست.
+                                    @endif
                                 </small>
 
                             </div>
@@ -536,107 +508,132 @@
                         </div>
 
 
-                        <form
-                            method="POST"
-                            action="{{ route('withdrawals.approve', $withdrawal) }}"
-                        >
+                        @if($isCash || $isBankTransfer)
 
-                            @csrf
+                            <form
+                                method="POST"
+                                action="{{ route('withdrawals.approve', $withdrawal) }}"
+                            >
 
-                            <div class="withdrawal-form-grid">
+                                @csrf
 
-                                {{-- بانک پرداخت‌کننده --}}
-                                <div class="withdrawal-form-group">
+                                @if($isBankTransfer)
 
-                                    <label class="withdrawal-form-label">
-                                        بانک پرداخت‌کننده
-                                        <span>*</span>
-                                    </label>
+                                    <div class="withdrawal-form-grid">
 
-                                    <select
-                                        name="payment_bank"
-                                        class="form-select withdrawal-form-control @error('payment_bank') is-invalid @enderror"
-                                        required
-                                    >
+                                        {{-- بانک پرداخت‌کننده --}}
+                                        <div class="withdrawal-form-group">
 
-                                        <option value="">
-                                            انتخاب بانک
-                                        </option>
+                                            <label class="withdrawal-form-label">
+                                                بانک پرداخت‌کننده
+                                                <span>*</span>
+                                            </label>
 
-                                        @foreach(\App\Enums\PaymentBank::cases() as $bank)
-
-                                            <option
-                                                value="{{ $bank->value }}"
-                                                @selected(old('payment_bank') == $bank->value)
+                                            <select
+                                                name="payment_bank"
+                                                class="form-select withdrawal-form-control @error('payment_bank') is-invalid @enderror"
+                                                required
                                             >
-                                            {{ $bank->label() }}
-                                            </option>
 
-                                        @endforeach
+                                                <option value="">
+                                                    انتخاب بانک
+                                                </option>
 
-                                    </select>
+                                                @foreach(\App\Enums\PaymentBank::cases() as $bank)
 
-                                    @error('payment_bank')
+                                                    <option
+                                                        value="{{ $bank->value }}"
+                                                        @selected(old('payment_bank') == $bank->value)
+                                                    >
+                                                    {{ $bank->label() }}
+                                                    </option>
 
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
+                                                @endforeach
+
+                                            </select>
+
+                                            @error('payment_bank')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+
+                                        </div>
+
+
+                                        {{-- کد پیگیری --}}
+                                        <div class="withdrawal-form-group">
+
+                                            <label class="withdrawal-form-label">
+                                                کد پیگیری پرداخت
+                                                <span>*</span>
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="payment_tracking_code"
+                                                class="form-control withdrawal-form-control @error('payment_tracking_code') is-invalid @enderror"
+                                                value="{{ old('payment_tracking_code') }}"
+                                                maxlength="100"
+                                                autocomplete="off"
+                                                required
+                                            >
+
+                                            @error('payment_tracking_code')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+
+                                        </div>
+
                                     </div>
 
-                                    @enderror
+                                @elseif($isCash)
 
-                                </div>
+                                    <div class="withdrawal-alert withdrawal-alert-success">
+                                        <span class="withdrawal-alert-icon">
+                                            <i class="bi bi-cash-stack"></i>
+                                        </span>
+
+                                        <span>
+                                            این درخواست به‌صورت نقدی ثبت شده است.
+                                            برای تأیید آن نیازی به اطلاعات بانکی نیست.
+                                        </span>
+                                    </div>
+
+                                @endif
 
 
-                                {{-- کد پیگیری --}}
-                                <div class="withdrawal-form-group">
+                                <div class="withdrawal-form-actions">
 
-                                    <label class="withdrawal-form-label">
-                                        کد پیگیری پرداخت
-                                        <span>*</span>
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="payment_tracking_code"
-                                        class="form-control withdrawal-form-control @error('payment_tracking_code') is-invalid @enderror"
-                                        value="{{ old('payment_tracking_code') }}"
-                                        maxlength="100"
-                                        autocomplete="off"
-                                        required
+                                    <button
+                                        type="submit"
+                                        class="withdrawal-action-btn withdrawal-action-btn-success"
+                                        onclick="return confirm('{{ $isCash
+                                            ? 'آیا وجه نقد را به مشتری تحویل داده‌اید؟'
+                                            : 'آیا انتقال وجه این درخواست انجام شده است؟' }}')"
                                     >
 
-                                    @error('payment_tracking_code')
+                                        <i class="bi bi-check-circle-fill"></i>
 
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                        <span>
+                                            {{ $isCash ? 'تأیید تحویل وجه نقد' : 'ثبت پرداخت' }}
+                                        </span>
 
-                                    @enderror
+                                    </button>
 
                                 </div>
 
+                            </form>
+
+                        @else
+
+                            <div class="withdrawal-alert withdrawal-alert-danger">
+                                روش پرداخت این درخواست معتبر نیست.
                             </div>
 
-
-                            <div class="withdrawal-form-actions">
-
-                                <button
-                                    type="submit"
-                                    class="withdrawal-action-btn withdrawal-action-btn-success"
-                                    onclick="return confirm('آیا پرداخت این درخواست انجام شده است؟')"
-                                >
-
-                                    <i class="bi bi-check-circle-fill"></i>
-
-                                    <span>
-                                        ثبت پرداخت
-                                    </span>
-
-                                </button>
-
-                            </div>
-
-                        </form>
+                        @endif
 
                     </div>
 
@@ -652,9 +649,7 @@
 
                             <div>
 
-                                <strong>
-                                    رد درخواست
-                                </strong>
+                                <strong>رد درخواست</strong>
 
                                 <small>
                                     در صورت رد، مبلغ به حساب مشتری بازگردانده خواهد شد.
@@ -680,9 +675,7 @@
 
                                 <i class="bi bi-x-circle-fill"></i>
 
-                                <span>
-                                    رد درخواست
-                                </span>
+                                <span>رد درخواست</span>
 
                             </button>
 

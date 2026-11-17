@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Hash;
-use App\Enums\UserStatus;
 
 class LoginController extends Controller
 {
@@ -16,17 +17,11 @@ class LoginController extends Controller
     ) {
     }
 
-    /**
-     * نمایش فرم ورود
-     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * بررسی نام کاربری و رمز عبور
-     */
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
@@ -47,9 +42,24 @@ class LoginController extends Controller
             return $this->invalidCredentials();
         }
 
-        session()->forget([
-            'login_user_id',
-        ]);
+        session()->forget('login_user_id');
+
+        // بررسی پایان عضویت اینترنتی فقط برای مشتریان
+        if ($user->role === UserRole::CUSTOMER) {
+            if (
+                ! $user->customer_id ||
+                ! $user->customer ||
+                ! $user->created_at ||
+                now()->greaterThanOrEqualTo(
+                    $user->created_at->copy()->addYears(2)
+                )
+            ) {
+                return back()
+                    ->withErrors([
+                        'username' => '.مدت عضویت اینترنتی شما به پایان رسیده است. برای تمدید دسترسی، لطفاً با صندوق قرض‌الحسنه به شماره ۰۷۱-۳۲۶۱۳۲۱۷ تماس بگیرید.',
+                    ]);
+            }
+        }
 
         $this->otpService->generate($user);
 

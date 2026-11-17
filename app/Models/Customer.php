@@ -27,12 +27,14 @@ class Customer extends Model
         'mobile',
         'mobile_second',
         'status',
+        'online_activation_approved',
     ];
 
     protected function casts(): array
     {
         return [
             'status' => CustomerStatus::class,
+            'online_activation_approved' => 'boolean',
         ];
     }
 

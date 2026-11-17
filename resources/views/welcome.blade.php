@@ -170,28 +170,13 @@
 
 
             <div class="home-hero-visual">
-
                 <div class="home-hero-image-wrapper">
-
-                    <div class="home-hero-image-placeholder">
-
-                        <i class="bi bi-piggy-bank-fill"></i>
-
-                        <div>
-                            <strong>پس‌انداز و سرمایه‌گذاری</strong>
-                            <span>
-                                همراهی امروز، آرامش فردا
-                            </span>
-                        </div>
-
-                    </div>
-
+                    <img
+                        src="{{ asset('images/fund-growth.png') }}"
+                        alt="رشد و پس‌انداز در صندوق قرض‌الحسنه"
+                        class="home-hero-image"
+                    >
                 </div>
-
-                <div class="home-hero-arrow">
-                    <i class="bi bi-chevron-left"></i>
-                </div>
-
             </div>
 
         </div>
@@ -894,9 +879,10 @@
                     <span>آدرس صندوق : شیراز - داریون بلوار کشاورز روبروی بانک ملی</span>
                 </span>
 
+
                 <a href="tel:07132613217">
                     <i class="bi bi-telephone"></i>
-                    <span>تلفن : </span><span>07132613217</span>
+                    <span>تلفن : </span> <span>07132613217</span>
                 </a>
 
                 <span>

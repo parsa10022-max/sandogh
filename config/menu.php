@@ -381,8 +381,24 @@ return [
                 ],
             ],
 
+            [
+                'title' => 'پرداخت اقساط از حساب پس‌انداز',
+                'icon' => 'wallet',
+                'route' => 'admin.reports.savings-installment-payments',
+                'active' => [
+                    'admin.reports.savings-installment-payments',
+                ],
+                'roles' => [
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::BOARD_MEMBER,
+                    UserRole::OPERATOR,
+                ],
+            ],
+
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

@@ -3,12 +3,23 @@
 namespace App\Services\Payment;
 
 use App\Enums\PaymentGateway;
+use App\Models\DonationPayment;
+use App\Models\Installment;
 use App\Models\PaymentIntent;
+use App\Models\SavingsTransfer;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class PaymentIntentService
 {
+    private const ACTIVE_STATUSES = [
+        'pending',
+        'redirected',
+        'verifying',
+        'review_required',
+        'paid',
+    ];
+
     /**
      * ایجاد Payment Intent جدید.
      */
@@ -22,43 +33,111 @@ class PaymentIntentService
         ?string $gatewayToken = null,
         ?int $expiresInMinutes = 30,
     ): PaymentIntent {
+        if ($paymentType === '') {
+            throw new RuntimeException('نوع پرداخت الزامی است.');
+        }
+
         if ($referenceId <= 0) {
-            throw new RuntimeException(
-                'شناسه مرجع پرداخت نامعتبر است.'
-            );
+            throw new RuntimeException('شناسه مرجع پرداخت نامعتبر است.');
         }
 
         if ($amount <= 0) {
-            throw new RuntimeException(
-                'مبلغ پرداخت باید بیشتر از صفر باشد.'
-            );
+            throw new RuntimeException('مبلغ پرداخت باید بیشتر از صفر باشد.');
         }
 
         if ($trackingCode === '') {
-            throw new RuntimeException(
-                'کد پیگیری پرداخت الزامی است.'
-            );
+            throw new RuntimeException('کد پیگیری پرداخت الزامی است.');
         }
 
         if ($expiresInMinutes !== null && $expiresInMinutes <= 0) {
-            throw new RuntimeException(
-                'مدت اعتبار پرداخت نامعتبر است.'
-            );
+            throw new RuntimeException('مدت اعتبار پرداخت نامعتبر است.');
         }
 
-        return PaymentIntent::create([
-            'payment_type' => $paymentType,
-            'reference_id' => $referenceId,
-            'amount' => $amount,
-            'tracking_code' => $trackingCode,
-            'gateway' => $gateway,
-            'payer_user_id' => $payerUserId,
-            'gateway_token' => $gatewayToken,
-            'status' => 'pending',
-            'expires_at' => $expiresInMinutes !== null
-                ? now()->addMinutes($expiresInMinutes)
-                : null,
-        ]);
+        $paymentTypes = $this->getReferenceTypes($paymentType);
+
+        return DB::transaction(function () use (
+            $paymentType,
+            $paymentTypes,
+            $referenceId,
+            $amount,
+            $trackingCode,
+            $gateway,
+            $payerUserId,
+            $gatewayToken,
+            $expiresInMinutes,
+        ) {
+            // ابتدا مرجع قفل می‌شود.
+            $this->lockReference($paymentType, $referenceId);
+
+            // فقط درخواست‌های شروع‌شده و هدایت‌شده منقضی می‌شوند.
+            PaymentIntent::query()
+                ->whereIn('payment_type', $paymentTypes)
+                ->where('reference_id', $referenceId)
+                ->whereIn('status', ['pending', 'redirected'])
+                ->whereNotNull('expires_at')
+                ->where('expires_at', '<=', now())
+                ->update([
+                    'status' => 'expired',
+                    'updated_at' => now(),
+                ]);
+
+            $existingIntent = PaymentIntent::query()
+                ->whereIn('payment_type', $paymentTypes)
+                ->where('reference_id', $referenceId)
+                ->whereIn('status', self::ACTIVE_STATUSES)
+                ->lockForUpdate()
+                ->first();
+
+            if ($existingIntent) {
+                throw new RuntimeException(
+                    'برای این مرجع، یک درخواست پرداخت فعال یا تعیین‌تکلیف‌شده وجود دارد.'
+                );
+            }
+
+            return PaymentIntent::create([
+                'payment_type' => $paymentType,
+                'reference_id' => $referenceId,
+                'amount' => $amount,
+                'tracking_code' => $trackingCode,
+                'gateway' => $gateway,
+                'payer_user_id' => $payerUserId,
+                'gateway_token' => $gatewayToken,
+                'status' => 'pending',
+                'expires_at' => $expiresInMinutes !== null
+                    ? now()->addMinutes($expiresInMinutes)
+                    : null,
+            ]);
+        });
+    }
+
+    /**
+     * قفل رکورد مرجع بر اساس نوع پرداخت.
+     */
+    private function lockReference(
+        string $paymentType,
+        int $referenceId
+    ): void {
+        $query = match ($paymentType) {
+            'installment',
+            'installment_other' => Installment::query(),
+
+            'donation_customer',
+            'donation_public' => DonationPayment::query(),
+
+            'savings_transfer' => SavingsTransfer::query(),
+
+            default => throw new RuntimeException(
+                'نوع پرداخت برای قفل‌گذاری مرجع پشتیبانی نمی‌شود.'
+            ),
+        };
+
+        $reference = $query
+            ->lockForUpdate()
+            ->find($referenceId);
+
+        if (! $reference) {
+            throw new RuntimeException('رکورد مرجع پرداخت پیدا نشد.');
+        }
     }
 
     /**
@@ -66,14 +145,12 @@ class PaymentIntentService
      */
     public function findById(int $id): PaymentIntent
     {
-        return PaymentIntent::query()
-            ->findOrFail($id);
+        return PaymentIntent::query()->findOrFail($id);
     }
 
     /**
-     * پیدا کردن Intent بر اساس ID و قفل کردن رکورد.
-     *
-     * این متد باید داخل DB::transaction() استفاده شود.
+     * پیدا کردن Intent بر اساس ID و قفل رکورد.
+     * فقط داخل تراکنش دیتابیس استفاده شود.
      */
     public function findByIdForUpdate(int $id): PaymentIntent
     {
@@ -90,23 +167,28 @@ class PaymentIntentService
         int $referenceId
     ): PaymentIntent {
         return PaymentIntent::query()
-            ->forReference($paymentType, $referenceId)
+            ->whereIn(
+                'payment_type',
+                $this->getReferenceTypes($paymentType)
+            )
+            ->where('reference_id', $referenceId)
             ->latest('id')
             ->firstOrFail();
     }
 
     /**
-     * پیدا کردن Intent بر اساس نوع و مرجع
-     * و قفل کردن رکورد در تراکنش دیتابیس.
-     *
-     * این متد برای سازگاری با استفاده‌های فعلی پروژه حفظ شده است.
+     * پیدا کردن و قفل کردن Intent بر اساس نوع و مرجع.
+     * باید داخل تراکنش و پس از قفل مرجع اجرا شود.
      */
     public function findForUpdate(
         string $paymentType,
         int $referenceId
     ): PaymentIntent {
         return PaymentIntent::query()
-            ->where('payment_type', $paymentType)
+            ->whereIn(
+                'payment_type',
+                $this->getReferenceTypes($paymentType)
+            )
             ->where('reference_id', $referenceId)
             ->latest('id')
             ->lockForUpdate()
@@ -114,45 +196,76 @@ class PaymentIntentService
     }
 
     /**
-     * علامت‌گذاری Intent به عنوان Redirected.
+     * تغییر وضعیت به Redirected و ثبت توکن.
      */
     public function markRedirected(
         PaymentIntent $intent,
         ?string $gatewayToken = null
     ): PaymentIntent {
-        $this->ensureStatus($intent, ['pending']);
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) use ($gatewayToken) {
+                $this->ensureStatus($lockedIntent, ['pending']);
 
-        $intent->update([
-            'status' => 'redirected',
-            'gateway_token' => $gatewayToken ?? $intent->gateway_token,
-        ]);
+                if (
+                    ! is_string($gatewayToken)
+                    || trim($gatewayToken) === ''
+                ) {
+                    throw new RuntimeException(
+                        'توکن معتبر درگاه برای هدایت به صفحه پرداخت الزامی است.'
+                    );
+                }
 
-        return $intent->refresh();
+                $lockedIntent->update([
+                    'status' => 'redirected',
+                    'gateway_token' => $gatewayToken,
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
     }
 
     /**
-     * علامت‌گذاری Intent به عنوان Verifying.
+     * تغییر وضعیت به Verifying.
      *
-     * این تغییر باید داخل Transaction انجام شود.
+     * این متد باید پیش از فراخوانی تأیید درگاه اجرا شود.
      */
     public function markVerifying(
         PaymentIntent $intent
     ): PaymentIntent {
-        $this->ensureStatus($intent, ['redirected']);
+        $expired = false;
 
-        if ($intent->isExpiredByTime()) {
-            $this->markExpired($intent);
+        $result = $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) use (&$expired) {
+                $this->ensureStatus($lockedIntent, ['redirected']);
 
+                if ($lockedIntent->isExpiredByTime()) {
+                    $lockedIntent->update([
+                        'status' => 'expired',
+                    ]);
+
+                    $expired = true;
+
+                    return $lockedIntent->fresh();
+                }
+
+                $lockedIntent->update([
+                    'status' => 'verifying',
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
+
+        if ($expired) {
             throw new RuntimeException(
                 'مهلت پرداخت به پایان رسیده است.'
             );
         }
 
-        $intent->update([
-            'status' => 'verifying',
-        ]);
-
-        return $intent->refresh();
+        return $result;
     }
 
     /**
@@ -163,83 +276,162 @@ class PaymentIntentService
         ?string $transactionId = null,
         ?string $referenceNumber = null,
     ): PaymentIntent {
-        $this->ensureStatus($intent, ['verifying']);
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) use (
+                $transactionId,
+                $referenceNumber
+            ) {
+                if ($lockedIntent->isPaid()) {
+                    return $lockedIntent;
+                }
 
-        $intent->update([
-            'status' => 'paid',
-            'gateway_transaction_id' => $transactionId,
-            'gateway_reference_number' => $referenceNumber,
-            'paid_at' => now(),
-        ]);
+                $this->ensureStatus($lockedIntent, ['verifying']);
 
-        return $intent->refresh();
+                $lockedIntent->update([
+                    'status' => 'paid',
+                    'gateway_transaction_id' => $transactionId,
+                    'gateway_reference_number' => $referenceNumber,
+                    'paid_at' => now(),
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
     }
 
     /**
-     * ثبت پرداخت موفقی که نیازمند بررسی مالی است.
+     * انتقال پرداخت موفق یا مشکوک به بررسی مالی.
      */
     public function markReviewRequired(
         PaymentIntent $intent,
         ?string $transactionId = null,
         ?string $referenceNumber = null,
     ): PaymentIntent {
-        $this->ensureStatus($intent, ['verifying']);
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) use (
+                $transactionId,
+                $referenceNumber
+            ) {
+                if ($lockedIntent->isPaid()) {
+                    throw new RuntimeException(
+                        'Payment Intent پرداخت‌شده را نمی‌توان به بررسی مالی منتقل کرد.'
+                    );
+                }
 
-        $intent->update([
-            'status' => 'review_required',
-            'gateway_transaction_id' => $transactionId,
-            'gateway_reference_number' => $referenceNumber,
-        ]);
+                if ($lockedIntent->status === 'review_required') {
+                    return $lockedIntent;
+                }
 
-        return $intent->refresh();
+                $this->ensureStatus($lockedIntent, ['verifying']);
+
+                $lockedIntent->update([
+                    'status' => 'review_required',
+                    'gateway_transaction_id' => $transactionId,
+                    'gateway_reference_number' => $referenceNumber,
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
     }
 
     /**
-     * ثبت شکست پرداخت.
+     * شکست در مرحله شروع پرداخت.
+     *
+     * فقط pending و redirected قابل تبدیل به failed هستند.
      */
     public function markFailed(
         PaymentIntent $intent
     ): PaymentIntent {
-        if ($intent->isPaid()) {
-            throw new RuntimeException(
-                'Payment Intent موفق را نمی‌توان ناموفق کرد.'
-            );
-        }
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) {
+                if (in_array(
+                    $lockedIntent->status,
+                    ['paid', 'review_required', 'expired', 'failed'],
+                    true
+                )) {
+                    return $lockedIntent;
+                }
 
-        if ($intent->isExpired()) {
-            return $intent;
-        }
+                $this->ensureStatus(
+                    $lockedIntent,
+                    ['pending', 'redirected']
+                );
 
-        $intent->update([
-            'status' => 'failed',
-        ]);
+                $lockedIntent->update([
+                    'status' => 'failed',
+                ]);
 
-        return $intent->refresh();
+                return $lockedIntent->fresh();
+            }
+        );
+    }
+
+    /**
+     * شکست قطعی تأیید درگاه.
+     *
+     * فقط پاسخ قطعی منفی درگاه مجاز است؛
+     * نه timeout و نه خطای ارتباطی نامشخص.
+     */
+    public function markVerificationFailed(
+        PaymentIntent $intent
+    ): PaymentIntent {
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) {
+                if ($lockedIntent->isFailed()) {
+                    return $lockedIntent;
+                }
+
+                $this->ensureStatus($lockedIntent, ['verifying']);
+
+                $lockedIntent->update([
+                    'status' => 'failed',
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
     }
 
     /**
      * منقضی کردن Intent.
+     *
+     * وضعیت verifying هرگز با این متد منقضی نمی‌شود.
      */
     public function markExpired(
         PaymentIntent $intent
     ): PaymentIntent {
-        if ($intent->isPaid()) {
-            throw new RuntimeException(
-                'Payment Intent پرداخت‌شده را نمی‌توان منقضی کرد.'
-            );
-        }
+        return $this->withLockedIntent(
+            $intent->id,
+            function (PaymentIntent $lockedIntent) {
+                if (in_array(
+                    $lockedIntent->status,
+                    ['paid', 'review_required', 'failed', 'expired'],
+                    true
+                )) {
+                    return $lockedIntent;
+                }
 
-        $intent->update([
-            'status' => 'expired',
-        ]);
+                $this->ensureStatus(
+                    $lockedIntent,
+                    ['pending', 'redirected']
+                );
 
-        return $intent->refresh();
+                $lockedIntent->update([
+                    'status' => 'expired',
+                ]);
+
+                return $lockedIntent->fresh();
+            }
+        );
     }
 
     /**
-     * بررسی اینکه Intent برای پرداخت مشخص معتبر است.
-     *
-     * در زمان Verify، Intent باید در وضعیت Redirected باشد.
+     * بررسی اعتبار Intent برای شروع تأیید پرداخت.
      */
     public function validateForPayment(
         PaymentIntent $intent,
@@ -292,10 +484,7 @@ class PaymentIntentService
     }
 
     /**
-     * اجرای عملیات با قفل روی Intent.
-     *
-     * این متد بر اساس نوع پرداخت و مرجع کار می‌کند
-     * و برای استفاده‌های فعلی پروژه حفظ شده است.
+     * اجرای عملیات با قفل مرجع و سپس قفل Intent.
      */
     public function transaction(
         string $paymentType,
@@ -307,6 +496,8 @@ class PaymentIntentService
             $referenceId,
             $callback
         ) {
+            $this->lockReference($paymentType, $referenceId);
+
             $intent = $this->findForUpdate(
                 $paymentType,
                 $referenceId
@@ -317,10 +508,7 @@ class PaymentIntentService
     }
 
     /**
-     * اجرای عملیات با قفل روی Payment Intent مشخص.
-     *
-     * این روش برای Callback و Verify دقیق‌تر است،
-     * چون مستقیماً بر اساس Payment Intent ID کار می‌کند.
+     * اجرای عملیات با قفل مرجع و سپس قفل Intent مشخص.
      */
     public function transactionById(
         int $paymentIntentId,
@@ -330,12 +518,97 @@ class PaymentIntentService
             $paymentIntentId,
             $callback
         ) {
-            $intent = $this->findByIdForUpdate(
-                $paymentIntentId
-            );
+            // خواندن اولیه فقط برای تشخیص نوع و شناسه مرجع است.
+            $initialIntent = $this->findById($paymentIntentId);
+
+            $paymentType = $initialIntent->payment_type;
+            $referenceId = (int) $initialIntent->reference_id;
+
+            // ابتدا مرجع قفل می‌شود.
+            $this->lockReference($paymentType, $referenceId);
+
+            // سپس Intent قفل می‌شود.
+            $intent = $this->findByIdForUpdate($paymentIntentId);
+
+            if (
+                $intent->payment_type !== $paymentType
+                || (int) $intent->reference_id !== $referenceId
+            ) {
+                throw new RuntimeException(
+                    'مرجع Payment Intent در حین عملیات تغییر کرده است.'
+                );
+            }
 
             return $callback($intent);
         });
+    }
+
+    /**
+     * اجرای تغییر وضعیت با ترتیب قفل ثابت:
+     * مرجع ← PaymentIntent
+     */
+    private function withLockedIntent(
+        int $intentId,
+        callable $callback
+    ): mixed {
+        // خواندن اولیه فقط برای تشخیص مرجع است.
+        $initialIntent = $this->findById($intentId);
+
+        $paymentType = $initialIntent->payment_type;
+        $referenceId = (int) $initialIntent->reference_id;
+
+        return DB::transaction(function () use (
+            $intentId,
+            $paymentType,
+            $referenceId,
+            $callback
+        ) {
+            // ترتیب قفل در تمام تغییر وضعیت‌ها یکسان است.
+            $this->lockReference($paymentType, $referenceId);
+
+            $lockedIntent = $this->findByIdForUpdate($intentId);
+
+            // بررسی عدم تغییر مرجع بین خواندن اولیه و قفل.
+            if (
+                $lockedIntent->payment_type !== $paymentType
+                || (int) $lockedIntent->reference_id !== $referenceId
+            ) {
+                throw new RuntimeException(
+                    'مرجع Payment Intent در حین عملیات تغییر کرده است.'
+                );
+            }
+
+            return $callback($lockedIntent);
+        });
+    }
+
+    /**
+     * تعیین انواع پرداخت دارای مرجع مشترک.
+     */
+    private function getReferenceTypes(
+        string $paymentType
+    ): array {
+        return match ($paymentType) {
+            'installment',
+            'installment_other' => [
+                'installment',
+                'installment_other',
+            ],
+
+            'donation_customer',
+            'donation_public' => [
+                'donation_customer',
+                'donation_public',
+            ],
+
+            'savings_transfer' => [
+                'savings_transfer',
+            ],
+
+            default => throw new RuntimeException(
+                'نوع پرداخت پشتیبانی نمی‌شود.'
+            ),
+        };
     }
 
     /**

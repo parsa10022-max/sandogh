@@ -223,26 +223,31 @@
                     </div>
 
 
+
+
                     {{-- Actions --}}
                     <div class="loan-request-form-actions">
 
+                        <a href="{{ route('customer.loans.index') }}"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-wallet2"></i>
+                            <span>مشاهده وام‌های من</span>
+                        </a>
+
                         <a href="{{ route('loan-requests.index') }}"
                            class="btn loan-request-cancel-btn">
-
                             <i class="bi bi-x-lg"></i>
                             <span>انصراف</span>
-
                         </a>
 
                         <button type="submit"
                                 class="btn loan-request-submit-btn">
-
                             <i class="bi bi-check-lg"></i>
                             <span>ثبت درخواست</span>
-
                         </button>
 
                     </div>
+
 
                 </form>
 

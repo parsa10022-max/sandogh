@@ -132,8 +132,7 @@
 
                                             <form
                                                 method="POST"
-                                                action="{{ route('withdrawals.cancel', $withdrawal) }}"
-                                                class="d-inline"
+                                                route('customer.withdrawals.cancel', $withdrawal)                                                class="d-inline"
                                             >
 
                                                 @csrf

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserOtpType;
 use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\OtpRequest;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
-use App\Enums\UserOtpType;
-use App\Enums\UserStatus;
 
 class OtpController extends Controller
 {
@@ -26,8 +26,11 @@ class OtpController extends Controller
         $user = $this->getLoginUser();
 
         if (! $user) {
-            return redirect()
-                ->route('login');
+            return redirect()->route('login');
+        }
+
+        if ($this->isCustomerMembershipExpired($user)) {
+            return $this->expiredMembershipRedirect();
         }
 
         $testOtp = null;
@@ -57,9 +60,13 @@ class OtpController extends Controller
         $user = $this->getLoginUser();
 
         if (! $user) {
-            return redirect()
-                ->route('login');
+            return redirect()->route('login');
         }
+
+        if ($this->isCustomerMembershipExpired($user)) {
+            return $this->expiredMembershipRedirect();
+        }
+
         if ($user->status !== UserStatus::ACTIVE) {
             $request->session()->forget('login_user_id');
 
@@ -78,8 +85,7 @@ class OtpController extends Controller
         )) {
             return back()
                 ->withErrors([
-                    'code' =>
-                        'کد تأیید صحیح نیست یا منقضی شده است.',
+                    'code' => 'کد تأیید صحیح نیست یا منقضی شده است.',
                 ]);
         }
 
@@ -89,9 +95,7 @@ class OtpController extends Controller
             'last_login_at' => now(),
         ]);
 
-        $request->session()->forget(
-            'login_user_id'
-        );
+        $request->session()->forget('login_user_id');
 
         $request->session()->regenerate();
 
@@ -101,8 +105,7 @@ class OtpController extends Controller
             );
         }
 
-        return redirect()
-            ->route('dashboard');
+        return redirect()->route('dashboard');
     }
 
     private function getLoginUser(): ?User
@@ -114,5 +117,30 @@ class OtpController extends Controller
         }
 
         return User::find($userId);
+    }
+
+    private function isCustomerMembershipExpired(User $user): bool
+    {
+        if ($user->role !== UserRole::CUSTOMER) {
+            return false;
+        }
+
+        return ! $user->customer_id
+            || ! $user->customer
+            || ! $user->created_at
+            || now()->greaterThanOrEqualTo(
+                $user->created_at->copy()->addYears(2)
+            );
+    }
+
+    private function expiredMembershipRedirect()
+    {
+        session()->forget('login_user_id');
+
+        return redirect()
+            ->route('login')
+            ->withErrors([
+                'username' => '.مدت عضویت اینترنتی شما به پایان رسیده است. برای تمدید دسترسی، لطفاً با صندوق قرض‌الحسنه به شماره ۰۷۱-۳۲۶۱۳۲۱۷ تماس بگیرید.',
+            ]);
     }
 }

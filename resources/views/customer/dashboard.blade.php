@@ -6,7 +6,56 @@
 
     <div class="customer-dashboard">
 
+        {{-- اعتبار عضویت اینترنتی --}}
+        {{-- اعتبار عضویت اینترنتی --}}
+        <section class="card border-0 shadow-sm rounded-3 mb-3">
 
+            <div class="card-body py-2 px-3">
+
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <i class="bi bi-calendar-check text-primary fs-5"></i>
+
+                        <span class="fw-bold small">
+                    اعتبار عضویت اینترنتی
+                </span>
+
+                    </div>
+
+                    <span class="badge bg-success-subtle text-success">
+                <i class="bi bi-check-circle-fill ms-1"></i>
+                فعال
+            </span>
+
+                </div>
+
+                <div class="d-flex align-items-center flex-wrap gap-3 mt-2 small">
+
+                    {{-- تاریخ شروع --}}
+                    <span>
+                <span class="text-muted">شروع:</span>
+
+                <strong class="text-success">
+                    {{ $membershipStartDate ? fa_number($membershipStartDate) : 'نامشخص' }}
+                </strong>
+            </span>
+
+                    {{-- تاریخ پایان --}}
+                    <span>
+                <span class="text-muted">پایان:</span>
+
+                <strong class="text-danger">
+                    {{ $membershipEndDate ? fa_number($membershipEndDate) : 'نامشخص' }}
+                </strong>
+            </span>
+
+                </div>
+
+            </div>
+
+        </section>
         {{-- =========================================================
              وضعیت مالی من
         ========================================================= --}}

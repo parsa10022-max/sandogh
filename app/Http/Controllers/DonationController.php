@@ -96,6 +96,11 @@ class DonationController extends Controller
     public function success(
         DonationPayment $donationPayment
     ) {
+        abort_unless(
+            (int) $donationPayment->status === 1,
+            404
+        );
+
         return view(
             'donation.success',
             compact('donationPayment')

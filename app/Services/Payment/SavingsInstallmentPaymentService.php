@@ -53,33 +53,6 @@ class SavingsInstallmentPaymentService
         ) {
             /*
             |--------------------------------------------------------------------------
-            | قفل وام
-            |--------------------------------------------------------------------------
-            */
-
-            $loanId = Installment::query()
-                ->whereKey($installment->id)
-                ->value('loan_id');
-
-            if (! $loanId) {
-                throw new \DomainException(
-                    'قسط موردنظر پیدا نشد.'
-                );
-            }
-
-            $loan = \App\Models\Loan::query()
-                ->with('customer')
-                ->lockForUpdate()
-                ->find($loanId);
-
-            if (! $loan) {
-                throw new \DomainException(
-                    'وام موردنظر پیدا نشد.'
-                );
-            }
-
-            /*
-            |--------------------------------------------------------------------------
             | قفل قسط
             |--------------------------------------------------------------------------
             */
@@ -91,6 +64,31 @@ class SavingsInstallmentPaymentService
             if (! $installment) {
                 throw new \DomainException(
                     'قسط موردنظر پیدا نشد.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | قفل وام
+            |--------------------------------------------------------------------------
+            */
+
+            $loanId = $installment->loan_id;
+
+            if (! $loanId) {
+                throw new \DomainException(
+                    'وام موردنظر پیدا نشد.'
+                );
+            }
+
+            $loan = \App\Models\Loan::query()
+                ->with('customer')
+                ->lockForUpdate()
+                ->find($loanId);
+
+            if (! $loan) {
+                throw new \DomainException(
+                    'وام موردنظر پیدا نشد.'
                 );
             }
 
@@ -163,7 +161,6 @@ class SavingsInstallmentPaymentService
             |--------------------------------------------------------------------------
             | ترتیب پرداخت اقساط
             |--------------------------------------------------------------------------
-            |
             | PENDING و OVERDUE هر دو پرداخت‌نشده هستند.
             |--------------------------------------------------------------------------
             */
@@ -248,8 +245,7 @@ class SavingsInstallmentPaymentService
             |--------------------------------------------------------------------------
             */
 
-            $trackingCode =
-                $this->trackingCodeService->generate();
+            $trackingCode = $this->trackingCodeService->generate();
 
             /*
             |--------------------------------------------------------------------------
@@ -400,6 +396,7 @@ class SavingsInstallmentPaymentService
             }
 
             return $payment;
-        });
+        }, 3);
     }
+
 }

@@ -122,7 +122,7 @@
                                 <td>
 
                                     <span class="loan-payment-loan-number" dir="ltr">
-                                        {{ fa_number($payment->loan?->loan_number ?? '---') }}
+                                        {{ fa_number($payment->loan?->full_loan_number ?? '---') }}
                                     </span>
 
                                 </td>

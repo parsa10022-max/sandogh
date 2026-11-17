@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\StoreCustomerRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
@@ -10,6 +11,7 @@ use App\Services\Customer\CustomerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CustomerController extends Controller
@@ -48,7 +50,20 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer): View
     {
-        return view('customer.edit', compact('customer'));
+        $canManageOnlineActivation = in_array(
+            request()->user()->role,
+            [
+                UserRole::ADMIN,
+                UserRole::CEO,
+                UserRole::OPERATOR,
+            ],
+            true
+        );
+
+        return view('customer.edit', compact(
+            'customer',
+            'canManageOnlineActivation'
+        ));
     }
 
     public function update(
@@ -63,6 +78,50 @@ class CustomerController extends Controller
         return redirect()
             ->route('customers.index')
             ->with('success', 'اطلاعات مشتری با موفقیت بروزرسانی شد.');
+    }
+
+    public function updateOnlineActivationApproval(
+        Request $request,
+        Customer $customer
+    ): RedirectResponse {
+        abort_unless(
+            in_array(
+                $request->user()->role,
+                [
+                    UserRole::ADMIN,
+                    UserRole::CEO,
+                    UserRole::OPERATOR,
+                ],
+                true
+            ),
+            403
+        );
+
+        $validated = $request->validate([
+            'approved' => ['required', 'in:0,1'],
+        ]);
+
+        $approved = $validated['approved'] === '1';
+
+        DB::transaction(function () use ($customer, $approved) {
+            $lockedCustomer = Customer::query()
+                ->whereKey($customer->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedCustomer->update([
+                'online_activation_approved' => $approved,
+            ]);
+        });
+
+        return redirect()
+            ->route('customers.edit', $customer)
+            ->with(
+                'success',
+                $approved
+                    ? 'مجوز فعال‌سازی اینترنتی مشتری تأیید شد.'
+                    : 'مجوز فعال‌سازی اینترنتی مشتری لغو شد.'
+            );
     }
 
     public function destroy(Customer $customer): RedirectResponse

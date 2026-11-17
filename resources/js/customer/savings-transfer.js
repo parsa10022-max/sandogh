@@ -77,68 +77,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* =========================================================
-       ACCOUNT NUMBER NORMALIZE
-
-       ورودی‌های مجاز:
-
-       6111-000011
-       6111000011
-       000011
-
-       خروجی:
-
-       6111000011
-       ========================================================= */
-
     function normalizeAccountNumber(value) {
-
-        value = onlyDigits(value);
-
-
-        /*
-         * اگر کاربر شماره کامل حساب را وارد کرده
-         * همان شماره استفاده می‌شود.
-         */
-        if (value.length === 10) {
-
-            return value;
-
-        }
-
-
-        /*
-         * اگر فقط 6 رقم انتهایی وارد شده باشد
-         * پیشوند 6111 اضافه می‌شود.
-         */
-        if (value.length === 6) {
-
-            return '6111' + value;
-
-        }
-
-
-        /*
-         * سایر حالت‌ها نامعتبر هستند.
-         */
-        return value;
-
+        return onlyDigits(value);
     }
-
-
-    /* =========================================================
-       ACCOUNT INPUT
-
-       فقط نمایش را مرتب می‌کنیم.
-
-       6111000011
-       ↓
-       6111-000011
-
-       اما مقدار واقعی هنگام جستجو:
-       6111000011
-       ========================================================= */
-
     customerKeyword.addEventListener(
         'input',
         function () {
@@ -150,8 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
             /*
              * حداکثر 10 رقم
              */
-            value =
-                value.substring(0, 10);
+
 
 
             /*
@@ -248,25 +188,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 keyword
             );
 
-
-            /*
-             * فقط شماره حساب 6 یا 10 رقمی
-             */
-            const digits =
-                onlyDigits(rawKeyword);
-
-
             if (
-                digits.length !== 6 &&
-                digits.length !== 10
+                !keyword.startsWith('6111') ||
+                keyword.length <= 4
             ) {
-
                 showError(
-                    'شماره حساب پس‌انداز را به صورت صحیح وارد کنید.'
+                    'شماره حساب باید با 6111 شروع شود و حداقل یک رقم بعد از آن داشته باشد.'
                 );
 
                 return;
-
             }
 
 
@@ -562,14 +492,8 @@ document.addEventListener('DOMContentLoaded', function () {
             onlyDigits(String(value));
 
 
-        if (value.length === 10) {
-
-            return (
-                value.substring(0, 4)
-                + '-'
-                + value.substring(4)
-            );
-
+        if (value.startsWith('6111') && value.length > 4) {
+            return value.substring(0, 4) + '-' + value.substring(4);
         }
 
 

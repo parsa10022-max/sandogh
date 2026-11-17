@@ -16,7 +16,8 @@ class DonationController extends Controller
 {
     public function __construct(
         private readonly DonationPaymentService $donationPaymentService
-    ) {
+    )
+    {
     }
 
     /**
@@ -32,7 +33,7 @@ class DonationController extends Controller
 
         $selectedAccountId = $request->integer('account_id');
 
-        if (! $selectedAccountId) {
+        if (!$selectedAccountId) {
             return redirect()
                 ->route('customer.dashboard')
                 ->with(
@@ -46,7 +47,7 @@ class DonationController extends Controller
             $selectedAccountId
         );
 
-        if (! $selectedAccount) {
+        if (!$selectedAccount) {
             return redirect()
                 ->route('customer.dashboard')
                 ->with(
@@ -92,7 +93,7 @@ class DonationController extends Controller
         $customer = auth()->user()->customer;
 
         abort_if(
-            ! $customer,
+            !$customer,
             403,
             'دسترسی به اطلاعات مشتری امکان‌پذیر نیست.'
         );
@@ -105,12 +106,19 @@ class DonationController extends Controller
         $result = $this->donationPaymentService->startPayment(
             customer: $customer,
             account: $account,
-            amount: (int) $validated['amount'],
+            amount: (int)$validated['amount'],
     );
 
-        return redirect()->away(
-            $result['gateway']['redirect_url']
+        $redirectUrl = $result['gateway']['redirect_url'] ?? null;
+
+        abort_if(
+            ! is_string($redirectUrl)
+            || trim($redirectUrl) === '',
+            502,
+            'آدرس انتقال به درگاه پرداخت معتبر نیست.'
         );
+
+        return redirect()->away($redirectUrl);
     }
 
     /**
@@ -119,8 +127,11 @@ class DonationController extends Controller
     public function payment(
         DonationPayment $donationPayment
     ): View {
+        $customerId = auth()->user()->customer?->id;
+
         abort_if(
-            $donationPayment->customer_id !== auth()->user()->customer->id,
+            $customerId === null
+            || (int) $donationPayment->customer_id !== (int) $customerId,
             403
         );
 
@@ -136,17 +147,27 @@ class DonationController extends Controller
     public function pay(
         DonationPayment $donationPayment
     ): RedirectResponse {
+        $customerId = auth()->user()->customer?->id;
+
         abort_if(
-            $donationPayment->customer_id !== auth()->user()->customer->id,
+            $customerId === null
+            || (int) $donationPayment->customer_id !== (int) $customerId,
             403
         );
 
         $response = $this->donationPaymentService
             ->sendToGateway($donationPayment);
 
-        return redirect(
-            $response['redirect_url']
+        $redirectUrl = $response['gateway']['redirect_url'] ?? null;
+
+        abort_if(
+            ! is_string($redirectUrl)
+            || trim($redirectUrl) === '',
+            502,
+            'آدرس انتقال به درگاه پرداخت معتبر نیست.'
         );
+
+        return redirect()->away($redirectUrl);
     }
 
     /**
@@ -154,10 +175,19 @@ class DonationController extends Controller
      */
     public function success(
         DonationPayment $donationPayment
-    ): View {
+    ): View
+    {
+        $customerId = auth()->user()->customer?->id;
+
         abort_if(
-            $donationPayment->customer_id !== auth()->user()->customer->id,
+            !$customerId
+            || (int)$donationPayment->customer_id !== (int)$customerId,
             403
+        );
+
+        abort_unless(
+            (int)$donationPayment->status === 1,
+            404
         );
 
         return view(

@@ -227,44 +227,48 @@
                                 </td>
 
 
+
                                 {{-- نوع تراکنش --}}
                                 <td>
+                                    @php
+                                        $type = $transaction->transaction_type;
+                                        $method = $transaction->payment_method;
 
-                                    @if($transaction->transaction_type === \App\Enums\TransactionType::DEPOSIT)
+                                        $transactionLabel = match ($type) {
+                                            \App\Enums\TransactionType::DEPOSIT => match ($method) {
+                                                \App\Enums\PaymentMethod::CASH => 'واریزی نقدی',
+                                                \App\Enums\PaymentMethod::POS => 'واریزی با پوز',
+                                                \App\Enums\PaymentMethod::GATEWAY => 'واریزی آنلاین',
+                                                \App\Enums\PaymentMethod::BANK_TRANSFER => 'واریزی بانکی',
+                                                \App\Enums\PaymentMethod::LOAN_DISBURSEMENT => 'واریز وام',
+                                                default => 'واریز',
+                                            },
 
-                                        <span class="transaction-type deposit">
-                                            <span class="transaction-type-dot"></span>
-                                            <i class="bi bi-arrow-down-circle"></i>
-                                            {{ $transaction->transaction_type->label() }}
-                                        </span>
+                                            \App\Enums\TransactionType::WITHDRAWAL => match ($method) {
+                                                \App\Enums\PaymentMethod::CASH => 'برداشت نقدی',
+                                                \App\Enums\PaymentMethod::BANK_TRANSFER => 'برداشت بانکی',
+                                                default => 'برداشت',
+                                            },
 
-                                    @elseif($transaction->transaction_type === \App\Enums\TransactionType::WITHDRAWAL)
+                                            \App\Enums\TransactionType::INSTALLMENT_PAYMENT => 'پرداخت قسط وام',
+                                            \App\Enums\TransactionType::TRANSFER => 'انتقال وجه',
+                                            \App\Enums\TransactionType::ADJUSTMENT => 'اصلاح حساب',
+                                            default => $type?->label() ?? '-',
+                                        };
 
-                                        <span class="transaction-type withdrawal">
-                                            <span class="transaction-type-dot"></span>
-                                            <i class="bi bi-arrow-up-circle"></i>
-                                            {{ $transaction->transaction_type->label() }}
-                                        </span>
+                                        $isDeposit = $type === \App\Enums\TransactionType::DEPOSIT;
+                                        $isWithdrawal = $type === \App\Enums\TransactionType::WITHDRAWAL;
+                                    @endphp
 
-                                    @elseif($transaction->transaction_type === \App\Enums\TransactionType::ADJUSTMENT)
+                                    <span class="transaction-type {{ $isDeposit ? 'deposit' : ($isWithdrawal ? 'withdrawal' : 'other') }}">
+        <span class="transaction-type-dot"></span>
 
-                                        <span class="transaction-type adjustment">
-                                            <span class="transaction-type-dot"></span>
-                                            <i class="bi bi-pencil-square"></i>
-                                            {{ $transaction->transaction_type->label() }}
-                                        </span>
+        <i class="bi {{ $isDeposit ? 'bi-arrow-down-circle' : ($isWithdrawal ? 'bi-arrow-up-circle' : 'bi-arrow-left-right') }}"></i>
 
-                                    @else
-
-                                        <span class="transaction-type other">
-                                            <span class="transaction-type-dot"></span>
-                                            <i class="bi bi-arrow-left-right"></i>
-                                            {{ $transaction->transaction_type->label() }}
-                                        </span>
-
-                                    @endif
-
+        {{ $transactionLabel }}
+    </span>
                                 </td>
+
 
 
                                 {{-- مبلغ --}}

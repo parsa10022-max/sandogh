@@ -89,7 +89,7 @@
     </a>
 
 
-    <a href="#"
+    <a href="{{ route('customer.savings.transactions') }}"
        class="customer-bottom-item">
 
         <i class="bi bi-wallet2"></i>
@@ -101,7 +101,7 @@
     </a>
 
 
-    <a href="#"
+    <a href="{{ route('customer.loans.index') }}"
        class="customer-bottom-item">
 
         <i class="bi bi-cash-coin"></i>
@@ -113,7 +113,7 @@
     </a>
 
 
-    <a href="#"
+    <a href="{{ route('customer.services') }}"
        class="customer-bottom-item">
 
         <i class="bi bi-grid"></i>
@@ -125,7 +125,7 @@
     </a>
 
 
-    <a href="#"
+    <a href="{{ route('customer.profile.index') }}"
        class="customer-bottom-item">
 
         <i class="bi bi-person"></i>

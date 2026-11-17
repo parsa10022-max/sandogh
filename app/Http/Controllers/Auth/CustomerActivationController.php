@@ -27,6 +27,7 @@ class CustomerActivationController extends Controller
         return view('auth.customer-activation');
     }
 
+
     public function sendOtp(
         SendOtpRequest $request
     ): RedirectResponse {
@@ -46,6 +47,15 @@ class CustomerActivationController extends Controller
                 );
         }
 
+        if (! $customer->online_activation_approved) {
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'فعال‌سازی اینترنتی این عضو هنوز توسط صندوق تأیید نشده است.'
+                );
+        }
+
         if ($customer->user()->exists()) {
             return back()
                 ->withInput()
@@ -55,6 +65,13 @@ class CustomerActivationController extends Controller
                 );
         }
 
+        // پاک‌سازی اطلاعات OTP قبلی قبل از تولید کد جدید
+        session()->forget([
+            'customer_activation_verified',
+            'customer_activation_test_otp',
+        ]);
+
+        // تولید OTP جدید
         $this->otpService->generate(
             $customer,
             $request
@@ -73,36 +90,13 @@ class CustomerActivationController extends Controller
             );
     }
 
+
     public function showOtp(): View|RedirectResponse
     {
-        if (! session()->has('customer_activation_id')) {
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'ابتدا شماره موبایل خود را وارد کنید.'
-                );
-        }
+        $customer = $this->approvedCustomerOrRedirect();
 
-        $customerId = session('customer_activation_id');
-
-        $customer = Customer::query()
-            ->active()
-            ->find($customerId);
-
-        if (! $customer) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_test_otp',
-            ]);
-
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'عضو موردنظر پیدا نشد.'
-                );
+        if ($customer instanceof RedirectResponse) {
+            return $customer;
         }
 
         $otp = $this->otpService->getLastPendingOtp($customer);
@@ -127,42 +121,14 @@ class CustomerActivationController extends Controller
     public function verifyOtp(
         OtpRequest $request
     ): RedirectResponse {
-        $customerId = session('customer_activation_id');
+        $customer = $this->approvedCustomerOrRedirect();
 
-        if (! $customerId) {
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'جلسه فعال‌سازی منقضی شده است. دوباره شروع کنید.'
-                );
-        }
-
-        $customer = Customer::query()
-            ->active()
-            ->find($customerId);
-
-        if (! $customer) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_test_otp',
-            ]);
-
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'عضو موردنظر پیدا نشد.'
-                );
+        if ($customer instanceof RedirectResponse) {
+            return $customer;
         }
 
         if ($customer->user()->exists()) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_test_otp',
-            ]);
+            $this->clearActivationSession();
 
             return redirect()
                 ->route('login')
@@ -213,42 +179,14 @@ class CustomerActivationController extends Controller
                 );
         }
 
-        $customerId = session('customer_activation_id');
+        $customer = $this->approvedCustomerOrRedirect();
 
-        if (! $customerId) {
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'جلسه فعال‌سازی منقضی شده است. دوباره شروع کنید.'
-                );
-        }
-
-        $customer = Customer::query()
-            ->active()
-            ->find($customerId);
-
-        if (! $customer) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_verified',
-            ]);
-
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'عضو موردنظر پیدا نشد.'
-                );
+        if ($customer instanceof RedirectResponse) {
+            return $customer;
         }
 
         if ($customer->user()->exists()) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_verified',
-            ]);
+            $this->clearActivationSession();
 
             return redirect()
                 ->route('login')
@@ -276,42 +214,14 @@ class CustomerActivationController extends Controller
                 );
         }
 
-        $customerId = session('customer_activation_id');
+        $customer = $this->approvedCustomerOrRedirect();
 
-        if (! $customerId) {
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'جلسه فعال‌سازی منقضی شده است. دوباره شروع کنید.'
-                );
-        }
-
-        $customer = Customer::query()
-            ->active()
-            ->find($customerId);
-
-        if (! $customer) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_verified',
-            ]);
-
-            return redirect()
-                ->route('customer-activation.create')
-                ->with(
-                    'error',
-                    'عضو موردنظر پیدا نشد.'
-                );
+        if ($customer instanceof RedirectResponse) {
+            return $customer;
         }
 
         if ($customer->user()->exists()) {
-            session()->forget([
-                'customer_activation_id',
-                'customer_activation_mobile',
-                'customer_activation_verified',
-            ]);
+            $this->clearActivationSession();
 
             return redirect()
                 ->route('login')
@@ -337,12 +247,7 @@ class CustomerActivationController extends Controller
                 );
         }
 
-        session()->forget([
-            'customer_activation_id',
-            'customer_activation_mobile',
-            'customer_activation_verified',
-            'customer_activation_test_otp',
-        ]);
+        $this->clearActivationSession();
 
         Auth::login($user);
 
@@ -354,5 +259,65 @@ class CustomerActivationController extends Controller
                 'success',
                 'حساب کاربری شما با موفقیت ایجاد شد.'
             );
+    }
+
+    /**
+     * دریافت مشتری فقط در صورت داشتن مجوز فعال‌سازی اینترنتی
+     */
+    private function approvedCustomerOrRedirect(): Customer|RedirectResponse
+    {
+        $customerId = session('customer_activation_id');
+
+        if (! $customerId) {
+            $this->clearActivationSession();
+
+            return redirect()
+                ->route('customer-activation.create')
+                ->with(
+                    'error',
+                    'جلسه فعال‌سازی منقضی شده است. دوباره شروع کنید.'
+                );
+        }
+
+        $customer = Customer::query()
+            ->active()
+            ->find($customerId);
+
+        if (! $customer) {
+            $this->clearActivationSession();
+
+            return redirect()
+                ->route('customer-activation.create')
+                ->with(
+                    'error',
+                    'عضو موردنظر پیدا نشد یا وضعیت عضویت او فعال نیست.'
+                );
+        }
+
+        if (! $customer->online_activation_approved) {
+            $this->clearActivationSession();
+
+            return redirect()
+                ->route('customer-activation.create')
+                ->with(
+                    'error',
+                    'مجوز فعال‌سازی اینترنتی این عضو توسط صندوق تأیید نشده یا لغو شده است.'
+                );
+        }
+
+        return $customer;
+    }
+
+    /**
+     * پاک‌سازی کامل اطلاعات نشست فعال‌سازی
+     */
+    private function clearActivationSession(): void
+    {
+        session()->forget([
+            'customer_activation_id',
+            'customer_activation_mobile',
+            'customer_activation_verified',
+            'customer_activation_test_otp',
+        ]);
     }
 }

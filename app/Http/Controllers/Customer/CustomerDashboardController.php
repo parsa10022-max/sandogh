@@ -20,7 +20,18 @@ class CustomerDashboardController extends Controller
     public function index(JalaliDateService $jalaliDateService)
     {
         $user = Auth::user();
+// تاریخ شروع و پایان اعتبار عضویت اینترنتی
+        $membershipStartDate = $user->created_at
+            ? $jalaliDateService->fromDatabase(
+                $user->created_at->toDateString()
+            )
+            : null;
 
+        $membershipEndDate = $user->created_at
+            ? $jalaliDateService->fromDatabase(
+                $user->created_at->copy()->addYears(2)->toDateString()
+            )
+            : null;
         /*
         |--------------------------------------------------------------------------
         | حساب‌های فعال مشتری
@@ -237,7 +248,9 @@ class CustomerDashboardController extends Controller
                 'overdueInstallmentsCount',
                 'donationAccounts',
                 'latestLoanRequest',
-                'latestTransactions'
+                'latestTransactions',
+                'membershipStartDate',
+                'membershipEndDate'
             )
         );
     }

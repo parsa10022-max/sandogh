@@ -4,31 +4,39 @@ namespace App\Http\Controllers\Customer;
 
 use App\Enums\LoanRequestStatus;
 use App\Enums\LoanStatus;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoanRequest\StoreCustomerLoanRequestRequest;
+use App\Models\Customer;
 use App\Models\LoanRequest;
+use App\Models\Notification;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use App\Enums\UserRole;
-use App\Models\Notification;
-use App\Models\User;
 
 class LoanRequestController extends Controller
 {
+    /**
+     * دریافت مشتری متصل به کاربر
+     */
+    private function getAuthenticatedCustomer(): Customer
+    {
+        $customer = auth()->user()?->customer;
+
+        abort_unless($customer, 403);
+
+        return $customer;
+    }
+
     /**
      * فرم ثبت درخواست وام
      */
     public function create(): View|RedirectResponse
     {
-        $customer = auth()->user()->customer;
-
-        /*
-        |--------------------------------------------------------------------------
-        | بررسی امکان ثبت درخواست جدید
-        |--------------------------------------------------------------------------
-        */
+        $customer = $this->getAuthenticatedCustomer();
 
         $restriction = $this->getLoanRequestRestriction($customer);
 
@@ -47,99 +55,102 @@ class LoanRequestController extends Controller
     public function store(
         StoreCustomerLoanRequestRequest $request
     ): RedirectResponse {
-        $customer = auth()->user()->customer;
+        $customer = $this->getAuthenticatedCustomer();
 
         /*
         |--------------------------------------------------------------------------
-        | بررسی امکان ثبت درخواست جدید
+        | قفل مشتری و ثبت اتمیک درخواست
         |--------------------------------------------------------------------------
+        |
+        | درخواست‌های هم‌زمان برای یک مشتری پشت سر هم اجرا می‌شوند.
+        | بررسی محدودیت و ثبت درخواست داخل همان تراکنش انجام می‌شود.
+        |
         */
 
-        $restriction = $this->getLoanRequestRestriction($customer);
+        $result = DB::transaction(function () use ($request, $customer) {
 
-        if ($restriction) {
+            $lockedCustomer = Customer::query()
+                ->whereKey($customer->id)
+                ->lockForUpdate()
+                ->first();
+
+            abort_unless($lockedCustomer, 403);
+
+            /*
+            |--------------------------------------------------------------------------
+            | بررسی مجدد محدودیت پس از گرفتن قفل
+            |--------------------------------------------------------------------------
+            */
+
+            $restriction = $this->getLoanRequestRestriction(
+                $lockedCustomer
+            );
+
+            if ($restriction) {
+                return [
+                    'restriction' => $restriction,
+                ];
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت درخواست
+            |--------------------------------------------------------------------------
+            */
+
+            $loanRequest = LoanRequest::create([
+                'customer_id' => $lockedCustomer->id,
+                'requested_amount' => $request->validated('requested_amount'),
+                'description' => $request->validated('description'),
+                'status' => LoanRequestStatus::PENDING,
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | اعلان درخواست وام برای کاربران مدیریتی
+            |--------------------------------------------------------------------------
+            */
+
+            $managerUsers = User::query()
+                ->whereIn('role', [
+                    UserRole::ADMIN->value,
+                    UserRole::CEO->value,
+                    UserRole::BOARD_MEMBER->value,
+                    UserRole::OPERATOR->value,
+                ])
+                ->get();
+
+            foreach ($managerUsers as $managerUser) {
+                Notification::create([
+                    'user_id' => $managerUser->id,
+                    'type' => 'loan_request_created',
+                    'title' => 'درخواست وام جدید',
+                    'message' =>
+                        'عضو «' .
+                        $lockedCustomer->full_name .
+                        '» درخواست وامی به مبلغ ' .
+                        fa_money($loanRequest->requested_amount) .
+                        ' ثبت کرده است.',
+                    'data' => [
+                        'loan_request_id' => $loanRequest->id,
+                        'customer_id' => $lockedCustomer->id,
+                        'customer_name' => $lockedCustomer->full_name,
+                        'requested_amount' => $loanRequest->requested_amount,
+                    ],
+                    'read_at' => null,
+                ]);
+            }
+
+            return [
+                'restriction' => null,
+            ];
+        }, 3);
+
+        if ($result['restriction']) {
             return back()
                 ->withInput()
-                ->with('error', $restriction);
+                ->with('error', $result['restriction']);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ثبت درخواست
-        |--------------------------------------------------------------------------
-        */
-
-        $loanRequest = LoanRequest::create([
-            'customer_id' =>
-                $customer->id,
-
-            'requested_amount' =>
-                $request->validated('requested_amount'),
-
-            'description' =>
-                $request->validated('description'),
-
-            'status' =>
-                LoanRequestStatus::PENDING,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | اعلان درخواست وام برای کاربران مدیریتی
-        |--------------------------------------------------------------------------
-        */
-
-        $managerUsers = User::query()
-            ->whereIn('role', [
-                UserRole::ADMIN->value,
-                UserRole::CEO->value,
-                UserRole::BOARD_MEMBER->value,
-                UserRole::OPERATOR->value,
-            ])
-            ->get();
-
-        foreach ($managerUsers as $managerUser) {
-            Notification::create([
-                'user_id' =>
-                    $managerUser->id,
-
-                'type' =>
-                    'loan_request_created',
-
-                'title' =>
-                    'درخواست وام جدید',
-
-                'message' =>
-                    'عضو «' .
-                    $customer->full_name .
-                    '» درخواست وامی به مبلغ ' .
-                    fa_money($loanRequest->requested_amount) .
-                    ' ثبت کرده است.',
-
-                'data' => [
-                    'loan_request_id' =>
-                        $loanRequest->id,
-
-                    'customer_id' =>
-                        $customer->id,
-
-                    'customer_name' =>
-                        $customer->full_name,
-
-                    'requested_amount' =>
-                        $loanRequest->requested_amount,
-                ],
-
-                'read_at' =>
-                    null,
-            ]);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | موفقیت
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->route('customer.loan-requests.index')
@@ -154,13 +165,7 @@ class LoanRequestController extends Controller
      */
     public function index(): View
     {
-        $customer = auth()->user()->customer;
-
-        /*
-        |--------------------------------------------------------------------------
-        | آخرین درخواست مشتری
-        |--------------------------------------------------------------------------
-        */
+        $customer = $this->getAuthenticatedCustomer();
 
         $latestRequest = LoanRequest::query()
             ->where('customer_id', $customer->id)
@@ -171,21 +176,9 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | وضعیت وام فعال
-        |--------------------------------------------------------------------------
-        */
-
         $hasActiveLoan = $customer->loans()
             ->active()
             ->exists();
-
-        /*
-        |--------------------------------------------------------------------------
-        | درخواست در حال بررسی
-        |--------------------------------------------------------------------------
-        */
 
         $hasPendingRequest = LoanRequest::query()
             ->where('customer_id', $customer->id)
@@ -194,12 +187,6 @@ class LoanRequestController extends Controller
                 LoanRequestStatus::PENDING->value
             )
             ->exists();
-
-        /*
-        |--------------------------------------------------------------------------
-        | آخرین درخواست رد شده
-        |--------------------------------------------------------------------------
-        */
 
         $latestRejectedRequest = LoanRequest::query()
             ->where('customer_id', $customer->id)
@@ -210,27 +197,12 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | بررسی امکان ثبت درخواست جدید
-        |--------------------------------------------------------------------------
-        */
-
         $restriction = $this->getLoanRequestRestriction($customer);
 
         $canCreateNewRequest = $restriction === null;
 
-        /*
-        |--------------------------------------------------------------------------
-        | درخواست‌های مشتری
-        |--------------------------------------------------------------------------
-        */
-
         $loanRequests = LoanRequest::query()
-            ->where(
-                'customer_id',
-                $customer->id
-            )
+            ->where('customer_id', $customer->id)
             ->with([
                 'loanType',
                 'loan',
@@ -257,24 +229,12 @@ class LoanRequestController extends Controller
     public function show(
         LoanRequest $loanRequest
     ): View {
-        $customer = auth()->user()->customer;
-
-        /*
-        |--------------------------------------------------------------------------
-        | امنیت
-        |--------------------------------------------------------------------------
-        */
+        $customer = $this->getAuthenticatedCustomer();
 
         abort_unless(
-            $loanRequest->customer_id === $customer->id,
+            (int) $loanRequest->customer_id === (int) $customer->id,
             403
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | روابط
-        |--------------------------------------------------------------------------
-        */
 
         $loanRequest->load([
             'loanType',
@@ -290,16 +250,12 @@ class LoanRequestController extends Controller
     /**
      * بررسی امکان ثبت درخواست وام جدید
      *
-     * خروجی:
-     *
-     * null
-     *      یعنی ثبت درخواست مجاز است.
-     *
-     * string
-     *      یعنی ثبت درخواست ممنوع است و متن پیام را برمی‌گرداند.
+     * null: ثبت درخواست مجاز است.
+     * string: ثبت درخواست ممنوع است و پیام محدودیت برمی‌گردد.
      */
-    private function getLoanRequestRestriction($customer): ?string
-    {
+    private function getLoanRequestRestriction(
+        Customer $customer
+    ): ?string {
         /*
         |--------------------------------------------------------------------------
         | 1. وام فعال
@@ -326,12 +282,6 @@ class LoanRequestController extends Controller
             ->latest('id')
             ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | هنوز هیچ درخواستی ثبت نشده
-        |--------------------------------------------------------------------------
-        */
-
         if (!$latestRequest) {
             return null;
         }
@@ -351,7 +301,7 @@ class LoanRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | 4. درخواست تایید شده
+        | 4. درخواست تأیید شده
         |--------------------------------------------------------------------------
         */
 
@@ -359,68 +309,27 @@ class LoanRequestController extends Controller
             $latestRequest->status ===
             LoanRequestStatus::APPROVED
         ) {
-            /*
-            |--------------------------------------------------------------------------
-            | تایید شده ولی هنوز Loan ساخته نشده
-            |--------------------------------------------------------------------------
-            |
-            | تا زمانی که فرآیند ایجاد وام کامل نشده، اجازه درخواست جدید نداریم.
-            |
-            */
-
             if (!$latestRequest->loan_id) {
                 return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Loan وجود دارد
-            |--------------------------------------------------------------------------
-            */
-
             $loan = $latestRequest->loan;
-
-            /*
-            |--------------------------------------------------------------------------
-            | اگر Loan پیدا نشد
-            |--------------------------------------------------------------------------
-            */
 
             if (!$loan) {
                 return 'درخواست وام شما تأیید شده است و هنوز فرآیند ایجاد وام آن تکمیل نشده است.';
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | وام فعال
-            |--------------------------------------------------------------------------
-            */
-
             if (
-                $loan->status ===
-                LoanStatus::ACTIVE
+                $loan->status === LoanStatus::ACTIVE
             ) {
                 return 'درخواست وام شما تأیید شده و وام شما فعال است؛ تا زمان تسویه وام امکان ثبت درخواست جدید وجود ندارد.';
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | وام تسویه شده
-            |--------------------------------------------------------------------------
-            */
-
             if (
-                $loan->status ===
-                LoanStatus::FINISHED
+                $loan->status === LoanStatus::FINISHED
             ) {
                 return null;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | وام لغو شده یا وضعیت غیرمنتظره
-            |--------------------------------------------------------------------------
-            */
 
             return 'درخواست وام قبلی شما هنوز در وضعیت نهایی قابل ثبت درخواست جدید نیست.';
         }
@@ -435,12 +344,6 @@ class LoanRequestController extends Controller
             $latestRequest->status ===
             LoanRequestStatus::REJECTED
         ) {
-            /*
-            |--------------------------------------------------------------------------
-            | تاریخ مراجعه بعدی
-            |--------------------------------------------------------------------------
-            */
-
             if (!$latestRequest->next_review_date) {
                 return 'درخواست وام قبلی شما رد شده است و هنوز تاریخ مجاز برای درخواست مجدد تعیین نشده است.';
             }
@@ -451,30 +354,31 @@ class LoanRequestController extends Controller
 
             $today = now()->startOfDay();
 
-            /*
-            |--------------------------------------------------------------------------
-            | هنوز تاریخ نرسیده
-            |--------------------------------------------------------------------------
-            */
-
             if ($today->lt($nextReviewDate)) {
                 return 'امکان ثبت درخواست جدید تا تاریخ ' .
                     jdate($nextReviewDate)->format('Y/m/d') .
                     ' وجود ندارد.';
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | تاریخ رسیده
-            |--------------------------------------------------------------------------
-            */
+            return null;
+        }
+        /*
+        |--------------------------------------------------------------------------
+        | 6. درخواست لغو شده
+        |--------------------------------------------------------------------------
+        */
 
+        if (
+            $latestRequest->status ===
+            LoanRequestStatus::CANCELLED
+        ) {
             return null;
         }
 
+
         /*
         |--------------------------------------------------------------------------
-        | وضعیت ناشناخته
+        | 6. وضعیت ناشناخته
         |--------------------------------------------------------------------------
         */
 

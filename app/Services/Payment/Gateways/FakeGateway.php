@@ -4,6 +4,7 @@ namespace App\Services\Payment\Gateways;
 
 use App\Enums\FakeGatewayResult;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class FakeGateway implements GatewayInterface
 {
@@ -12,55 +13,46 @@ class FakeGateway implements GatewayInterface
      */
     public function request(array $paymentData): array
     {
-        $token = $paymentData['gateway_token']
-            ?? Str::uuid()->toString();
+        $paymentIntentId = $paymentData['payment_intent_id'] ?? null;
 
-        $paymentIntentId =
-            $paymentData['payment_intent_id']
-            ?? null;
-
-        if (! $paymentIntentId) {
+        if (
+            (! is_int($paymentIntentId) && ! is_string($paymentIntentId))
+            || (is_string($paymentIntentId) && trim($paymentIntentId) === '')
+            || (is_int($paymentIntentId) && $paymentIntentId <= 0)
+        ) {
             return [
                 'success' => false,
                 'message' => 'شناسه Payment Intent ارسال نشده است.',
             ];
         }
 
+        $paymentIntentId = (string) $paymentIntentId;
+
+        $token = $paymentData['gateway_token'] ?? Str::uuid()->toString();
+
+        if (! is_string($token) || trim($token) === '') {
+            return [
+                'success' => false,
+                'message' => 'توکن پرداخت معتبر نیست.',
+            ];
+        }
+
         return [
             'success' => true,
-
             'token' => $token,
-
             'payment_intent_id' => $paymentIntentId,
 
             'redirect_url' => route('payments.fake', [
                 'token' => $token,
-
                 'payment_intent_id' => $paymentIntentId,
-
-                'payment_type' =>
-                    $paymentData['payment_type'] ?? null,
-
-                'reference_id' =>
-                    $paymentData['reference_id'] ?? null,
-
-                'loan_id' =>
-                    $paymentData['loan_id'] ?? null,
-
-                'installment_id' =>
-                    $paymentData['installment_id'] ?? null,
-
-                'loan_number' =>
-                    $paymentData['loan_number'] ?? null,
-
-                'installment_number' =>
-                    $paymentData['installment_number'] ?? null,
-
-                'tracking_code' =>
-                    $paymentData['tracking_code'] ?? null,
-
-                'amount' =>
-                    $paymentData['amount'] ?? null,
+                'payment_type' => $paymentData['payment_type'] ?? null,
+                'reference_id' => $paymentData['reference_id'] ?? null,
+                'loan_id' => $paymentData['loan_id'] ?? null,
+                'installment_id' => $paymentData['installment_id'] ?? null,
+                'loan_number' => $paymentData['loan_number'] ?? null,
+                'installment_number' => $paymentData['installment_number'] ?? null,
+                'tracking_code' => $paymentData['tracking_code'] ?? null,
+                'amount' => $paymentData['amount'] ?? null,
             ]),
         ];
     }
@@ -72,48 +64,49 @@ class FakeGateway implements GatewayInterface
     {
         $token = $callbackData['token'] ?? null;
 
-        if (! $token) {
+        if (! is_string($token) || trim($token) === '') {
             return [
                 'success' => false,
                 'message' => 'توکن پرداخت ارسال نشده است.',
             ];
         }
 
-        $paymentIntentId =
-            $callbackData['payment_intent_id']
-            ?? null;
+        $paymentIntentId = $callbackData['payment_intent_id'] ?? null;
 
-        if (! $paymentIntentId) {
+        if (! is_string($paymentIntentId) || trim($paymentIntentId) === '') {
             return [
                 'success' => false,
-                'message' =>
-                    'شناسه Payment Intent ارسال نشده است.',
+                'message' => 'شناسه Payment Intent ارسال نشده است.',
             ];
         }
 
-        $result = FakeGatewayResult::tryFrom(
-                $callbackData['result']
-                ?? FakeGatewayResult::SUCCESS->value
-            ) ?? FakeGatewayResult::SUCCESS;
+        $rawResult = $callbackData['result']
+            ?? FakeGatewayResult::SUCCESS->value;
+
+        if (! is_string($rawResult)) {
+            return [
+                'success' => false,
+                'message' => 'نتیجه پرداخت نامعتبر است.',
+            ];
+        }
+
+        $result = FakeGatewayResult::tryFrom($rawResult);
+
+        if ($result === null) {
+            return [
+                'success' => false,
+                'message' => 'نتیجه پرداخت ناشناخته است.',
+            ];
+        }
 
         return match ($result) {
             FakeGatewayResult::SUCCESS => [
                 'success' => true,
-
-                'transaction_id' =>
-                    'TX' . strtoupper(
-                        Str::random(12)
-                    ),
-
-                'reference_number' =>
-                    now()->format('YmdHis')
-                    . rand(1000, 9999),
-
-                'card_number' =>
-                    '603799******1234',
-
-                'message' =>
-                    'پرداخت با موفقیت انجام شد.',
+                'transaction_id' => 'TX' . strtoupper(Str::random(12)),
+                'reference_number' => now()->format('YmdHis')
+                    . random_int(1000, 9999),
+                'card_number' => '603799******1234',
+                'message' => 'پرداخت با موفقیت انجام شد.',
             ],
 
             FakeGatewayResult::FAILED => [
@@ -123,51 +116,38 @@ class FakeGateway implements GatewayInterface
 
             FakeGatewayResult::CANCELED => [
                 'success' => false,
-                'message' =>
-                    'کاربر پرداخت را لغو کرد.',
-            ],
-
-            FakeGatewayResult::TIMEOUT => [
-                'success' => false,
-                'message' =>
-                    'مهلت پرداخت به پایان رسید.',
+                'message' => 'کاربر پرداخت را لغو کرد.',
             ],
 
             FakeGatewayResult::VERIFY_FAILED => [
                 'success' => false,
-                'message' =>
-                    'بانک پرداخت را تأیید نکرد.',
+                'message' => 'بانک پرداخت را تأیید نکرد.',
             ],
 
             FakeGatewayResult::DUPLICATE_CALLBACK => [
                 'success' => false,
-                'message' =>
-                    'Callback تکراری دریافت شد.',
+                'message' => 'Callback تکراری دریافت شد.',
             ],
 
             FakeGatewayResult::INVALID_AMOUNT => [
                 'success' => false,
-                'message' =>
-                    'مبلغ پرداخت نامعتبر است.',
+                'message' => 'مبلغ پرداخت نامعتبر است.',
             ],
 
             FakeGatewayResult::INVALID_TOKEN => [
                 'success' => false,
-                'message' =>
-                    'توکن پرداخت نامعتبر است.',
+                'message' => 'توکن پرداخت نامعتبر است.',
             ],
 
             FakeGatewayResult::INVALID_SIGNATURE => [
                 'success' => false,
-                'message' =>
-                    'امضای دیجیتال نامعتبر است.',
+                'message' => 'امضای دیجیتال نامعتبر است.',
             ],
 
-            FakeGatewayResult::CONNECTION_ERROR => [
-                'success' => false,
-                'message' =>
-                    'ارتباط با درگاه بانکی برقرار نشد.',
-            ],
+            FakeGatewayResult::TIMEOUT,
+            FakeGatewayResult::CONNECTION_ERROR => throw new RuntimeException(
+                'نتیجه پرداخت به علت اختلال ارتباطی یا پایان زمان انتظار مشخص نشد.'
+            ),
         };
     }
 }

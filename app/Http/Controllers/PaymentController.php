@@ -134,6 +134,7 @@ class PaymentController extends Controller
 
             return redirect()
                 ->route('payments.failed', [
+                    'payment_type' => $request->payment_type,
                     'reference_id' => $request->reference_id,
                     'installment_id' => $request->installment_id,
                 ])
@@ -169,6 +170,24 @@ class PaymentController extends Controller
 
     public function success(LoanPayment $payment)
     {
+        $user = auth()->user();
+
+        $customer = $user->customer;
+
+        if (!$customer) {
+            abort(403);
+        }
+
+        $isLoanOwner = (int) $payment->loan->customer_id
+            === (int) $customer->id;
+
+        $isPayer = (int) $payment->user_id
+            === (int) $user->id;
+
+        if (!$isLoanOwner && !$isPayer) {
+            abort(403);
+        }
+
         return view('receipts.payment', [
             'title' => 'رسید پرداخت قسط',
             'receipt_number' => $payment->tracking_code,
@@ -195,78 +214,82 @@ class PaymentController extends Controller
 
     public function failed(Request $request)
     {
-        if (($request->payment_type ?? null) === 'donation') {
+        // پرداخت کمک مشتری
+        if ($request->payment_type === 'donation_customer') {
+            $donationPayment = DonationPayment::find($request->reference_id);
+
+            if ($donationPayment) {
+                return redirect()
+                    ->route('customer.donations.create', [
+                        'account_id' => $donationPayment->account_id,
+                    ])
+                    ->with('error', 'پرداخت کمک انجام نشد.');
+            }
+
             return redirect()
-                ->route('donation.create')
-                ->with(
-                    'error',
-                    'پرداخت کمک انجام نشد.'
-                );
+                ->route('customer.dashboard')
+                ->with('error', 'پرداخت کمک انجام نشد.');
         }
 
-        if ($request->reference_id) {
-            $transfer = SavingsTransfer::find(
-                $request->reference_id
-            );
+        // پرداخت کمک عمومی
+        if ($request->payment_type === 'donation_public') {
+            return redirect()
+                ->route('donation.create')
+                ->with('error', 'پرداخت کمک انجام نشد.');
+        }
+
+        // انتقال پس‌انداز
+        if ($request->payment_type === 'savings_transfer') {
+            $transfer = SavingsTransfer::find($request->reference_id);
 
             if ($transfer) {
                 $customer = auth()->user()?->customer;
 
                 if (
                     $customer &&
-                    $transfer->receiver_customer_id === $customer->id
+                    (int) $transfer->receiver_customer_id === (int) $customer->id
                 ) {
                     return redirect()
                         ->route('customer.savings.deposit.create')
-                        ->with(
-                            'error',
-                            'پرداخت انجام نشد.'
-                        );
+                        ->with('error', 'پرداخت انجام نشد.');
                 }
 
                 return redirect()
                     ->route('customer.savings-transfer.create')
-                    ->with(
-                        'error',
-                        'پرداخت انجام نشد.'
-                    );
+                    ->with('error', 'پرداخت انجام نشد.');
             }
+
+            return redirect()
+                ->route('customer.dashboard')
+                ->with('error', 'اطلاعات انتقال پس‌انداز پیدا نشد.');
         }
 
+        // پرداخت اقساط
         if ($request->installment_id) {
             $installment = Installment::with('loan')
                 ->find($request->installment_id);
 
-            if ($installment) {
+            if ($installment && $installment->loan) {
                 $customer = auth()->user()?->customer;
 
                 if (
                     $customer &&
-                    $installment->loan->customer_id === $customer->id
+                    (int) $installment->loan->customer_id === (int) $customer->id
                 ) {
                     return redirect()
                         ->route('customer.installments.index')
-                        ->with(
-                            'error',
-                            'پرداخت قسط انجام نشد.'
-                        );
+                        ->with('error', 'پرداخت قسط انجام نشد.');
                 }
 
                 return redirect()
                     ->route('customer.installments.others.create')
-                    ->with(
-                        'error',
-                        'پرداخت قسط انجام نشد.'
-                    );
+                    ->with('error', 'پرداخت قسط انجام نشد.');
             }
         }
 
         return redirect()
             ->route('loans.index')
-            ->with(
-                'error',
-                'پرداخت انجام نشد.'
-            );
+            ->with('error', 'پرداخت انجام نشد.');
     }
 
     public function savingsTransferSuccess(SavingsTransfer $transfer)

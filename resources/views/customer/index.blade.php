@@ -58,6 +58,7 @@
                         <th>کد ملی</th>
                         <th>موبایل</th>
                         <th>وضعیت</th>
+                        <th>عضویت سایت</th>
                         <th class="customers-actions-column">
                             عملیات
                         </th>
@@ -99,6 +100,28 @@
 
                             </td>
 
+                            <td data-label="عضویت سایت" class="text-nowrap">
+                                @if($customer->user?->created_at)
+                                    @php
+                                        $startDate = \Morilog\Jalali\Jalalian::fromCarbon(
+                                            $customer->user->created_at
+                                        );
+
+                                        $endDate = $startDate->addYears(2);
+                                    @endphp
+
+                                    <small class="d-block text-success">
+                                        شروع: {{ fa_number($startDate->format('Y/m/d')) }}
+                                    </small>
+
+                                    <small class="d-block text-danger">
+                                        پایان: {{ fa_number($endDate->format('Y/m/d')) }}
+                                    </small>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+
                             <td
                                 data-label="عملیات"
                                 class="customers-actions"
@@ -123,7 +146,7 @@
                         <tr>
 
                             <td
-                                colspan="6"
+                                colspan="7"
                                 class="customers-empty"
                             >
 

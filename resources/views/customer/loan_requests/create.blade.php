@@ -236,38 +236,41 @@
                         </div>
 
                     </div>
+
                     <div class="col-12 col-lg-6">
                         {{-- =================================================
-                       دکمه‌ها
-                  ================================================== --}}
-
+                             دکمه‌ها
+                        ================================================== --}}
                         <div class="loan-request-actions">
+
+                            <a
+                                href="{{ route('customer.loans.index') }}"
+                                class="loan-request-my-loans-button"
+                            >
+                                <i class="bi bi-wallet2"></i>
+                                ضمانت ها
+                            </a>
 
                             <a
                                 href="{{ route('customer.loan-requests.index') }}"
                                 class="loan-request-cancel-button"
                             >
-
                                 <i class="bi bi-arrow-right"></i>
-
                                 انصراف
-
                             </a>
-
 
                             <button
                                 type="submit"
                                 class="loan-request-submit-button"
                             >
-
                                 <i class="bi bi-send-fill"></i>
-
                                 ثبت درخواست
-
                             </button>
 
                         </div>
                     </div>
+
+
                 </div>
 
 

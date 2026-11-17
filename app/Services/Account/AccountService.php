@@ -69,8 +69,15 @@ class AccountService
         ?string $iban = null,
         ?string $description = null,
         ?int $createdBy = null,
-    ): Withdrawal {
-        if ($amount < 500000) {
+        bool $enforceMinimum = true,
+): Withdrawal {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException(
+                'مبلغ برداشت باید بیشتر از صفر باشد.'
+            );
+        }
+
+        if ($enforceMinimum && $amount < 500000) {
             throw new \InvalidArgumentException(
                 'حداقل مبلغ برداشت ۵۰۰,۰۰۰ ریال است.'
             );
@@ -95,12 +102,16 @@ class AccountService
                 );
             }
 
-            $withdrawalIban = $iban ?? $account->customer?->iban;
+            $withdrawalIban = null;
 
-            if (!$withdrawalIban) {
-                throw new \InvalidArgumentException(
-                    'شماره شبا برای برداشت مشخص نشده است.'
-                );
+            if ($paymentMethod === PaymentMethod::BANK_TRANSFER) {
+                $withdrawalIban = $iban ?? $account->customer?->iban;
+
+                if (!$withdrawalIban) {
+                    throw new \InvalidArgumentException(
+                        'شماره شبا برای برداشت مشخص نشده است.'
+                    );
+                }
             }
 
             $balanceBefore = $account->balance;
@@ -111,14 +122,14 @@ class AccountService
             $transaction = $this->accountTransactionService->create(
                 account: $account,
                 type: TransactionType::WITHDRAWAL,
-                source: TransactionSource::ONLINE,
+                source: TransactionSource::OPERATOR,
                 paymentMethod: $paymentMethod,
                 amount: $amount,
                 balanceBefore: $balanceBefore,
                 balanceAfter: $balanceAfter,
                 description: $description,
                 createdBy: $createdBy,
-            );
+        );
 
             return Withdrawal::create([
                 'account_id' => $account->id,
@@ -172,7 +183,7 @@ class AccountService
                 account: $account,
                 type: TransactionType::DEPOSIT,
                 source: TransactionSource::ONLINE,
-                paymentMethod: PaymentMethod::BANK_TRANSFER,
+                paymentMethod: PaymentMethod::ACCOUNT_BALANCE,
                 amount: $withdrawal->amount,
                 balanceBefore: $balanceBefore,
                 balanceAfter: $balanceAfter,
@@ -217,12 +228,12 @@ class AccountService
                 account: $account,
                 type: TransactionType::DEPOSIT,
                 source: TransactionSource::OPERATOR,
-                paymentMethod: PaymentMethod::BANK_TRANSFER,
+                paymentMethod: PaymentMethod::ACCOUNT_BALANCE,
                 amount: $withdrawal->amount,
                 balanceBefore: $balanceBefore,
                 balanceAfter: $balanceAfter,
                 description: 'برگشت مبلغ برداشت رد شده',
-            );
+);
 
             $withdrawal->update([
                 'status' => WithdrawalStatus::REJECTED,

@@ -47,7 +47,7 @@ class DepositController extends Controller
         );
 
         return redirect()
-            ->back()
+            ->route('accounts.index')
             ->with(
                 'success',
                 'واریز با موفقیت ثبت شد. شماره تراکنش: '

@@ -10,6 +10,9 @@ use App\Services\Account\AccountService;
 use App\Enums\PaymentMethod;
 use App\Enums\WithdrawalStatus;
 use Illuminate\Http\Request;
+use App\Enums\PaymentBank;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class WithdrawalController extends Controller
 {
@@ -47,14 +50,21 @@ class WithdrawalController extends Controller
         WithdrawalRequest $request,
         Account $account
     ) {
+        $paymentMethod = PaymentMethod::from(
+            (int) $request->validated('payment_method')
+        );
+
         $this->accountService->withdraw(
             account: $account,
-            amount: $request->amount,
-            paymentMethod: PaymentMethod::BANK_TRANSFER,
-            iban: \App\Support\Iban::normalize($request->iban),
-            description: $request->description,
+            amount: (int) $request->validated('amount'),
+            paymentMethod: $paymentMethod,
+            iban: $paymentMethod === PaymentMethod::BANK_TRANSFER
+                ? \App\Support\Iban::normalize($request->validated('iban'))
+                : null,
+            description: $request->validated('description'),
             createdBy: auth()->id(),
-        );
+            enforceMinimum: false,
+    );
 
         return redirect()
             ->route('accounts.show', $account)
@@ -69,6 +79,7 @@ class WithdrawalController extends Controller
         $withdrawal->load([
             'account.customer',
             'paidBy',
+            'transaction',
         ]);
 
         return view(
@@ -77,68 +88,81 @@ class WithdrawalController extends Controller
         );
     }
 
+
     public function approve(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $request->validate(
-            [
-                'payment_bank' => [
-                    'required',
-                    'integer',
+        DB::transaction(function () use ($request, $withdrawal) {
+            $lockedWithdrawal = Withdrawal::query()
+                ->lockForUpdate()
+                ->findOrFail($withdrawal->id);
+
+            if ($lockedWithdrawal->status !== WithdrawalStatus::PENDING) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'withdrawal' => 'این درخواست دیگر در وضعیت قابل پرداخت نیست.',
+                ]);
+            }
+
+            $lockedWithdrawal->load('transaction');
+
+            $paymentMethod = $lockedWithdrawal->transaction?->payment_method;
+
+            if (!in_array($paymentMethod, [
+                PaymentMethod::CASH,
+                PaymentMethod::BANK_TRANSFER,
+            ], true)) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'withdrawal' => 'روش پرداخت این درخواست معتبر نیست.',
+                ]);
+            }
+
+            $isBankTransfer = $paymentMethod === PaymentMethod::BANK_TRANSFER;
+
+            $validated = $request->validate(
+                [
+                    'payment_bank' => $isBankTransfer
+                        ? ['required', 'integer', Rule::enum(PaymentBank::class)]
+                        : ['nullable'],
+
+                    'payment_tracking_code' => $isBankTransfer
+                        ? ['required', 'string', 'max:100']
+                        : ['nullable'],
                 ],
-
-                'payment_tracking_code' => [
-                    'required',
-                    'string',
-                    'max:100',
-                ],
-            ],
-            [
-                'payment_bank.required' =>
-                    'انتخاب بانک پرداخت الزامی است.',
-
-                'payment_bank.integer' =>
-                    'بانک پرداخت انتخاب‌شده معتبر نیست.',
-
-                'payment_tracking_code.required' =>
-                    'وارد کردن کد پیگیری پرداخت الزامی است.',
-
-                'payment_tracking_code.string' =>
-                    'کد پیگیری پرداخت باید به صورت متن باشد.',
-
-                'payment_tracking_code.max' =>
-                    'کد پیگیری پرداخت نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
-            ]
-        );
-
-        if ($withdrawal->status !== WithdrawalStatus::PENDING) {
-            return back()->with(
-                'error',
-                'این درخواست دیگر در وضعیت قابل پرداخت نیست.'
+                [
+                    'payment_bank.required' => 'انتخاب بانک پرداخت الزامی است.',
+                    'payment_bank.integer' => 'بانک پرداخت معتبر نیست.',
+                    'payment_bank.enum' => 'بانک انتخاب‌شده معتبر نیست.',
+                    'payment_tracking_code.required' => 'وارد کردن کد پیگیری پرداخت الزامی است.',
+                    'payment_tracking_code.string' => 'کد پیگیری پرداخت باید به صورت متن باشد.',
+                    'payment_tracking_code.max' => 'کد پیگیری پرداخت نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.',
+                ]
             );
-        }
 
-        $withdrawal->update([
-            'status' => WithdrawalStatus::PAID,
-            'payment_bank' => $request->payment_bank,
-            'payment_tracking_code' => $request->payment_tracking_code,
-            'paid_by' => auth()->id(),
-            'paid_at' => now(),
-        ]);
+            $lockedWithdrawal->update([
+                'status' => WithdrawalStatus::PAID,
+                'payment_bank' => $isBankTransfer
+                    ? $validated['payment_bank']
+                    : null,
+                'payment_tracking_code' => $isBankTransfer
+                    ? $validated['payment_tracking_code']
+                    : null,
+                'paid_by' => auth()->id(),
+                'paid_at' => now(),
+            ]);
+        });
 
         return redirect()
             ->route('withdrawals.show', $withdrawal)
-            ->with(
-                'success',
-                'برداشت با موفقیت پرداخت شد.'
-            );
+            ->with('success', 'برداشت با موفقیت پرداخت شد.');
     }
+
 
     public function receipt(Withdrawal $withdrawal)
     {
         $withdrawal->load([
             'account.customer',
+            'transaction',
             'paidBy',
         ]);
 
@@ -147,12 +171,15 @@ class WithdrawalController extends Controller
             404
         );
 
+        $receiptNumber = $withdrawal->payment_tracking_code
+            ?: $withdrawal->transaction?->transaction_no;
+
         return view(
             'receipts.saving-withdraw',
             [
                 'withdrawal' => $withdrawal,
                 'title' => 'رسید برداشت از حساب پس‌انداز',
-                'receipt_number' => $withdrawal->payment_tracking_code,
+                'receipt_number' => $receiptNumber,
                 'receipt_date' => $withdrawal->paid_at
                     ? \Morilog\Jalali\Jalalian::fromDateTime(
                         $withdrawal->paid_at

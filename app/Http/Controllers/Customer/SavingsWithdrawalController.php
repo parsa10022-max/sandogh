@@ -156,7 +156,7 @@ class SavingsWithdrawalController extends Controller
             */
 
             return redirect()
-                ->route('customer.savings.withdrawal.create')
+                ->route('customer.dashboard')
                 ->with(
                     'success',
                     'درخواست برداشت شما با موفقیت ثبت شد و در انتظار بررسی است.'

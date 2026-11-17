@@ -319,20 +319,14 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
         [WithdrawalController::class, 'approve']
     )->name('withdrawals.approve');
 
-    Route::patch(
-        '/withdrawals/{withdrawal}/cancel',
-        [WithdrawalController::class, 'cancel']
-    )->name('withdrawals.cancel');
+
 
     Route::post(
         '/withdrawals/{withdrawal}/reject',
         [WithdrawalController::class, 'reject']
     )->name('withdrawals.reject');
 
-    Route::get(
-        '/my-withdrawals',
-        [WithdrawalController::class, 'myWithdrawals']
-    )->name('withdrawals.mine');
+
 
     Route::get(
         '/withdrawals/{withdrawal}/receipt',
@@ -380,6 +374,11 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
         'customers/search-code',
         [CustomerController::class, 'searchByCode']
     )->name('customers.search.code');
+
+    Route::patch(
+        'customers/{customer}/online-activation',
+        [CustomerController::class, 'updateOnlineActivationApproval']
+    )->name('customers.online-activation.update');
 
     Route::resource(
         'customers',
@@ -583,6 +582,11 @@ Route::middleware(['auth', 'admin.access'])->group(function () {
                 ]
             )->name('daily-operations');
 
+            Route::get('/savings-installment-payments', [
+                \App\Http\Controllers\Admin\SavingsInstallmentPaymentsReportController::class,
+                'index',
+            ])->name('savings-installment-payments');
+
             Route::get(
                 '/gateway-transactions',
                 [
@@ -724,6 +728,11 @@ Route::middleware(['auth', 'customer.access'])
         )->name('settings.index');
 
 
+        Route::patch('withdrawals/{withdrawal}/cancel', [WithdrawalController::class, 'cancel'])
+            ->name('withdrawals.cancel');
+
+        Route::get('my-withdrawals', [WithdrawalController::class, 'myWithdrawals'])
+            ->name('withdrawals.mine');
         /*
         --------------------------------------------------------------------------
          Profile

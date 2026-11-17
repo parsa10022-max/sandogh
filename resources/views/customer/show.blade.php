@@ -388,7 +388,38 @@
                     @endif
 
                 </div>
+                {{-- =================================================
+     EDIT CUSTOMER IBAN
+================================================== --}}
 
+                <div class="customer-iban-action">
+
+                    <div class="customer-iban-action__info">
+
+                        <div class="customer-iban-action__icon">
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+
+                        <div class="customer-iban-action__text">
+                            <h3>شماره شبای مشتری</h3>
+
+                            <p>
+                                برای ثبت یا ویرایش شماره شبا و اطلاعات بانکی مشتری اقدام کنید.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{{ route('customers.edit', $customer) }}"
+                        class="customer-iban-action__button"
+                    >
+                        <i class="bi bi-pencil-square"></i>
+                        <span>ویرایش و اضافه کردن شماره شبا</span>
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+
+                </div>
             </div>
 
         </div>

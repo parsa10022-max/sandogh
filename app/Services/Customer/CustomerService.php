@@ -28,6 +28,7 @@ class CustomerService
         ?string $search = null
     ): LengthAwarePaginator {
         return Customer::query()
+            ->with('user:id,customer_id,created_at')
             ->search($search)
             ->latest()
             ->paginate($perPage)

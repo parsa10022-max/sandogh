@@ -28,16 +28,6 @@ class PaymentService
         Installment $installment,
         bool $allowOthers = false
     ): array {
-        $installment->loadMissing('loan');
-
-        $this->validatePayment(
-            $installment,
-            $allowOthers
-        );
-
-        $trackingCode =
-            $this->trackingCodeService->generate();
-
         $payerUserId = auth()->id();
 
         if (! $payerUserId) {
@@ -54,46 +44,106 @@ class PaymentService
             config('payment.gateway')
         );
 
-        $paymentIntent = $this->paymentIntentService->create(
-            paymentType: $paymentType,
-            referenceId: $installment->id,
-            amount: (int) $installment->amount,
-            trackingCode: $trackingCode,
-            gateway: $gateway,
-            payerUserId: $payerUserId,
-            gatewayToken: null,
-            expiresInMinutes: 30,
-        );
+        /*
+         * ایجاد Intent زیر قفل قسط انجام می‌شود
+         * تا درخواست‌های هم‌زمان نتوانند چند Intent فعال بسازند.
+         */
+        [$installment, $paymentIntent, $trackingCode] =
+            DB::transaction(function () use (
+                $installment,
+                $allowOthers,
+                $paymentType,
+                $gateway,
+                $payerUserId,
+            ) {
+                $lockedInstallment = Installment::query()
+                    ->lockForUpdate()
+                    ->find($installment->id);
 
-        $gatewayResponse = $this->gateway->request([
-            'payment_intent_id' => $paymentIntent->id,
+                if (! $lockedInstallment) {
+                    throw new \DomainException(
+                        'قسط موردنظر پیدا نشد.'
+                    );
+                }
 
-            'payment_type' => $paymentType,
+                $lockedInstallment->load('loan');
 
-            'loan_id' => $installment->loan_id,
+                $this->validatePayment(
+                    $lockedInstallment,
+                    $allowOthers
+                );
 
-            'installment_id' => $installment->id,
+                $activeIntentExists = PaymentIntent::query()
+                    ->where(
+                        'reference_id',
+                        $lockedInstallment->id
+                    )
+                    ->whereIn('payment_type', [
+                        'installment',
+                        'installment_other',
+                    ])
+                    ->whereIn('status', [
+                        'pending',
+                        'redirected',
+                        'verifying',
+                        'review_required',
+                        'paid',
+                    ])
+                    ->exists();
 
-            'loan_number' =>
-                $installment->loan->loan_number,
+                if ($activeIntentExists) {
+                    throw new \DomainException(
+                        'برای این قسط درخواست پرداخت قبلی وجود دارد؛ ابتدا وضعیت آن باید مشخص شود.'
+                    );
+                }
 
-            'installment_number' =>
-                $installment->installment_number,
+                $trackingCode =
+                    $this->trackingCodeService->generate();
 
-            'reference_id' => $installment->id,
+                $paymentIntent = $this->paymentIntentService->create(
+                    paymentType: $paymentType,
+                    referenceId: $lockedInstallment->id,
+                    amount: (int) $lockedInstallment->amount,
+                    trackingCode: $trackingCode,
+                    gateway: $gateway,
+                    payerUserId: $payerUserId,
+                    gatewayToken: null,
+                    expiresInMinutes: 30,
+            );
 
-            'amount' => (int) $installment->amount,
+                return [
+                    $lockedInstallment,
+                    $paymentIntent,
+                    $trackingCode,
+                ];
+            });
 
-            'tracking_code' => $trackingCode,
+        /*
+         * ارتباط با درگاه خارج از تراکنش دیتابیس
+         */
+        try {
+            $gatewayResponse = $this->gateway->request([
+                'payment_intent_id' => $paymentIntent->id,
+                'payment_type' => $paymentType,
+                'loan_id' => $installment->loan_id,
+                'installment_id' => $installment->id,
+                'loan_number' => $installment->loan->loan_number,
+                'installment_number' =>
+                    $installment->installment_number,
+                'reference_id' => $installment->id,
+                'amount' => (int) $paymentIntent->amount,
+                'tracking_code' => $trackingCode,
+                'payer_user_id' => $payerUserId,
+                'callback_url' => route('payments.callback'),
+                'gateway_token' => $paymentIntent->gateway_token,
+            ]);
+        } catch (\Throwable $exception) {
+            report($exception);
 
-            'payer_user_id' => $payerUserId,
-
-            'callback_url' =>
-                route('payments.callback'),
-
-            'gateway_token' =>
-                $paymentIntent->gateway_token,
-        ]);
+            throw new \DomainException(
+                'ارتباط با درگاه برقرار نشد؛ وضعیت درخواست پرداخت نیازمند بررسی است.'
+            );
+        }
 
         if (! ($gatewayResponse['success'] ?? false)) {
             $this->paymentIntentService->markFailed(
@@ -106,29 +156,19 @@ class PaymentService
             );
         }
 
-        $gatewayToken =
-            $gatewayResponse['token']
+        $gatewayToken = $gatewayResponse['token']
             ?? $paymentIntent->gateway_token;
 
         if (! $gatewayToken) {
-            $this->paymentIntentService->markFailed(
-                $paymentIntent
-            );
-
             throw new \DomainException(
-                'توکن درگاه ایجاد نشد.'
+                'توکن پرداخت دریافت نشد؛ وضعیت درخواست نیازمند بررسی است.'
             );
         }
 
-        $paymentIntent->update([
-            'gateway_token' => $gatewayToken,
-        ]);
-
-        $paymentIntent =
-            $this->paymentIntentService->markRedirected(
-                $paymentIntent->refresh(),
-                $gatewayToken
-            );
+        $paymentIntent = $this->paymentIntentService->markRedirected(
+            $paymentIntent,
+            $gatewayToken
+        );
 
         $gatewayResponse['payment_intent_id'] =
             $paymentIntent->id;
@@ -137,57 +177,35 @@ class PaymentService
     }
 
     /**
-     * تایید پرداخت
+     * تأیید پرداخت
      */
     public function verifyPayment(
         array $callbackData
     ): LoanPayment {
-        /*
-         * PaymentIntent اولین مرجع Callback است.
-         */
-        $paymentIntent =
-            $this->resolvePaymentIntent($callbackData);
+        $paymentIntent = $this->resolvePaymentIntent(
+            $callbackData
+        );
 
-        $paymentIntentId =
-            (int) $paymentIntent->id;
-
-        $paymentType =
-            $paymentIntent->payment_type;
-
-        $installmentId =
-            (int) $paymentIntent->reference_id;
-
-        $amount =
-            (int) $paymentIntent->amount;
-
-        $gateway =
-            $paymentIntent->gateway;
+        $paymentIntentId = (int) $paymentIntent->id;
+        $installmentId = (int) $paymentIntent->reference_id;
+        $paymentType = $paymentIntent->payment_type;
+        $amount = (int) $paymentIntent->amount;
+        $gateway = $paymentIntent->gateway;
+        $payerUserId = $paymentIntent->payer_user_id;
+        $trackingCode = $paymentIntent->tracking_code;
+        $callbackToken = $callbackData['token'] ?? null;
 
         /*
-         * Callback تکراری برای پرداخت موفق.
-         *
-         * در این حالت دیگر نباید Gateway دوباره Verify شود
-         * و نباید عملیات مالی دوباره انجام شود.
+         * Callback تکراری برای پرداخت موفق
          */
         if ($paymentIntent->isPaid()) {
             $existingPayment = LoanPayment::query()
-                ->where(
-                    'installment_id',
-                    $installmentId
-                )
+                ->where('installment_id', $installmentId)
                 ->first();
 
-
             if ($existingPayment) {
-                $this->paymentIntentService->markReviewRequired(
-                    $paymentIntent,
-                    $gatewayResponse['transaction_id'] ?? null,
-                    $gatewayResponse['reference_number'] ?? null,
-                );
-
                 return $existingPayment;
             }
-
 
             throw new \DomainException(
                 'Payment Intent پرداخت شده است اما رکورد پرداخت پیدا نشد.'
@@ -195,27 +213,102 @@ class PaymentService
         }
 
         /*
-         * اعتبارسنجی اولیه PaymentIntent
+         * مرحله اول:
+         * قفل قسط و Intent و انتقال به verifying.
+         *
+         * این تراکنش قبل از ارتباط با درگاه Commit می‌شود.
          */
-        $this->paymentIntentService->validateForPayment(
-            intent: $paymentIntent,
-            paymentType: $paymentType,
-            referenceId: $installmentId,
-            amount: $amount,
-            gateway: $gateway,
-        );
+        $paymentIntent = DB::transaction(function () use (
+            $paymentIntentId,
+            $installmentId,
+            $paymentType,
+            $amount,
+            $gateway,
+            $callbackToken,
+
+        ) {
+            $installment = Installment::query()
+                ->lockForUpdate()
+                ->find($installmentId);
+
+            if (! $installment) {
+                throw new \DomainException(
+                    'قسط موردنظر پیدا نشد.'
+                );
+            }
+
+            $intent = $this->paymentIntentService
+                ->findByIdForUpdate($paymentIntentId);
+            if (
+                ! is_string($callbackToken)
+                || $callbackToken === ''
+                || ! is_string($intent->gateway_token)
+                || $intent->gateway_token === ''
+                || ! hash_equals($intent->gateway_token, $callbackToken)
+            ) {
+                throw new \DomainException(
+                    'توکن پرداخت نامعتبر است.'
+                );
+            }
+
+            if (
+                (int) $intent->reference_id !== $installmentId
+                || ! in_array($intent->payment_type, [
+                    'installment',
+                    'installment_other',
+                ], true)
+            ) {
+                throw new \DomainException(
+                    'Payment Intent با قسط موردنظر مطابقت ندارد.'
+                );
+            }
+
+            $this->paymentIntentService->validateForPayment(
+                intent: $intent,
+                paymentType: $paymentType,
+                referenceId: $installmentId,
+                amount: $amount,
+                gateway: $gateway,
+            );
+
+            if ((int) $installment->amount !== $amount) {
+                throw new \DomainException(
+                    'مبلغ قسط با Payment Intent مطابقت ندارد.'
+                );
+            }
+
+            return $this->paymentIntentService->markVerifying(
+                $intent
+            );
+        });
 
         /*
-         * تایید توسط Gateway
-         *
-         * این عملیات خارج از DB Transaction انجام می‌شود
-         * تا Transaction هنگام ارتباط با بانک باز نماند.
+         * مرحله دوم:
+         * تأیید درگاه خارج از تراکنش دیتابیس.
          */
-        $gatewayResponse =
-            $this->gateway->verify($callbackData);
+        try {
+            $gatewayResponse = $this->gateway->verify(
+                $callbackData
+            );
+        } catch (\Throwable $exception) {
+            /*
+             * نتیجه نامشخص است.
+             * Intent در verifying باقی می‌ماند.
+             */
+            throw new \DomainException(
+                'نتیجه پرداخت از درگاه مشخص نشد؛ پرداخت نیازمند بررسی است.'
+            );
+        }
 
         if (! ($gatewayResponse['success'] ?? false)) {
-            $this->paymentIntentService->markFailed(
+            /*
+             * پاسخ قطعی ناموفق درگاه:
+             * verifying به failed تبدیل می‌شود.
+             *
+             * این متد نباید برای timeout یا خطای ارتباطی
+             * استفاده شود.
+             */
+            $this->paymentIntentService->markVerificationFailed(
                 $paymentIntent
             );
 
@@ -226,108 +319,22 @@ class PaymentService
         }
 
         /*
-         * payer فقط از PaymentIntent
+         * مرحله سوم:
+         * ثبت نهایی پرداخت.
          */
-        $payerUserId =
-            $paymentIntent->payer_user_id;
-
-        $trackingCode =
-            $paymentIntent->tracking_code;
-
-        /*
-         * تمام عملیات مالی داخل یک Transaction.
-         */
-        return DB::transaction(function () use (
+        $result = DB::transaction(function () use (
             $paymentIntentId,
             $installmentId,
             $amount,
+            $paymentType,
+            $gateway,
             $gatewayResponse,
             $payerUserId,
             $trackingCode,
-            $paymentType,
-            $gateway,
         ) {
             /*
-             * PaymentIntent مشخص Callback را قفل می‌کنیم.
-             */
-            $paymentIntent =
-                $this->paymentIntentService
-                    ->findByIdForUpdate(
-                        $paymentIntentId
-                    );
-
-            /*
-             * اگر Callback همزمان یا تکراری بوده
-             * و پرداخت قبلاً ثبت شده است،
-             * عملیات مالی دوباره انجام نمی‌شود.
-             */
-            if ($paymentIntent->isPaid()) {
-                $existingPayment =
-                    LoanPayment::query()
-                        ->where(
-                            'installment_id',
-                            $installmentId
-                        )
-                        ->first();
-
-                if ($existingPayment) {
-                    return $existingPayment;
-                }
-
-                throw new \DomainException(
-                    'Payment Intent پرداخت شده است اما رکورد پرداخت پیدا نشد.'
-                );
-            }
-
-            /*
-             * اعتبارسنجی دوباره بعد از Lock.
-             */
-            $this->paymentIntentService->validateForPayment(
-                intent: $paymentIntent,
-                paymentType: $paymentType,
-                referenceId: $installmentId,
-                amount: $amount,
-                gateway: $gateway,
-            );
-
-            /*
-             * PaymentIntent فقط داخل Transaction
-             * وارد وضعیت Verifying می‌شود.
-             */
-            $paymentIntent =
-                $this->paymentIntentService->markVerifying(
-                    $paymentIntent
-                );
-
-            /*
-             * پیدا کردن loan_id
-             */
-            $loanId = Installment::query()
-                ->whereKey($installmentId)
-                ->value('loan_id');
-
-            if (! $loanId) {
-                throw new \DomainException(
-                    'قسط موردنظر پیدا نشد.'
-                );
-            }
-
-            /*
-             * قفل کردن وام
-             */
-            $loan = Loan::query()
-                ->with('customer.user')
-                ->lockForUpdate()
-                ->find($loanId);
-
-            if (! $loan) {
-                throw new \DomainException(
-                    'وام مربوط به قسط پیدا نشد.'
-                );
-            }
-
-            /*
-             * قفل کردن قسط
+             * ترتیب قفل:
+             * Installment → PaymentIntent → Loan
              */
             $installment = Installment::query()
                 ->lockForUpdate()
@@ -339,144 +346,155 @@ class PaymentService
                 );
             }
 
-            /*
-             * کنترل ارتباط قسط و وام
-             */
+            $intent = $this->paymentIntentService
+                ->findByIdForUpdate($paymentIntentId);
+
             if (
-                (int) $installment->loan_id
-                !== (int) $loan->id
+                (int) $intent->reference_id !== $installmentId
+                || $intent->payment_type !== $paymentType
+                || (int) $intent->amount !== $amount
+                || $intent->gateway !== $gateway
             ) {
                 throw new \DomainException(
-                    'قسط با وام مربوطه مطابقت ندارد.'
+                    'اطلاعات Payment Intent معتبر نیست.'
                 );
             }
 
             /*
-             * مبلغ واقعی قسط باید با PaymentIntent
-             * یکسان باشد.
+             * Callback تکراری
              */
-            if (
-                (int) $installment->amount
-                !== $amount
-            ) {
-                throw new \DomainException(
-                    'مبلغ قسط با Payment Intent مطابقت ندارد.'
-                );
-            }
-
-            /*
-             * کنترل پرداخت تکراری
-             */
-            $existingPayment =
-                LoanPayment::query()
-                    ->where(
-                        'installment_id',
-                        $installment->id
-                    )
+            if ($intent->isPaid()) {
+                $existingPayment = LoanPayment::query()
+                    ->where('installment_id', $installmentId)
                     ->first();
 
+                if ($existingPayment) {
+                    return $existingPayment;
+                }
+
+                throw new \DomainException(
+                    'رکورد پرداخت قبلی پیدا نشد.'
+                );
+            }
+
+            if ($intent->status !== 'verifying') {
+                throw new \DomainException(
+                    'وضعیت Payment Intent برای ثبت پرداخت معتبر نیست.'
+                );
+            }
+
+            if ((int) $installment->amount !== $amount) {
+                $this->paymentIntentService->markReviewRequired(
+                    $intent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
+                );
+
+                return [
+                    'review_required' => true,
+                ];
+            }
+
+            $loan = Loan::query()
+                ->with('customer.user')
+                ->lockForUpdate()
+                ->find($installment->loan_id);
+
+            if (! $loan) {
+                $this->paymentIntentService->markReviewRequired(
+                    $intent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
+                );
+
+                return [
+                    'review_required' => true,
+                ];
+            }
+
+            /*
+             * جلوگیری از ثبت پرداخت تکراری
+             */
+            $existingPayment = LoanPayment::query()
+                ->where('installment_id', $installmentId)
+                ->first();
+
             if ($existingPayment) {
-                $this->paymentIntentService->markPaid(
-                    $paymentIntent,
-                    $gatewayResponse['transaction_id']
-                    ?? null,
-                    $gatewayResponse['reference_number']
-                    ?? null,
+                $this->paymentIntentService->markReviewRequired(
+                    $intent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
                 );
 
-                return $existingPayment;
+                return [
+                    'review_required' => true,
+                ];
             }
 
-            /*
-             * وام باید فعال باشد.
-             */
             if (
-                $loan->status
-                !== LoanStatus::ACTIVE
+                $loan->status !== LoanStatus::ACTIVE
+                || $installment->status === InstallmentStatus::PAID
             ) {
-                throw new \DomainException(
-                    'این وام فعال نیست.'
+                $this->paymentIntentService->markReviewRequired(
+                    $intent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
                 );
+
+                return [
+                    'review_required' => true,
+                ];
             }
 
             /*
-             * قسط نباید قبلاً پرداخت شده باشد.
+             * بررسی اقساط قبلی
              */
-            if (
-                $installment->status
-                === InstallmentStatus::PAID
-            ) {
-                throw new \DomainException(
-                    'این قسط قبلاً پرداخت شده است.'
-                );
-            }
-
-            /*
-             * بررسی ترتیب اقساط
-             */
-            $previousUnpaidExists =
-                Installment::query()
-                    ->where(
-                        'loan_id',
-                        $loan->id
-                    )
-                    ->where(
-                        'installment_number',
-                        '<',
-                        $installment->installment_number
-                    )
-                    ->whereIn('status', [
-                        InstallmentStatus::PENDING->value,
-                        InstallmentStatus::OVERDUE->value,
-                    ])
-                    ->exists();
+            $previousUnpaidExists = Installment::query()
+                ->where('loan_id', $loan->id)
+                ->where(
+                    'installment_number',
+                    '<',
+                    $installment->installment_number
+                )
+                ->whereIn('status', [
+                    InstallmentStatus::PENDING->value,
+                    InstallmentStatus::OVERDUE->value,
+                ])
+                ->exists();
 
             if ($previousUnpaidExists) {
-                throw new \DomainException(
-                    'ابتدا باید اقساط قبلی پرداخت شوند.'
+                $this->paymentIntentService->markReviewRequired(
+                    $intent,
+                    $gatewayResponse['transaction_id'] ?? null,
+                    $gatewayResponse['reference_number'] ?? null,
                 );
+
+                return [
+                    'review_required' => true,
+                ];
             }
 
             /*
-             * ثبت LoanPayment
+             * ثبت پرداخت
              */
-            $payment =
-                $this->createLoanPayment(
-                    installment: $installment,
-                    paymentIntent: $paymentIntent,
-                    gatewayResponse: $gatewayResponse,
-                    trackingCode: $trackingCode,
-                    payerUserId: $payerUserId,
-                );
-
-            /*
-             * پرداخت شدن قسط
-             */
-            $this->markInstallmentAsPaid(
-                $installment
+            $payment = $this->createLoanPayment(
+                installment: $installment,
+                paymentIntent: $intent,
+                gatewayResponse: $gatewayResponse,
+                trackingCode: $trackingCode,
+                payerUserId: $payerUserId,
             );
 
-            /*
-             * موفق شدن PaymentIntent
-             */
+            $this->markInstallmentAsPaid($installment);
+
             $this->paymentIntentService->markPaid(
-                $paymentIntent,
-                $gatewayResponse['transaction_id']
-                ?? null,
-                $gatewayResponse['reference_number']
-                ?? null,
+                $intent,
+                $gatewayResponse['transaction_id'] ?? null,
+                $gatewayResponse['reference_number'] ?? null,
             );
 
-            /*
-             * بررسی پایان وام
-             */
-            $this->finishLoanIfNeeded(
-                $loan
-            );
+            $this->finishLoanIfNeeded($loan);
 
-            /*
-             * ارسال اعلان
-             */
             $this->sendPaymentNotifications(
                 $loan,
                 $installment,
@@ -486,6 +504,23 @@ class PaymentService
 
             return $payment;
         });
+
+        if (
+            is_array($result)
+            && ($result['review_required'] ?? false) === true
+        ) {
+            throw new \DomainException(
+                'پرداخت در درگاه موفق بوده، اما ثبت آن نیازمند بررسی مالی است.'
+            );
+        }
+
+        if (! $result instanceof LoanPayment) {
+            throw new \DomainException(
+                'نتیجه تأیید پرداخت معتبر نیست.'
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -495,8 +530,7 @@ class PaymentService
         array $callbackData
     ): PaymentIntent {
         $paymentIntentId =
-            $callbackData['payment_intent_id']
-            ?? null;
+            $callbackData['payment_intent_id'] ?? null;
 
         if (! $paymentIntentId) {
             throw new \DomainException(
@@ -504,19 +538,14 @@ class PaymentService
             );
         }
 
-        if (
-            ! ctype_digit(
-                (string) $paymentIntentId
-            )
-        ) {
+        if (! ctype_digit((string) $paymentIntentId)) {
             throw new \DomainException(
                 'شناسه Payment Intent نامعتبر است.'
             );
         }
 
-        $paymentIntent =
-            PaymentIntent::query()
-                ->find((int) $paymentIntentId);
+        $paymentIntent = PaymentIntent::query()
+            ->find((int) $paymentIntentId);
 
         if (! $paymentIntent) {
             throw new \DomainException(
@@ -524,9 +553,7 @@ class PaymentService
             );
         }
 
-        $callbackToken =
-            $callbackData['token']
-            ?? null;
+        $callbackToken = $callbackData['token'] ?? null;
 
         if (
             ! $callbackToken
@@ -555,34 +582,17 @@ class PaymentService
         ?int $payerUserId
     ): LoanPayment {
         return LoanPayment::create([
-            'loan_id' =>
-                $installment->loan_id,
-
-            'installment_id' =>
-                $installment->id,
-
-            'user_id' =>
-                $payerUserId,
-
-            'amount' =>
-                $installment->amount,
-
-            'tracking_code' =>
-                $trackingCode,
-
-            'gateway' =>
-                $paymentIntent->gateway,
-
+            'loan_id' => $installment->loan_id,
+            'installment_id' => $installment->id,
+            'user_id' => $payerUserId,
+            'amount' => $installment->amount,
+            'tracking_code' => $trackingCode,
+            'gateway' => $paymentIntent->gateway,
             'bank_transaction_id' =>
-                $gatewayResponse['transaction_id']
-                ?? null,
-
+                $gatewayResponse['transaction_id'] ?? null,
             'bank_reference_number' =>
-                $gatewayResponse['reference_number']
-                ?? null,
-
-            'paid_at' =>
-                now(),
+                $gatewayResponse['reference_number'] ?? null,
+            'paid_at' => now(),
         ]);
     }
 
@@ -593,11 +603,8 @@ class PaymentService
         Installment $installment
     ): void {
         $installment->update([
-            'status' =>
-                InstallmentStatus::PAID->value,
-
-            'paid_at' =>
-                now(),
+            'status' => InstallmentStatus::PAID->value,
+            'paid_at' => now(),
         ]);
     }
 
@@ -607,22 +614,17 @@ class PaymentService
     private function finishLoanIfNeeded(
         Loan $loan
     ): void {
-        $hasUnpaidInstallments =
-            Installment::query()
-                ->where(
-                    'loan_id',
-                    $loan->id
-                )
-                ->whereIn('status', [
-                    InstallmentStatus::PENDING->value,
-                    InstallmentStatus::OVERDUE->value,
-                ])
-                ->exists();
+        $hasUnpaidInstallments = Installment::query()
+            ->where('loan_id', $loan->id)
+            ->whereIn('status', [
+                InstallmentStatus::PENDING->value,
+                InstallmentStatus::OVERDUE->value,
+            ])
+            ->exists();
 
         if (! $hasUnpaidInstallments) {
             $loan->update([
-                'status' =>
-                    LoanStatus::FINISHED->value,
+                'status' => LoanStatus::FINISHED->value,
             ]);
         }
     }
@@ -636,31 +638,20 @@ class PaymentService
         LoanPayment $payment,
         ?int $payerUserId
     ): void {
-        $loanOwnerUserId =
-            $loan->customer?->user?->id;
+        $loanOwnerUserId = $loan->customer?->user?->id;
 
         if ($loanOwnerUserId) {
             Notification::create([
-                'user_id' =>
-                    $loanOwnerUserId,
-
-                'type' =>
-                    'loan_payment',
-
-                'title' =>
-                    'پرداخت قسط',
-
+                'user_id' => $loanOwnerUserId,
+                'type' => 'loan_payment',
+                'title' => 'پرداخت قسط',
                 'message' =>
                     'قسط شماره '
                     . $installment->installment_number
                     . ' با موفقیت پرداخت شد.',
-
                 'data' => [
-                    'loan_payment_id' =>
-                        $payment->id,
-
-                    'installment_id' =>
-                        $installment->id,
+                    'loan_payment_id' => $payment->id,
+                    'installment_id' => $installment->id,
                 ],
             ]);
         }
@@ -670,24 +661,13 @@ class PaymentService
             && $payerUserId !== $loanOwnerUserId
         ) {
             Notification::create([
-                'user_id' =>
-                    $payerUserId,
-
-                'type' =>
-                    'loan_payment',
-
-                'title' =>
-                    'پرداخت قسط',
-
-                'message' =>
-                    'پرداخت قسط با موفقیت انجام شد.',
-
+                'user_id' => $payerUserId,
+                'type' => 'loan_payment',
+                'title' => 'پرداخت قسط',
+                'message' => 'پرداخت قسط با موفقیت انجام شد.',
                 'data' => [
-                    'loan_payment_id' =>
-                        $payment->id,
-
-                    'installment_id' =>
-                        $installment->id,
+                    'loan_payment_id' => $payment->id,
+                    'installment_id' => $installment->id,
                 ],
             ]);
         }
@@ -733,8 +713,7 @@ class PaymentService
         }
 
         if (! $allowOthers) {
-            $loanCustomerId =
-                $installment->loan?->customer_id;
+            $loanCustomerId = $installment->loan?->customer_id;
 
             if (
                 (int) $loanCustomerId
@@ -746,22 +725,18 @@ class PaymentService
             }
         }
 
-        $previousUnpaidExists =
-            Installment::query()
-                ->where(
-                    'loan_id',
-                    $installment->loan_id
-                )
-                ->where(
-                    'installment_number',
-                    '<',
-                    $installment->installment_number
-                )
-                ->whereIn('status', [
-                    InstallmentStatus::PENDING->value,
-                    InstallmentStatus::OVERDUE->value,
-                ])
-                ->exists();
+        $previousUnpaidExists = Installment::query()
+            ->where('loan_id', $installment->loan_id)
+            ->where(
+                'installment_number',
+                '<',
+                $installment->installment_number
+            )
+            ->whereIn('status', [
+                InstallmentStatus::PENDING->value,
+                InstallmentStatus::OVERDUE->value,
+            ])
+            ->exists();
 
         if ($previousUnpaidExists) {
             throw new \DomainException(
@@ -782,10 +757,7 @@ class PaymentService
                 'loanType',
                 'installments',
             ])
-            ->where(
-                'loan_number',
-                $loanNumber
-            )
+            ->where('loan_number', $loanNumber)
             ->first();
 
         if (! $loan) {
@@ -794,10 +766,7 @@ class PaymentService
             );
         }
 
-        if (
-            $loan->status
-            !== LoanStatus::ACTIVE
-        ) {
+        if ($loan->status !== LoanStatus::ACTIVE) {
             throw new \DomainException(
                 'این وام فعال نیست.'
             );

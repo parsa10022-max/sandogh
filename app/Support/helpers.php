@@ -114,7 +114,7 @@ if (! function_exists('fa_money_with_unit')) {
 if (! function_exists('clean_money')) {
     /**
      * Convert a Persian/Arabic formatted money value
-     * into a clean English integer for backend processing.
+     * into a non-negative integer for backend processing.
      *
      * Example:
      * ۱۲٬۵۰۰٬۰۰۰ => 12500000
@@ -125,7 +125,11 @@ if (! function_exists('clean_money')) {
             return null;
         }
 
-        $value = en_number($value);
+        if (! is_string($value) && ! is_int($value)) {
+            return null;
+        }
+
+        $value = en_number((string) $value);
 
         $value = str_replace([
             ',',
@@ -135,12 +139,28 @@ if (! function_exists('clean_money')) {
             'ریال',
         ], '', $value);
 
-        $value = preg_replace('/[^\d-]/', '', $value);
-
-        if ($value === '' || $value === '-') {
+        if ($value === '' || ! ctype_digit($value)) {
             return null;
         }
 
-        return (int) $value;
+        $normalized = ltrim($value, '0');
+
+        if ($normalized === '') {
+            return 0;
+        }
+
+        $max = (string) PHP_INT_MAX;
+
+        if (
+            strlen($normalized) > strlen($max) ||
+            (
+                strlen($normalized) === strlen($max) &&
+                strcmp($normalized, $max) > 0
+            )
+        ) {
+            return null;
+        }
+
+        return (int) $normalized;
     }
 }
