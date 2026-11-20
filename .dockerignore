@@ -1,0 +1,16 @@
+.git
+.idea
+.vscode
+.env
+.env.*
+!.env.example
+node_modules
+vendor
+public/hot
+public/storage
+storage/logs/*
+storage/app/imports/*
+*.sql
+*.zip
+*.log
+.phpunit.result.cache
